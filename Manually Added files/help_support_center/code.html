@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nikat Support Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#182056",
+              "on-secondary-container": "#e3ffe4",
+              "outline": "#6e739d",
+              "on-error-container": "#ffa8a3",
+              "on-error": "#490006",
+              "surface-bright": "#1e2660",
+              "tertiary-fixed": "#fc9df7",
+              "tertiary-container": "#fc9df7",
+              "on-secondary-fixed-variant": "#006a35",
+              "error-dim": "#d7383b",
+              "primary": "#5eb4ff",
+              "error": "#ff716c",
+              "on-secondary": "#005f2f",
+              "surface-tint": "#5eb4ff",
+              "on-tertiary-fixed": "#47004c",
+              "on-secondary-fixed": "#004a23",
+              "inverse-surface": "#fbf8ff",
+              "secondary-fixed": "#6bfe9c",
+              "primary-fixed": "#2aa7ff",
+              "error-container": "#9f0519",
+              "tertiary-fixed-dim": "#ec90e9",
+              "secondary-dim": "#5bef90",
+              "primary-dim": "#15a4ff",
+              "outline-variant": "#40456c",
+              "surface-container-low": "#080e38",
+              "on-primary-fixed": "#000000",
+              "surface-dim": "#05092f",
+              "on-surface-variant": "#a3a8d5",
+              "tertiary-dim": "#ec90e9",
+              "on-tertiary-fixed-variant": "#702073",
+              "primary-container": "#2aa7ff",
+              "on-background": "#e2e3ff",
+              "inverse-on-surface": "#4d527a",
+              "on-primary": "#003151",
+              "surface": "#05092f",
+              "secondary-fixed-dim": "#5bef90",
+              "tertiary": "#ffb3f9",
+              "background": "#05092f",
+              "surface-variant": "#182056",
+              "primary-fixed-dim": "#0099f0",
+              "on-primary-container": "#00253f",
+              "inverse-primary": "#00639e",
+              "on-tertiary": "#702073",
+              "surface-container-high": "#131a4c",
+              "on-primary-fixed-variant": "#002e4d",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-container": "#651469",
+              "surface-container": "#0e1442",
+              "on-surface": "#e2e3ff",
+              "secondary": "#6bfe9c",
+              "secondary-container": "#006d37"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { background-color: #05092f; color: #e2e3ff; font-family: 'Manrope', sans-serif; }
+      .glass-effect { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+      .editorial-header { letter-spacing: -0.02em; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary/30">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-black/40 flex justify-between items-center px-6 h-16 w-full font-['Plus_Jakarta_Sans'] text-sm tracking-tight no-border space-y-4">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Support Hub</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-blue-400 border-b-2 border-blue-400 pb-1" href="#">Knowledge Base</a>
+<a class="text-slate-300 hover:text-white transition-colors" href="#">My Tickets</a>
+<a class="text-slate-300 hover:text-white transition-colors" href="#">Community</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-300 hover:bg-white/5 p-2 rounded-full transition-all" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-slate-300 hover:bg-white/5 p-2 rounded-full transition-all" data-icon="help_outline">help_outline</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="User profile avatar photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAToraGPPsG4lL1gAbWw8yFp6PJCMNcrIsxLBz4d8aKqbRBfjiocmYEv7DSpDom_xarBkKyYWfDTydviZnKXe1wZJvGXcubkOolgiCDbEwmvqWiXXQIMq99c5og6YIioRR9viVWtUt0tt6yv4TuMFJ0YlCN1GKPkT4Bux3GkeOTlUoA3Pe1beaxI832F4xUoMQwv_fJiu1R901EXFNeAe1aQYb1cYHfQNZyotiXQo1m3z2s1-bU8CXDOIbsaYqmoFZHSLT8fEL4Urt9"/>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto space-y-16">
+<!-- Hero Search Section -->
+<section class="relative text-center space-y-8 py-12">
+<div class="space-y-4">
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold editorial-header text-on-surface">How can we <span class="text-primary">help?</span></h1>
+<p class="font-body text-on-surface-variant text-lg max-w-2xl mx-auto">Search for answers, browse categories, or track your active tickets in the Nikat ecosystem.</p>
+</div>
+<div class="max-w-3xl mx-auto relative">
+<div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</div>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-full py-6 pl-16 pr-8 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/50 text-lg shadow-2xl shadow-black/20 glass-effect" placeholder="Search for articles, topics, or keywords..." type="text"/>
+</div>
+<!-- Quick Links -->
+<div class="flex flex-wrap justify-center gap-3">
+<span class="text-on-surface-variant text-sm font-label uppercase tracking-widest pt-2 px-4">Popular:</span>
+<button class="bg-surface-container-low hover:bg-surface-container-high text-primary px-5 py-2 rounded-full text-sm font-medium transition-colors border border-outline-variant/10">Reset Password</button>
+<button class="bg-surface-container-low hover:bg-surface-container-high text-primary px-5 py-2 rounded-full text-sm font-medium transition-colors border border-outline-variant/10">Payment Methods</button>
+<button class="bg-surface-container-low hover:bg-surface-container-high text-primary px-5 py-2 rounded-full text-sm font-medium transition-colors border border-outline-variant/10">Refund Policy</button>
+</div>
+</section>
+<!-- Bento Grid: FAQs & Tracking -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Category Cards (Asymmetric Layout) -->
+<div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+<!-- Account -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6 hover:bg-surface-container group transition-all">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="person">person</span>
+</div>
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-2">Account Management</h3>
+<p class="text-on-surface-variant text-sm mb-4">Profile settings, security, and verification processes.</p>
+<ul class="space-y-2 text-sm text-primary/80">
+<li class="hover:text-primary cursor-pointer flex items-center gap-2"><span class="w-1 h-1 bg-primary rounded-full"></span>Changing your email</li>
+<li class="hover:text-primary cursor-pointer flex items-center gap-2"><span class="w-1 h-1 bg-primary rounded-full"></span>Two-factor authentication</li>
+</ul>
+</div>
+</div>
+<!-- Payments -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6 hover:bg-surface-container group transition-all">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl" data-icon="payments">payments</span>
+</div>
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-2">Billing &amp; Payments</h3>
+<p class="text-on-surface-variant text-sm mb-4">Invoices, payment methods, and subscription tiers.</p>
+<ul class="space-y-2 text-sm text-secondary/80">
+<li class="hover:text-secondary cursor-pointer flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Manage cards</li>
+<li class="hover:text-secondary cursor-pointer flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Understanding fees</li>
+</ul>
+</div>
+</div>
+<!-- Service Bookings -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6 hover:bg-surface-container group transition-all sm:col-span-2">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="space-y-4 max-w-md">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-3xl" data-icon="calendar_month">calendar_month</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Service Bookings</h3>
+<p class="text-on-surface-variant text-sm">Managing your upcoming appointments and cancellations across all providers.</p>
+</div>
+<div class="flex-shrink-0 grid grid-cols-2 gap-3">
+<div class="bg-surface/50 p-4 rounded-lg border border-outline-variant/10 text-center">
+<span class="block text-2xl font-bold text-on-surface">24</span>
+<span class="text-[10px] uppercase tracking-widest text-outline">Articles</span>
+</div>
+<div class="bg-surface/50 p-4 rounded-lg border border-outline-variant/10 text-center">
+<span class="block text-2xl font-bold text-on-surface">12</span>
+<span class="text-[10px] uppercase tracking-widest text-outline">Guides</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- My Tickets Sidebar -->
+<div class="md:col-span-4 bg-surface-container p-8 rounded-xl space-y-8 h-full border border-outline-variant/10">
+<div class="flex justify-between items-center">
+<h2 class="font-headline text-2xl font-bold text-on-surface">My Tickets</h2>
+<span class="bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded">ACTIVE</span>
+</div>
+<div class="space-y-4">
+<!-- Ticket 1 -->
+<div class="p-4 rounded-lg bg-surface-container-low border-l-4 border-primary space-y-2 cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-wider">
+<span class="text-primary">#NIK-4829</span>
+<span class="text-outline">2h ago</span>
+</div>
+<p class="text-sm font-bold text-on-surface">Delayed Refund for Order #9021</p>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-xs" data-icon="chat">chat</span>
+<span>Awaiting your reply</span>
+</div>
+</div>
+<!-- Ticket 2 -->
+<div class="p-4 rounded-lg bg-surface-container-low border-l-4 border-secondary space-y-2 cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-wider">
+<span class="text-secondary">#NIK-3910</span>
+<span class="text-outline">Yesterday</span>
+</div>
+<p class="text-sm font-bold text-on-surface">Verification documents rejected</p>
+<div class="flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+<span>Resolved</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 rounded-xl bg-surface-container-highest text-on-surface font-bold text-sm hover:bg-surface-bright transition-all flex items-center justify-center gap-2">
+                    View All Request History
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Contact Form Section -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<div class="space-y-4">
+<h2 class="font-headline text-4xl font-extrabold editorial-header text-on-surface">Still need help?</h2>
+<p class="text-on-surface-variant leading-relaxed">Our support team is available 24/7. Submit a query and we'll get back to you within 4 business hours. For urgent issues, please use the live chat in the mobile app.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="mail">mail</span>
+<div>
+<span class="block font-bold text-on-surface">Email Support</span>
+<span class="text-sm text-outline">support@nikat.com</span>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="forum">forum</span>
+<div>
+<span class="block font-bold text-on-surface">Live Chat</span>
+<span class="text-sm text-outline">Available in App</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-10 rounded-2xl shadow-xl border border-outline-variant/10">
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest text-outline">Subject</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50" placeholder="Summary of your issue" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest text-outline">Category</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50">
+<option>Technical Issue</option>
+<option>Billing Question</option>
+<option>Account Access</option>
+<option>Feedback</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest text-outline">Urgency</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50">
+<option>Normal</option>
+<option>High</option>
+<option>Critical</option>
+</select>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest text-outline">Description</label>
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50" placeholder="How can we help? Please provide as much detail as possible..." rows="4"></textarea>
+</div>
+<button class="w-full bg-gradient-to-r from-primary to-primary-container py-4 rounded-xl text-on-primary font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Submit Support Ticket</button>
+</form>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-16 bg-slate-950/80 backdrop-blur-lg flex justify-around items-center px-4 pb-safe rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.5)] z-50">
+<div class="flex flex-col items-center justify-center text-slate-500">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-blue-500/20 text-blue-400 rounded-xl px-4 py-1 scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="Confirmation_number">confirmation_number</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Tickets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-bold uppercase tracking-widest mt-1">Profile</span>
+</div>
+</nav>
+<!-- Decorative Gradient Blobs -->
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+<div class="fixed bottom-[10%] right-[-10%] w-[30%] h-[30%] bg-tertiary/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+</body></html>

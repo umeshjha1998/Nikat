@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-container": "#006d37",
+                        "on-error-container": "#ffa8a3",
+                        "on-tertiary": "#702073",
+                        "secondary": "#6bfe9c",
+                        "on-secondary": "#005f2f",
+                        "surface-container": "#0e1442",
+                        "outline": "#6e739d",
+                        "surface-container-high": "#131a4c",
+                        "surface-container-highest": "#182056",
+                        "on-primary-fixed": "#000000",
+                        "on-background": "#e2e3ff",
+                        "primary-container": "#2aa7ff",
+                        "tertiary-fixed": "#fc9df7",
+                        "on-surface-variant": "#a3a8d5",
+                        "inverse-on-surface": "#4d527a",
+                        "primary-fixed-dim": "#0099f0",
+                        "error": "#ff716c",
+                        "background": "#05092f",
+                        "tertiary": "#ffb3f9",
+                        "tertiary-fixed-dim": "#ec90e9",
+                        "on-secondary-container": "#e3ffe4",
+                        "inverse-primary": "#00639e",
+                        "on-tertiary-fixed": "#47004c",
+                        "tertiary-dim": "#ec90e9",
+                        "surface-container-lowest": "#000000",
+                        "on-surface": "#e2e3ff",
+                        "surface": "#05092f",
+                        "secondary-dim": "#5bef90",
+                        "tertiary-container": "#fc9df7",
+                        "error-container": "#9f0519",
+                        "surface-container-low": "#080e38",
+                        "primary-dim": "#15a4ff",
+                        "primary-fixed": "#2aa7ff",
+                        "secondary-fixed-dim": "#5bef90",
+                        "error-dim": "#d7383b",
+                        "surface-variant": "#182056",
+                        "on-tertiary-container": "#651469",
+                        "surface-dim": "#05092f",
+                        "secondary-fixed": "#6bfe9c",
+                        "on-tertiary-fixed-variant": "#702073",
+                        "on-primary-fixed-variant": "#002e4d",
+                        "on-primary-container": "#00253f",
+                        "on-secondary-fixed": "#004a23",
+                        "outline-variant": "#40456c",
+                        "surface-bright": "#1e2660",
+                        "primary": "#5eb4ff",
+                        "surface-tint": "#5eb4ff",
+                        "on-secondary-fixed-variant": "#006a35",
+                        "on-error": "#490006",
+                        "inverse-surface": "#fbf8ff",
+                        "on-primary": "#003151"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-nav {
+            background: rgba(14, 20, 66, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #05092f; }
+        ::-webkit-scrollbar-thumb { background: #182056; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-black/40">
+<div class="flex justify-between items-center px-6 py-3 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-blue-500 tracking-tighter font-headline">Nikat</span>
+<div class="hidden md:flex items-center bg-surface-container-highest rounded-full px-4 py-1.5 gap-3 border border-outline-variant/15 focus-within:ring-2 ring-primary/50 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 placeholder:text-on-surface-variant/50" placeholder="Search Nikat..." type="text"/>
+</div>
+<div class="hidden lg:flex gap-6 font-headline font-bold tracking-tight">
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Community</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Services</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Shops</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up of a smiling professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmBdB3YC65aO-ajBlbO1fbSre06lo62Al8nHMwTV2BN11sx9tVLHhWmrSxLjJ9OARFXCUxLLlagu34f8Cu9eSavmhx7bZwFLoBpdGFdRhCChu8B6CYS25jkpSzU3-A4OXrCQa1pT5iMInYmR6C1_p5_HH7lmTqEoGfSYS-5cDdCfR7A3cvg38G1ja6PunxaYdA2cL0byx3vBdYVkCT4DZiYxXq5x4WCWsN-cdkhFRZQA_lRCt4LZsr2f3HcbEyfzDCO_2Skgse8DJl"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 px-6 max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="mb-10">
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                Results for "<span class="text-primary">Home Repair</span>"
+            </h1>
+<p class="text-on-surface-variant font-medium">Found 124 results across Nikat Ecosystem</p>
+</header>
+<!-- Filter Bar -->
+<section class="flex flex-wrap items-center gap-3 mb-12 overflow-x-auto pb-4 scrollbar-hide">
+<button class="flex items-center gap-2 bg-primary text-on-primary font-bold px-5 py-2.5 rounded-full shadow-lg shadow-primary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">tune</span>
+<span class="text-sm font-label uppercase tracking-wider">All Filters</span>
+</button>
+<div class="h-6 w-px bg-outline-variant/30 mx-2"></div>
+<button class="flex items-center gap-2 bg-surface-container hover:bg-surface-container-high text-on-surface px-4 py-2 rounded-xl transition-all border border-outline-variant/10">
+<span class="text-sm">Distance: <span class="font-bold text-primary">5km</span></span>
+<span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+<button class="flex items-center gap-2 bg-surface-container hover:bg-surface-container-high text-on-surface px-4 py-2 rounded-xl transition-all border border-outline-variant/10">
+<span class="text-sm">Rating: <span class="font-bold text-primary">4.5+</span></span>
+</button><button class="flex items-center gap-2 bg-surface-container hover:bg-surface-container-high text-on-surface px-4 py-2 rounded-xl transition-all border border-outline-variant/10">
+<span class="text-sm">Service: <span class="font-bold text-primary">All Categories</span></span>
+<span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+<button class="flex items-center gap-2 bg-surface-container hover:bg-surface-container-high text-on-surface px-4 py-2 rounded-xl transition-all border border-outline-variant/10">
+<span class="text-sm">Category</span>
+<span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+<div class="flex items-center gap-2 bg-secondary-container/20 text-secondary border border-secondary/20 px-4 py-2 rounded-xl">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-sm font-bold uppercase tracking-widest font-label">Open Now</span>
+</div>
+</section>
+<!-- Bento Grid Results -->
+<div class="space-y-16">
+<!-- Shops & Services (Featured Grid) -->
+<section>
+<div class="flex items-end justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">storefront</span>
+<h2 class="font-headline text-2xl font-bold tracking-tight">Top Shops &amp; Services</h2>
+</div>
+<a class="text-primary font-bold text-sm hover:underline underline-offset-4 decoration-primary/50" href="#">View all</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Shop Card 1 -->
+<div class="group bg-surface-container-low rounded-xl overflow-hidden shadow-xl transition-all hover:-translate-y-1">
+<div class="relative h-48 overflow-hidden">
+<img alt="Hardware store interior" class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="Clean modern hardware store interior with wooden shelves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwoLhPWUreL1rPKoYu7afhjBsF4SbTB27EkOslTUOQ7uOvPpKXMIY4gttpXr1xVftsBMiuKgLVRN8UvMfYDBxnqZ_KmP6jy9cUEqEOTjlTiHVyWbWdzrDN-z6nC-jxGzGRqloYouwthY0tQ-Q8gnIqQ4_ca5uSpt1nLpYdWwSIVnjMQ7oUcbdf8zmmWp0xt8rbfHpxaORbVZnXxgEJw2nuBgTKTby-uXzj_6Tb_Krq3TlXQxD8bH7GIneNmH5xGmGDrnBjF8hLmpnq"/>
+<div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.9</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-xl font-bold">The Fixer's Hub</h3>
+<span class="text-secondary text-[10px] font-bold uppercase tracking-tighter bg-secondary/10 px-2 py-0.5 rounded border border-secondary/20">Open Now</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2 font-body">Premium hardware, tool rentals, and expert home renovation consultations in downtown.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs font-semibold">1.2 km away</span>
+</div>
+<span class="bg-tertiary-container/20 text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold font-label uppercase tracking-widest">Premium</span>
+</div>
+</div>
+</div>
+<!-- Shop Card 2 -->
+<div class="group bg-surface-container-low rounded-xl overflow-hidden shadow-xl transition-all hover:-translate-y-1">
+<div class="relative h-48 overflow-hidden">
+<img alt="Tech repair workshop" class="w-full h-full object-cover transition-transform group-hover:scale-110" data-alt="Close up of technician hands repairing electronic circuit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG4TG9uqWMReIoQkCD8cMECbV95NPKAHdkqvjvOD8OGcTQBDr6YoKg9im1Edhp-3sWWIQH1iDm2ul0o1UkVjHTN3GNJWSNbu-kouNZFKmHS2qptK5NagBQKD_4UoxoLPonBNJxpExay3AmnlHkaKxGqmAcpXxbjErSh9o6eI5s2HmdihTekma-dLgjesODjF6jTdGx0iq9yopQq7RzS5-_-sRk_evbvG-olG_x_jltCE_HW8xLV-CgrroO1XI8879vFIHAKjla2eDy"/>
+<div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.7</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-xl font-bold">Circuit Surgeons</h3>
+<span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-tighter bg-surface-container-highest px-2 py-0.5 rounded border border-outline-variant/20">Closes at 6 PM</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-4 line-clamp-2 font-body">Specialized in laptop, smartphone and micro-electronics repair with warranty.</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs font-semibold">3.8 km away</span>
+</div>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold font-label uppercase tracking-widest">Tech</span>
+</div>
+</div>
+</div>
+<!-- Shop Card 3 (Bento Style Vertical) -->
+<div class="bg-surface-container-low rounded-xl p-6 shadow-xl flex flex-col justify-between border-l-4 border-primary">
+<div>
+<span class="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-3 block">Promotion</span>
+<h3 class="font-headline text-2xl font-extrabold mb-4 leading-tight">Need a Plumber <br/>Right Now?</h3>
+<p class="text-on-surface-variant text-sm mb-6">Connect with verified emergency technicians in under 15 minutes.</p>
+</div>
+<button class="w-full py-3 bg-primary-container text-on-primary-container font-black rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                            Find Emergency Service
+                        </button>
+</div>
+</div>
+</section>
+<!-- Technicians & Experts (List Style) -->
+<section>
+<div class="flex items-end justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary text-3xl">engineering</span>
+<h2 class="font-headline text-2xl font-bold tracking-tight">Verified Technicians</h2>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Tech Card 1 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/10 hover:bg-surface-container transition-all">
+<div class="relative shrink-0">
+<img alt="Technician portrait" class="w-20 h-20 rounded-full object-cover" data-alt="Portrait of a smiling technician in work clothes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZsq-XWTNPgwCnmuNumtaHjho5N0Vgk5WIig1Hoy33pZf0wgiGBoI5D5REoinu3-k_-eD0LZLjPcR7LSIvkqruu55Ty1rmJWU-DEHxeQ9CRZXATT2Nkg-Xs7z67VQuVvpwfrbKduOKMmNydg6gArB8kuciTi1rI385x3yzYIdjKz0rbexrm1FOjRFqeEAdtlP2sD4k5RsCYJqzW6JmJrgK_Hp6sPT956WO9LVz3v_xxxfQUuEopl2uylhd77c8xOBOfFzjchGc7Cwh"/>
+<div class="absolute -bottom-1 -right-1 bg-secondary p-1 rounded-full border-4 border-surface-container-low">
+<span class="material-symbols-outlined text-on-secondary text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline font-bold text-lg">Marcus Chen</h4>
+<p class="text-primary text-xs font-bold uppercase tracking-wider">Master Electrician</p>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">5.0</span>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">(42 Reviews)</span>
+</div>
+</div>
+<div class="flex gap-2 mt-3">
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded text-on-surface-variant">Wiring</span>
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded text-on-surface-variant">EV Stations</span>
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded text-on-surface-variant">+3 more</span>
+</div>
+</div>
+</div>
+<!-- Tech Card 2 -->
+<div class="flex items-center gap-5 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/10 hover:bg-surface-container transition-all">
+<div class="relative shrink-0">
+<img alt="Designer portrait" class="w-20 h-20 rounded-full object-cover" data-alt="Professional woman architect with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdZYEaGZRJm6OQGztHjnEEdMX7RdlzkDj396Jm20yptWsaOUawDaRxxSv4HgeKkMKntP1WZwrHSDWvb4Ts0OMVGhBxlrW42R82zmaIgfdj_bDf0boeMu8J3zv1ShBpDBzfqKQxqC2uuGqe5ZwH30ISRzX_2AjsANqR8XsD-mWj04ho5dNK80SLetmrCt85RBLBdu-rtUjKWsqmpESIJRfO3qlOhDrEdiSti3j9NeVPWUc6jtfm3YniUrOC6bpm2tj99wnqf87UXVvr"/>
+<div class="absolute -bottom-1 -right-1 bg-secondary p-1 rounded-full border-4 border-surface-container-low">
+<span class="material-symbols-outlined text-on-secondary text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline font-bold text-lg">Elena Rodriguez</h4>
+<p class="text-primary text-xs font-bold uppercase tracking-wider">Interior Decorator</p>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">4.8</span>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">(118 Reviews)</span>
+</div>
+</div>
+<div class="flex gap-2 mt-3">
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded text-on-surface-variant">Color Theory</span>
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded text-on-surface-variant">Minimalism</span>
+<span class="text-[10px] px-2 py-0.5 bg-surface-container-highest rounded text-on-surface-variant">IKEA Hack</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Map View Callout (Asymmetric) -->
+<section class="relative bg-surface-container rounded-3xl overflow-hidden p-8 md:p-12 min-h-[400px] flex items-center">
+<div class="absolute inset-0 opacity-40 mix-blend-overlay">
+<img alt="Map graphic" class="w-full h-full object-cover" data-alt="Stylized dark minimalist city map with neon blue paths" data-location="San Francisco" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgvr-n_Q-8lh0SlqZ0sNzFC6W2LxHcUCdJacJnJog5NF6kMmpibPpgFDoGuGG4lK6euLCQBlL-z3s7hNDaLj3Y30p8Y93jka--zPxakC70pBfodwU9hRum6pGBAzY_gVQa44oOlFIn7KcR9jZFrdXT9gSk7fDIxt7EJFioLDYuo_1z0QtnAVobT0mTaA2DMMT7jV71m1HntpDfJPyTmb8Ky7Rtp3P4XUg3Dtbxs0lZDBLw1sGiO_Ld10Ea71C7-3baP3s75UpQ7kWs"/>
+</div>
+<div class="relative z-10 max-w-md">
+<h2 class="font-headline text-3xl md:text-4xl font-black mb-6 leading-tight">See what's around <br/>the corner.</h2>
+<p class="text-on-surface-variant mb-8 font-medium">Use our interactive Nikat Map to find shops and technicians currently active in your neighborhood.</p>
+<button class="px-8 py-4 bg-primary text-on-primary-fixed font-black rounded-full shadow-2xl shadow-primary/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+<span class="material-symbols-outlined">map</span>
+                        Explore Nearby
+                    </button>
+</div>
+<!-- Asymmetric Floating Card -->
+<div class="hidden lg:block absolute right-12 top-1/2 -translate-y-1/2 w-64 bg-slate-950/80 backdrop-blur-xl p-6 rounded-2xl border border-outline-variant/20 rotate-3 shadow-2xl">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary">near_me</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase">Current Area</p>
+<p class="font-headline font-bold">North District</p>
+</div>
+</div>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">32 active service providers found in this zone today.</p>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 w-full py-12 px-6 mt-auto border-t border-slate-800/50">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+<div class="space-y-4">
+<span class="text-lg font-bold text-slate-200">Nikat Platform</span>
+<p class="text-slate-500 font-['Manrope'] text-sm tracking-wide max-w-xs leading-relaxed">The Luminous Navigator for modern communities. Connect, discover, and build with verified local talent.</p>
+<div class="flex gap-4">
+<button class="p-2 bg-surface-container rounded-lg hover:text-blue-400 transition-colors">
+<span class="material-symbols-outlined">public</span>
+</button>
+<button class="p-2 bg-surface-container rounded-lg hover:text-blue-400 transition-colors">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-3">
+<h5 class="text-blue-400 font-semibold text-sm">Navigation</h5>
+<a class="text-slate-500 hover:text-slate-300 hover:underline decoration-blue-500/50 underline-offset-4 transition-opacity font-['Manrope'] text-sm tracking-wide" href="#">About</a>
+<a class="text-slate-500 hover:text-slate-300 hover:underline decoration-blue-500/50 underline-offset-4 transition-opacity font-['Manrope'] text-sm tracking-wide" href="#">Help Center</a>
+<a class="text-slate-500 hover:text-slate-300 hover:underline decoration-blue-500/50 underline-offset-4 transition-opacity font-['Manrope'] text-sm tracking-wide" href="#">Contact</a>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="text-blue-400 font-semibold text-sm">Legal</h5>
+<a class="text-slate-500 hover:text-slate-300 hover:underline decoration-blue-500/50 underline-offset-4 transition-opacity font-['Manrope'] text-sm tracking-wide" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-slate-300 hover:underline decoration-blue-500/50 underline-offset-4 transition-opacity font-['Manrope'] text-sm tracking-wide" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-800/30 text-center">
+<p class="text-slate-500 font-['Manrope'] text-sm tracking-wide">© 2024 Nikat Platform. All rights reserved.</p>
+</div>
+</footer>
+<!-- Bottom Nav for Mobile -->
+<div class="md:hidden fixed bottom-0 w-full glass-nav p-3 flex justify-around items-center z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Explore</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">search</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Search</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">bookmark</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Saved</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Profile</span>
+</button>
+</div>
+</body></html>

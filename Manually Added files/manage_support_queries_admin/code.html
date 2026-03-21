@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#182056",
+              "on-secondary-container": "#e3ffe4",
+              "outline": "#6e739d",
+              "on-error-container": "#ffa8a3",
+              "on-error": "#490006",
+              "surface-bright": "#1e2660",
+              "tertiary-fixed": "#fc9df7",
+              "tertiary-container": "#fc9df7",
+              "on-secondary-fixed-variant": "#006a35",
+              "error-dim": "#d7383b",
+              "primary": "#5eb4ff",
+              "error": "#ff716c",
+              "on-secondary": "#005f2f",
+              "surface-tint": "#5eb4ff",
+              "on-tertiary-fixed": "#47004c",
+              "on-secondary-fixed": "#004a23",
+              "inverse-surface": "#fbf8ff",
+              "secondary-fixed": "#6bfe9c",
+              "primary-fixed": "#2aa7ff",
+              "error-container": "#9f0519",
+              "tertiary-fixed-dim": "#ec90e9",
+              "secondary-dim": "#5bef90",
+              "primary-dim": "#15a4ff",
+              "outline-variant": "#40456c",
+              "surface-container-low": "#080e38",
+              "on-primary-fixed": "#000000",
+              "surface-dim": "#05092f",
+              "on-surface-variant": "#a3a8d5",
+              "tertiary-dim": "#ec90e9",
+              "on-tertiary-fixed-variant": "#702073",
+              "primary-container": "#2aa7ff",
+              "on-background": "#e2e3ff",
+              "inverse-on-surface": "#4d527a",
+              "on-primary": "#003151",
+              "surface": "#05092f",
+              "secondary-fixed-dim": "#5bef90",
+              "tertiary": "#ffb3f9",
+              "background": "#05092f",
+              "surface-variant": "#182056",
+              "primary-fixed-dim": "#0099f0",
+              "on-primary-container": "#00253f",
+              "inverse-primary": "#00639e",
+              "on-tertiary": "#702073",
+              "surface-container-high": "#131a4c",
+              "on-primary-fixed-variant": "#002e4d",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-container": "#651469",
+              "surface-container": "#0e1442",
+              "on-surface": "#e2e3ff",
+              "secondary": "#6bfe9c",
+              "secondary-container": "#006d37"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #05092f;
+            color: #e2e3ff;
+            font-family: 'Manrope', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary/30 min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-black/40 flex justify-between items-center px-6 h-16 w-full font-['Plus_Jakarta_Sans'] text-sm tracking-tight no-border space-y-4">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Support Hub</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-slate-300 hover:text-white transition-colors" href="#">Knowledge Base</a>
+<a class="text-blue-400 border-b-2 border-blue-400 pb-1" href="#">My Tickets</a>
+<a class="text-slate-300 hover:text-white transition-colors" href="#">Community</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<input class="bg-surface-container-highest border-none rounded-full px-4 py-1.5 w-64 text-xs focus:ring-1 focus:ring-primary text-on-surface-variant outline-none" placeholder="Search support..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1.5 text-lg text-outline">search</span>
+</div>
+<button class="material-symbols-outlined text-slate-300 hover:bg-white/5 transition-all duration-200 p-2 rounded-full">notifications</button>
+<button class="material-symbols-outlined text-slate-300 hover:bg-white/5 transition-all duration-200 p-2 rounded-full">help_outline</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant scale-95 active:scale-90 transition-transform cursor-pointer">
+<img alt="User profile avatar" data-alt="Admin user profile picture avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7qQG7vCNDZ0Ip-6LlwOndGqpsFD1sgz-pFzny_sVmNtphAM9-2q3ngOnZ-tL4VnOrMVjqYHVjCCLWlj328UD8AG6Ol-eQXLYe7FFsMKhxami07_SVDwV5kQ7oLnJ98gP22y-yS2weHG1FvMssN2co5O3l4ZAuuodjo5iEU4c1RH4z2bXlZFqbYzeNhybg_pPOYl_2uj6rgfwyIpZx-HGejC1_qkoAK06ppuxqFL-xEE6v5lu4w-t-FpxVhg3HZ_tRQg_f0Eqv9Qk6"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar (Shared Component) -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-slate-900 font-['Plus_Jakarta_Sans'] text-sm font-medium py-4 flat no shadows">
+<div class="px-6 mb-8 mt-16">
+<h2 class="text-lg font-black text-slate-100 mb-1">Admin Panel</h2>
+<p class="text-xs text-slate-400 uppercase tracking-widest">Support Management</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition-colors opacity-80 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-500/10 text-blue-400 border-r-4 border-blue-500 rounded-l-xl transition-colors" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span>Open Tickets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition-colors opacity-80 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">check_circle</span>
+<span>Resolved</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition-colors opacity-80 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Articles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition-colors opacity-80 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-3 rounded-xl transition-all scale-95 active:scale-90 flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+<span>New Article</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-3 text-error-dim hover:bg-error-container/10 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-20 pb-24 px-4 md:px-8">
+<!-- Header Section -->
+<header class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+<div>
+<h1 class="text-3xl md:text-4xl font-headline font-extrabold text-on-surface tracking-tight">Manage Queries</h1>
+<p class="text-on-surface-variant font-body mt-1">Review and action pending support requests for Nikat users.</p>
+</div>
+<div class="flex items-center gap-3 overflow-x-auto pb-2 lg:pb-0 hide-scrollbar">
+<button class="whitespace-nowrap px-5 py-2 rounded-full bg-primary text-on-primary font-bold text-sm shadow-lg shadow-primary/20">All Tickets</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-colors">Pending Approval</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-colors">Urgent</button>
+</div>
+</header>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-low p-5 rounded-xl border-none">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline">Open Tickets</span>
+<span class="material-symbols-outlined text-primary">confirmation_number</span>
+</div>
+<div class="text-3xl font-headline font-bold">124</div>
+<div class="text-[10px] text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> 12% from yesterday
+                </div>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl border-none">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline">Avg Response</span>
+<span class="material-symbols-outlined text-tertiary">schedule</span>
+</div>
+<div class="text-3xl font-headline font-bold">2.4h</div>
+<div class="text-[10px] text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_down</span> 0.5h faster
+                </div>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl border-none">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline">Resolved Today</span>
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+</div>
+<div class="text-3xl font-headline font-bold">89</div>
+<div class="text-[10px] text-outline mt-1 italic">Daily target: 100</div>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl border-none">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline">SLA Compliance</span>
+<span class="material-symbols-outlined text-error">verified_user</span>
+</div>
+<div class="text-3xl font-headline font-bold">96%</div>
+<div class="text-[10px] text-on-surface-variant mt-1">Stable across regions</div>
+</div>
+</div>
+<!-- Filters & Search Shell -->
+<div class="bg-surface-container-low rounded-t-2xl p-6 flex flex-col md:flex-row items-center gap-6">
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container border-none rounded-xl py-3 pl-12 pr-4 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Search by Ticket ID, User, or Keyword..." type="text"/>
+</div>
+<div class="flex items-center gap-2 overflow-x-auto w-full hide-scrollbar">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="text-xs font-label text-outline uppercase tracking-wider">Status:</span>
+<select class="bg-transparent border-none text-xs font-bold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-8">
+<option>All Statuses</option>
+<option>Open</option>
+<option>In Progress</option>
+<option>Resolved</option>
+<option>Pending Approval</option>
+</select>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/10">
+<span class="text-xs font-label text-outline uppercase tracking-wider">Priority:</span>
+<select class="bg-transparent border-none text-xs font-bold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-8">
+<option>All Priorities</option>
+<option>Critical</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Data Table (The Core) -->
+<div class="bg-surface-container-low overflow-x-auto rounded-b-2xl mb-8">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-outline text-[10px] uppercase tracking-[0.2em] font-label">
+<th class="px-6 py-4">Ticket ID</th>
+<th class="px-6 py-4">User Name</th>
+<th class="px-6 py-4">Category</th>
+<th class="px-6 py-4">Priority</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Date Submitted</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-primary text-sm">#TK-8821</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-primary">JD</div>
+<div>
+<div class="text-sm font-semibold text-on-surface">John Doe</div>
+<div class="text-[10px] text-outline">Premium Tier</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold">Payment Failure</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-xs font-medium text-on-surface">Critical</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">Open</span>
+</td>
+<td class="px-6 py-5 text-xs text-outline">Oct 24, 2023 • 09:42</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/20 text-primary rounded-lg transition-colors material-symbols-outlined" title="Respond">reply</button>
+<button class="p-2 hover:bg-tertiary/20 text-tertiary rounded-lg transition-colors material-symbols-outlined" title="Reassign">person_add</button>
+<button class="p-2 hover:bg-error/20 text-error rounded-lg transition-colors material-symbols-outlined" title="Close">close</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-primary text-sm">#TK-8819</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-primary">SA</div>
+<div>
+<div class="text-sm font-semibold text-on-surface">Sarah Ahmed</div>
+<div class="text-[10px] text-outline">Standard Tier</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold">Account Access</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-xs font-medium text-on-surface">High</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase tracking-widest">In Progress</span>
+</td>
+<td class="px-6 py-5 text-xs text-outline">Oct 24, 2023 • 08:15</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/20 text-primary rounded-lg transition-colors material-symbols-outlined">reply</button>
+<button class="p-2 hover:bg-tertiary/20 text-tertiary rounded-lg transition-colors material-symbols-outlined">person_add</button>
+<button class="p-2 hover:bg-error/20 text-error rounded-lg transition-colors material-symbols-outlined">close</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-primary text-sm">#TK-8815</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-primary">MK</div>
+<div>
+<div class="text-sm font-semibold text-on-surface">Mark Kim</div>
+<div class="text-[10px] text-outline">Pro Tier</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold">UI Bug</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="text-xs font-medium text-on-surface">Medium</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase tracking-widest">Pending Approval</span>
+</td>
+<td class="px-6 py-5 text-xs text-outline">Oct 23, 2023 • 17:30</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/20 text-primary rounded-lg transition-colors material-symbols-outlined">reply</button>
+<button class="p-2 hover:bg-tertiary/20 text-tertiary rounded-lg transition-colors material-symbols-outlined">person_add</button>
+<button class="p-2 hover:bg-error/20 text-error rounded-lg transition-colors material-symbols-outlined">close</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-primary text-sm">#TK-8802</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-primary">RL</div>
+<div>
+<div class="text-sm font-semibold text-on-surface">Rosa Lopez</div>
+<div class="text-[10px] text-outline">Standard Tier</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-[10px] font-bold">Feedback</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-xs font-medium text-on-surface">Low</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-outline-variant/20 text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">Resolved</span>
+</td>
+<td class="px-6 py-5 text-xs text-outline">Oct 23, 2023 • 14:00</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary/20 text-primary rounded-lg transition-colors material-symbols-outlined">visibility</button>
+<button class="p-2 hover:bg-outline-variant/20 text-outline rounded-lg transition-colors material-symbols-outlined">archive</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-xs text-outline font-label">Showing 1 to 4 of 124 results</p>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low text-outline hover:text-on-surface transition-colors material-symbols-outlined">chevron_left</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-on-primary font-bold text-xs">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface font-bold text-xs transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface font-bold text-xs transition-colors">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low text-outline hover:text-on-surface transition-colors material-symbols-outlined">chevron_right</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-16 flex justify-around items-center px-4 pb-safe bg-slate-950/80 backdrop-blur-lg rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.5)] z-50">
+<div class="flex flex-col items-center justify-center text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined">search</span>
+<span>Search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-blue-500/20 text-blue-400 rounded-xl px-4 py-1 text-[10px] font-bold uppercase tracking-widest scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span>Tickets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nikat Admin - Platform Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary": "#005f2f",
+                        "inverse-primary": "#00639e",
+                        "tertiary-container": "#fc9df7",
+                        "error": "#ff716c",
+                        "on-secondary-fixed-variant": "#006a35",
+                        "outline": "#6e739d",
+                        "primary-fixed-dim": "#0099f0",
+                        "inverse-surface": "#fbf8ff",
+                        "on-surface-variant": "#a3a8d5",
+                        "surface-container": "#0e1442",
+                        "error-container": "#9f0519",
+                        "on-primary-fixed-variant": "#002e4d",
+                        "secondary-fixed": "#6bfe9c",
+                        "surface-container-highest": "#182056",
+                        "tertiary-fixed": "#fc9df7",
+                        "primary-fixed": "#2aa7ff",
+                        "secondary-fixed-dim": "#5bef90",
+                        "error-dim": "#d7383b",
+                        "surface-bright": "#1e2660",
+                        "surface-container-lowest": "#000000",
+                        "primary-dim": "#15a4ff",
+                        "surface-tint": "#5eb4ff",
+                        "secondary-dim": "#5bef90",
+                        "surface-container-low": "#080e38",
+                        "surface-container-high": "#131a4c",
+                        "primary-container": "#2aa7ff",
+                        "on-tertiary-fixed": "#47004c",
+                        "tertiary-fixed-dim": "#ec90e9",
+                        "inverse-on-surface": "#4d527a",
+                        "secondary": "#6bfe9c",
+                        "on-tertiary-fixed-variant": "#702073",
+                        "primary": "#5eb4ff",
+                        "on-secondary-container": "#e3ffe4",
+                        "surface-dim": "#05092f",
+                        "surface-variant": "#182056",
+                        "on-secondary-fixed": "#004a23",
+                        "tertiary-dim": "#ec90e9",
+                        "on-primary-container": "#00253f",
+                        "on-tertiary": "#702073",
+                        "on-error": "#490006",
+                        "on-tertiary-container": "#651469",
+                        "on-background": "#e2e3ff",
+                        "on-primary-fixed": "#000000",
+                        "outline-variant": "#40456c",
+                        "surface": "#05092f",
+                        "secondary-container": "#006d37",
+                        "on-error-container": "#ffa8a3",
+                        "background": "#05092f",
+                        "tertiary": "#ffb3f9",
+                        "on-primary": "#003151",
+                        "on-surface": "#e2e3ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #05092f;
+            color: #e2e3ff;
+            font-family: 'Manrope', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(24, 32, 86, 0.6);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-950 border-r border-white/5 flex flex-col h-full py-6 px-4 gap-2 font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="mb-8 px-2">
+<h1 class="text-2xl font-black tracking-tighter text-blue-500" style="">Nikat Platform</h1>
+<p class="text-slate-500 text-xs" style="">System Administrator</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="storefront" style="">storefront</span>
+                Shop Management
+            </a><a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+                Manage Users
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="settings_suggest" style="">settings_suggest</span>
+                Service Management
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="verified_user" style="">verified_user</span>
+                Approvals Workflow
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="settings" style="">settings</span>
+                System Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="security" style="">security</span>
+                Security Logs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl bg-blue-500/10 text-blue-400 border-r-2 border-blue-500 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="analytics" style="">analytics</span>
+                Platform Analytics
+            </a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-lg shadow-primary/20 transition-transform active:scale-95" style="">
+                New Entry
+            </button>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-40 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-black/50 flex items-center justify-between px-6 h-16 w-full ml-64 font-['Plus_Jakarta_Sans'] antialiased">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+<span class="material-symbols-outlined text-sm" data-icon="search" style="">search</span>
+</span>
+<input class="bg-slate-900/40 border-0 rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-blue-400 w-64 placeholder:text-slate-500" placeholder="Search analytics..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 mr-64">
+<button class="p-2 rounded-lg text-slate-400 hover:bg-white/5 transition-colors active:scale-95" style="">
+<span class="material-symbols-outlined" data-icon="notifications" style="">notifications</span>
+</button>
+<button class="p-2 rounded-lg text-slate-400 hover:bg-white/5 transition-colors active:scale-95" style="">
+<span class="material-symbols-outlined" data-icon="help_outline" style="">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest flex items-center justify-center border border-white/10 overflow-hidden">
+<img alt="Admin" class="h-full w-full object-cover" data-alt="Admin user profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCune2_Cq8zg3rZeeKDJqYx2ssyZgFvL7o10J9pc_Lk5RJdf7bKjA-7JbL-Exk6wSxhH9jwY7ceLiQn4hZLL8YMZQEaH69GW5ORuM_VqVoS8KWeeud1Oee_GFOy257fePwTLmD5eYSLggoB4eAclfoG3kHrJX-0lpSrgCWayIqua5a0rKNOtmuGieoWvD88JGIpyh_vwA9-E6mOQK2wiRJ-9HtuqtKmUiOC8EToYkkCnwE7ugESHmW6Y_UDQPBwG7QkOy-sXGHvxDZ7" style=""/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<span class="text-primary font-bold tracking-widest text-[10px] uppercase mb-2 block" style="">Executive Overview</span>
+<h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface" style="">Platform Intelligence</h2>
+</div>
+<div class="flex gap-3">
+<div class="bg-surface-container px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-medium border border-white/5" style="">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="calendar_today" style="">calendar_today</span>
+                    Last 30 Days
+                </div>
+<button class="bg-surface-container-high px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold border border-white/10 hover:bg-surface-bright transition-colors" style="">
+<span class="material-symbols-outlined text-lg" data-icon="download" style="">download</span>
+                    Export PDF
+                </button>
+</div>
+</div>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-12 gap-6 mb-8">
+<!-- Growth Chart -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-low p-6 rounded-[2rem] relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="trending_up" style="">trending_up</span>
+</div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-8">
+<div>
+<p class="text-on-surface-variant text-sm font-medium" style="">User Acquisition &amp; Retention</p>
+<h3 class="text-2xl font-headline font-bold text-on-surface mt-1" style="">Growth Velocity</h3>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs text-on-surface-variant" style="">New Users</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-tertiary"></span>
+<span class="text-xs text-on-surface-variant" style="">Active Sessions</span>
+</div>
+</div>
+</div>
+<!-- Mock Line Chart -->
+<div class="h-64 flex items-end gap-2 px-2">
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 40%">
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover/bar:opacity-100 transition-opacity rounded-t-lg"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 55%">
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover/bar:opacity-100 transition-opacity rounded-t-lg"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 45%">
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover/bar:opacity-100 transition-opacity rounded-t-lg"></div>
+</div>
+<div class="flex-1 bg-primary rounded-t-lg relative group/bar" style="height: 70%">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-bold py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap" style="">+24% Peak</div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 60%"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 85%"></div>
+<div class="flex-1 bg-primary rounded-t-lg relative group/bar" style="height: 95%"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 75%"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 65%"></div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group/bar" style="height: 80%"></div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+<span class="" style="">Mon</span><span class="" style="">Tue</span><span class="" style="">Wed</span><span class="" style="">Thu</span><span class="" style="">Fri</span><span class="" style="">Sat</span><span class="" style="">Sun</span>
+</div>
+</div>
+</div>
+<!-- Revenue Trend -->
+<div class="col-span-12 lg:col-span-4 bg-gradient-to-br from-surface-container to-surface-container-high p-6 rounded-[2rem] flex flex-col justify-between border border-white/5">
+<div>
+<div class="flex justify-between items-center mb-6">
+<span class="p-3 rounded-2xl bg-secondary/10 text-secondary">
+<span class="material-symbols-outlined" data-icon="payments" data-weight="fill" style="">payments</span>
+</span>
+<div class="bg-secondary/20 text-secondary text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1" style="">
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_upward" style="">arrow_upward</span>
+                            12.5%
+                        </div>
+</div>
+<p class="text-on-surface-variant text-sm font-medium" style="">Monthly Recurring Revenue</p>
+<h3 class="text-4xl font-headline font-black text-on-surface mt-2" style="">₹242,850.00</h3>
+</div>
+<div class="mt-8 space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant" style="">Shop Subscriptions</span>
+<span class="font-bold" style="">$184k</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4"></div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant" style="">Service Commissions</span>
+<span class="font-bold" style="">$58k</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/4"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Top Performing Shops -->
+<div class="col-span-12 md:col-span-6 bg-surface-container-low rounded-[2rem] overflow-hidden">
+<div class="p-8 border-b border-white/5 flex justify-between items-center">
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">Top Performing Shops</h3>
+<button class="text-primary text-xs font-bold hover:underline" style="">View All</button>
+</div>
+<div class="p-4">
+<div class="space-y-2">
+<div class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-2xl transition-colors">
+<div class="h-12 w-12 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Shop 1" class="h-full w-full object-cover" data-alt="High-end urban coffee shop interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-IjZmFqxGhsCa650O4TjK8P94plJitZKaiSNSZm_xblSgtcePYagb0FIssaN44gGhH_qpxH-B4b5dnl9pB0JIHqbrvKjQ3ljCXiev2rl8Z-totJoHoNjWd5Zu4f5671Ec9h9g_AMJmkBcTBIhiT3I4epbUJWBvQ4Zxj8UFjLf7JlQssguAJYe-R7qp1bsWNhbRh7lIPXjxQ-WrXOpxdG8Gs31pPPPx9fAFhXzqCT-5Snkp2lackOCRpi4X9Cgz-hl8oU6AMayarbU" style=""/>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-surface" style="">Artisan Brews &amp; Co.</p>
+<p class="text-xs text-on-surface-variant" style="">Lifestyle • Downtown</p>
+</div>
+<div class="text-right">
+<p class="font-black text-secondary" style="">$12.4k</p>
+<div class="flex items-center justify-end gap-1 text-[10px] text-on-surface-variant" style="">
+<span class="material-symbols-outlined text-[10px] text-secondary" data-icon="star" data-weight="fill" style="">star</span>
+                                    4.9
+                                </div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-2xl transition-colors">
+<div class="h-12 w-12 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Shop 2" class="h-full w-full object-cover" data-alt="Minimalist luxury spa treatment room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByW37KPuhjq8DKhyZoWNMB-UNqwaPgJQ9ZQC5BvtALfmceoGm--PyjmXAaWr2GDPMna9F70AY0P7DOGWDGram7LcHcuud2_Nw_CBlzObtcMWckzaJf3tZxN1vzEdiUpIMn2OlgEuJP0zTWqaD2I_bFZyIvHZeaDNYOecK0R0aGlFOOeoPXgVu1ISn90WWhsjbVdnhtPWQjzCvSt72NvRlve3v7-uPBJPZjqbENBGmI14VmuunOeRba3OFrz7nXni6O34Xgu_-7a8Aj" style=""/>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-surface" style="">The Serene Oasis</p>
+<p class="text-xs text-on-surface-variant" style="">Wellness • Northside</p>
+</div>
+<div class="text-right">
+<p class="font-black text-secondary" style="">$10.1k</p>
+<div class="flex items-center justify-end gap-1 text-[10px] text-on-surface-variant" style="">
+<span class="material-symbols-outlined text-[10px] text-secondary" data-icon="star" data-weight="fill" style="">star</span>
+                                    4.8
+                                </div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 hover:bg-white/5 rounded-2xl transition-colors">
+<div class="h-12 w-12 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Shop 3" class="h-full w-full object-cover" data-alt="Rustic organic grocery store section" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSqrmI-wDQaeGo15zpcGOGgt7eigoDZTUfoFUrAym0V05rL8-zN8IuCht48incztYAjGbDW2Bnizijpoz_gUo7RTKrrt8Tdg52zjya6_XKJddlKAoQF9kNi8BgNvgG8S9JbnYaPt3TtTsfsFdnY088LlstOGmvZy2xdqxmvoadRPkGanzHt2uw6m6GuZ6t75QhDbdZJWlQLAnHMk1vERdOn2az4IkKSjvLNFm0nXyLTeWMDW_wVZ538sfMWkg9a3tTuD5bAYsPM6z6" style=""/>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-surface" style="">Green Roots Market</p>
+<p class="text-xs text-on-surface-variant" style="">Retail • East Gate</p>
+</div>
+<div class="text-right">
+<p class="font-black text-secondary" style="">$9.8k</p>
+<div class="flex items-center justify-end gap-1 text-[10px] text-on-surface-variant" style="">
+<span class="material-symbols-outlined text-[10px] text-secondary" data-icon="star" data-weight="fill" style="">star</span>
+                                    4.7
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Service Heatmap Concept -->
+<div class="col-span-12 md:col-span-6 bg-surface-container-low rounded-[2rem] p-8">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">Service Heatmap</h3>
+<div class="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+<span class="" style="">Low Demand</span>
+<div class="w-20 h-2 bg-gradient-to-r from-surface-container-highest via-primary to-secondary rounded-full"></div>
+<span class="" style="">Peak</span>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-3">
+<!-- Heatmap Grid -->
+<div class="space-y-3 text-[10px] font-bold text-on-surface-variant/40 flex flex-col justify-around py-1">
+<span class="" style="">9 AM</span><span class="" style="">12 PM</span><span class="" style="">3 PM</span><span class="" style="">6 PM</span><span class="" style="">9 PM</span>
+</div>
+<div class="col-span-6 grid grid-cols-6 gap-2">
+<!-- Simulated heatmap blocks -->
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-primary/40 rounded-lg"></div>
+<div class="aspect-square bg-primary/60 rounded-lg"></div>
+<div class="aspect-square bg-primary/20 rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-primary/30 rounded-lg"></div>
+<div class="aspect-square bg-secondary/80 rounded-lg shadow-[0_0_15px_rgba(107,254,156,0.3)]"></div>
+<div class="aspect-square bg-secondary rounded-lg shadow-[0_0_20px_rgba(107,254,156,0.5)]"></div>
+<div class="aspect-square bg-secondary/70 rounded-lg shadow-[0_0_15px_rgba(107,254,156,0.2)]"></div>
+<div class="aspect-square bg-primary/50 rounded-lg"></div>
+<div class="aspect-square bg-primary/20 rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-primary/60 rounded-lg"></div>
+<div class="aspect-square bg-primary/80 rounded-lg"></div>
+<div class="aspect-square bg-primary/90 rounded-lg"></div>
+<div class="aspect-square bg-primary/40 rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-primary/20 rounded-lg"></div>
+<div class="aspect-square bg-primary/30 rounded-lg"></div>
+<div class="aspect-square bg-primary/40 rounded-lg"></div>
+<div class="aspect-square bg-primary/20 rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-primary/10 rounded-lg"></div>
+<div class="aspect-square bg-primary/10 rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+<div class="aspect-square bg-surface-container-highest rounded-lg"></div>
+</div>
+</div>
+<div class="mt-8 p-4 bg-surface-container rounded-2xl border border-white/5 flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="lightbulb" style="">lightbulb</span>
+<p class="text-xs leading-relaxed text-on-surface-variant" style="">
+<strong class="text-on-surface">Insight:</strong> Peak demand for <span class="text-primary" style="">Lifestyle Services</span> occurs between 12 PM - 2 PM on weekdays. Suggest 15% surge pricing for partners.
+                    </p>
+</div>
+</div>
+</div>
+<!-- System Health Section -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container p-6 rounded-3xl border border-white/5 flex items-center gap-4">
+<div class="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="dns" style="">dns</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest" style="">API Latency</p>
+<p class="text-xl font-headline font-bold text-on-surface" style="">42ms <span class="text-secondary text-sm ml-2 font-normal" style="">Optimal</span></p>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-3xl border border-white/5 flex items-center gap-4">
+<div class="h-12 w-12 rounded-2xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="cloud_done" style="">cloud_done</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest" style="">Uptime</p>
+<p class="text-xl font-headline font-bold text-on-surface" style="">99.99% <span class="text-secondary text-sm ml-2 font-normal" style="">Steady</span></p>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-3xl border border-white/5 flex items-center gap-4">
+<div class="h-12 w-12 rounded-2xl bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="bug_report" style="">bug_report</span>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest" style="">Open Incidents</p>
+<p class="text-xl font-headline font-bold text-on-surface" style="">0 <span class="text-slate-500 text-sm ml-2 font-normal" style="">Clear</span></p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

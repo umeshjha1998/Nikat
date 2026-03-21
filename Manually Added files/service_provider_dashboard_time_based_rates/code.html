@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nikat - Service Provider Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-dim": "#05092f",
+              "surface-container-high": "#131a4c",
+              "surface-container-highest": "#182056",
+              "on-tertiary-container": "#651469",
+              "on-surface": "#e2e3ff",
+              "outline-variant": "#40456c",
+              "on-secondary": "#005f2f",
+              "secondary-dim": "#5bef90",
+              "surface-container-low": "#080e38",
+              "on-tertiary-fixed": "#47004c",
+              "inverse-surface": "#fbf8ff",
+              "error-container": "#9f0519",
+              "primary-dim": "#15a4ff",
+              "on-secondary-fixed-variant": "#006a35",
+              "on-secondary-fixed": "#004a23",
+              "error": "#ff716c",
+              "surface-variant": "#182056",
+              "tertiary-fixed-dim": "#ec90e9",
+              "secondary-fixed-dim": "#5bef90",
+              "secondary-fixed": "#6bfe9c",
+              "inverse-on-surface": "#4d527a",
+              "secondary-container": "#006d37",
+              "on-tertiary": "#702073",
+              "on-surface-variant": "#a3a8d5",
+              "tertiary": "#ffb3f9",
+              "on-error-container": "#ffa8a3",
+              "error-dim": "#d7383b",
+              "surface-container-lowest": "#000000",
+              "outline": "#6e739d",
+              "tertiary-container": "#fc9df7",
+              "on-background": "#e2e3ff",
+              "primary-container": "#2aa7ff",
+              "on-primary-fixed-variant": "#002e4d",
+              "surface-bright": "#1e2660",
+              "on-primary-fixed": "#000000",
+              "on-secondary-container": "#e3ffe4",
+              "on-tertiary-fixed-variant": "#702073",
+              "inverse-primary": "#00639e",
+              "tertiary-dim": "#ec90e9",
+              "primary": "#5eb4ff",
+              "secondary": "#6bfe9c",
+              "primary-fixed": "#2aa7ff",
+              "surface-container": "#0e1442",
+              "surface": "#05092f",
+              "primary-fixed-dim": "#0099f0",
+              "tertiary-fixed": "#fc9df7",
+              "on-primary-container": "#00253f",
+              "background": "#05092f",
+              "on-error": "#490006",
+              "surface-tint": "#5eb4ff",
+              "on-primary": "#003151"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #05092f;
+            color: #e2e3ff;
+            font-family: 'Manrope', sans-serif;
+        }
+        .glass-header {
+            background: rgba(5, 9, 47, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="dark overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#05092f]/60 backdrop-blur-xl shadow-2xl shadow-black/40 flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-[#e2e3ff] font-['Plus_Jakarta_Sans']">Nikat</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] font-['Plus_Jakarta_Sans'] text-sm tracking-tight transition-colors" href="#">Discover</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] font-['Plus_Jakarta_Sans'] text-sm tracking-tight transition-colors" href="#">Services</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] font-['Plus_Jakarta_Sans'] text-sm tracking-tight transition-colors" href="#">Shops</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] font-['Plus_Jakarta_Sans'] text-sm tracking-tight transition-colors" href="#">Community</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-blue-400 dark:text-[#5eb4ff] hover:bg-white/5 rounded-full transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/20">
+<img class="h-full w-full object-cover" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-1Ls-LvDW2EHy_8-UmMW4BBqcQ0GiLAbJjgJUTvoQErBndnWmPCIHN0gBE3jfL8enCRqQw4oP7AbadENwjkfoQiPcM3nb9N1SHo5cLFU1AwsGqjSO0CAhrn-zDUFkLzs18vtJZmXVuGgIICjViW9YVgivrvRZ1ZV0Wzmgqv4GAckRNQofY4dLJP_-H8zDH3C6i9kHF880fNkvu5kasPZC_NeNz3C7QpD98VJEfqYGrAl9ZU-8SKO7cKcdws7euNQwxHFhY4bgUX9S"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col gap-2 py-4 h-screen w-64 fixed left-0 top-0 pt-20 bg-[#080e38] shadow-r-xl shadow-black/20 z-40">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-1">
+<div class="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-[#e2e3ff] font-['Plus_Jakarta_Sans'] leading-tight">Business Studio</h2>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Manage presence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#e2e3ff]/60 hover:bg-[#182056] rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#e2e3ff]/60 hover:bg-[#182056] rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium">Listings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#5eb4ff] to-[#2aa7ff] text-white rounded-lg shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium">Appointments</span>
+</a>
+</nav>
+<div class="px-4 mb-4">
+<button class="w-full py-3 bg-surface-container-high hover:bg-surface-variant text-primary font-bold rounded-xl transition-all active:scale-95 border border-primary/10">
+                Create Listing
+            </button>
+</div>
+<div class="px-2 pt-4 border-t border-outline-variant/10">
+<a class="flex items-center gap-3 px-4 py-3 text-[#e2e3ff]/60 hover:bg-[#182056] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#e2e3ff]/60 hover:bg-[#182056] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-['Plus_Jakarta_Sans'] font-medium">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:ml-64 pt-20 pb-12 px-6">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Header Section with Availability Toggle -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Technician Dashboard</h1>
+<p class="text-on-surface-variant font-body">Welcome back, Alex. You have 4 appointments scheduled for today.</p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl flex items-center gap-6 border border-outline-variant/10 shadow-xl">
+<div class="flex items-center gap-3">
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+<span class="text-sm font-bold font-headline text-secondary">Active Now</span>
+</div>
+<div class="h-8 w-px bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Duty Status</span>
+<span class="text-sm font-bold text-on-surface">Available for Instant Hire</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Quick Stats / Service Summary (Bento 4 cols) -->
+<div class="md:col-span-4 space-y-6">
+<!-- Pricing Card -->
+<div class="bg-surface-container p-6 rounded-2xl shadow-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="text-on-surface-variant font-bold text-sm">Hourly Charges</span>
+<span class="material-symbols-outlined text-primary" data-icon="payments">payments</span>
+</div>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-4xl font-extrabold text-on-surface tracking-tighter">₹85.00</span>
+<span class="text-on-surface-variant text-sm">/ hr (Avg)</span>
+</div>
+<!-- Time Specific Rates List -->
+<div class="space-y-3 mb-6">
+<div class="flex justify-between items-center p-2 rounded-lg bg-surface-container-low border border-outline-variant/5">
+<div>
+<p class="text-xs font-bold text-on-surface">Morning</p>
+<p class="text-[10px] text-on-surface-variant">8AM - 12PM</p>
+</div>
+<span class="text-sm font-bold text-primary">₹75.00</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded-lg bg-surface-container-low border border-outline-variant/5">
+<div>
+<p class="text-xs font-bold text-on-surface">Afternoon</p>
+<p class="text-[10px] text-on-surface-variant">12PM - 5PM</p>
+</div>
+<span class="text-sm font-bold text-primary">₹85.00</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded-lg bg-surface-container-low border border-outline-variant/5">
+<div>
+<p class="text-xs font-bold text-on-surface">Evening</p>
+<p class="text-[10px] text-on-surface-variant">5PM - 10PM</p>
+</div>
+<span class="text-sm font-bold text-primary">₹110.00</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded-lg bg-primary/5 border border-primary/20">
+<div>
+<p class="text-xs font-bold text-primary">Emergency/Night</p>
+<p class="text-[10px] text-primary/70">10PM - 8AM</p>
+</div>
+<span class="text-sm font-bold text-primary">₹150.00</span>
+</div>
+</div>
+<button class="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold rounded-lg transition-colors border border-primary/20 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="edit_calendar">edit_calendar</span>
+                Edit Rates
+            </button>
+</div>
+<!-- Work Hours Card -->
+<div class="bg-surface-container p-6 rounded-2xl shadow-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="text-on-surface-variant font-bold text-sm">Work Hours</span>
+<span class="material-symbols-outlined text-tertiary" data-icon="schedule">schedule</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Mon - Fri</span>
+<span class="text-on-surface font-bold">08:00 - 18:00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Saturday</span>
+<span class="text-on-surface font-bold">10:00 - 14:00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Sunday</span>
+<span class="text-error font-bold">Closed</span>
+</div>
+</div>
+<button class="w-full mt-6 py-2 bg-surface-container-high text-on-surface text-xs font-bold rounded-lg hover:bg-surface-variant transition-colors">Edit Schedule</button>
+</div>
+</div>
+<!-- Main Service Types & Map (Bento 8 cols) -->
+<div class="md:col-span-8 space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Service Types -->
+<div class="bg-surface-container p-6 rounded-2xl border border-outline-variant/5">
+<h3 class="text-lg font-bold font-headline mb-4">Service Specializations</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-full bg-surface-container-highest text-primary text-xs font-bold border border-primary/20">Electrical Repair</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container-highest text-primary text-xs font-bold border border-primary/20">HVAC Install</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container-highest text-primary text-xs font-bold border border-primary/20">Smart Home</span>
+<span class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold border border-outline-variant/10">+ Add New</span>
+</div>
+<div class="mt-8">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Service Performance</p>
+<div class="space-y-4">
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="">Electrical</span>
+<span class="font-bold">78%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[78%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="">HVAC</span>
+<span class="font-bold">42%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[42%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Service Area Map -->
+<div class="bg-surface-container-low rounded-2xl border border-outline-variant/10 overflow-hidden group">
+<div class="relative h-48 w-full">
+<img class="h-full w-full object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Abstract map showing service coverage area" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOi2iBbMisBTimiPzMnG0OO_5yDm5T5uxVMn6AJ29bhPp0P4iOJSXBuJzfcf-FtVqZ8WZlK7rpdxLVMyYL-E-ku-2lT3XjTcWf2R7XPtQ_fLkgPeV5jkXOZISM6edYVFTtsQyRJRv6tVrNcTnC721UA4O3sh1fYs-qXoiutJolMVjekgDVXEiSxV6iWQTdWQRBI6MQtxKatyXmLHWUfZ7LJbp6MPt10tfwaB6t4HDY6Z6AhEjVBf_k49zNF62ZxAb_yWsFUSzX5L2V"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-2 bg-surface-container/90 backdrop-blur-md p-2 rounded-xl border border-outline-variant/20">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="location_on">location_on</span>
+<span class="text-xs font-bold truncate">Downtown, West Side, &amp; Harbor District</span>
+</div>
+</div>
+</div>
+<div class="p-4 flex justify-between items-center">
+<span class="text-xs font-bold text-on-surface-variant">Radius: 15 miles</span>
+<button class="text-primary text-xs font-bold hover:underline">Edit Area</button>
+</div>
+</div>
+</div>
+<!-- Recent Service Inquiries -->
+<div class="bg-surface-container p-6 rounded-3xl border border-outline-variant/5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold font-headline tracking-tight">Recent Inquiries</h3>
+<button class="text-xs font-bold text-primary flex items-center gap-1">
+                                View Archive <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Inquiry Row -->
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<div class="h-12 w-12 rounded-full overflow-hidden border-2 border-outline-variant/20">
+<img class="h-full w-full object-cover" data-alt="Client profile picture Sarah" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP2lPDPvSXp1Mrz3SFTe4KhxXNg3iTN9KmGrxgAcMhx5gqP7GiU9GMmz4Pf1AR0hnm0kwTm4C7usZ_Izi59fTXg_KlMOQtZpomVrtsbALKL8ywC8AqxZLBfy-Sh0x7GMtOZStoQ7PymXz98983X0kY64bzU2XqP7L-H0lHf72-KoAM3BYxk0FwFGBqS7yw-_5l7S2B9GKKV_qxXS91l-uvwk9LPOpQ-xM15e7oZMQgpmuPQI3_USQ7DqXIlR_uHyz-hb99BaYwJ7oC"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface">Sarah J. <span class="text-[10px] ml-2 px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary">New</span></h4>
+<span class="text-[10px] text-on-surface-variant">22 mins ago</span>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-1">"Needs help with faulty kitchen outlet and flickering lights..."</p>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 bg-secondary/10 text-secondary rounded-lg hover:bg-secondary/20">
+<span class="material-symbols-outlined text-sm" data-icon="check" style='font-variation-settings: "FILL" 1;'>check</span>
+</button>
+<button class="p-2 bg-error/10 text-error rounded-lg hover:bg-error/20">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<!-- Inquiry Row -->
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<div class="h-12 w-12 rounded-full overflow-hidden border-2 border-outline-variant/20">
+<img class="h-full w-full object-cover" data-alt="Client profile picture Marcus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcHZHD7VfAdI54fxlYDbuaWkYT9C0xJot11hTNXhYq_XoU7ZJy02VNp7X5uFIGXPAxxeKgate06eP50IColTWA9gMOyY0yGuFT5e4Gmgu-pEZ4SoPIohUBkDdu9WpY5UVaOE8Qe3vKbSqutXpLYtpj32EowBvAAsPjXS4XQX-cyel86DEa_crtYbGJKnPzwGn2y2zFCoxym3v3AaKGdyspiEcPjUrKqVBZ27X922Y0qJA5HuFlQQuRWeKdqbXg3oBMz_GCO4YiDD1a"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface">Marcus Chen</h4>
+<span class="text-[10px] text-on-surface-variant">2 hours ago</span>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-1">"Installation of Nest thermostat in 3-bedroom apartment..."</p>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 bg-secondary/10 text-secondary rounded-lg hover:bg-secondary/20">
+<span class="material-symbols-outlined text-sm" data-icon="check" style='font-variation-settings: "FILL" 1;'>check</span>
+</button>
+<button class="p-2 bg-error/10 text-error rounded-lg hover:bg-error/20">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Reviews Row - Horizontal Scroll -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-bold font-headline tracking-tight">Client Feedback</h3>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-secondary">4.9</span>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-secondary text-xs" data-icon="star" style='font-variation-settings: "FILL" 1;'>star</span>
+<span class="material-symbols-outlined text-secondary text-xs" data-icon="star" style='font-variation-settings: "FILL" 1;'>star</span>
+<span class="material-symbols-outlined text-secondary text-xs" data-icon="star" style='font-variation-settings: "FILL" 1;'>star</span>
+<span class="material-symbols-outlined text-secondary text-xs" data-icon="star" style='font-variation-settings: "FILL" 1;'>star</span>
+<span class="material-symbols-outlined text-secondary text-xs" data-icon="star" style='font-variation-settings: "FILL" 1;'>star</span>
+</div>
+<span class="text-xs text-on-surface-variant">(124 reviews)</span>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-4 no-scrollbar">
+<!-- Review Card -->
+<div class="min-w-[300px] bg-surface-container-high p-5 rounded-2xl border border-outline-variant/10 shadow-lg">
+<div class="flex items-center gap-3 mb-4">
+<div class="h-8 w-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-xs">EL</div>
+<div>
+<p class="text-xs font-bold">Elena Lockwood</p>
+<p class="text-[10px] text-on-surface-variant">3 days ago</p>
+</div>
+</div>
+<p class="text-sm italic text-on-surface/90 leading-relaxed">"Professional, clean work, and arrived exactly on time. Highly recommend for any complex electrical issues!"</p>
+</div>
+<!-- Review Card -->
+<div class="min-w-[300px] bg-surface-container-high p-5 rounded-2xl border border-outline-variant/10 shadow-lg">
+<div class="flex items-center gap-3 mb-4">
+<div class="h-8 w-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">BT</div>
+<div>
+<p class="text-xs font-bold">Brian T.</p>
+<p class="text-[10px] text-on-surface-variant">1 week ago</p>
+</div>
+</div>
+<p class="text-sm italic text-on-surface/90 leading-relaxed">"Alex was great at explaining the smart home setup. Very patient and knowledgeable."</p>
+</div>
+<!-- Review Card -->
+<div class="min-w-[300px] bg-surface-container-high p-5 rounded-2xl border border-outline-variant/10 shadow-lg">
+<div class="flex items-center gap-3 mb-4">
+<div class="h-8 w-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">JM</div>
+<div>
+<p class="text-xs font-bold">James Miller</p>
+<p class="text-[10px] text-on-surface-variant">2 weeks ago</p>
+</div>
+</div>
+<p class="text-sm italic text-on-surface/90 leading-relaxed">"Fixed the AC unit in record time during a heatwave. Lifesaver!"</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Bottom Navigation Shell -->
+<nav class="md:hidden fixed bottom-0 w-full h-16 glass-header border-t border-outline-variant/10 flex items-center justify-around px-4 z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold">Studio</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="event_note" style='font-variation-settings: "FILL" 1;'>event_note</span>
+<span class="text-[10px] font-bold">Jobs</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[10px] font-bold">Messages</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</button>
+</nav>
+</body></html>

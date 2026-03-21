@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#702073",
+              "secondary-fixed": "#6bfe9c",
+              "surface-dim": "#05092f",
+              "surface-bright": "#1e2660",
+              "secondary": "#6bfe9c",
+              "tertiary-fixed-dim": "#ec90e9",
+              "on-secondary-container": "#e3ffe4",
+              "on-error": "#490006",
+              "primary-fixed-dim": "#0099f0",
+              "on-tertiary-container": "#651469",
+              "on-tertiary": "#702073",
+              "error-dim": "#d7383b",
+              "tertiary-dim": "#ec90e9",
+              "inverse-surface": "#fbf8ff",
+              "surface": "#05092f",
+              "tertiary-container": "#fc9df7",
+              "on-primary-fixed-variant": "#002e4d",
+              "inverse-primary": "#00639e",
+              "error-container": "#9f0519",
+              "primary-fixed": "#2aa7ff",
+              "on-primary-container": "#00253f",
+              "surface-container-highest": "#182056",
+              "background": "#05092f",
+              "surface-container-low": "#080e38",
+              "inverse-on-surface": "#4d527a",
+              "on-primary": "#003151",
+              "on-primary-fixed": "#000000",
+              "outline": "#6e739d",
+              "surface-container-high": "#131a4c",
+              "on-surface": "#e2e3ff",
+              "primary-dim": "#15a4ff",
+              "error": "#ff716c",
+              "on-error-container": "#ffa8a3",
+              "secondary-fixed-dim": "#5bef90",
+              "tertiary-fixed": "#fc9df7",
+              "secondary-dim": "#5bef90",
+              "outline-variant": "#40456c",
+              "surface-container-lowest": "#000000",
+              "surface-container": "#0e1442",
+              "on-surface-variant": "#a3a8d5",
+              "on-secondary": "#005f2f",
+              "secondary-container": "#006d37",
+              "on-background": "#e2e3ff",
+              "on-tertiary-fixed": "#47004c",
+              "primary-container": "#2aa7ff",
+              "on-secondary-fixed": "#004a23",
+              "on-secondary-fixed-variant": "#006a35",
+              "primary": "#5eb4ff",
+              "surface-variant": "#182056",
+              "surface-tint": "#5eb4ff",
+              "tertiary": "#ffb3f9"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #05092f;
+            color: #e2e3ff;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#05092f]/60 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.4)] flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer">arrow_back</span>
+<h1 class="text-2xl font-extrabold tracking-tighter text-[#e2e3ff] font-headline">Nikat</h1>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] font-headline font-bold tracking-tight" href="#">Shops</a>
+<a class="text-[#5eb4ff] border-b-2 border-[#5eb4ff] pb-1 font-headline font-bold tracking-tight" href="#">Services</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] font-headline font-bold tracking-tight" href="#">Deals</a>
+</nav>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#5eb4ff] hover:bg-[#182056]/50 p-2 rounded-full transition-all">shopping_cart</span>
+<span class="material-symbols-outlined text-[#5eb4ff] hover:bg-[#182056]/50 p-2 rounded-full transition-all">notifications</span>
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="User profile avatar in dark aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZQbpw81REU1bEet6DHDMzP7ae_7LZvySKyMxs_GPdhf_4X4kntrX4OKjTg1xwBLeqDhkxvkapBdpixShxJUCe-en3_wMD3KYHv-t7YnH79K0u93o0Imn37vy-UnQ4P0eBrx43MMzheB7eSZQuqMftqeo9dOtwx8H4ExOYoJzM2o2Mok9z1lFnQKvgwRtk-wFBZdnaLFJbkQTp7sYQ32QjJzkyK11_d6xDkcerb1w40SOaoXJmsIj8XZBiNL09LT1-uKRzKKiXQ_bQ"/>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-8 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Business Profile & Progress -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Business Card -->
+<div class="bg-surface-container rounded-xl overflow-hidden">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="Interior of The Urban Fade barber shop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZrhgofLaouHrsWLaUCaTW2-b5ofz8Ef_HR8zyBbvKoQfm-OE5K7UvFlfySc7JCe44AXrI-YH7-FwZV6j9c5l3pYQj0JInc6Kti0-3IFV0_5ZbPWR4beEjzcxYcafKikh38G_Z15iKwgcqn0pFiXrWn-l-3_5Cx0Pjg2VpIG7tRXeQZNoAiMTkJH0j3KSxqrK4cSt2MxcMzR8__MJ51dSpwhBdAJXRQuKmhEjj9sWdS4n3TZQKfZb8jzOILacV31YVRp3CCq2DvvFY"/>
+<div class="absolute top-4 right-4 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        Verified
+                    </div>
+</div>
+<div class="p-6">
+<h2 class="text-3xl font-headline font-extrabold tracking-tight mb-2">The Urban Fade</h2>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-lg">4.9</span>
+<span class="text-on-surface-variant text-sm">(120+ Reviews)</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-body">
+                        Premium grooming located in the heart of downtown. Specializing in modern fades, beard sculpting, and traditional hot towel shaves.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Cozy</span>
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Expert</span>
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Premium</span>
+</div>
+</div>
+</div>
+<!-- Booking Progress -->
+<div class="bg-surface-container-low p-6 rounded-xl space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
+<div class="flex-1 border-b border-outline-variant pb-2">
+<span class="block text-[10px] font-bold text-primary uppercase tracking-widest">Step One</span>
+<span class="font-headline font-bold">Select Service</span>
+</div>
+</div>
+<div class="flex items-center gap-4 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold">2</div>
+<div class="flex-1 border-b border-outline-variant pb-2">
+<span class="block text-[10px] font-bold uppercase tracking-widest">Step Two</span>
+<span class="font-headline font-bold">Date &amp; Time</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Booking Steps -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Service Selection -->
+<section>
+<h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">content_cut</span>
+                    Popular Services
+                </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Service Item -->
+<div class="bg-surface-container p-5 rounded-xl border-2 border-primary ring-2 ring-primary/20 relative cursor-pointer">
+<div class="absolute top-4 right-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h4 class="font-headline font-bold text-lg mb-1">Executive Haircut</h4>
+<p class="text-on-surface-variant text-xs mb-4">Precision fade, wash, and style.</p>
+<div class="flex justify-between items-center">
+<span class="text-primary font-extrabold text-xl">$45.00</span>
+<span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">45 MIN</span>
+</div>
+</div>
+<!-- Service Item -->
+<div class="bg-surface-container p-5 rounded-xl border-2 border-transparent hover:border-outline-variant transition-all cursor-pointer">
+<h4 class="font-headline font-bold text-lg mb-1">Beard Sculpting</h4>
+<p class="text-on-surface-variant text-xs mb-4">Razor line-up and hot towel treatment.</p>
+<div class="flex justify-between items-center">
+<span class="text-on-surface font-extrabold text-xl">$30.00</span>
+<span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">30 MIN</span>
+</div>
+</div>
+<!-- Service Item -->
+<div class="bg-surface-container p-5 rounded-xl border-2 border-transparent hover:border-outline-variant transition-all cursor-pointer">
+<h4 class="font-headline font-bold text-lg mb-1">The Full Experience</h4>
+<p class="text-on-surface-variant text-xs mb-4">Haircut + Beard + Facial Massage.</p>
+<div class="flex justify-between items-center">
+<span class="text-on-surface font-extrabold text-xl">$70.00</span>
+<span class="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">90 MIN</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Date & Calendar -->
+<section class="bg-surface-container-low p-6 rounded-2xl">
+<h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+                    Pick a Date
+                </h3>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<!-- Date Card Active -->
+<div class="flex-shrink-0 w-20 h-24 bg-gradient-to-br from-primary to-primary-container rounded-xl flex flex-col items-center justify-center text-white shadow-lg">
+<span class="text-[10px] font-bold uppercase tracking-widest">Oct</span>
+<span class="text-2xl font-extrabold">14</span>
+<span class="text-[10px] font-bold opacity-80">MON</span>
+</div>
+<!-- Date Card -->
+<div class="flex-shrink-0 w-20 h-24 bg-surface-container rounded-xl flex flex-col items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Oct</span>
+<span class="text-2xl font-extrabold">15</span>
+<span class="text-[10px] font-bold text-on-surface-variant">TUE</span>
+</div>
+<div class="flex-shrink-0 w-20 h-24 bg-surface-container rounded-xl flex flex-col items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Oct</span>
+<span class="text-2xl font-extrabold">16</span>
+<span class="text-[10px] font-bold text-on-surface-variant">WED</span>
+</div>
+<div class="flex-shrink-0 w-20 h-24 bg-surface-container rounded-xl flex flex-col items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Oct</span>
+<span class="text-2xl font-extrabold">17</span>
+<span class="text-[10px] font-bold text-on-surface-variant">THU</span>
+</div>
+<div class="flex-shrink-0 w-20 h-24 bg-surface-container rounded-xl flex flex-col items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Oct</span>
+<span class="text-2xl font-extrabold">18</span>
+<span class="text-[10px] font-bold text-on-surface-variant">FRI</span>
+</div>
+</div>
+</section>
+<!-- Time Slots -->
+<section>
+<h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+                    Select Time Slot
+                </h3>
+<div class="space-y-6">
+<div>
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] mb-4">Morning Rush</span>
+<div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">09:00 AM</button>
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">10:00 AM</button>
+<button class="py-3 px-4 bg-surface-container-highest text-on-surface-variant rounded-lg font-bold cursor-not-allowed line-through">11:00 AM</button>
+</div>
+</div>
+<div>
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] mb-4">Afternoon Calm</span>
+<div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">01:30 PM</button>
+<button class="py-3 px-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-bold shadow-lg ring-4 ring-primary/20">02:30 PM</button>
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">03:30 PM</button>
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">04:30 PM</button>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em]">Evening Prime</span>
+<span class="text-[10px] font-bold text-secondary uppercase bg-secondary/10 px-2 py-0.5 rounded">+$5 Prime Fee</span>
+</div>
+<div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">06:00 PM</button>
+<button class="py-3 px-4 bg-surface-container rounded-lg font-bold hover:bg-surface-container-high border border-outline-variant/20">07:00 PM</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer Action Bar -->
+<div class="fixed bottom-0 w-full bg-[#182056]/60 backdrop-blur-xl shadow-[0_-8px_24px_rgba(0,0,0,0.3)] px-6 py-4 z-50 rounded-t-2xl">
+<div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="text-left">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Total Amount</span>
+<span class="text-2xl font-extrabold text-primary font-headline">$45.00</span>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<div class="text-left hidden sm:block">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Service</span>
+<span class="text-sm font-bold">Executive Haircut</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-12 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed font-headline font-extrabold rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest flex items-center justify-center gap-2">
+                Confirm Booking
+                <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#182056]/60 backdrop-blur-xl z-[60] rounded-t-2xl">
+<div class="flex flex-col items-center justify-center text-[#e2e3ff]/50 hover:text-[#5eb4ff] transition-colors">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold">Explore</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-[#5eb4ff] to-[#2aa7ff] text-white rounded-xl px-4 py-1.5 transition-transform active:scale-90">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold">Bookings</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#e2e3ff]/50 hover:text-[#5eb4ff] transition-colors">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold">Cart</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#e2e3ff]/50 hover:text-[#5eb4ff] transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold">Account</span>
+</div>
+</nav>
+</body></html>
