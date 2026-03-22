@@ -1,0 +1,22 @@
+<mat-toolbar color="primary" class="navbar">
+  <span class="logo" routerLink="/">Nikat</span>
+  <span class="spacer"></span>
+
+  <button mat-icon-button title="Translate" (click)="translate()">
+    <mat-icon>language</mat-icon>
+  </button>
+
+  <mat-slide-toggle class="dark-mode-toggle" (change)="toggleDarkMode($event)">
+    Dark Mode
+  </mat-slide-toggle>
+
+  <ng-container *ngIf="!isLoggedIn">
+      <button mat-button routerLink="/auth/login">Login</button>
+      <button mat-raised-button color="accent" routerLink="/auth/register">Register</button>
+  </ng-container>
+
+  <ng-container *ngIf="isLoggedIn">
+      <button mat-button *ngIf="isAdmin" routerLink="/admin">Admin</button>
+      <button mat-button *ngIf="!isAdmin" routerLink="/user-dashboard">Dashboard</button>
+  </ng-container>
+</mat-toolbar>

@@ -1,0 +1,28 @@
+<div class="otp-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Verify OTP</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="instruction">We've sent a code to your email. Please enter it below.</p>
+      <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+        <div class="otp-inputs">
+            <!-- Simulated multiple inputs with a single form control for simplicity, can be expanded -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Enter OTP Code</mat-label>
+              <input matInput formControlName="otp" maxlength="6" required>
+              <mat-error *ngIf="otpForm.get('otp')?.hasError('required')">Required</mat-error>
+              <mat-error *ngIf="otpForm.get('otp')?.hasError('pattern')">Must be 6 digits</mat-error>
+            </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="otpForm.invalid" class="full-width submit-btn">
+          Verify
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <p class="resend-link">Didn't receive the code? <a href="javascript:void(0)" (click)="resendOtp()">Resend</a></p>
+    </mat-card-actions>
+  </mat-card>
+</div>

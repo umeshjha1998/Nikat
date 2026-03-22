@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+
+<div class="search-results-container">
+  <div class="search-header">
+    <h2>Search Results for "plumber"</h2>
+    <div class="filters">
+      <mat-chip-listbox aria-label="Filter selection">
+        <mat-chip-option selected>All (12)</mat-chip-option>
+        <mat-chip-option>Services (8)</mat-chip-option>
+        <mat-chip-option>Shops (4)</mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  </div>
+
+  <div class="results-grid">
+    <!-- Mock Result Card -->
+    <mat-card class="result-card" *ngFor="let i of [1,2,3,4]">
+      <img mat-card-image src="https://via.placeholder.com/300x200?text=Listing+Image" alt="Listing Image">
+      <mat-card-content>
+        <div class="header-row">
+            <h3>Quick Fix Plumbers</h3>
+            <span class="rating"><mat-icon inline="true">star</mat-icon> 4.5 (120)</span>
+        </div>
+        <p class="category">Service • Plumber</p>
+        <p class="address"><mat-icon inline="true">location_on</mat-icon> 2.5 km away • Sector 14</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary">View Details</button>
+        <button mat-icon-button color="accent" title="Save"><mat-icon>favorite_border</mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
