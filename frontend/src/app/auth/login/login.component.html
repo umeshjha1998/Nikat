@@ -1,0 +1,41 @@
+<div class="login-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Login to Nikat</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="Enter your email" required>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password" required>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+        </mat-form-field>
+
+        <div class="error-msg" *ngIf="errorMessage">
+            {{errorMessage}}
+        </div>
+
+        <div class="actions">
+          <a routerLink="/auth/forgot-password" class="forgot-password">Forgot Password?</a>
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" class="full-width login-btn">
+          Login
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <p class="register-link">Don't have an account? <a routerLink="/auth/register">Register</a></p>
+    </mat-card-actions>
+  </mat-card>
+</div>

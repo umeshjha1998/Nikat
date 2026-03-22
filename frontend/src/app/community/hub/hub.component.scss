@@ -1,0 +1,87 @@
+.community-hub-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+}
+
+.locality-select {
+  width: 300px;
+  margin-top: 20px;
+}
+
+.hub-tabs {
+  margin-bottom: 20px;
+}
+
+.posts-list {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-card {
+  width: 100%;
+}
+
+.user-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+}
+
+.post-details {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    gap: 15px;
+
+    .price {
+        font-weight: bold;
+        color: #388e3c;
+    }
+}
+
+.no-posts, .tab-placeholder {
+    text-align: center;
+    padding: 40px;
+    color: #777;
+    font-style: italic;
+}
+
+.select-prompt {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 18px;
+    color: #555;
+}
+
+.add-post-btn {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1000;
+}
+
+/* Dark theme overrides */
+:host-context(.dark-theme) {
+  .header h1 {
+    color: #fff;
+  }
+  .post-details {
+      color: #bbb;
+  }
+}
