@@ -1,0 +1,29 @@
+<div class="dashboard-container">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar class="header-image">
+        <!-- Add condition to use real image when available -->
+        <mat-icon style="font-size: 40px; width: 40px; height: 40px;">account_circle</mat-icon>
+      </div>
+      <mat-card-title>User Dashboard</mat-card-title>
+      <mat-card-subtitle>Manage your profile</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Example mock data -->
+      <div class="profile-details">
+        <h3>Profile Details</h3>
+        <p><strong>Name:</strong> John Doe</p>
+        <p><strong>Email:</strong> john@example.com</p>
+        <p><strong>Phone:</strong> +1234567890</p>
+        <p><strong>Role:</strong> USER</p>
+        <p><strong>Address:</strong> 123 Main St, Anytown</p>
+      </div>
+
+      <div class="actions">
+        <button mat-stroked-button color="primary">Edit Profile</button>
+        <button mat-stroked-button color="warn" (click)="logout()">Logout</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

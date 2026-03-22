@@ -1,0 +1,44 @@
+.manage-shops-container {
+  padding: 10px;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+}
+
+.table-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .search-field {
+    width: 300px;
+  }
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+
+    &.active {
+        background-color: #4caf50;
+    }
+    &.pending_verification {
+        background-color: #ff9800;
+    }
+    &.blocked {
+        background-color: #f44336;
+    }
+    &.inactive {
+        background-color: #9e9e9e;
+    }
+}

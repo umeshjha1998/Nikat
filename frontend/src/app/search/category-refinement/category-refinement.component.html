@@ -1,0 +1,54 @@
+<app-navbar></app-navbar>
+
+<div class="category-container">
+  <div class="header-section">
+      <div class="icon-circle">
+          <mat-icon>content_cut</mat-icon>
+      </div>
+      <h1>Barber Shops</h1>
+      <p>Find the best local barber shops for haircuts, shaving, and treatments.</p>
+  </div>
+
+  <div class="filters-sidebar">
+      <mat-card>
+          <h3>Filters</h3>
+          <!-- Mock filters -->
+          <div class="filter-group">
+              <label>Sort By</label>
+              <mat-chip-listbox aria-label="Sort selection">
+                  <mat-chip-option selected>Nearest</mat-chip-option>
+                  <mat-chip-option>Highest Rated</mat-chip-option>
+              </mat-chip-listbox>
+          </div>
+          <div class="filter-group">
+              <label>Services</label>
+              <mat-chip-listbox multiple aria-label="Services selection">
+                  <mat-chip-option>Haircut</mat-chip-option>
+                  <mat-chip-option>Shaving</mat-chip-option>
+                  <mat-chip-option>Facial</mat-chip-option>
+              </mat-chip-listbox>
+          </div>
+          <button mat-stroked-button color="primary" class="full-width">Apply Filters</button>
+      </mat-card>
+  </div>
+
+  <div class="results-area">
+      <!-- Similar to results.component, using mock data -->
+      <div class="results-grid">
+        <mat-card class="result-card" *ngFor="let i of [1,2,3,4,5,6]">
+          <img mat-card-image src="https://via.placeholder.com/300x200?text=Barber+Shop" alt="Shop Image">
+          <mat-card-content>
+            <div class="header-row">
+                <h3>The Urban Fade</h3>
+                <span class="rating"><mat-icon inline="true">star</mat-icon> 4.8 (85)</span>
+            </div>
+            <p class="category">Shop • Barber</p>
+            <p class="address"><mat-icon inline="true">location_on</mat-icon> 1.2 km away • Main Market</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-stroked-button color="primary">View Services</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+  </div>
+</div>

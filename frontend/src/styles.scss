@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.dark-theme {
+  /* Use a dark material theme or custom colors */
+  background-color: #303030;
+  color: #fff;
+
+  .mat-card {
+    background-color: #424242;
+    color: #fff;
+  }
+
+  .mat-sidenav {
+    background-color: #424242;
+    color: #fff;
+  }
+
+  .content-area {
+      background-color: #303030;
+  }
+}
