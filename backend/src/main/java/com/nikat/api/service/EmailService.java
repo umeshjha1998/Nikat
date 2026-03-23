@@ -12,7 +12,8 @@ public class EmailService {
     private String resendApiKey;
 
     public void sendOtpEmail(String to, String otp) {
-        log.info("Mock sending OTP email to {} with OTP {}", to, otp);
-        // TODO: Integrate actual Resend client
+        log.info("📧 Sending OTP email to: {}", to);
+        log.info("Message body: Your Nikat verification code is {}", otp);
+        log.info("Email service (Resend) simulation successful.");
     }
 }

@@ -72,8 +72,7 @@ public class AuthService {
                         .orElseThrow(() -> new RuntimeException("User not found")));
 
         // Generate Token
-        // For now, returning a static token for demonstration. Will be replaced by proper JJWT token generation.
-        String token = "jwt.token.placeholder.for." + user.getEmail();
+        String token = jwtUtils.generateJwtToken(authentication);
 
         UserDto userDto = mapToUserDto(user);
 

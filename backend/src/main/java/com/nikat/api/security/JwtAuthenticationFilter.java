@@ -29,15 +29,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         String jwt = parseJwt(request);
-        // NOTE: stubbing actual validation for scaffolding phase.
-        // if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-        //     String email = jwtUtils.getEmailFromJwtToken(jwt);
-        //     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        //     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        //         userDetails, null, userDetails.getAuthorities());
-        //     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        //     SecurityContextHolder.getContext().setAuthentication(authentication);
-        // }
+        
+        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            String email = jwtUtils.getEmailFromJwtToken(jwt);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         filterChain.doFilter(request, response);
     }
