@@ -26,7 +26,7 @@
 <p class="text-on-surface-variant text-lg max-w-2xl">Register today to discover local treasures, manage your business, or offer professional services to your community.</p>
 </div>
 <!-- Multi-Role Registration Flow -->
-<form class="space-y-8">
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-8">
 <!-- Section 1: Role Selection (Bento Style) -->
 <section class="space-y-6">
 <div class="flex items-center space-x-3">
@@ -36,7 +36,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 <!-- User Role -->
 <label class="relative group cursor-pointer">
-<input checked="" class="peer sr-only" name="role" type="checkbox" value="user"/>
+<input checked="" class="peer sr-only" name="role" type="checkbox" value="user" (change)="onRoleChange($event)"/>
 <div class="h-full p-6 rounded-2xl bg-surface-container border border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all duration-300 hover:bg-surface-container-high shadow-lg">
 <div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-primary" data-icon="person">person</span>
@@ -50,7 +50,7 @@
 </label>
 <!-- Shop Owner Role -->
 <label class="relative group cursor-pointer">
-<input class="peer sr-only" name="role" type="checkbox" value="shop_owner"/>
+<input class="peer sr-only" name="role" type="checkbox" value="shop_owner" (change)="onRoleChange($event)"/>
 <div class="h-full p-6 rounded-2xl bg-surface-container border border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all duration-300 hover:bg-surface-container-high shadow-lg">
 <div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-secondary" data-icon="storefront">storefront</span>
@@ -64,7 +64,7 @@
 </label>
 <!-- Service Provider Role -->
 <label class="relative group cursor-pointer">
-<input class="peer sr-only" name="role" type="checkbox" value="service_provider"/>
+<input class="peer sr-only" name="role" type="checkbox" value="service_provider" (change)="onRoleChange($event)"/>
 <div class="h-full p-6 rounded-2xl bg-surface-container border border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all duration-300 hover:bg-surface-container-high shadow-lg">
 <div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-tertiary" data-icon="handyman">handyman</span>
@@ -87,11 +87,11 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Full Name</label>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant" placeholder="John Doe" type="text"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant" placeholder="John Doe" type="text" formControlName="fullName"/>
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Gender</label>
-<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface">
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" formControlName="gender">
 <option>Select Gender</option>
 <option>Male</option>
 <option>Female</option>
@@ -102,23 +102,23 @@
 <div class="space-y-2 md:col-span-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Email Address</label>
 <div class="flex gap-2">
-<input class="flex-1 bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="john@example.com" type="email"/>
-<button class="bg-primary/10 text-primary px-6 py-3 rounded-xl font-bold hover:bg-primary/20 active:scale-95 transition-all text-sm" type="button">Send OTP</button>
+<input class="flex-1 bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="john@example.com" type="email" formControlName="email"/>
+<button class="bg-primary/10 text-primary px-6 py-3 rounded-xl font-bold hover:bg-primary/20 active:scale-95 transition-all text-sm" type="button" (click)="sendOtp()">Send OTP</button>
 </div>
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Phone Number</label>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="+91 (900) 000-0000" type="tel"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="+91 (900) 000-0000" type="tel" formControlName="phone"/>
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Password</label>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="••••••••" type="password"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="••••••••" type="password" formControlName="password"/>
 </div>
 <div class="space-y-2 md:col-span-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Location &amp; Address</label>
 <div class="space-y-4">
 <div class="flex flex-col md:flex-row gap-3">
-<button class="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-dim active:scale-95 transition-all shadow-lg shadow-primary/20" type="button">
+<button class="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-dim active:scale-95 transition-all shadow-lg shadow-primary/20" type="button" (click)="getLocation()">
 <span class="material-symbols-outlined">location_on</span>
 <span>Detect Location</span>
 </button>
@@ -128,7 +128,7 @@
 </div>
 </div>
 <div class="relative">
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pl-11 focus:ring-2 focus:ring-primary text-on-surface" placeholder="Flat, Floor, Building, or Landmark details" type="text"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pl-11 focus:ring-2 focus:ring-primary text-on-surface" placeholder="Flat, Floor, Building, or Landmark details" type="text" formControlName="address"/>
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">apartment</span>
 </div>
 <p class="text-[10px] text-on-surface-variant italic">* GPS coordinates are used for precise delivery. Please provide building details manually.</p>
@@ -140,7 +140,7 @@
 <span class="material-symbols-outlined text-4xl text-outline-variant group-hover:text-primary transition-colors">cloud_upload</span>
 <p class="text-sm font-medium">Click to upload or drag and drop</p>
 <p class="text-xs text-outline-variant">PNG, JPG up to 1MB</p>
-<input class="hidden" type="file"/>
+<input class="hidden" type="file" (change)="onFileSelected($event)"/>
 </div>
 </div>
 </div>
@@ -162,7 +162,7 @@
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Shop Category</label>
-<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" id="shop_category_select" onchange="updateDescription('shop_category_select', 'shop_description_field')">
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" id="shop_category_select" formControlName="shopCategory">
 <option disabled="" selected="">Select Category</option>
 <option>Barber Shop</option>
 <option>Grocery</option>
@@ -173,22 +173,22 @@
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Worker Count</label>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="0" type="number"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="0" type="number" formControlName="workerCount"/>
 </div>
 <div class="md:col-span-2 space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Shop Description</label>
-<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant resize-none custom-scrollbar" id="shop_description_field" placeholder="Briefly describe your shop and services..." rows="3"></textarea>
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant resize-none custom-scrollbar" id="shop_description_field" placeholder="Briefly describe your shop and services..." rows="3" formControlName="shopDescription"></textarea>
 </div>
 <div class="md:col-span-2 flex flex-col md:flex-row gap-4">
 <label class="flex-1 flex items-center gap-3 p-4 bg-surface-container-highest rounded-xl cursor-pointer">
-<input class="rounded text-primary focus:ring-primary bg-surface border-outline-variant" type="checkbox"/>
+<input class="rounded text-primary focus:ring-primary bg-surface border-outline-variant" type="checkbox" formControlName="inventoryManagement"/>
 <div>
 <p class="font-bold text-sm">Inventory Management</p>
 <p class="text-xs text-on-surface-variant">Track stock levels automatically</p>
 </div>
 </label>
 <label class="flex-1 flex items-center gap-3 p-4 bg-surface-container-highest rounded-xl cursor-pointer">
-<input class="rounded text-primary focus:ring-primary bg-surface border-outline-variant" type="checkbox"/>
+<input class="rounded text-primary focus:ring-primary bg-surface border-outline-variant" type="checkbox" formControlName="rentalOptions"/>
 <div>
 <p class="font-bold text-sm">Rental Options</p>
 <p class="text-xs text-on-surface-variant">Enable daily/hourly item rental</p>
@@ -207,7 +207,7 @@
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Service Type</label>
-<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" id="service_type_select" onchange="updateDescription('service_type_select', 'service_description_field')">
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" id="service_type_select" formControlName="serviceType">
 <option disabled="" selected="">Select Specialization</option>
 <option>Electrician</option>
 <option>Home Cleaning</option>
@@ -220,20 +220,20 @@
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Base Charges (Per Hour)</label>
 <div class="relative">
 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">₹</span>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pl-8 focus:ring-2 focus:ring-primary text-on-surface" placeholder="25.00" type="text"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pl-8 focus:ring-2 focus:ring-primary text-on-surface" placeholder="25.00" type="text" formControlName="baseCharges"/>
 </div>
 </div>
 <div class="md:col-span-2 space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Service Description</label>
-<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant resize-none custom-scrollbar" id="service_description_field" placeholder="Describe your expertise and the services you provide..." rows="3"></textarea>
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant resize-none custom-scrollbar" id="service_description_field" placeholder="Describe your expertise and the services you provide..." rows="3" formControlName="serviceDescription"></textarea>
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Availability Start</label>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" type="time"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" type="time" formControlName="availabilityStart"/>
 </div>
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Availability End</label>
-<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" type="time"/>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" type="time" formControlName="availabilityEnd"/>
 </div>
 </div>
 </section>
@@ -246,7 +246,7 @@
 <button class="w-full md:w-auto min-w-[320px] bg-gradient-to-br from-[#5eb4ff] to-[#2aa7ff] text-white py-4 px-12 rounded-2xl font-plus-jakarta font-extrabold text-lg shadow-[0_12px_32px_rgba(94,180,255,0.3)] hover:scale-[1.02] active:scale-95 transition-all" type="submit">
                         Complete Registration
                     </button>
-<p class="text-on-surface-variant text-sm">Already have an account? <a class="text-primary font-bold" href="#">Sign In</a></p>
+<p class="text-on-surface-variant text-sm">Already have an account? <a class="text-primary font-bold" routerLink="/auth/login">Sign In</a></p>
 </div>
 </form>
 </div>

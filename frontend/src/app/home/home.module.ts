@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { HomepageComponent } from './homepage/homepage.component';
+import { NikatHomepageComponent } from './nikat-homepage/nikat-homepage.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { HomepageComponent } from './homepage/homepage.component';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    NikatHomepageComponent
   ]
 })
 export class HomeModule { }

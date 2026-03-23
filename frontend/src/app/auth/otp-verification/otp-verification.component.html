@@ -28,14 +28,14 @@
                 </p>
 </div>
 <!-- OTP Input Form -->
-<form action="#" class="space-y-8">
-<div class="flex justify-between gap-2 md:gap-3">
-<input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none" maxlength="1" placeholder="•" type="text"/>
-<input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none" maxlength="1" placeholder="•" type="text"/>
-<input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none" maxlength="1" placeholder="•" type="text"/>
-<input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none" maxlength="1" placeholder="•" type="text"/>
-<input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none" maxlength="1" placeholder="•" type="text"/>
-<input class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none" maxlength="1" placeholder="•" type="text"/>
+<form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-8">
+<div class="flex justify-between gap-2 md:gap-3" formArrayName="digits">
+<input *ngFor="let control of digits.controls; let i = index"
+       [formControlName]="i"
+       (input)="onInput($event, i)"
+       (keydown)="onKeyDown($event, i)"
+       class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold bg-surface-container-highest border-0 rounded-lg text-primary focus:ring-2 focus:ring-primary transition-all outline-none"
+       maxlength="1" placeholder="•" type="text"/>
 </div>
 <div class="space-y-4">
 <button class="w-full h-14 bg-gradient-to-r from-primary to-primary-container text-on-primary-container font-bold text-base rounded-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20" type="submit">
@@ -44,7 +44,7 @@
 </button>
 <div class="flex flex-col items-center gap-2">
 <p class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Didn't receive code?</p>
-<button class="text-primary hover:text-primary-dim text-sm font-semibold transition-colors flex items-center gap-1" type="button">
+<button (click)="resendOtp()" class="text-primary hover:text-primary-dim text-sm font-semibold transition-colors flex items-center gap-1" type="button">
                             Resend OTP
                             <span class="material-symbols-outlined text-base">refresh</span>
 </button>

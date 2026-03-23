@@ -9,11 +9,11 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { HubComponent } from './community/hub/hub.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    UserDashboardComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -21,6 +21,8 @@ import { MatIconModule } from '@angular/material/icon';
     AppRoutingModule,
     CoreModule,
     SharedModule,
+    UserDashboardComponent,
+    HubComponent,
     MatCardModule,
     MatButtonModule,
     MatIconModule

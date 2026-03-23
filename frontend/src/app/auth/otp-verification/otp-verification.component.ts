@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,21 +14,40 @@ export class OtpVerificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.otpForm = this.fb.group({
-      otp: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]]
+      digits: this.fb.array(new Array(6).fill('').map(() => this.fb.control('', [Validators.required, Validators.pattern('^[0-9]$')])))
     });
+  }
+
+  get digits() {
+    return this.otpForm.get('digits') as FormArray;
+  }
+
+  onInput(event: any, index: number): void {
+    const input = event.target;
+    if (input.value && index < 5) {
+      const nextInput = input.parentElement.children[index + 1] as HTMLInputElement;
+      if (nextInput) nextInput.focus();
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent, index: number): void {
+    if (event.key === 'Backspace' && !this.digits.at(index).value && index > 0) {
+      const prevInput = (event.target as HTMLInputElement).parentElement?.children[index - 1] as HTMLInputElement;
+      if (prevInput) prevInput.focus();
+    }
   }
 
   onSubmit(): void {
     if (this.otpForm.valid) {
-      console.log('OTP verification logic here', this.otpForm.value);
-      // Call service to verify OTP
-      this.router.navigate(['/auth/login']); // or directly to dashboard
+      const otpValue = this.digits.value.join('');
+      console.log('Verifying OTP:', otpValue);
+      // Implementation: call service
+      this.router.navigate(['/auth/login']);
     }
   }
 
   resendOtp(): void {
-      console.log('Resending OTP');
-      // Call service to resend
-      alert('OTP Resent');
+    console.log('Resending OTP');
+    alert('OTP Resent');
   }
 }

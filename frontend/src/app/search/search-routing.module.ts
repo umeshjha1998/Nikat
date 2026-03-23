@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ResultsComponent } from './results/results.component';
-import { CategoryRefinementComponent } from './category-refinement/category-refinement.component';
 
 const routes: Routes = [
-  { path: 'results', component: ResultsComponent },
-  { path: 'category/:id', component: CategoryRefinementComponent }
+  { path: 'results', loadComponent: () => import('./search-results/search-results.component').then(m => m.SearchResultsComponent) },
+  { path: 'category/:id', loadComponent: () => import('./refined-category-search/refined-category-search.component').then(m => m.RefinedCategorySearchComponent) }
 ];
 
 @NgModule({

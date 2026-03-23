@@ -1,98 +1,82 @@
 <app-navbar></app-navbar>
 
 <div class="community-hub-container">
-  <div class="header">
+  <!-- Header & Locality Picker -->
+  <div class="header-glass">
     <h1>Community Hub</h1>
-    <p>Connect with your neighbors</p>
+    <p>Discover local stories, events, and trade within your neighborhood.</p>
 
-    <mat-form-field appearance="outline" class="locality-select">
-      <mat-label>Select your locality</mat-label>
-      <mat-select [(value)]="selectedLocality" (selectionChange)="onLocalityChange()">
-        <mat-option value="Janta Flat">Janta Flat</mat-option>
-        <mat-option value="LIG flats">LIG flats</mat-option>
-        <mat-option value="MIG flats">MIG flats</mat-option>
-        <mat-option value="HIG flats">HIG flats</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="locality-picker">
+      <span class="material-symbols-outlined text-primary">location_on</span>
+      <mat-form-field appearance="outline">
+        <mat-label>Select your locality</mat-label>
+        <mat-select [(value)]="selectedLocality" (selectionChange)="onLocalityChange()">
+          <mat-option value="Janta Flat">Janta Flat</mat-option>
+          <mat-option value="LIG flats">LIG flats</mat-option>
+          <mat-option value="MIG flats">MIG flats</mat-option>
+          <mat-option value="HIG flats">HIG flats</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
 
+  <!-- Main Content Area -->
   <div class="main-content" *ngIf="selectedLocality">
-    <mat-tab-group animationDuration="0ms" class="hub-tabs">
-      <mat-tab label="All">
-        <ng-template matTabContent>
-          <div class="posts-list">
-             <mat-card class="post-card" *ngFor="let post of filteredPosts">
-                <mat-card-header>
-                    <div mat-card-avatar class="user-avatar">
-                        <mat-icon>account_circle</mat-icon>
-                    </div>
-                    <mat-card-title>{{post.title}}</mat-card-title>
-                    <mat-card-subtitle>{{post.authorName}} • {{post.postType}}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>{{post.content}}</p>
-                    <div class="post-details" *ngIf="post.price || post.eventTime">
-                        <span *ngIf="post.price" class="price">Price: ₹{{post.price}}</span>
-                        <span *ngIf="post.eventTime" class="time">Time: {{post.eventTime | date:'medium'}}</span>
-                    </div>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-button color="primary">Interested</button>
-                    <button mat-button>Report</button>
-                </mat-card-actions>
-             </mat-card>
-             <div *ngIf="filteredPosts.length === 0" class="no-posts">
-                 No posts found for this locality and type.
-             </div>
+    <!-- Custom Tab Switcher -->
+    <div class="tab-switcher">
+      <button 
+        *ngFor="let tab of tabs" 
+        (click)="setActiveTab(tab)"
+        [class.active]="activeTab === tab"
+        class="tab-btn">
+        {{tab}}
+      </button>
+    </div>
+
+    <!-- Bento Feed -->
+    <div class="bento-feed" *ngIf="filteredPosts.length > 0">
+      <div 
+        *ngFor="let post of filteredPosts; let i = index" 
+        [class]="'bento-card ' + getBentoClass(i)">
+        
+        <div>
+          <span class="card-tag">{{post.postType}}</span>
+          <h3 class="text-2xl font-black mb-3 leading-tight">{{post.title}}</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">{{post.content}}</p>
+          
+          <div class="mt-4 flex gap-4" *ngIf="post.price || post.eventTime">
+            <span *ngIf="post.price" class="text-secondary font-bold text-sm">₹{{post.price}}</span>
+            <span *ngIf="post.eventTime" class="text-primary font-bold text-sm">{{post.eventTime | date:'shortTime'}}</span>
           </div>
-        </ng-template>
-      </mat-tab>
+        </div>
 
-      <mat-tab label="Reviews">
-        <!-- Filter logic would apply here in component -->
-        <ng-template matTabContent>
-            <div class="tab-placeholder">Reviews content</div>
-        </ng-template>
-      </mat-tab>
+        <div class="author-meta">
+          <div class="avatar">{{post.authorName.charAt(0)}}</div>
+          <div class="info">
+            <div class="name">{{post.authorName}}</div>
+            <div class="type">Local Resident</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <mat-tab label="Games Together">
-         <ng-template matTabContent>
-            <div class="tab-placeholder">Games content</div>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab label="Cab Pool">
-         <ng-template matTabContent>
-            <div class="tab-placeholder">Cab Pool content</div>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab label="Local Store (Group Shopping)">
-         <ng-template matTabContent>
-            <div class="tab-placeholder">Group shopping content</div>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab label="Buy/Sell">
-         <ng-template matTabContent>
-            <div class="tab-placeholder">Marketplace content</div>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab label="Issues">
-         <ng-template matTabContent>
-            <div class="tab-placeholder">Issues content</div>
-        </ng-template>
-      </mat-tab>
-
-    </mat-tab-group>
-
-    <button mat-fab color="primary" class="add-post-btn" title="Add Post">
-      <mat-icon>add</mat-icon>
-    </button>
+    <!-- Empty Feed State -->
+    <div *ngIf="filteredPosts.length === 0" class="no-locality-state">
+      <mat-icon>post_add</mat-icon>
+      <h2>No posts yet</h2>
+      <p>Be the first to share something in {{selectedLocality}}!</p>
+    </div>
   </div>
 
-  <div class="select-prompt" *ngIf="!selectedLocality">
-      Please select a locality to view community posts.
+  <!-- Selection Prompt State -->
+  <div class="no-locality-state" *ngIf="!selectedLocality">
+    <mat-icon>explore_nearby</mat-icon>
+    <h2>Explore your area</h2>
+    <p>Please select a locality to view community posts and local updates.</p>
+  </div>
+
+  <!-- Floating Action Button -->
+  <div class="add-post-fab" title="Share something new">
+    <mat-icon>add</mat-icon>
   </div>
 </div>

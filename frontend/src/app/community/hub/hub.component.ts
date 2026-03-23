@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { SharedModule } from '../../shared/shared.module';
 
 export interface PostData {
+// ...
     id: string;
     title: string;
     content: string;
@@ -19,6 +28,8 @@ const MOCK_POSTS: PostData[] = [
 
 @Component({
   selector: 'app-hub',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatSelectModule, MatCardModule, MatButtonModule, MatIconModule, MatTabsModule, SharedModule],
   templateUrl: './hub.component.html',
   styleUrls: ['./hub.component.scss']
 })
@@ -26,6 +37,8 @@ export class HubComponent implements OnInit {
   selectedLocality: string = '';
   allPosts: PostData[] = MOCK_POSTS;
   filteredPosts: PostData[] = [];
+  activeTab: string = 'All';
+  tabs: string[] = ['All', 'Reviews', 'Games', 'Cab Pool', 'Marketplace', 'Issues'];
 
   constructor() { }
 
@@ -33,10 +46,42 @@ export class HubComponent implements OnInit {
   }
 
   onLocalityChange() {
+      this.filterPosts();
+  }
+
+  setActiveTab(tab: string) {
+      this.activeTab = tab;
+      this.filterPosts();
+  }
+
+  filterPosts() {
+      let posts = this.allPosts;
+      
+      // Filter by locality
       if (this.selectedLocality) {
-          this.filteredPosts = this.allPosts.filter(p => p.locality === this.selectedLocality);
+          posts = posts.filter(p => p.locality === this.selectedLocality);
       } else {
           this.filteredPosts = [];
+          return;
       }
+
+      // Filter by tab type (Simplified mapping)
+      if (this.activeTab !== 'All') {
+          const typeMap: any = {
+              'Reviews': 'Review',
+              'Games': 'Game',
+              'Cab Pool': 'CabPool',
+              'Marketplace': 'Marketplace',
+              'Issues': 'Issue'
+          };
+          posts = posts.filter(p => p.postType === typeMap[this.activeTab]);
+      }
+
+      this.filteredPosts = posts;
+  }
+
+  getBentoClass(index: number): string {
+      const classes = ['large', 'medium', 'tall', 'medium', 'medium', 'large'];
+      return classes[index % classes.length];
   }
 }

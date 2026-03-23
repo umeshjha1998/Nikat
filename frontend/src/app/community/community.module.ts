@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CommunityRoutingModule } from './community-routing.module';
-import { HubComponent } from './hub/hub.component';
 import { SharedModule } from '../shared/shared.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +13,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
-    HubComponent
   ],
   imports: [
     CommonModule,

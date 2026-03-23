@@ -8,7 +8,7 @@ You are working on Nikat, a local services and shops discovery platform. The rep
 ### Frontend (Angular)
 - The frontend is located in the `frontend/` directory.
 - It is deployed automatically via Vercel using `vercel.json` for SPA routing.
-- **Component Strategy**: It uses Angular Modules (`NgModule`) instead of Standalone components for legacy consistency. All features are wrapped in feature modules (e.g., `auth`, `admin`, `community`, `user-dashboard`) and lazy loaded.
+- **Component Strategy**: It primarily uses Angular Modules (`NgModule`) for legacy consistency, however, all newly developed features (e.g., Phase 3 Community Hubs, Phase 4 Dashboards) use Angular 18 **Standalone components** imported into their respective Routing Modules.
 - **Styling**: SCSS with Angular Material prebuilt themes (`indigo-pink.css`) and global dark mode toggle `.dark-theme`. Tailwind CSS utilities are also available via `@tailwind` directives in `styles.scss`.
 - **State & APIs**: Shared logic lives in `core/services/` (`ApiService`, `AuthService`). Auth token is stored in localStorage.
 

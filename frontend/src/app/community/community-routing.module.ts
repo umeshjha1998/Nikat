@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HubComponent } from './hub/hub.component';
+import { ReviewRatingHubComponent } from './review-rating-hub/review-rating-hub.component';
 
 const routes: Routes = [
-  { path: '', component: HubComponent }
+  { path: '', loadComponent: () => import('./community-hub-interactive-features/community-hub-interactive-features.component').then(m => m.CommunityHubInteractiveFeaturesComponent) },
+  { path: 'review-rating-hub', component: ReviewRatingHubComponent }
 ];
 
 @NgModule({

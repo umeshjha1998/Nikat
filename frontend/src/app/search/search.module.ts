@@ -13,12 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
-    ResultsComponent,
     CategoryRefinementComponent
   ],
   imports: [
     CommonModule,
     SearchRoutingModule,
+    ResultsComponent,
     SharedModule,
     MatCardModule,
     MatButtonModule,

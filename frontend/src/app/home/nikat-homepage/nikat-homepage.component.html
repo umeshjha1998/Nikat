@@ -5,10 +5,10 @@
 <div class="flex items-center gap-8">
 <span class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-[#5eb4ff] to-[#2aa7ff]" style="">Nikat</span>
 <nav class="hidden md:flex items-center gap-6">
-<a class="font-plus-jakarta tracking-tight font-bold text-blue-400 border-b-2 border-blue-400 pb-1" href="#" style="">Discover</a>
-<a class="font-plus-jakarta tracking-tight font-bold text-[#e2e3ff]/70 hover:text-[#e2e3ff] transition-all duration-300" href="#" style="">Services</a>
-<a class="font-plus-jakarta tracking-tight font-bold text-[#e2e3ff]/70 hover:text-[#e2e3ff] transition-all duration-300" href="#" style="">Shops</a>
-<a class="font-plus-jakarta tracking-tight font-bold text-[#e2e3ff]/70 hover:text-[#e2e3ff] transition-all duration-300" href="#" style="">Community</a>
+<a class="font-plus-jakarta tracking-tight font-bold text-blue-400 border-b-2 border-blue-400 pb-1" routerLink="/" style="">Discover</a>
+<a class="font-plus-jakarta tracking-tight font-bold text-[#e2e3ff]/70 hover:text-[#e2e3ff] transition-all duration-300" routerLink="/search" style="">Services</a>
+<a class="font-plus-jakarta tracking-tight font-bold text-[#e2e3ff]/70 hover:text-[#e2e3ff] transition-all duration-300" routerLink="/search/shops" style="">Shops</a>
+<a class="font-plus-jakarta tracking-tight font-bold text-[#e2e3ff]/70 hover:text-[#e2e3ff] transition-all duration-300" routerLink="/community" style="">Community</a>
 </nav>
 </div>
 <div class="flex items-center gap-4">
@@ -92,7 +92,7 @@
 <h3 class="font-headline text-3xl font-bold tracking-tight" style="">Browse Categories</h3>
 <p class="text-outline-variant font-medium" style="">Quick access to essential services</p>
 </div>
-<button class="text-primary font-bold hover:underline" style="">View All</button>
+<button class="text-primary font-bold hover:underline" routerLink="/search" style="">View All</button>
 </div>
 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
 <!-- Category: Barber -->
@@ -306,10 +306,16 @@
 <div class="space-y-6 bg-surface-container/50 p-8 rounded-3xl border border-outline-variant/10">
 <span class="font-headline text-lg font-bold" style="">Business Hub</span>
 <p class="text-sm text-outline-variant" style="">Manage your listings, view insights, and grow your local presence.</p>
-<a class="inline-flex items-center gap-2 text-blue-400 underline font-bold group" href="#" style="">
+<div class="flex flex-col gap-3">
+<a class="inline-flex items-center gap-2 text-blue-400 underline font-bold group" routerLink="/auth/login" style="">
                     Admin Login
                     <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" style="">login</span>
 </a>
+<a class="inline-flex items-center gap-2 text-primary underline font-bold group" routerLink="/auth/register" style="">
+                    Register Business
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" style="">app_registration</span>
+</a>
+</div>
 </div>
 </div>
 <div class="max-w-7xl mx-auto px-8 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
