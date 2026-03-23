@@ -1,0 +1,23 @@
+package com.nikat.api.dto;
+
+import lombok.*;
+import java.util.UUID;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ShopDto {
+    private UUID id;
+    private UUID ownerId;
+    private String ownerName;
+    private String name;
+    private String categoryName;
+    private UUID categoryId;
+    private Integer workerCount;
+    private String description;
+    private String address;
+    private String openingHours;
+    private String status;
+    private Boolean isFeatured;
+}

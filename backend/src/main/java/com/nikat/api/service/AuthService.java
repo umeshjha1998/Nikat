@@ -1,0 +1,99 @@
+package com.nikat.api.service;
+
+import com.nikat.api.domain.User;
+import com.nikat.api.dto.AuthRequest;
+import com.nikat.api.dto.AuthResponse;
+import com.nikat.api.dto.RegisterRequest;
+import com.nikat.api.dto.UserDto;
+import com.nikat.api.repository.UserRepository;
+import com.nikat.api.security.JwtUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email is already in use.");
+        }
+        if (userRepository.existsByPhone(request.getPhone())) {
+            throw new RuntimeException("Phone is already in use.");
+        }
+
+        User user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .phone(request.getPhone())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole() != null ? request.getRole() : "USER")
+                .isShopOwner("SHOP_OWNER".equals(request.getRole()))
+                .isServiceProvider("SERVICE_PROVIDER".equals(request.getRole()))
+                .status("PENDING_VERIFICATION")
+                .emailVerified(false)
+                .build();
+
+        user = userRepository.save(user);
+
+        // Map to UserDto
+        UserDto userDto = mapToUserDto(user);
+        
+        // Return without token for now, require OTP or login
+        return AuthResponse.builder()
+                .token(null) // Token generated on login
+                .user(userDto)
+                .build();
+    }
+
+    public AuthResponse login(AuthRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmailOrPhone(), request.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Fetch User
+        User user = userRepository.findByEmail(request.getEmailOrPhone())
+                .orElseGet(() -> userRepository.findByPhone(request.getEmailOrPhone())
+                        .orElseThrow(() -> new RuntimeException("User not found")));
+
+        // Generate Token
+        // For now, returning a static token for demonstration. Will be replaced by proper JJWT token generation.
+        String token = "jwt.token.placeholder.for." + user.getEmail();
+
+        UserDto userDto = mapToUserDto(user);
+
+        return AuthResponse.builder()
+                .token(token)
+                .user(userDto)
+                .build();
+    }
+
+    private UserDto mapToUserDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .isShopOwner(user.getIsShopOwner())
+                .isServiceProvider(user.getIsServiceProvider())
+                .status(user.getStatus())
+                .build();
+    }
+}

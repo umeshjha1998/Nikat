@@ -1,0 +1,24 @@
+<!-- Top App Bar -->
+<header class="app-header">
+  <div class="header-content">
+    <div class="logo-container" routerLink="/">
+      <span class="material-icons logo-icon">explore</span>
+      <span class="logo-text">Nikat</span>
+    </div>
+    
+    <nav class="desktop-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Explore</a>
+      <a routerLink="/login" class="btn btn-secondary nav-btn">Sign In</a>
+      <a routerLink="/register" class="btn btn-primary glow-effect nav-btn">Join Now</a>
+    </nav>
+    
+    <button class="mobile-menu-btn">
+      <span class="material-icons">menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="app-main">
+  <router-outlet></router-outlet>
+</main>
