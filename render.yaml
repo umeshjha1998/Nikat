@@ -15,4 +15,4 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: ALLOWED_ORIGINS
-        value: https://nikat-frontend.vercel.app # Example Vercel URL
+        value: https://nikat.vercel.app # Example Vercel URL
