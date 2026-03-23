@@ -60,7 +60,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder.Default
     private boolean isEmailVerified = false;
+    @Builder.Default
     private boolean isBlocked = false;
 
     private LocalDateTime createdAt;

@@ -40,6 +40,7 @@ public class CommunityPost {
     private Double price;
     private LocalDateTime eventTime;
 
+    @Builder.Default
     private boolean isApproved = false;
 
     private LocalDateTime createdAt;

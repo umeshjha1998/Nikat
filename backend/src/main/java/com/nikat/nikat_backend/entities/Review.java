@@ -34,6 +34,7 @@ public class Review {
     @Column(columnDefinition = "TEXT")
     private String comment;
 
+    @Builder.Default
     private boolean isApproved = false;
 
     private LocalDateTime createdAt;

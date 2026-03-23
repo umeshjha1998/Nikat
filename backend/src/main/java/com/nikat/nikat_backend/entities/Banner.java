@@ -24,5 +24,6 @@ public class Banner {
 
     private int displayOrder;
 
+    @Builder.Default
     private boolean isActive = true;
 }

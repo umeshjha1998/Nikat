@@ -36,5 +36,6 @@ public class Product {
     @ElementCollection
     private List<String> imageUrls;
 
+    @Builder.Default
     private boolean isAvailable = true;
 }
