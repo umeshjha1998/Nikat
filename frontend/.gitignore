@@ -31,6 +31,7 @@ speed-measure-plugin*.json
 .history/*
 
 # misc
+/.angular
 /.sass-cache
 /connect.lock
 /coverage
@@ -41,3 +42,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Custom Additions
+*.log
+.env
+.env.*

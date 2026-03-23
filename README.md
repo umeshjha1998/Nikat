@@ -4,8 +4,8 @@ Nikat is a comprehensive local services and shops discovery platform connecting 
 
 ## 🚀 Technology Stack
 
-- **Frontend**: Angular 18, Angular Material, SCSS
-- **Backend**: Spring Boot 3.x, Java 21, Spring Security (JWT), Spring Data JPA
+- **Frontend**: Angular 18, Angular Material, SCSS (with Tailwind CSS utilities)
+- **Backend**: Spring Boot 3.x, Java 21, Spring Security 6 (JWT), Spring Data JPA
 - **Database**: PostgreSQL (Neon)
 - **Email Service**: Resend (OTP & verification flows)
 - **Deployment Strategy**:
@@ -67,21 +67,20 @@ Nikat is structured to be automatically deployed using GitHub integrations on Ve
 ## 📚 Project Architecture
 
 The architecture maintains a strict separation of concerns:
-- **Backend Layers**: Controller, Service, Repository, DTO/Mapper, Entity, Config.
-- **Frontend Modules**: Organized by domain (`auth`, `home`, `search`, `listings`, `community`, `admin`, `shared`, `core`).
+- **Backend Layers**: Controller → Service → Repository → Entity, with DTOs/Mappers for API boundaries.
+- **Frontend Modules**: Organized by domain (`auth`, `home`, `search`, `listings`, `community`, `admin`, `user-dashboard`, `shared`, `core`), all lazy-loaded.
 - **Data Source**: Admin updates reflect on canonical persisted records to ensure a single source of truth across the platform.
-# Nikat - Discover Your Community
 
-Nikat is a comprehensive local discovery and community engagement platform designed to connect users with local shops, services, and neighborhood events. It bridges the gap between local businesses and consumers while fostering a vibrant community ecosystem.
+---
 
-## Overview
+## 👥 User Roles
 
 Nikat serves multiple types of users, providing tailored experiences for each:
 1. **Consumers/Users:** Discover local shops, book services, purchase products, participate in community discussions, and manage their local experiences.
 2. **Business Owners (Shops & Services):** Manage their digital storefronts, handle bookings, sell products, track analytics, and engage with customers.
 3. **Platform Administrators:** Oversee platform operations, manage users and businesses, handle approvals, moderate community content, and view platform-wide analytics.
 
-## Core Features
+## ✨ Core Features
 
 ### For Users
 * **Authentication & Profiles:** Secure login, registration flow with OTP, and personalized user dashboards.
@@ -107,16 +106,13 @@ Nikat serves multiple types of users, providing tailored experiences for each:
 * **Moderation & Support:** Manage approvals, handle support queries, and moderate the Community Hub.
 * **Analytics & Security:** View platform stats, manage global settings, and audit security logs.
 
-## Project Structure & Documentation
+---
 
-To maintain scalability and ease of development, the project architecture, design guidelines, and data models are documented separately for AI agents and developers.
+## 📖 Documentation
 
-Please refer to the `agent-instructions/` directory for detailed technical specifications:
-* `agent-instructions/tech-stack-and-architecture.md` - Technical stack and system architecture.
-* `agent-instructions/data-models.md` - Core database schemas and entities.
-* `agent-instructions/core-features-and-logic.md` - Business logic and feature implementation details.
-* `agent-instructions/ui-ux-guidelines.md` - Design system, colors, and typography.
-* `agent-instructions/agent-workflow-rules.md` - Rules for AI agents operating within the codebase.
-
-## Getting Started
-(Details on local development setup will be added here based on the chosen tech stack).
+For detailed technical specifications, refer to the `agent-instructions/` directory:
+* `agent-instructions/tech-stack-and-architecture.md` — Technical stack and system architecture.
+* `agent-instructions/data-models.md` — Core database schemas and entities.
+* `agent-instructions/core-features-and-logic.md` — Business logic and feature implementation details.
+* `agent-instructions/ui-ux-guidelines.md` — Design system, colors, and typography.
+* `agent-instructions/agent-workflow-rules.md` — Rules for AI agents operating within the codebase.

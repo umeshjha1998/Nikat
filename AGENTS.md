@@ -8,8 +8,8 @@ You are working on Nikat, a local services and shops discovery platform. The rep
 ### Frontend (Angular)
 - The frontend is located in the `frontend/` directory.
 - It is deployed automatically via Vercel using `vercel.json` for SPA routing.
-- **Component Strategy**: It uses Angular Modules (`NgModule`) instead of Standalone components for legacy consistency. All features are wrapped in feature modules (e.g., `auth`, `admin`, `community`) and lazy loaded.
-- **Styling**: `styles.scss` uses Angular Material prebuilt themes (`indigo-pink.css`) and global dark mode toggles `.dark-theme`.
+- **Component Strategy**: It uses Angular Modules (`NgModule`) instead of Standalone components for legacy consistency. All features are wrapped in feature modules (e.g., `auth`, `admin`, `community`, `user-dashboard`) and lazy loaded.
+- **Styling**: SCSS with Angular Material prebuilt themes (`indigo-pink.css`) and global dark mode toggle `.dark-theme`. Tailwind CSS utilities are also available via `@tailwind` directives in `styles.scss`.
 - **State & APIs**: Shared logic lives in `core/services/` (`ApiService`, `AuthService`). Auth token is stored in localStorage.
 
 ### Backend (Spring Boot)
@@ -18,6 +18,7 @@ You are working on Nikat, a local services and shops discovery platform. The rep
 - **Java Version**: Uses Java 21.
 - **Security**: Spring Security 6 with JWT filter chain. The `ApplicationConfig` handles DaoAuthenticationProvider with `BCryptPasswordEncoder`.
 - **Database**: PostgreSQL (Neon Database). Uses Spring Data JPA with `Hibernate`. Base inheritance is used for `Listing` -> `Shop` / `Service` with `InheritanceType.JOINED`.
+- **Email**: Resend API for OTP and verification flows.
 - **Testing**: JUnit 5 + Mockito. 100% logic line coverage mapped via JaCoCo maven plugin. Use `./mvnw test` to execute.
 
 ## Deployment Details
@@ -25,12 +26,22 @@ You are working on Nikat, a local services and shops discovery platform. The rep
 - **Vercel Setup**: Standard Angular project settings. Framework preset should be `Angular` and root directory `frontend/`.
 
 ## Common Commands
+- Run Frontend: `cd frontend && npm start`
 - Run Frontend Tests: `cd frontend && npm run test`
+- Run Backend: `cd backend && ./mvnw spring-boot:run`
 - Run Backend Tests: `cd backend && ./mvnw clean test`
 - Build Frontend: `cd frontend && npm run build`
 - Build Backend: `cd backend && ./mvnw clean package -DskipTests`
 
+## Git & Ignored Files
+- Angular cache (`.angular/`) is excluded from version control via `.gitignore`.
+- `node_modules/`, `dist/`, `target/`, `build/`, `.env`, and IDE files are also ignored.
+- Refer to the root `.gitignore`, `frontend/.gitignore`, and `backend/.gitignore` for full details.
+
 *Note for AI Agents:* Because the codebase is located in an isolated MCP sandbox without a GitHub repository mapped, programmatic Vercel/Render deployments via direct MCP API requests that require a `repo` attribute will fail. The structural design and configuration files (`render.yaml`, `vercel.json`, `Dockerfile`) are fully built to handle it natively once pushed to GitHub.
+
+---
+
 # AI Agent Instructions (Agentic Flow Standard)
 
 This file contains instructions for AI coding assistants (like Cursor, Copilot, or Claude) working on the Nikat project.

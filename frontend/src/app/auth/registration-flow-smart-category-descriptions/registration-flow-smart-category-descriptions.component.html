@@ -1,0 +1,299 @@
+
+<!-- TopAppBar -->
+<header class="bg-[#182056]/60 backdrop-blur-xl dark:bg-[#182056]/60 docked full-width top-0 sticky z-50 shadow-[0_12px_32px_rgba(0,0,0,0.4)]">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-[#5eb4ff] to-[#2aa7ff]">Nikat</div>
+<nav class="hidden md:flex items-center space-x-8 font-plus-jakarta tracking-tight font-bold text-on-surface">
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] hover:bg-[#e2e3ff]/10 transition-all duration-300 px-3 py-1 rounded-lg" href="#">Discover</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] hover:bg-[#e2e3ff]/10 transition-all duration-300 px-3 py-1 rounded-lg" href="#">Services</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] hover:bg-[#e2e3ff]/10 transition-all duration-300 px-3 py-1 rounded-lg" href="#">Shops</a>
+<a class="text-[#e2e3ff]/70 hover:text-[#e2e3ff] hover:bg-[#e2e3ff]/10 transition-all duration-300 px-3 py-1 rounded-lg" href="#">Community</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">location_on</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">dark_mode</button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Default user avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARIwk-337ztnoyXKuLqs6TSxAAawl0-mpSpJfL6DWiBOM-XgNJLIdpGb2Xy0FvQ2FtdIbb3QMzAJ21lt57pSJDVn4h25l0qT0UYrMGkVzOrTZ2SOfBkAVmmLHybMkCSvCj1EpY6MvZVR9GJwKb-UQ5DP4jB66dOgkWHTzwM-lPv_oWfKPaTaIfCop4cNYw18oJ6fHs8lRxJzK0e82dBsYEjLyg8qJ7tKPeoo8Ct1WMRbr3UKERaBC_eWb-zIg_FgIvlhuJxDMonrpq"/>
+</div>
+</div>
+</div>
+</header>
+<main class="min-h-screen pt-12 pb-32 px-4">
+<div class="max-w-4xl mx-auto">
+<!-- Hero Header -->
+<div class="mb-12 text-center md:text-left">
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Join the <span class="text-transparent bg-clip-text bg-gradient-to-br from-primary to-primary-container">Ecosystem</span></h1>
+<p class="text-on-surface-variant text-lg max-w-2xl">Register today to discover local treasures, manage your business, or offer professional services to your community.</p>
+</div>
+<!-- Multi-Role Registration Flow -->
+<form class="space-y-8">
+<!-- Section 1: Role Selection (Bento Style) -->
+<section class="space-y-6">
+<div class="flex items-center space-x-3">
+<span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">1</span>
+<h2 class="font-headline text-xl font-bold">Select Your Roles</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- User Role -->
+<label class="relative group cursor-pointer">
+<input checked="" class="peer sr-only" name="role" type="checkbox" value="user"/>
+<div class="h-full p-6 rounded-2xl bg-surface-container border border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all duration-300 hover:bg-surface-container-high shadow-lg">
+<div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+</div>
+<h3 class="font-bold text-lg mb-1">User</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Discover shops, book services, and engage with the community.</p>
+<div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</label>
+<!-- Shop Owner Role -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="role" type="checkbox" value="shop_owner"/>
+<div class="h-full p-6 rounded-2xl bg-surface-container border border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all duration-300 hover:bg-surface-container-high shadow-lg">
+<div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary" data-icon="storefront">storefront</span>
+</div>
+<h3 class="font-bold text-lg mb-1">Shop Owner</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">List your physical store, manage inventory, and reach local customers.</p>
+<div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</label>
+<!-- Service Provider Role -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="role" type="checkbox" value="service_provider"/>
+<div class="h-full p-6 rounded-2xl bg-surface-container border border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all duration-300 hover:bg-surface-container-high shadow-lg">
+<div class="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-tertiary" data-icon="handyman">handyman</span>
+</div>
+<h3 class="font-bold text-lg mb-1">Service Provider</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Offer professional skills like plumbing, tutoring, or pet grooming.</p>
+<div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</label>
+</div>
+</section>
+<!-- Section 2: Personal Identification -->
+<section class="p-8 rounded-3xl bg-surface-container-low space-y-8">
+<div class="flex items-center space-x-3">
+<span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">2</span>
+<h2 class="font-headline text-xl font-bold">Personal Identification</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Full Name</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Gender</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface">
+<option>Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Non-binary</option>
+<option>Prefer not to say</option>
+</select>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Email Address</label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="john@example.com" type="email"/>
+<button class="bg-primary/10 text-primary px-6 py-3 rounded-xl font-bold hover:bg-primary/20 active:scale-95 transition-all text-sm" type="button">Send OTP</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Phone Number</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="+91 (900) 000-0000" type="tel"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Password</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="••••••••" type="password"/>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Location &amp; Address</label>
+<div class="space-y-4">
+<div class="flex flex-col md:flex-row gap-3">
+<button class="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-dim active:scale-95 transition-all shadow-lg shadow-primary/20" type="button">
+<span class="material-symbols-outlined">location_on</span>
+<span>Detect Location</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-on-surface placeholder:text-outline-variant opacity-70 cursor-not-allowed" placeholder="GPS Coordinates (e.g. 28.6139° N, 77.2090° E)" readonly="" type="text"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-primary text-xs font-bold uppercase tracking-tighter">GPS Required</span>
+</div>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pl-11 focus:ring-2 focus:ring-primary text-on-surface" placeholder="Flat, Floor, Building, or Landmark details" type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">apartment</span>
+</div>
+<p class="text-[10px] text-on-surface-variant italic">* GPS coordinates are used for precise delivery. Please provide building details manually.</p>
+</div>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Profile Photo (Max 1MB)</label>
+<div class="border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 flex flex-col items-center justify-center text-center space-y-2 hover:border-primary/50 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-outline-variant group-hover:text-primary transition-colors">cloud_upload</span>
+<p class="text-sm font-medium">Click to upload or drag and drop</p>
+<p class="text-xs text-outline-variant">PNG, JPG up to 1MB</p>
+<input class="hidden" type="file"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Dynamic Professional Fields -->
+<section class="space-y-8">
+<div class="flex items-center space-x-3">
+<span class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">3</span>
+<h2 class="font-headline text-xl font-bold">Business &amp; Service Details</h2>
+</div>
+<!-- Shop Details Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 rounded-3xl bg-surface-container-low">
+<div class="md:col-span-2 flex items-center justify-between border-b border-outline-variant/10 pb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">storefront</span>
+<span class="font-bold">Shop Configurations</span>
+</div>
+<span class="text-[10px] uppercase tracking-widest font-bold px-2 py-1 bg-secondary/10 text-secondary rounded">Conditional</span>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Shop Category</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" id="shop_category_select" onchange="updateDescription('shop_category_select', 'shop_description_field')">
+<option disabled="" selected="">Select Category</option>
+<option>Barber Shop</option>
+<option>Grocery</option>
+<option>Cafe</option>
+<option>Boutique</option>
+<option>Tech</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Worker Count</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" placeholder="0" type="number"/>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Shop Description</label>
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant resize-none custom-scrollbar" id="shop_description_field" placeholder="Briefly describe your shop and services..." rows="3"></textarea>
+</div>
+<div class="md:col-span-2 flex flex-col md:flex-row gap-4">
+<label class="flex-1 flex items-center gap-3 p-4 bg-surface-container-highest rounded-xl cursor-pointer">
+<input class="rounded text-primary focus:ring-primary bg-surface border-outline-variant" type="checkbox"/>
+<div>
+<p class="font-bold text-sm">Inventory Management</p>
+<p class="text-xs text-on-surface-variant">Track stock levels automatically</p>
+</div>
+</label>
+<label class="flex-1 flex items-center gap-3 p-4 bg-surface-container-highest rounded-xl cursor-pointer">
+<input class="rounded text-primary focus:ring-primary bg-surface border-outline-variant" type="checkbox"/>
+<div>
+<p class="font-bold text-sm">Rental Options</p>
+<p class="text-xs text-on-surface-variant">Enable daily/hourly item rental</p>
+</div>
+</label>
+</div>
+</div>
+<!-- Service Provider Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-8 rounded-3xl bg-surface-container-low">
+<div class="md:col-span-2 flex items-center justify-between border-b border-outline-variant/10 pb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">handyman</span>
+<span class="font-bold">Provider Capabilities</span>
+</div>
+<span class="text-[10px] uppercase tracking-widest font-bold px-2 py-1 bg-tertiary/10 text-tertiary rounded">Conditional</span>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Service Type</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" id="service_type_select" onchange="updateDescription('service_type_select', 'service_description_field')">
+<option disabled="" selected="">Select Specialization</option>
+<option>Electrician</option>
+<option>Home Cleaning</option>
+<option>Plumbing</option>
+<option>Virtual Assistant</option>
+<option>Pet Grooming</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Base Charges (Per Hour)</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant">₹</span>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 pl-8 focus:ring-2 focus:ring-primary text-on-surface" placeholder="25.00" type="text"/>
+</div>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Service Description</label>
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface placeholder:text-outline-variant resize-none custom-scrollbar" id="service_description_field" placeholder="Describe your expertise and the services you provide..." rows="3"></textarea>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Availability Start</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" type="time"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant">Availability End</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface" type="time"/>
+</div>
+</div>
+</section>
+<!-- Final Actions -->
+<div class="flex flex-col items-center space-y-6 pt-8">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant bg-surface text-primary focus:ring-primary" required="" type="checkbox"/>
+<span class="text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">I agree to the <a class="text-primary underline" href="#">Terms of Service</a> and <a class="text-primary underline" href="#">Privacy Policy</a>.</span>
+</label>
+<button class="w-full md:w-auto min-w-[320px] bg-gradient-to-br from-[#5eb4ff] to-[#2aa7ff] text-white py-4 px-12 rounded-2xl font-plus-jakarta font-extrabold text-lg shadow-[0_12px_32px_rgba(94,180,255,0.3)] hover:scale-[1.02] active:scale-95 transition-all" type="submit">
+                        Complete Registration
+                    </button>
+<p class="text-on-surface-variant text-sm">Already have an account? <a class="text-primary font-bold" href="#">Sign In</a></p>
+</div>
+</form>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#05092f] dark:bg-[#05092f] w-full mt-auto border-t border-outline-variant/10">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto px-8 py-16 tonal-shift bg-[#080e38]">
+<div class="space-y-4">
+<div class="text-xl font-bold text-[#e2e3ff] mb-4">Nikat</div>
+<p class="font-manrope text-sm text-[#e2e3ff]/80 leading-relaxed">Connecting communities through seamless service discovery and shop management. Your local ecosystem, unified.</p>
+</div>
+<div>
+<h4 class="font-bold text-primary mb-6">Quick Links</h4>
+<ul class="space-y-4 font-manrope text-sm">
+<li><a class="text-[#e2e3ff]/60 hover:text-white hover:translate-x-1 transition-transform inline-block" href="#">About Us</a></li>
+<li><a class="text-[#e2e3ff]/60 hover:text-white hover:translate-x-1 transition-transform inline-block" href="#">Contact Support</a></li>
+<li><a class="text-[#e2e3ff]/60 hover:text-white hover:translate-x-1 transition-transform inline-block" href="#">Privacy Policy</a></li>
+<li><a class="text-[#e2e3ff]/60 hover:text-white hover:translate-x-1 transition-transform inline-block" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-primary mb-6">Stay Connected</h4>
+<p class="text-sm text-[#e2e3ff]/60 mb-4">Subscribe to our newsletter for community updates.</p>
+<div class="flex gap-2">
+<input class="bg-[#182056] border-none rounded-lg px-4 py-2 text-sm flex-1" placeholder="Email" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-bold text-sm">Join</button>
+</div>
+<p class="mt-8 font-manrope text-xs text-[#e2e3ff]/40">© 2024 Nikat. Explore your community.</p>
+</div>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#182056]/60 backdrop-blur-xl z-50 rounded-t-3xl shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-[#e2e3ff]/60 px-5 py-2 hover:text-blue-300 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-bold mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e3ff]/60 px-5 py-2 hover:text-blue-300 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-bold mt-1">Discovery</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e3ff]/60 px-5 py-2 hover:text-blue-300 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-bold mt-1">Community</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#5eb4ff] to-[#2aa7ff] text-white rounded-2xl px-5 py-2 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-bold mt-1">Profile</span>
+</a>
+</nav>

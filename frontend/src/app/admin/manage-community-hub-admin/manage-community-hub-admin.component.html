@@ -1,0 +1,399 @@
+
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-[#05092f] dark:bg-[#05092f] border-r border-[#40456c]/15 shadow-2xl shadow-black/40 z-50">
+<div class="flex flex-col h-full py-6 px-4">
+<div class="mb-8 px-2">
+<h1 class="text-xl font-bold text-[#e2e3ff] tracking-tight">Luminous Admin</h1>
+<p class="text-on-surface-variant text-[10px] tracking-wider uppercase mt-1">Community Manager</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-4 py-3 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<!-- Active State: Community/Hub -->
+<a class="flex items-center px-4 py-3 rounded-xl text-[#5eb4ff] font-bold border-r-4 border-[#5eb4ff] bg-[#0e1442] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="groups">groups</span>
+<span class="text-sm font-medium">Community Hub</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="directions_car">directions_car</span>
+<span class="text-sm font-medium">Cab Pools</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="sports_esports">sports_esports</span>
+<span class="text-sm font-medium">Games</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="storefront">storefront</span>
+<span class="text-sm font-medium">Marketplace</span>
+</a>
+<a class="flex items-center px-4 py-3 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="shopping_bag">shopping_bag</span>
+<span class="text-sm font-medium">Group Shopping</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1">
+<button class="w-full primary-glow text-on-primary-fixed font-bold py-3 rounded-xl mb-6 shadow-lg shadow-primary/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    New Activity
+                </button>
+<a class="flex items-center px-4 py-2 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center px-4 py-2 rounded-xl text-[#e2e3ff]/60 hover:text-[#e2e3ff] hover:bg-[#080e38] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+<span class="text-sm">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#182056]/60 backdrop-blur-xl border-b border-[#40456c]/10 h-16 px-8 flex justify-between items-center">
+<div class="flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl" data-icon="search">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#006BFF]/50 placeholder:text-on-surface-variant/50" placeholder="Search activities, hosts, or reports..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-[#e2e3ff]/70 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-[#182056]"></span>
+</button>
+<button class="text-[#e2e3ff]/70 hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-[#40456c]/20">
+<div class="text-right">
+<p class="text-sm font-bold leading-none">Admin Profile</p>
+<p class="text-[10px] text-primary uppercase tracking-tighter mt-1">System Root</p>
+</div>
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full border border-primary/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2RjkwVTLqsGOmzjjiGRR7rJnPW4CgUlIogc0TXyual26_-tDprtrNKJ3xfSRZWUy_Qse9KGvWUMJAZCmvkio4xzaIk-ScQnJcFC5MqaA7SFxs7Mflls3Q7joF2ikftk9gLZZtaQN7HU6UWXdXOxHCxWGxNqu6mtgnzYjdEFwNv3714QUIqdPC-mBMha7Xs6e9V59Gsguhqd4Lbwrv9n1oeMQ8CHO8UrO2DYBJB2feyq9uPIAsRMo0OjAnNX7cmUB63cbtDRHEgZOS"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="mt-16 p-8 flex-1 space-y-8">
+<!-- Summary Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary">
+<p class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Active Cab Pools</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-extrabold text-on-surface">142</h3>
+<span class="text-secondary text-xs flex items-center bg-secondary/10 px-2 py-1 rounded-full">+12% <span class="material-symbols-outlined text-xs ml-1" data-icon="trending_up">trending_up</span></span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-tertiary">
+<p class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Reported Items</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-extrabold text-on-surface">24</h3>
+<span class="text-error text-xs flex items-center bg-error/10 px-2 py-1 rounded-full">+4 <span class="material-symbols-outlined text-xs ml-1" data-icon="warning">warning</span></span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-secondary">
+<p class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Completed Goals</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-extrabold text-on-surface">892</h3>
+<span class="text-secondary text-xs flex items-center bg-secondary/10 px-2 py-1 rounded-full">94% <span class="material-symbols-outlined text-xs ml-1" data-icon="check_circle">check_circle</span></span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary-fixed">
+<p class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">New Listings</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-extrabold text-on-surface">56</h3>
+<span class="text-primary-fixed text-xs flex items-center bg-primary-fixed/10 px-2 py-1 rounded-full">Today</span>
+</div>
+</div>
+</section>
+<!-- Activity Management Container -->
+<section class="bg-surface-container rounded-2xl overflow-hidden flex flex-col">
+<!-- Header & Tabs -->
+<div class="px-8 pt-8 pb-0">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-2xl font-extrabold tracking-tight">Community Activities</h2>
+<p class="text-on-surface-variant text-sm mt-1">Manage and moderate all active community engagements</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-high px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                                Advanced Filters
+                            </button>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+                                Export Logs
+                            </button>
+</div>
+</div>
+<!-- Category Tabs -->
+<div class="flex gap-8 border-b border-outline-variant/10 overflow-x-auto pb-px">
+<button class="pb-4 text-primary font-bold border-b-2 border-primary whitespace-nowrap px-1">All Activities</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap px-1">Cab Pools</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap px-1">Games Together</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap px-1">Marketplace</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap px-1">Reviews</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap px-1">Group Shopping</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap px-1">Hosted Rooms</button>
+</div>
+</div>
+<!-- Table Content -->
+<div class="p-4">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-y-2">
+<thead>
+<tr class="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold">
+<th class="px-6 py-4">Activity / Category</th>
+<th class="px-6 py-4">Purpose / Title</th>
+<th class="px-6 py-4">Host / Creator</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Moderation Actions</th>
+</tr>
+</thead>
+<tbody>
+<!-- Item 1 -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+</div>
+<div>
+<p class="text-sm font-bold">Cab Pool</p>
+<p class="text-[10px] text-on-surface-variant">ID: #CP-9021</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium">Morning commute to Tech Park</p>
+<div class="flex gap-2 mt-1">
+<span class="bg-surface-container-highest text-[10px] px-2 py-0.5 rounded-full text-on-surface-variant">Recurring</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCczv_zX7Pn9bqRFO2s9BSlcxFZbcvBOksDEOEgCbHyXAVprve4fJbkZWBPVFOWEfVfjfWiSLvVG_OddEIvpyuZdHllBWINhR1Xu8j-YYxk5MzXzPnuFpB7BWTXFu1JhbyvPBjR_kgmfkX0MIUpTiXyPTL-X6KBD-HwSDdI1pEPlP8J86ffLJgHP74tKZdIdOQRx2fasphdt40QyB3p7L1FPCRZiQx0iAwKT-f0UoRwW8jwvbPuCab6nYMQa6QqkoIJUmvRU9iXZQY_"/>
+<span class="text-sm">Alex Rivera</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 rounded-r-xl text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-variant rounded-lg text-secondary" title="Approve">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-error" title="Block">
+<span class="material-symbols-outlined text-xl" data-icon="block">block</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant" title="Delete">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 2 -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+</div>
+<div>
+<p class="text-sm font-bold">Marketplace</p>
+<p class="text-[10px] text-on-surface-variant">ID: #MP-4412</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium">Mechanical Keyboard - Cherry MX Blue</p>
+<div class="flex gap-2 mt-1">
+<span class="bg-error/10 text-[10px] px-2 py-0.5 rounded-full text-error font-bold flex items-center">
+<span class="material-symbols-outlined text-[10px] mr-1" data-icon="report">report</span>
+                                                Suspicious Content
+                                            </span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ5XLiHBnzotl0RIVkAISdIpc_8MJsZkMRbwKxcYo-vj_mTVA6xqy8KPnQeOXbKlgKIeW4T1YdpBf_bUS5cJJ1fGYaORlF3zboZHrrnBAq2KBT7oX56i6xmXsk2B9Zu6cJCbUF6dPOEUZZJJ-60dbyvywAjQHETN26GYu208uavXx5weJER5RFNyCVAymuc9efaFPVmePoLS0utIimdvIwqGOvUKT-F8-ZqsqebfKCIL3MV4ns3fgmo3x49wthBawCQbp5nw7hvBaV"/>
+<span class="text-sm">Jordan Smith</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-2"></span>
+                                            Reported
+                                        </span>
+</td>
+<td class="px-6 py-4 rounded-r-xl text-right">
+<div class="flex justify-end gap-2 opacity-100">
+<button class="p-2 hover:bg-surface-variant rounded-lg text-secondary" title="Approve">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="p-2 bg-error/20 hover:bg-error/30 rounded-lg text-error" title="Block">
+<span class="material-symbols-outlined text-xl" data-icon="block" style="font-variation-settings: 'FILL' 1;">block</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant" title="Delete">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 3 -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+</div>
+<div>
+<p class="text-sm font-bold">Games</p>
+<p class="text-[10px] text-on-surface-variant">ID: #GM-1102</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium">Valorant Scrims Night</p>
+<div class="flex gap-2 mt-1">
+<span class="bg-surface-container-highest text-[10px] px-2 py-0.5 rounded-full text-on-surface-variant">One-time Event</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmPzOGlbVBj0ELmuVq-1LQxub2AYymNFx6fExoaE4w3Gs-n8OpbruWHzWCKHgkWG46r3zwFzLOamTt1BE6u1R3VRd4GsA-YpuZvEmllr1BqHWSc9iNLFhPuExBmATdWjV5usMxAFVT5JPfq4qYnUyQi6Ye3jrOL9TBAcY61HZSKPJ81llNQPf5XRUrxqPUIta6fFlgV1vjb6PwHRxGTBNgJfFQsgWhSQLVAtw8EvhQPLpQS-b8Ad4jq7ndMvQRbLIfhu08qa9dKCOc"/>
+<span class="text-sm">PixelWiz_99</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-on-surface-variant/10 text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant mr-2"></span>
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 rounded-r-xl text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant" title="View Details">
+<span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant" title="Archive">
+<span class="material-symbols-outlined text-xl" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Item 4 -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 rounded-l-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed/10 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<p class="text-sm font-bold">Group Shopping</p>
+<p class="text-[10px] text-on-surface-variant">ID: #GS-5582</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-medium">Wholesale Organic Produce Bulk Buy</p>
+<div class="flex gap-2 mt-1">
+<span class="bg-primary/10 text-[10px] px-2 py-0.5 rounded-full text-primary">High Priority</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWXpHByxiViZ7AaBi95EdbRb35IKESOMYuv_VrPzkz7igevUWKfqEgKXoX3_CAdnrz4DByjgsG7WE7Ydbmtd2L8rm12UaW_jbRBcwb7FoV-9ug_9O2vN8YZvVj8s6P2C5-irEaN7l6yEqQzPHHszujfso7-NoezfQhbway1ivzj4uVbRsBOlpjCS8AIGtcIe4u8tBK-2AEX4-Ihj40rZDi7-YQGzSvBFLPwdl8gndZQ1bnO-PQuCWJZbhQR8HUiCXNhRIoj0c6Nj6n"/>
+<span class="text-sm">OrganicMarket_Mod</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 rounded-r-xl text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-variant rounded-lg text-secondary" title="Approve">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-error" title="Block">
+<span class="material-symbols-outlined text-xl" data-icon="block">block</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-lg text-on-surface-variant" title="Delete">
+<span class="material-symbols-outlined text-xl" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer / Pagination -->
+<div class="px-8 py-6 border-t border-outline-variant/10 flex justify-between items-center">
+<p class="text-xs text-on-surface-variant">Showing <span class="text-on-surface font-bold">1-4</span> of <span class="text-on-surface font-bold">1,244</span> entries</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/20 hover:bg-surface-container-high transition-colors text-xs">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/20 hover:bg-surface-container-high transition-colors text-xs">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Bottom Asymmetric Section: Moderation Insights -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 bg-surface-container-low rounded-2xl p-8 relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-lg font-bold mb-4">Moderation Heatmap</h3>
+<div class="aspect-[21/9] w-full bg-surface-container-highest/30 rounded-xl flex items-center justify-center border border-outline-variant/10">
+<!-- Placeholder for complex chart visual -->
+<div class="flex flex-col items-center opacity-40">
+<span class="material-symbols-outlined text-4xl mb-2" data-icon="analytics">analytics</span>
+<p class="text-xs font-label tracking-widest uppercase">Visualizing community engagement and report density</p>
+</div>
+</div>
+</div>
+<!-- Decorative background glow -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+</div>
+<div class="bg-surface-container p-8 rounded-2xl flex flex-col">
+<h3 class="text-lg font-bold mb-6">Recent Escalations</h3>
+<div class="space-y-6 flex-1">
+<div class="flex gap-4">
+<div class="w-2 h-2 rounded-full bg-error mt-1.5 shrink-0"></div>
+<div>
+<p class="text-sm font-bold">Multiple Reports: Marketplace</p>
+<p class="text-xs text-on-surface-variant mt-1">Listing #MP-8821 flagged for 10+ spam reports in 1 hour.</p>
+<button class="text-[10px] text-primary font-bold mt-2 uppercase tracking-tighter">Review Now</button>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-2 h-2 rounded-full bg-tertiary mt-1.5 shrink-0"></div>
+<div>
+<p class="text-sm font-bold">New Review Dispute</p>
+<p class="text-xs text-on-surface-variant mt-1">Host "Café Horizon" disputing 1-star review by User#102.</p>
+<button class="text-[10px] text-primary font-bold mt-2 uppercase tracking-tighter">Open Ticket</button>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 rounded-xl border border-outline-variant/30 text-sm font-bold hover:bg-surface-container-highest transition-colors">
+                        View All Tasks
+                    </button>
+</div>
+</section>
+</div>
+</main>

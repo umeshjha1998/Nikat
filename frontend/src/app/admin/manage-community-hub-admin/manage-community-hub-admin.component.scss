@@ -1,0 +1,17 @@
+
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(24, 32, 86, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .primary-glow {
+            background: linear-gradient(135deg, #5eb4ff 0%, #2aa7ff 100%);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #05092f; }
+        ::-webkit-scrollbar-thumb { background: #182056; border-radius: 10px; }
+    

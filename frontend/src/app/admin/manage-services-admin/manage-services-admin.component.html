@@ -1,0 +1,433 @@
+
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-950 border-r border-white/5 flex flex-col py-6 px-4 gap-2 font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="mb-8 px-2">
+<h1 class="text-2xl font-black tracking-tighter text-blue-500" style="">Nikat Platform</h1>
+<p class="text-slate-500 text-xs" style="">System Administrator</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">storefront</span>
+                Shop Management
+            </a><a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">person</span>
+                Manage Users
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-500/10 text-blue-400 border-r-2 border-blue-500 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">settings_suggest</span>
+                Service Management
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">verified_user</span>
+                Approvals Workflow
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">settings</span>
+                System Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">security</span>
+                Security Logs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#" style="">
+<span class="material-symbols-outlined" style="">analytics</span>
+                Platform Analytics
+            </a>
+</nav>
+<button class="mt-auto bg-primary-container text-on-primary-container font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 duration-200" style="">
+<span class="material-symbols-outlined" style="">add</span>
+            New Entry
+        </button>
+</aside>
+<!-- TopNavBar (Authority: JSON) -->
+<header class="fixed top-0 w-full z-40 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-black/50 flex items-center justify-between px-6 h-16 ml-64 font-['Plus_Jakarta_Sans'] antialiased">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96 max-w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" style="">search</span>
+<input class="w-full bg-slate-900/40 border-none rounded-full py-2 pl-10 pr-4 text-sm text-slate-200 focus:ring-1 focus:ring-blue-400 transition-all" placeholder="Search services or providers..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-6 pr-64">
+<div class="flex items-center gap-4 text-slate-400">
+<button class="hover:bg-white/5 p-2 rounded-full transition-colors active:scale-95" style="">
+<span class="material-symbols-outlined" style="">notifications</span>
+</button>
+<button class="hover:bg-white/5 p-2 rounded-full transition-colors active:scale-95" style="">
+<span class="material-symbols-outlined" style="">help_outline</span>
+</button>
+<button class="hover:bg-white/5 p-2 rounded-full transition-colors active:scale-95" style="">
+<span class="material-symbols-outlined" style="">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Header Section -->
+<section class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2" style="">Service Management</h2>
+<p class="text-on-surface-variant font-body" style="">Monitor ecosystem health and provider performance across all categories.</p>
+</div>
+<div class="flex gap-3">
+<div class="relative flex items-center bg-surface-container rounded-xl px-3 py-1">
+<span class="material-symbols-outlined text-on-surface-variant text-lg mr-2" style="">filter_list</span>
+<select class="bg-transparent border-none text-on-surface-variant text-sm font-bold focus:ring-0 cursor-pointer pr-8 py-1 appearance-none">
+<option class="bg-surface-container-high">All Categories</option>
+<option class="bg-surface-container-high">Home &amp; Hygiene</option>
+<option class="bg-surface-container-high">Tech Solutions</option>
+<option class="bg-surface-container-high">Maintenance</option>
+<option class="bg-surface-container-high">Repairs</option>
+<option class="bg-surface-container-high">Lifestyle</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 pointer-events-none text-on-surface-variant text-sm" style="">expand_more</span>
+</div><div class="flex items-center bg-surface-container rounded-xl p-1">
+<button class="px-4 py-2 bg-primary text-on-primary font-bold rounded-lg text-sm transition-all" style="">Grid</button>
+<button class="px-4 py-2 text-on-surface-variant font-bold rounded-lg text-sm hover:text-on-surface transition-all" style="">List</button>
+</div>
+</div>
+</section>
+<!-- Metrics Overview (Bento Grid Style) -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4" style="">Active Services</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-primary" style="">1,284</span>
+<span class="text-secondary text-sm font-medium flex items-center gap-1" style="">
+<span class="material-symbols-outlined text-sm" style="">trending_up</span> +12%
+                    </span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4" style="">Avg. Charge</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-on-surface" style="">₹84.50</span>
+<span class="text-on-surface-variant text-sm font-medium" style="">Global</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4" style="">Providers Online</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-secondary" style="">312</span>
+<span class="flex h-2 w-2 rounded-full bg-secondary animate-pulse mb-2"></span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4" style="">System Load</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-tertiary" style="">Normal</span>
+<span class="text-tertiary text-sm font-medium" style="">99.9% Up</span>
+</div>
+</div>
+</section>
+<!-- Main Services Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Service Card 1 -->
+<div class="group bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+<div class="h-40 bg-surface-container-highest relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70" data-alt="Professional deep cleaning equipment in a modern room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCabC6kC6rNeRkjwBYDMEfXoVKT1DyKoUpITkSS9Wk9Hjat7QO8waeZ_JzxSPrFesHqmI1zNJWk_dd44jAXjDgNF4CN79WFjhq5lGWupnqJKIoypKyaa5jsIXQeZbxcbBxGbI_2wzn9gfoFaeNmREKW-SX6oNsu44w6OFwWNnQ9zUy4-Z3XglK-elPr8_VFSqFOFMiruCHJLCbZjMH1Yvk1WKSie16pQnR7T3Qhv8AJJ0vyg2lqhSms6Y9gIAooV5a7J5PUYZLTsFzs" style="">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute top-4 right-4 bg-surface-container/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-secondary" style="">
+                        ACTIVE
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-xs font-label text-primary font-bold tracking-widest uppercase mb-1" style="">Home &amp; Hygiene</p>
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">Deep Sanitization Service</h3>
+</div>
+<span class="text-lg font-headline font-bold text-on-surface" style="">₹120<span class="text-sm font-body text-on-surface-variant" style="">/hr</span></span>
+</div>
+<div class="flex items-center gap-3 mb-6 p-3 bg-surface-container-high rounded-lg">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male service provider" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrmMXoC2lYg9a8f72N9mGRu9wpHgSejH_1QSIqw9tfJe-RpqSVMArbRb9siM1JYrbxflvR388IhKvt_sNovo5TRH1Fd-L0ZOcP2U2PAwNnS4yjiCe4fK1VmsfSsncremLcZqQVXwZDQVdxdrxo3wMPXuBfdnP629plE7gMCfmcZdNX_Xqc4pP-1avitHHd4ep2dl6CJO4xIJjM8M-vVgz7Cs58Bt7LMUlxT5iRqmOAQo029MiqwBIAlh9i14RWkX3WDdFqYU96CRbA" style="">
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-label" style="">Provider</p>
+<p class="text-sm font-bold text-on-surface" style="">Marcus Sterling</p>
+</div>
+<div class="ml-auto flex items-center text-secondary">
+<span class="material-symbols-outlined text-sm" style="">star</span>
+<span class="text-xs font-bold ml-1" style="">4.9</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-tertiary-container/10 text-tertiary text-[10px] font-bold rounded uppercase" style="">Elite Tier</span>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase" style="">Instant Book</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" style="">
+<span class="material-symbols-outlined" style="">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Service Card 2 -->
+<div class="group bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+<div class="h-40 bg-surface-container-highest relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70" data-alt="Technician repairing complex electronics circuit board" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2tcQnBghGqZ64ymtUkmZ7owTXKQzdIT7aCpunRTJk-_XgFRqshUgJWALPYkJYARApSLWhN0eF8t3D2k_nOVKMZiVfj7cR3sBmsOgA2uBOH5a2NRHZGGkvgU-fUak8hXo3-RXuLxGS5NicQUNJLDXIDhEUFVLtrXBIpFID4iTe17BJLhTf3EMm7qvctRsauBzthqEd55BMfGZkvorf6YhavnWVccQZbZvKSB4M5byxSu_pQ3oTyacXmdcuHo3VjlHswYNC4j8_iCnL" style="">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute top-4 right-4 bg-surface-container/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-secondary" style="">
+                        ACTIVE
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-xs font-label text-primary font-bold tracking-widest uppercase mb-1" style="">Tech Solutions</p>
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">Smart Home Integration</h3>
+</div>
+<span class="text-lg font-headline font-bold text-on-surface" style="">₹155<span class="text-sm font-body text-on-surface-variant" style="">/hr</span></span>
+</div>
+<div class="flex items-center gap-3 mb-6 p-3 bg-surface-container-high rounded-lg">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female service provider" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIHQJ90A3nfQD_WqR3OaV0W5XfH5X9-P32eEqKxyugLmGvMdeIf17HEaxPqqM93ZtKKGQIo1pte47h_3sQ3NZEtctJZ-_5IBc0aRNyAVToC9XAZTiaOoaQA24XhOwbaoDsasQlw_5fR3feB1YgucleLW8ub1omU6J3r7QCwF_0A5zDk-GmNx44d2xk9Xu4vtiR_XkpLxylm4aHFFHolfIHF8X9rm36W_SsRcFdA7lstUwyMEU3OWVHLehdDjukLb11cBbNTPbyGg0_" style="">
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-label" style="">Provider</p>
+<p class="text-sm font-bold text-on-surface" style="">Elena Rodriguez</p>
+</div>
+<div class="ml-auto flex items-center text-secondary">
+<span class="material-symbols-outlined text-sm" style="">star</span>
+<span class="text-xs font-bold ml-1" style="">5.0</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-tertiary-container/10 text-tertiary text-[10px] font-bold rounded uppercase" style="">Expert</span>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase" style="">Equipment Inc.</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" style="">
+<span class="material-symbols-outlined" style="">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Service Card 3 -->
+<div class="group bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+<div class="h-40 bg-surface-container-highest relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70" data-alt="Close up of gardening tools and plants" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjnOoXRpgBUQGRpyO0MkG9mdAikgwpJvl2dM-Zlq66qXJ3Q9Ci-bZFpYKJyVMsAcjPbb9-ozop2pEPdA8ULOTYuL_2ap4Bx3zJJWL-ieRw79zDCl1l5IToA2mrFTlRAxlFspX_SRahBpvS6skoQJ1RO6SDjPVEpxFwCxTv-36Zl7f5LAL2iwecxr6s8WT3yAHGb_scCjotH1FsXcHy3gEeIvTn0TIU_AuNcL6youu3j8vGIk8OuroMwqSisuqPVWoUEubuUJ1EtY5P" style="">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute top-4 right-4 bg-error-container/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-on-background" style="">
+                        BUSY
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-xs font-label text-primary font-bold tracking-widest uppercase mb-1" style="">Maintenance</p>
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">Botanical Landscaping</h3>
+</div>
+<span class="text-lg font-headline font-bold text-on-surface" style="">₹95<span class="text-sm font-body text-on-surface-variant" style="">/hr</span></span>
+</div>
+<div class="flex items-center gap-3 mb-6 p-3 bg-surface-container-high rounded-lg">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male landscape gardener" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB50obpatnG1ObnyB2gMX77cPyQbG67ISaVQfAoKOsLF_Wx2GP4oOf-cn6Gbyw2I3KNSjmLR78iBQ4kWy3rE3p-xY_UaiErdJ2HRoQ_NklNkV9rl6MSexmSE3t_u7iXgxdF4PUuBsqXAzMhWAfPP32Dhxv1P6JVMOZovu4_0wyb1vQvdvFQKLo1ansA5nJJs6VlxeYV_0NFy7inQoDHVLeWNPxNIFn2UurYbPmQ1ELaiSnkBiqe-Emi7AoEF_S0VatJ8HdU7I50vGmS" style="">
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-label" style="">Provider</p>
+<p class="text-sm font-bold text-on-surface" style="">Julian Vane</p>
+</div>
+<div class="ml-auto flex items-center text-secondary">
+<span class="material-symbols-outlined text-sm" style="">star</span>
+<span class="text-xs font-bold ml-1" style="">4.8</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-tertiary-container/10 text-tertiary text-[10px] font-bold rounded uppercase" style="">Eco-Friendly</span>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase" style="">Seasonal</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" style="">
+<span class="material-symbols-outlined" style="">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Service Card 4 -->
+<div class="group bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+<div class="h-40 bg-surface-container-highest relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70" data-alt="Electrical multimeter and testing tools" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBCUKSYtQsuwJbODF4EZ4coOrDXCCRt-4euwDZTMWR5q1HOx8f7SttLPv6q17Lp9hKSUSZgqxn2Ka8RQckPi6PZTZlR01em3-42x0jnnQzk_znQT93x4CqPtngSRMbK4o8CoydojweSNXPX3NDLHJ5uL2WiJJLnVxJwNXc8_L1V1ueDp33jIDH7McQnBkYxBPf82dEuinI_WZc84VCYhTg7AlxRPJkozRWgjdhv-6f7nHu7AT36GpGID-ah3D0CIp3Cb-j2xDrSpBe" style="">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute top-4 right-4 bg-surface-container/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-secondary" style="">
+                        ACTIVE
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-xs font-label text-primary font-bold tracking-widest uppercase mb-1" style="">Repairs</p>
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">HVAC System Overhaul</h3>
+</div>
+<span class="text-lg font-headline font-bold text-on-surface" style="">₹180<span class="text-sm font-body text-on-surface-variant" style="">/hr</span></span>
+</div>
+<div class="flex items-center gap-3 mb-6 p-3 bg-surface-container-high rounded-lg">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a technician" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjNkELd_qw1GeAg_hOmEKHnPa3PdmUQsm3ayWJXd49SCMM2k9FJOxYyDRYBGKXYsWZoPx01-PmlIYr7Z7lTRLVeg0W-8F3Q2-kahu5M_LsXSiwBDWXyF4B8uVXiczEK_CwZryl0bwJdPCmmOe8kE3HpN5LSDKZhpgrKQXWlYbF725GwyXbYDzdCsvHizer9_drbrZq3CGt8bm3q99duCmCAQCFu8EPyoQnjRZtuGqcw8vFDP1-T_idc5N6bQv2CFpBQ9MnXmn_y6xp" style="">
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-label" style="">Provider</p>
+<p class="text-sm font-bold text-on-surface" style="">Sarah Cho</p>
+</div>
+<div class="ml-auto flex items-center text-secondary">
+<span class="material-symbols-outlined text-sm" style="">star</span>
+<span class="text-xs font-bold ml-1" style="">4.9</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-tertiary-container/10 text-tertiary text-[10px] font-bold rounded uppercase" style="">Licensed</span>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase" style="">24/7 Response</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" style="">
+<span class="material-symbols-outlined" style="">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Service Card 5 -->
+<div class="group bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+<div class="h-40 bg-surface-container-highest relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-70" data-alt="Artist studio with canvas and paint brushes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdvYSGL6Imc3V2GGoHDb98lQgxaFRBq1Tk7IYYXTLr8vWalYjr9hD1QjTIGLLLaC5lfYN07yjrQk6AXzOka0o2KPKWc7bvWI_dY6eSaWw_hMoDwU_iEu9ZSt9tlMYB63oY7nDgK8ColEOQ8KwXsfEAMxt99H0hMr5lzKA3i1ozuMt0J_-AORqL4QiaLYmDc0mFNtDM7N8IukWlsBd9SE2hS7FMXyxz2f598HNn9tyscRhUSwSTuBMm0O7hvYuAQ7w-KfbfT8_v8e8V" style="">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute top-4 right-4 bg-outline-variant/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-on-background" style="">
+                        OFFLINE
+                    </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-xs font-label text-primary font-bold tracking-widest uppercase mb-1" style="">Lifestyle</p>
+<h3 class="text-xl font-headline font-bold text-on-surface" style="">Bespoke Wall Muralist</h3>
+</div>
+<span class="text-lg font-headline font-bold text-on-surface" style="">₹210<span class="text-sm font-body text-on-surface-variant" style="">/hr</span></span>
+</div>
+<div class="flex items-center gap-3 mb-6 p-3 bg-surface-container-high rounded-lg">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female artist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYWqBk0OF2Cnz5quDwgLQZ8MvDCz-8h-C7nQ8P-EH8d0PmHb2A4PjURl6eb9JamaY0noQiivakNvaLyP_t0XWq0i4YL54Dp18QQ7C6MrXGi6BooQ8turN8i2p2yhlJ-uTH7vluLTDMiTIaes3snEHaY3Nw-iQskzMlpzrcm3UNx7cm7Ct3Q-zrr3HYn3Mb3-Ros6l3Mr_Op4tZKz4eLBl0e95tocZ_bL995Wx6pwFB9E2kWDvkgc2OlwL8IFekZoNPKFpvpdc_AoNN" style="">
+</div>
+<div>
+<p class="text-xs text-on-surface-variant font-label" style="">Provider</p>
+<p class="text-sm font-bold text-on-surface" style="">Maya Angelou</p>
+</div>
+<div class="ml-auto flex items-center text-secondary">
+<span class="material-symbols-outlined text-sm" style="">star</span>
+<span class="text-xs font-bold ml-1" style="">5.0</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-tertiary-container/10 text-tertiary text-[10px] font-bold rounded uppercase" style="">Custom</span>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase" style="">Artisanal</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" style="">
+<span class="material-symbols-outlined" style="">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Add New Service Placeholder Card -->
+<div class="group border-2 border-dashed border-outline-variant/20 rounded-xl flex flex-col items-center justify-center p-8 transition-all duration-300 hover:border-primary/50 hover:bg-primary/5">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl text-primary" style="">add_circle</span>
+</div>
+<h3 class="text-lg font-headline font-bold text-on-surface mb-2" style="">Deploy New Service</h3>
+<p class="text-sm text-on-surface-variant text-center max-w-[200px]" style="">Onboard a new service provider or category to the platform.</p>
+<button class="mt-6 px-6 py-2 bg-primary/10 text-primary font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all" style="">Launch Onboarding</button>
+</div>
+</section>
+<!-- Technicians Quick-View Table (Editorial Style) -->
+<section class="mt-16">
+<h2 class="text-2xl font-headline font-extrabold tracking-tight text-on-surface mb-6" style="">Recent Technician Activity</h2>
+<div class="bg-surface-container-low rounded-2xl overflow-hidden">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-left">
+<th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant" style="">Provider</th>
+<th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant" style="">Expertise</th>
+<th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant" style="">Avg. Charge</th>
+<th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant" style="">Efficiency</th>
+<th class="px-6 py-4 text-xs font-label uppercase tracking-widest text-on-surface-variant" style="">Status</th>
+<th class="px-6 py-4" style=""></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-xs font-bold text-on-primary-container" style="">AA</div>
+<span class="font-bold text-on-surface" style="">Adrian Aris</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body text-sm" style="">Electrical Eng.</td>
+<td class="px-6 py-4 font-headline font-bold text-on-surface" style="">$140.00</td>
+<td class="px-6 py-4" style="">
+<div class="w-24 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="w-[92%] h-full bg-secondary"></div>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="flex items-center gap-2 text-secondary text-xs font-bold uppercase" style="">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Online
+                                </span>
+</td>
+<td class="px-6 py-4 text-right" style="">
+<button class="text-on-surface-variant hover:text-on-surface" style=""><span class="material-symbols-outlined text-lg" style="">chevron_right</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-tertiary-container flex items-center justify-center text-xs font-bold text-on-tertiary-container" style="">LK</div>
+<span class="font-bold text-on-surface" style="">Lana Kova</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body text-sm" style="">Interior Design</td>
+<td class="px-6 py-4 font-headline font-bold text-on-surface" style="">$225.00</td>
+<td class="px-6 py-4" style="">
+<div class="w-24 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="w-[85%] h-full bg-secondary"></div>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="flex items-center gap-2 text-on-surface-variant text-xs font-bold uppercase" style="">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Away
+                                </span>
+</td>
+<td class="px-6 py-4 text-right" style="">
+<button class="text-on-surface-variant hover:text-on-surface" style=""><span class="material-symbols-outlined text-lg" style="">chevron_right</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center text-xs font-bold text-on-secondary-container" style="">TH</div>
+<span class="font-bold text-on-surface" style="">Tom Harris</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body text-sm" style="">Plumbing Mast.</td>
+<td class="px-6 py-4 font-headline font-bold text-on-surface" style="">$115.00</td>
+<td class="px-6 py-4" style="">
+<div class="w-24 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="w-[78%] h-full bg-secondary"></div>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="flex items-center gap-2 text-secondary text-xs font-bold uppercase" style="">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Online
+                                </span>
+</td>
+<td class="px-6 py-4 text-right" style="">
+<button class="text-on-surface-variant hover:text-on-surface" style=""><span class="material-symbols-outlined text-lg" style="">chevron_right</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all" style="">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: &quot;FILL&quot; 1;">bolt</span>
+</button>
