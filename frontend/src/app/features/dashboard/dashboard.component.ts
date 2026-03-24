@@ -22,28 +22,28 @@ import { AuthService } from '../../core/auth.service';
         </div>
 
         <nav class="dash-nav">
-          <a class="d-nav-item active">
+          <a class="d-nav-item" (click)="setTab('overview')" [class.active]="activeTab === 'overview'">
             <span class="material-icons">grid_view</span>
             <span>Overview</span>
           </a>
-          <a class="d-nav-item">
+          <a class="d-nav-item" (click)="setTab('bookings')" [class.active]="activeTab === 'bookings'">
             <span class="material-icons">event_note</span>
             <span>Bookings</span>
           </a>
-          <a class="d-nav-item">
+          <a class="d-nav-item" (click)="setTab('saved')" [class.active]="activeTab === 'saved'">
             <span class="material-icons">favorite</span>
             <span>Saved Shops</span>
           </a>
-          <a class="d-nav-item">
+          <a class="d-nav-item" (click)="setTab('orders')" [class.active]="activeTab === 'orders'">
             <span class="material-icons">shopping_bag</span>
             <span>Orders</span>
           </a>
           <div class="nav-spacer"></div>
-          <a class="d-nav-item">
+          <a class="d-nav-item" (click)="setTab('settings')" [class.active]="activeTab === 'settings'">
             <span class="material-icons">settings</span>
             <span>Settings</span>
           </a>
-          <a class="d-nav-item logout">
+          <a class="d-nav-item logout" (click)="signOut()">
             <span class="material-icons">logout</span>
             <span>Sign Out</span>
           </a>
@@ -78,115 +78,128 @@ import { AuthService } from '../../core/auth.service';
           </div>
         </header>
 
-        <!-- Stats Grid -->
-        <section class="dash-stats">
-          <div class="stat-glass-card">
-            <div class="s-head">
-              <span class="s-label">Total Points</span>
-              <span class="material-icons s-icon">stars</span>
-            </div>
-            <div class="s-body">
-              <h2>1,250</h2>
-              <div class="s-progress">
-                <div class="bar" style="width: 65%"></div>
+        <!-- Overview Tab -->
+        <ng-container *ngIf="activeTab === 'overview'">
+          <!-- Stats Grid -->
+          <section class="dash-stats">
+            <div class="stat-glass-card">
+              <div class="s-head">
+                <span class="s-label">Total Points</span>
+                <span class="material-icons s-icon">stars</span>
               </div>
-              <p>250 pts to Gold Tier</p>
-            </div>
-          </div>
-
-          <div class="stat-glass-card">
-            <div class="s-head">
-              <span class="s-label">Bookings</span>
-              <span class="material-icons s-icon">calendar_today</span>
-            </div>
-            <div class="s-body">
-              <h2>14</h2>
-              <p>Across 5 categories</p>
-              <div class="avatar-group">
-                <span class="a-mini">S</span>
-                <span class="a-mini">B</span>
-                <span class="a-mini">+2</span>
+              <div class="s-body">
+                <h2>1,250</h2>
+                <div class="s-progress">
+                  <div class="bar" style="width: 65%"></div>
+                </div>
+                <p>250 pts to Gold Tier</p>
               </div>
             </div>
-          </div>
 
-          <div class="stat-glass-card wallet">
-            <div class="s-head">
-              <span class="s-label">Nikat Credit</span>
-              <span class="material-icons s-icon">account_balance_wallet</span>
+            <div class="stat-glass-card">
+              <div class="s-head">
+                <span class="s-label">Bookings</span>
+                <span class="material-icons s-icon">calendar_today</span>
+              </div>
+              <div class="s-body">
+                <h2>14</h2>
+                <p>Across 5 categories</p>
+                <div class="avatar-group">
+                  <span class="a-mini">S</span>
+                  <span class="a-mini">B</span>
+                  <span class="a-mini">+2</span>
+                </div>
+              </div>
             </div>
-            <div class="s-body">
-              <h2>₹450</h2>
-              <button class="btn-topup">Top Up</button>
+
+            <div class="stat-glass-card wallet">
+              <div class="s-head">
+                <span class="s-label">Nikat Credit</span>
+                <span class="material-icons s-icon">account_balance_wallet</span>
+              </div>
+              <div class="s-body">
+                <h2>₹450</h2>
+                <button class="btn-topup">Top Up</button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <!-- Main Grid -->
-        <div class="dash-main-grid">
-           <!-- Left: Bookings -->
-           <section class="dash-section">
-             <div class="section-head">
-               <h3>Upcoming Bookings</h3>
-               <a href="#">View All</a>
-             </div>
+          <!-- Main Grid -->
+          <div class="dash-main-grid">
+            <!-- Left: Bookings -->
+            <section class="dash-section">
+              <div class="section-head">
+                <h3>Upcoming Bookings</h3>
+                <a href="#">View All</a>
+              </div>
 
-             <div class="booking-stack">
-               <div class="booking-item-premium" *ngFor="let b of bookings">
-                 <div class="b-date-box" [class.alt]="b.alt">
-                   <span class="m">{{b.month}}</span>
-                   <span class="d">{{b.day}}</span>
-                 </div>
-                 <div class="b-info">
+              <div class="booking-stack">
+                <div class="booking-item-premium" *ngFor="let b of bookings">
+                  <div class="b-date-box" [class.alt]="b.alt">
+                    <span class="m">{{b.month}}</span>
+                    <span class="d">{{b.day}}</span>
+                  </div>
+                  <div class="b-info">
                     <h4>{{b.service}}</h4>
                     <p><span class="material-icons">storefront</span> {{b.shop}}</p>
                     <div class="b-meta">
                       <span><span class="material-icons">schedule</span> {{b.time}}</span>
                       <span class="status-tag" [class]="b.status">{{b.status}}</span>
                     </div>
-                 </div>
-                 <div class="b-actions">
-                   <button class="btn-outline">Reschedule</button>
-                   <button class="btn-icon-blur"><span class="material-icons">more_horiz</span></button>
-                 </div>
-               </div>
-             </div>
-           </section>
-
-           <!-- Right: Recent Activity & Recommendations -->
-           <aside class="dash-side-col">
-             <section class="dash-section">
-                <div class="section-head">
-                  <h3>Recent Activity</h3>
-                </div>
-                <div class="activity-feed">
-                  <div class="act-item">
-                    <div class="act-icon"><span class="material-icons">reviews</span></div>
-                    <div class="act-text">
-                      <p>You reviewed <strong>Urban Fade</strong></p>
-                      <span>2 days ago</span>
-                    </div>
                   </div>
-                  <div class="act-item">
-                    <div class="act-icon green"><span class="material-icons">payments</span></div>
-                    <div class="act-text">
-                      <p>Refund processed for <strong>Spa Order</strong></p>
-                      <span>5 days ago</span>
-                    </div>
+                  <div class="b-actions">
+                    <button class="btn-outline">Reschedule</button>
+                    <button class="btn-icon-blur"><span class="material-icons">more_horiz</span></button>
                   </div>
                 </div>
-             </section>
+              </div>
+            </section>
 
-             <section class="promo-card">
-               <div class="p-content">
-                 <h4>Refer & Earn</h4>
-                 <p>Get ₹200 for every friend you invite to Nikat.</p>
-                 <button class="btn-prime">Invite Friends</button>
-               </div>
-               <span class="material-icons p-deco">redeem</span>
-             </section>
-           </aside>
-        </div>
+            <!-- Right: Recent Activity -->
+            <aside class="dash-side-col">
+              <section class="dash-section">
+                  <div class="section-head">
+                    <h3>Recent Activity</h3>
+                  </div>
+                  <div class="activity-feed">
+                    <div class="act-item">
+                      <div class="act-icon"><span class="material-icons">reviews</span></div>
+                      <div class="act-text">
+                        <p>You reviewed <strong>Urban Fade</strong></p>
+                        <span>2 days ago</span>
+                      </div>
+                    </div>
+                    <div class="act-item">
+                      <div class="act-icon green"><span class="material-icons">payments</span></div>
+                      <div class="act-text">
+                        <p>Refund processed for <strong>Spa Order</strong></p>
+                        <span>5 days ago</span>
+                      </div>
+                    </div>
+                  </div>
+              </section>
+
+              <section class="promo-card">
+                <div class="p-content">
+                  <h4>Refer & Earn</h4>
+                  <p>Get ₹200 for every friend you invite to Nikat.</p>
+                  <button class="btn-prime">Invite Friends</button>
+                </div>
+                <span class="material-icons p-deco">redeem</span>
+              </section>
+            </aside>
+          </div>
+        </ng-container>
+
+        <!-- Other Tabs Placeholders -->
+        <div class="tab-content-placeholder" *ngIf="activeTab !== 'overview'">
+           <div class="placeholder-card">
+              <span class="material-icons">construction</span>
+              <h3>{{activeTab | titlecase}} Section</h3>
+              <p>This section is currently under enhancement to provide a premium experience.</p>
+              <button class="btn-outline" (click)="setTab('overview')">Back to Overview</button>
+           </div>
+        </div>div>
       </main>
     </div>
   `,
@@ -303,6 +316,7 @@ import { AuthService } from '../../core/auth.service';
 })
 export class DashboardComponent {
   private authService = inject(AuthService);
+  activeTab = 'overview';
 
   get currentUser() {
     return this.authService.currentUser;
@@ -316,4 +330,12 @@ export class DashboardComponent {
     { service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
     { service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }
   ];
+
+  setTab(tab: string) {
+    this.activeTab = tab;
+  }
+
+  signOut() {
+    this.authService.logout();
+  }
 }

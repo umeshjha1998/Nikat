@@ -23,30 +23,34 @@ import { AuthService } from '../../../core/auth.service';
         </div>
 
         <nav class="sidebar-nav">
-          <a class="nav-item active">
+          <a class="nav-item" (click)="setTab('performance')" [class.active]="activeTab === 'performance'">
             <span class="material-icons">auto_graph</span>
             <span>Performance</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('schedule')" [class.active]="activeTab === 'schedule'">
             <span class="material-icons">calendar_month</span>
             <span>Schedule</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('services')" [class.active]="activeTab === 'services'">
             <span class="material-icons">design_services</span>
             <span>Services</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('clients')" [class.active]="activeTab === 'clients'">
             <span class="material-icons">group</span>
             <span>Clients</span>
           </a>
           <div class="nav-divider"></div>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('reviews')" [class.active]="activeTab === 'reviews'">
             <span class="material-icons">star_outline</span>
             <span>Reviews</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('settings')" [class.active]="activeTab === 'settings'">
             <span class="material-icons">settings</span>
             <span>Settings</span>
+          </a>
+          <a class="nav-item logout-item" (click)="signOut()" style="color: #ef4444; margin-top: auto;">
+            <span class="material-icons">logout</span>
+            <span>Sign Out</span>
           </a>
         </nav>
 
@@ -75,118 +79,130 @@ import { AuthService } from '../../../core/auth.service';
           </div>
         </header>
 
-        <!-- Stats Overview -->
-        <div class="stats-container">
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Today's Appointments</span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">5</span>
-              <span class="stat-sub">Next: 2:30 PM</span>
-            </div>
-          </div>
-
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Monthly Earnings</span>
-              <span class="trend positive">+15.3%</span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">₹32,400</span>
-              <div class="earnings-bar"></div>
-            </div>
-          </div>
-
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Clients</span>
-              <span class="trend positive">+4 new</span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">67</span>
-              <div class="client-avatars">
-                <img src="https://i.pravatar.cc/150?u=1" alt="c">
-                <img src="https://i.pravatar.cc/150?u=2" alt="c">
-                <img src="https://i.pravatar.cc/150?u=3" alt="c">
-                <span class="more">+64</span>
+        <ng-container *ngIf="activeTab === 'performance'">
+          <!-- Stats Overview -->
+          <div class="stats-container">
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Today's Appointments</span>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value">5</span>
+                <span class="stat-sub">Next: 2:30 PM</span>
               </div>
             </div>
-          </div>
 
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Avg Rating</span>
-              <span class="material-icons rating-icon">star</span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">4.8</span>
-              <span class="stat-sub">56 Reviews</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="dashboard-grid">
-          <!-- Left Column: Schedule -->
-          <div class="grid-col-2">
-            <section class="content-card-dark">
-              <div class="card-header">
-                <h2>Today's Schedule</h2>
-                <a class="link-btn">Full Calendar</a>
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Monthly Earnings</span>
+                <span class="trend positive">+15.3%</span>
               </div>
-              <div class="schedule-timeline">
-                <div class="schedule-item" *ngFor="let apt of todayAppointments" [class.current]="apt.current">
-                  <div class="time-slot">
-                    <span class="time">{{apt.time}}</span>
-                    <span class="duration">{{apt.duration}}</span>
-                  </div>
-                  <div class="timeline-dot" [class.active]="apt.current"></div>
-                  <div class="appointment-card">
-                    <div class="apt-header">
-                      <h3>{{apt.service}}</h3>
-                      <span class="apt-status" [class]="apt.status">{{apt.status}}</span>
-                    </div>
-                    <p class="apt-meta">
-                      <span class="material-icons">person</span> {{apt.client}}
-                      <span class="divider">|</span>
-                      <span class="material-icons">location_on</span> {{apt.location}}
-                    </p>
-                  </div>
+              <div class="stat-main">
+                <span class="stat-value">₹32,400</span>
+                <div class="earnings-bar"></div>
+              </div>
+            </div>
+
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Clients</span>
+                <span class="trend positive">+4 new</span>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value">67</span>
+                <div class="client-avatars">
+                  <img src="https://i.pravatar.cc/150?u=1" alt="c">
+                  <img src="https://i.pravatar.cc/150?u=2" alt="c">
+                  <img src="https://i.pravatar.cc/150?u=3" alt="c">
+                  <span class="more">+64</span>
                 </div>
               </div>
-            </section>
+            </div>
+
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Avg Rating</span>
+                <span class="material-icons rating-icon">star</span>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value">4.8</span>
+                <span class="stat-sub">56 Reviews</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Right Column: Active Services -->
-          <div class="grid-col-1">
-            <section class="content-card-dark">
-              <div class="card-header">
-                <h2>Active Services</h2>
-              </div>
-              <div class="services-mini-list">
-                <div class="service-mini-card" *ngFor="let svc of activeServices">
-                  <div class="svc-icon-box">
-                    <span class="material-icons">{{svc.icon}}</span>
-                  </div>
-                  <div class="svc-details">
-                    <h4>{{svc.name}}</h4>
-                    <div class="svc-stats">
-                      <span class="price">₹{{svc.price}}</span>
-                      <span class="bookings">{{svc.bookings}} bookings</span>
+          <div class="dashboard-grid">
+            <!-- Left Column: Schedule -->
+            <div class="grid-col-2">
+              <section class="content-card-dark">
+                <div class="card-header">
+                  <h2>Today's Schedule</h2>
+                  <a class="link-btn">Full Calendar</a>
+                </div>
+                <div class="schedule-timeline">
+                  <div class="schedule-item" *ngFor="let apt of todayAppointments" [class.current]="apt.current">
+                    <div class="time-slot">
+                      <span class="time">{{apt.time}}</span>
+                      <span class="duration">{{apt.duration}}</span>
+                    </div>
+                    <div class="timeline-dot" [class.active]="apt.current"></div>
+                    <div class="appointment-card">
+                      <div class="apt-header">
+                        <h3>{{apt.service}}</h3>
+                        <span class="apt-status" [class]="apt.status">{{apt.status}}</span>
+                      </div>
+                      <p class="apt-meta">
+                        <span class="material-icons">person</span> {{apt.client}}
+                        <span class="divider">|</span>
+                        <span class="material-icons">location_on</span> {{apt.location}}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
-              <button class="btn-full-width">Manage all Services</button>
-            </section>
+              </section>
+            </div>
 
-            <section class="content-card-dark upgrade-panel">
-              <span class="material-icons-outlined crown">workspace_premium</span>
-              <h3>Nikat Premium</h3>
-              <p>Unlock advanced analytics and client automated reminders.</p>
-              <button class="btn-premium">Upgrade Now</button>
-            </section>
+            <!-- Right Column: Active Services -->
+            <div class="grid-col-1">
+              <section class="content-card-dark">
+                <div class="card-header">
+                  <h2>Active Services</h2>
+                </div>
+                <div class="services-mini-list">
+                  <div class="service-mini-card" *ngFor="let svc of activeServices">
+                    <div class="svc-icon-box">
+                      <span class="material-icons">{{svc.icon}}</span>
+                    </div>
+                    <div class="svc-details">
+                      <h4>{{svc.name}}</h4>
+                      <div class="svc-stats">
+                        <span class="price">₹{{svc.price}}</span>
+                        <span class="bookings">{{svc.bookings}} bookings</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-full-width">Manage all Services</button>
+              </section>
+
+              <section class="content-card-dark upgrade-panel">
+                <span class="material-icons-outlined crown">workspace_premium</span>
+                <h3>Nikat Premium</h3>
+                <p>Unlock advanced analytics and client automated reminders.</p>
+                <button class="btn-premium">Upgrade Now</button>
+              </section>
+            </div>
           </div>
+        </ng-container>
+
+        <!-- Other Tabs Placeholders -->
+        <div class="tab-content-placeholder" *ngIf="activeTab !== 'performance'" style="margin-top: 2rem;">
+           <div class="content-card-dark" style="padding: 4rem; text-align: center; border: 1px dashed var(--glass-border);">
+              <span class="material-icons" style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem;">construction</span>
+              <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{activeTab | titlecase}} Module</h2>
+              <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem;">This section is currently being updated with advanced management tools for your professional service.</p>
+              <button class="btn-primary-glow" (click)="setTab('performance')">Return to Performance</button>
+           </div>
         </div>
       </main>
     </div>
@@ -413,9 +429,13 @@ import { AuthService } from '../../../core/auth.service';
       .timeline-dot { left: -7px; }
       .time-slot { left: -80px; width: 60px; }
     }
+    .nav-item.logout-item:hover {
+      background: rgba(239, 68, 68, 0.1) !important;
+    }
   `]
 })
 export class ServiceProviderDashboardComponent implements OnInit {
+  activeTab = 'performance';
   todayAppointments = [
     { time: '10:00 AM', duration: '45 min', service: 'Classic Haircut', client: 'Raj P.', location: 'In-store', status: 'completed', current: false },
     { time: '11:00 AM', duration: '1 hr', service: 'Full Grooming Package', client: 'Amit S.', location: 'In-store', status: 'completed', current: false },
@@ -442,4 +462,12 @@ export class ServiceProviderDashboardComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  setTab(tab: string) {
+    this.activeTab = tab;
+  }
+
+  signOut() {
+    this.authService.logout();
+  }
 }

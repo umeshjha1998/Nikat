@@ -23,41 +23,45 @@ import { AuthService } from '../../../core/auth.service';
         </div>
 
         <nav class="sidebar-nav">
-          <a class="nav-item active">
+          <a class="nav-item" (click)="setTab('analytics')" [class.active]="activeTab === 'analytics'">
             <span class="material-icons">insights</span>
             <span>Analytics</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('listings')" [class.active]="activeTab === 'listings'">
             <span class="material-icons">storefront</span>
             <span>Listings</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('appointments')" [class.active]="activeTab === 'appointments'">
             <span class="material-icons">event_available</span>
             <span>Appointments</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('inquiries')" [class.active]="activeTab === 'inquiries'">
             <span class="material-icons">chat_bubble_outline</span>
             <span>Inquiries</span>
             <span class="badge">4</span>
           </a>
           <div class="nav-divider"></div>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('settings')" [class.active]="activeTab === 'settings'">
             <span class="material-icons">settings</span>
             <span>Settings</span>
           </a>
-          <a class="nav-item">
+          <a class="nav-item" (click)="setTab('support')" [class.active]="activeTab === 'support'">
             <span class="material-icons">help_outline</span>
             <span>Support</span>
+          </a>
+          <a class="nav-item logout-item" (click)="signOut()" style="color: #ef4444; margin-top: auto;">
+            <span class="material-icons">logout</span>
+            <span>Sign Out</span>
           </a>
         </nav>
 
         <div class="user-profile-mini">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="avatar" class="mini-avatar">
-          <div class="user-details">
-            <span class="name">Alex Rivers</span>
-            <span class="role">Shop Owner</span>
+          <div class="mini-avatar-circle">{{userInitial}}</div>
+          <div class="user-details" style="margin-left: 10px;">
+            <span class="name">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
+            <span class="role">{{currentUser?.role}}</span>
           </div>
-          <span class="material-icons">more_vert</span>
+          <span class="material-icons" style="margin-left: auto;">more_vert</span>
         </div>
       </aside>
 
@@ -81,146 +85,159 @@ import { AuthService } from '../../../core/auth.service';
         </header>
 
         <!-- Stats Overview -->
-        <div class="stats-container">
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Total Views</span>
-              <span class="trend positive">
-                <span class="material-icons">trending_up</span> +14.2%
-              </span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">12.4K</span>
-              <div class="stat-visual views"></div>
-            </div>
-          </div>
-
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Inquiries</span>
-              <span class="trend positive">
-                <span class="material-icons">trending_up</span> +5.8%
-              </span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">842</span>
-              <div class="stat-visual inquiries"></div>
-            </div>
-          </div>
-
-          <div class="stat-card-glass">
-            <div class="stat-header">
-              <span class="stat-label">Average Rating</span>
-              <span class="rating-stars">
-                <span class="material-icons">star</span>
-                <span class="material-icons">star</span>
-                <span class="material-icons">star</span>
-                <span class="material-icons">star</span>
-                <span class="material-icons">star_half</span>
-              </span>
-            </div>
-            <div class="stat-main">
-              <span class="stat-value">4.9</span>
-              <span class="stat-meta">From 128 reviews</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="dashboard-grid">
-          <!-- Left Column -->
-          <div class="grid-col-2">
-            <!-- Engagement Chart Placeholder -->
-            <section class="content-card-dark">
-              <div class="card-header">
-                <h2>Engagement Trends</h2>
-                <div class="header-tabs">
-                  <button class="active">Views</button>
-                  <button>Interactions</button>
-                </div>
+        <ng-container *ngIf="activeTab === 'analytics'">
+          <!-- Stats Overview -->
+          <div class="stats-container">
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Total Views</span>
+                <span class="trend positive">
+                  <span class="material-icons">trending_up</span> +14.2%
+                </span>
               </div>
-              <div class="chart-container">
-                <div class="chart-placeholder">
-                  <!-- Simulated Chart Line -->
-                  <svg viewBox="0 0 800 200" class="simulated-chart">
-                    <path d="M0,150 Q50,140 100,160 T200,100 T300,120 T400,80 T500,90 T600,40 T700,60 T800,20" 
-                          fill="none" stroke="url(#chartGradient)" stroke-width="4" />
-                    <defs>
-                      <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#3ddc84" />
-                        <stop offset="100%" stop-color="#6bfe9c" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  <div class="chart-grid-lines">
-                    <span></span><span></span><span></span><span></span>
+              <div class="stat-main">
+                <span class="stat-value">12.4K</span>
+                <div class="stat-visual views"></div>
+              </div>
+            </div>
+
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Inquiries</span>
+                <span class="trend positive">
+                  <span class="material-icons">trending_up</span> +5.8%
+                </span>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value">842</span>
+                <div class="stat-visual inquiries"></div>
+              </div>
+            </div>
+
+            <div class="stat-card-glass">
+              <div class="stat-header">
+                <span class="stat-label">Average Rating</span>
+                <span class="rating-stars">
+                  <span class="material-icons">star</span>
+                  <span class="material-icons">star</span>
+                  <span class="material-icons">star</span>
+                  <span class="material-icons">star</span>
+                  <span class="material-icons">star_half</span>
+                </span>
+              </div>
+              <div class="stat-main">
+                <span class="stat-value">4.9</span>
+                <span class="stat-meta">From 128 reviews</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <!-- Left Column -->
+            <div class="grid-col-2">
+              <!-- Engagement Chart Placeholder -->
+              <section class="content-card-dark">
+                <div class="card-header">
+                  <h2>Engagement Trends</h2>
+                  <div class="header-tabs">
+                    <button class="active">Views</button>
+                    <button>Interactions</button>
                   </div>
                 </div>
-              </div>
-            </section>
-
-            <!-- Showcase Photos -->
-            <section class="content-card-dark">
-              <div class="card-header">
-                <h2>Showcase Photos</h2>
-                <button class="link-btn">Manage Album</button>
-              </div>
-              <div class="photo-grid">
-                <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80')"></div>
-                <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80')"></div>
-                <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=400&q=80')"></div>
-                <div class="photo-add-card">
-                  <span class="material-icons">add_a_photo</span>
-                  <span>Upload</span>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <!-- Right Column -->
-          <div class="grid-col-1">
-            <!-- Recent Inquiries -->
-            <section class="content-card-dark inquiries-section">
-              <div class="card-header">
-                <h2>Recent Inquiries</h2>
-                <span class="dot-badge highlight"></span>
-              </div>
-              <div class="inquiry-list">
-                <div class="inquiry-item" *ngFor="let inquiry of recentInquiries">
-                  <div class="inquiry-user">
-                    <img [src]="inquiry.avatar" class="user-avatar" alt="avatar">
-                    <div class="user-info">
-                      <strong>{{inquiry.name}}</strong>
-                      <span>{{inquiry.time}}</span>
+                <div class="chart-container">
+                  <div class="chart-placeholder">
+                    <!-- Simulated Chart Line -->
+                    <svg viewBox="0 0 800 200" class="simulated-chart">
+                      <path d="M0,150 Q50,140 100,160 T200,100 T300,120 T400,80 T500,90 T600,40 T700,60 T800,20" 
+                            fill="none" stroke="url(#chartGradient)" stroke-width="4" />
+                      <defs>
+                        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#3ddc84" />
+                          <stop offset="100%" stop-color="#6bfe9c" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div class="chart-grid-lines">
+                      <span></span><span></span><span></span><span></span>
                     </div>
                   </div>
-                  <p class="inquiry-text">"{{inquiry.message}}"</p>
-                  <div class="inquiry-actions">
-                    <button class="btn-reply">Reply</button>
-                    <button class="btn-icon"><span class="material-icons">more_horiz</span></button>
+                </div>
+              </section>
+
+              <!-- Showcase Photos -->
+              <section class="content-card-dark">
+                <div class="card-header">
+                  <h2>Showcase Photos</h2>
+                  <button class="link-btn">Manage Album</button>
+                </div>
+                <div class="photo-grid">
+                  <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80')"></div>
+                  <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80')"></div>
+                  <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=400&q=80')"></div>
+                  <div class="photo-add-card">
+                    <span class="material-icons">add_a_photo</span>
+                    <span>Upload</span>
                   </div>
                 </div>
-              </div>
-              <button class="btn-full-width">View All Conversations</button>
-            </section>
+              </section>
+            </div>
 
-            <!-- Location Identity -->
-            <section class="content-card-dark location-section">
-              <div class="card-header">
-                <h2>Location Identity</h2>
-                <span class="material-icons lock-status">verified</span>
-              </div>
-              <div class="location-content">
-                <div class="map-mini">
-                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=40" alt="map">
-                  <div class="map-pin"><span class="material-icons">location_on</span></div>
+            <!-- Right Column -->
+            <div class="grid-col-1">
+              <!-- Recent Inquiries -->
+              <section class="content-card-dark inquiries-section">
+                <div class="card-header">
+                  <h2>Recent Inquiries</h2>
+                  <span class="dot-badge highlight"></span>
                 </div>
-                <div class="address-details">
-                  <p class="address">Downtown Core, 452 Liberty Avenue, Suite 101</p>
-                  <p class="distance">Central Hub Area</p>
+                <div class="inquiry-list">
+                  <div class="inquiry-item" *ngFor="let inquiry of recentInquiries">
+                    <div class="inquiry-user">
+                      <img [src]="inquiry.avatar" class="user-avatar" alt="avatar">
+                      <div class="user-info">
+                        <strong>{{inquiry.name}}</strong>
+                        <span>{{inquiry.time}}</span>
+                      </div>
+                    </div>
+                    <p class="inquiry-text">"{{inquiry.message}}"</p>
+                    <div class="inquiry-actions">
+                      <button class="btn-reply">Reply</button>
+                      <button class="btn-icon"><span class="material-icons">more_horiz</span></button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </section>
+                <button class="btn-full-width">View All Conversations</button>
+              </section>
+
+              <!-- Location Identity -->
+              <section class="content-card-dark location-section">
+                <div class="card-header">
+                  <h2>Location Identity</h2>
+                  <span class="material-icons lock-status">verified</span>
+                </div>
+                <div class="location-content">
+                  <div class="map-mini">
+                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=40" alt="map">
+                    <div class="map-pin"><span class="material-icons">location_on</span></div>
+                  </div>
+                  <div class="address-details">
+                    <p class="address">Downtown Core, 452 Liberty Avenue, Suite 101</p>
+                    <p class="distance">Central Hub Area</p>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
+        </ng-container>
+
+        <!-- Other Tabs Placeholders -->
+        <div class="tab-content-placeholder" *ngIf="activeTab !== 'analytics'" style="margin-top: 2rem;">
+           <div class="content-card-dark" style="padding: 4rem; text-align: center; border: 1px dashed var(--glass-border);">
+              <span class="material-icons" style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem;">construction</span>
+              <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{activeTab | titlecase}} Module</h2>
+              <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem;">This section is currently being updated with advanced management tools for your business.</p>
+              <button class="btn-primary-glow" (click)="setTab('analytics')">Return to Analytics</button>
+           </div>
         </div>
       </main>
     </div>
@@ -815,9 +832,25 @@ import { AuthService } from '../../../core/auth.service';
       .stats-container { grid-template-columns: 1fr; }
       .photo-grid { grid-template-columns: repeat(2, 1fr); }
     }
+    .mini-avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .nav-item.logout-item:hover {
+      background: rgba(239, 68, 68, 0.1) !important;
+    }
   `]
 })
 export class ShopOwnerDashboardComponent implements OnInit {
+  activeTab = 'analytics';
   recentInquiries = [
     { 
       name: 'Sarah Mitchell', 
@@ -845,4 +878,12 @@ export class ShopOwnerDashboardComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  setTab(tab: string) {
+    this.activeTab = tab;
+  }
+
+  signOut() {
+    this.authService.logout();
+  }
 }
