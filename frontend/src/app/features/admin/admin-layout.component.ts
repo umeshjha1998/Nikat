@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ThemeService } from '../../core/theme.service';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -38,6 +39,23 @@ import { ThemeService } from '../../core/theme.service';
       </aside>
 
       <main class="admin-main">
+        <!-- Admin Top Bar -->
+        <div class="admin-topbar">
+          <div class="topbar-left">
+            <h2 class="topbar-title">Admin Panel</h2>
+          </div>
+          <div class="topbar-right">
+            <div class="admin-user-info">
+              <div class="admin-avatar">{{ adminInitial }}</div>
+              <span class="admin-name">{{ adminDisplayName }}</span>
+            </div>
+            <button class="admin-logout-btn" (click)="logout()" title="Logout">
+              <span class="material-icons">logout</span>
+              Logout
+            </button>
+          </div>
+        </div>
+
         <router-outlet></router-outlet>
       </main>
     </div>
@@ -46,9 +64,29 @@ import { ThemeService } from '../../core/theme.service';
 })
 export class AdminLayoutComponent {
   private readonly themeService = inject(ThemeService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   protected readonly isDarkMode = this.themeService.isDarkMode;
+
+  get adminInitial(): string {
+    const user = this.authService.currentUser;
+    if (user?.firstName) return user.firstName.charAt(0).toUpperCase();
+    return 'A';
+  }
+
+  get adminDisplayName(): string {
+    const user = this.authService.currentUser;
+    if (user) return `${user.firstName} ${user.lastName}`;
+    return 'Administrator';
+  }
 
   toggleTheme() {
     this.themeService.toggleTheme();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/admin-login']);
   }
 }

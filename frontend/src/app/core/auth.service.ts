@@ -74,6 +74,13 @@ export class AuthService {
     );
   }
 
+  /** Manually set a session (for hardcoded/mock logins like admin-login) */
+  setSession(token: string, user: UserDto): void {
+    localStorage.setItem('nikat_token', token);
+    localStorage.setItem('nikat_user', JSON.stringify(user));
+    this.currentUser$.next(user);
+  }
+
   logout(): void {
     localStorage.removeItem('nikat_token');
     localStorage.removeItem('nikat_user');

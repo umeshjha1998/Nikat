@@ -47,7 +47,46 @@
 .theme-toggle-admin .material-icons { font-size: 1.2rem; }
 
 /* Main Content */
-.admin-main { flex: 1; padding: 2.5rem; overflow-y: auto; }
+.admin-main { flex: 1; padding: 0; overflow-y: auto; display: flex; flex-direction: column; }
+
+/* Admin Top Bar */
+.admin-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 2.5rem; border-bottom: 1px solid var(--glass-border);
+  background: var(--surface-container-low); flex-shrink: 0;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.admin-topbar + * { padding: 2.5rem; flex: 1; }
+.topbar-left { display: flex; align-items: center; }
+.topbar-title {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem;
+  font-weight: 700; color: var(--on-surface); margin: 0;
+}
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.admin-user-info { display: flex; align-items: center; gap: 0.6rem; }
+.admin-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, #ffb347, #ff9500);
+  color: #3d2000; font-weight: 800; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-name {
+  font-size: 0.85rem; font-weight: 600; color: var(--on-surface);
+  white-space: nowrap;
+}
+.admin-logout-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 1rem; border-radius: 2rem;
+  background: transparent; border: 1px solid var(--glass-border);
+  color: var(--text-muted); font-weight: 600; font-size: 0.8rem;
+  cursor: pointer; transition: all 0.2s ease; font-family: 'Manrope', sans-serif;
+}
+.admin-logout-btn .material-icons { font-size: 1rem; }
+.admin-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
 
 /* Page Header */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }

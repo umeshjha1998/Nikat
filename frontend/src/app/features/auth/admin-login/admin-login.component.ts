@@ -177,8 +177,7 @@ export class AdminLoginComponent {
           isServiceProvider: false,
           status: 'ACTIVE'
         };
-        localStorage.setItem('nikat_token', 'mock-admin-session-jwt');
-        localStorage.setItem('nikat_user', JSON.stringify(dummyUser));
+        this.authService.setSession('mock-admin-session-jwt', dummyUser);
 
         // Use timeout to simulate login delay/process
         this.loading = false;

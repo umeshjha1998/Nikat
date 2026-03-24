@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
+import { adminGuard } from './core/admin.guard';
 
 export const routes: Routes = [
   // Public Pages
@@ -34,7 +35,7 @@ export const routes: Routes = [
   // Admin Panel — nested under AdminLayoutComponent
   {
     path: 'admin',
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
     loadComponent: () => import('./features/admin/admin-layout.component').then(c => c.AdminLayoutComponent),
     children: [
       { path: '', loadComponent: () => import('./features/admin/admin-dashboard.component').then(c => c.AdminDashboardComponent) },
