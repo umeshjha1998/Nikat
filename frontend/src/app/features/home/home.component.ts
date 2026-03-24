@@ -197,7 +197,7 @@ import { ApiService } from '../../core/api.service';
     .hero-content { position: relative; z-index: 10; max-width: 900px; }
     .badge-float { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--primary); padding: 0.5rem 1.25rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 700; margin-bottom: 2rem; }
     .hero-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 5rem; font-weight: 800; line-height: 1.05; margin: 0 0 2rem; letter-spacing: -0.04em; }
-    .text-gradient { background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .text-gradient { background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero-desc { font-size: 1.35rem; color: var(--text-muted); line-height: 1.6; max-width: 700px; margin: 0 auto 3.5rem; }
 
     .search-container-premium { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 0.75rem; border-radius: 2rem; display: flex; align-items: center; gap: 1rem; max-width: 680px; margin: 0 auto 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.2); transition: all 0.3s ease; }
@@ -210,7 +210,7 @@ import { ApiService } from '../../core/api.service';
     .hero-quick-filters { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
     .f-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; }
     .f-item { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 0.5rem 1.25rem; border-radius: 2rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .f-item:hover { color: #fff; border-color: var(--primary); background: rgba(59,130,246,0.1); }
+    .f-item:hover { color: var(--text-main); border-color: var(--primary); background: rgba(59,130,246,0.1); }
     .f-item .material-icons { font-size: 1.1rem; color: var(--primary); }
 
     /* Showcase */
@@ -219,7 +219,7 @@ import { ApiService } from '../../core/api.service';
     .showcase-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
     .sh-left h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin: 0 0 0.5rem; }
     .sh-left p { font-size: 1.1rem; color: var(--text-muted); }
-    .btn-outline-glass { background: var(--glass); border: 1px solid var(--glass-border); color: #fff; padding: 0.75rem 1.75rem; border-radius: 1rem; font-weight: 700; cursor: pointer; }
+    .btn-outline-glass { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.75rem 1.75rem; border-radius: 1rem; font-weight: 700; cursor: pointer; }
 
     .showcase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
     .exp-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 2rem; overflow: hidden; transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; }
@@ -238,26 +238,26 @@ import { ApiService } from '../../core/api.service';
     .e-meta { display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
     .e-meta .material-icons { font-size: 1rem; }
     .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--glass-border); }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4b5563; margin-left: auto; }
-    .status-dot.open { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); margin-left: auto; }
+    .status-dot.open { background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
 
     /* Ecosystem */
     .ecosystem-section { padding: 6rem 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
     .eco-grid { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; text-align: center; }
-    .eco-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .eco-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .eco-grid p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
     .eco-divider { width: 1px; height: 80px; background: var(--glass-border); }
 
     /* Propulsion */
     .business-propulsion { padding: 10rem 2rem; }
-    .prop-card { max-width: 1100px; margin: 0 auto; background: linear-gradient(135deg, #0a113d, #020410); border: 1px solid var(--glass-border); border-radius: 3rem; padding: 5rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+    .prop-card { max-width: 1100px; margin: 0 auto; background: var(--surface-container-low); border: 1px solid var(--glass-border); border-radius: 3rem; padding: 5rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
     .prop-card::after { content: ''; position: absolute; top: -50%; right: -20%; width: 500px; height: 500px; background: var(--primary); border-radius: 50%; filter: blur(200px); opacity: 0.1; }
     .prop-content { max-width: 600px; position: relative; z-index: 5; }
     .prop-badge { color: var(--primary); font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 1.5rem; }
     .prop-content h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3rem; font-weight: 800; margin: 0 0 1.5rem; line-height: 1.1; }
     .prop-content p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; line-height: 1.6; }
     .prop-actions { display: flex; align-items: center; gap: 2rem; }
-    .btn-text-white { background: transparent; border: none; color: #e2e8f0; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    .btn-text-white { background: transparent; border: none; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
 
     .prop-visual { width: 160px; height: 160px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 3rem; display: flex; align-items: center; justify-content: center; transform: rotate(15deg); }
     .v-rect .material-icons { font-size: 5rem; color: var(--primary); }
@@ -269,12 +269,12 @@ import { ApiService } from '../../core/api.service';
     .f-col-brand p { color: var(--text-muted); margin: 2rem 0; line-height: 1.6; font-weight: 600; }
     .f-social { display: flex; gap: 1.5rem; }
     .f-social a { color: var(--text-muted); transition: 0.2s; }
-    .f-social a:hover { color: #fff; }
+    .f-social a:hover { color: var(--primary); }
 
     .f-links-wrap { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; }
     .f-col h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 2rem; }
     .f-col a { display: block; color: var(--text-muted); text-decoration: none; margin-bottom: 1.25rem; font-weight: 600; font-size: 0.95rem; transition: 0.2s; }
-    .f-col a:hover { color: #fff; }
+    .f-col a:hover { color: var(--primary); }
 
     .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.9rem; }
     .f-utils { display: flex; gap: 3rem; }
@@ -322,7 +322,7 @@ export class HomeComponent implements OnInit {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/browse'], { queryParams: { q: this.searchQuery } });
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
     }
   }
 

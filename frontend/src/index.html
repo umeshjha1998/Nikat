@@ -14,6 +14,45 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet">
   <!-- Material Symbols Outlined (for variable icon features) -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            "background": "var(--bg)",
+            "on-background": "var(--text-main)",
+            "primary": "var(--primary)",
+            "on-primary": "var(--text-main)",
+            "primary-container": "var(--primary)",
+            "on-primary-container": "var(--text-main)",
+            "secondary": "var(--secondary)",
+            "on-secondary": "var(--bg)",
+            "secondary-container": "var(--secondary)",
+            "on-secondary-container": "var(--bg)",
+            "tertiary": "var(--tertiary)",
+            "on-tertiary": "var(--bg)",
+            "tertiary-container": "var(--tertiary)",
+            "on-tertiary-container": "var(--bg)",
+            "surface": "var(--card-bg)",
+            "on-surface": "var(--on-surface)",
+            "on-surface-variant": "var(--on-surface-variant)",
+            "surface-container": "var(--surface-container)",
+            "surface-container-low": "var(--surface-container-low)",
+            "surface-container-high": "var(--surface-container-high)",
+            "surface-container-highest": "var(--surface-container-highest)",
+            "outline": "var(--border-color)",
+            "outline-variant": "var(--outline-variant)",
+            "on-primary-fixed": "var(--text-main)",
+            "on-secondary-fixed": "var(--bg)",
+            "on-tertiary-fixed": "var(--bg)",
+          }
+        }
+      }
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>

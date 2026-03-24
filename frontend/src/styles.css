@@ -3,10 +3,12 @@
 
 :root {
   --primary: #3b82f6;
+  --secondary: #6bfe9c;
+  --tertiary: #ffb3f9;
   --accent: #5eb4ff;
   --accent-glow: rgba(94, 180, 255, 0.4);
   --bg: #020410;
-  --header-bg: rgba(24, 32, 86, 0.6);
+  --header-bg: rgba(14, 20, 66, 0.6);
   --glass: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.1);
   --text-main: #ffffff;
@@ -15,11 +17,21 @@
   --nav-link: #a3a8d5;
   --nav-link-hover: #e2e3ff;
   --card-bg: rgba(30, 41, 59, 0.5);
+  --surface-container: #0e1442;
+  --surface-container-low: #080e38;
+  --surface-container-high: #131a4c;
+  --surface-container-highest: #182056;
+  --on-surface: #e2e3ff;
+  --on-surface-variant: #a3a8d5;
+  --outline-variant: #40456c;
 }
 
 .light-theme {
   --bg: #f8fafc;
   --header-bg: rgba(255, 255, 255, 0.9);
+  --primary: #2563eb;
+  --secondary: #16a34a;
+  --tertiary: #c026d3;
   --accent: #2563eb;
   --accent-glow: rgba(37, 99, 235, 0.2);
   --glass: rgba(0, 0, 0, 0.03);
@@ -30,6 +42,13 @@
   --nav-link: #475569;
   --nav-link-hover: #0f172a;
   --card-bg: #ffffff;
+  --surface-container: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container-high: #f1f5f9;
+  --surface-container-highest: #e2e8f0;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline-variant: #cbd5e1;
 }
 
 * {
