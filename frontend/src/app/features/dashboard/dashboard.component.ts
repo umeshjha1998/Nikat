@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
@@ -316,6 +316,7 @@ import { AuthService } from '../../core/auth.service';
 })
 export class DashboardComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
   activeTab = 'overview';
 
   get currentUser() {
@@ -337,5 +338,6 @@ export class DashboardComponent {
 
   signOut() {
     this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

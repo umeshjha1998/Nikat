@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
@@ -450,7 +450,7 @@ export class ServiceProviderDashboardComponent implements OnInit {
     { name: 'Home Visit', price: '1,800', bookings: 12, icon: 'home' }
   ];
 
-  constructor(private apiService: ApiService, private authService: AuthService) {}
+  constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
 
   get currentUser() {
     return this.authService.currentUser;
@@ -469,5 +469,6 @@ export class ServiceProviderDashboardComponent implements OnInit {
 
   signOut() {
     this.authService.logout();
+    this.router.navigate(['/']);
   }
 }
