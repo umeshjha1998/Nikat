@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../../../core/api.service';
 
 @Component({
   selector: 'app-service-booking',
@@ -240,18 +241,29 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
       --primary: #3b82f6;
       --primary-glow: rgba(59, 130, 246, 0.4);
       --bg: #020410;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --card-bg: #080c24;
       --glass: rgba(255, 255, 255, 0.03);
       --glass-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
     }
 
-    .booking-premium { min-height: 100vh; background: var(--bg); color: #fff; padding-top: 5rem; }
+    :host-context(.light-theme) {
+      --bg: #f8faff;
+      --text-main: #1a1f36;
+      --text-muted: #4f566b;
+      --card-bg: #ffffff;
+      --glass: rgba(0,0,0,0.02);
+      --glass-border: rgba(0,0,0,0.08);
+    }
+
+    .booking-premium { min-height: 100vh; background: var(--bg); color: var(--text-main); padding-top: 5rem; transition: all 0.3s ease; }
 
     /* Header & Stepper */
     .booking-header {
       position: fixed; top: 0; left: 0; right: 0; height: 5rem;
-      background: rgba(2, 4, 16, 0.8); backdrop-filter: blur(20px);
+      background: var(--bg); backdrop-filter: blur(20px);
       z-index: 1000; border-bottom: 1px solid var(--glass-border);
       display: flex; align-items: center;
     }
@@ -295,14 +307,14 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 
     .m-content { flex: 1; }
     .m-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    .m-top h3 { font-size: 1.25rem; font-weight: 800; margin: 0; }
-    .m-price { font-size: 1.25rem; font-weight: 800; color: #fff; }
+    .m-top h3 { font-size: 1.25rem; font-weight: 800; margin: 0; color: var(--text-main); }
+    .m-price { font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
     .m-meta { display: flex; gap: 1.25rem; }
     .meta-tag { display: flex; align-items: center; gap: 0.4rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
     .meta-tag .material-icons { font-size: 1rem; color: var(--primary); }
 
     /* Calendar Mini */
-    .calendar-mini { background: #080c24; border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2rem; margin-bottom: 2.5rem; }
+    .calendar-mini { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2rem; margin-bottom: 2.5rem; }
     .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     .cal-nav h3 { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; }
     .nav-btns { display: flex; gap: 0.5rem; }
@@ -321,7 +333,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
     .d-dot { width: 4px; height: 4px; background: #10b981; border-radius: 50%; position: absolute; bottom: 8px; }
 
     /* Time Slots */
-    .time-slots-premium h3 { font-size: 1rem; color: #fff; margin-bottom: 1.5rem; }
+    .time-slots-premium h3 { font-size: 1rem; color: var(--text-main); margin-bottom: 1.5rem; }
     .ts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; margin-bottom: 3rem; }
     .ts-btn {
       background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1rem;
@@ -335,7 +347,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
     .invoice-section h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary); margin: 0 0 1.5rem; }
     .inv-row { display: flex; justify-content: space-between; margin-bottom: 1.25rem; }
     .inv-label { color: var(--text-muted); font-weight: 700; }
-    .inv-val { color: #fff; font-weight: 800; }
+    .inv-val { color: var(--text-main); font-weight: 800; }
     .inv-divider { height: 1px; background: var(--glass-border); margin: 2rem 0; }
     .inv-row.total { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; align-items: flex-end; }
     .final-price { color: #10b981; font-size: 2rem; }
@@ -347,7 +359,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 
     /* Sidebar */
     .booking-summary-sidebar { display: flex; flex-direction: column; gap: 2rem; }
-    .provider-pill-premium { background: #080c24; border: 1px solid var(--glass-border); border-radius: 2rem; padding: 1.5rem; display: flex; gap: 1.25rem; align-items: center; }
+    .provider-pill-premium { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 1.5rem; display: flex; gap: 1.25rem; align-items: center; }
     .provider-img { width: 70px; height: 70px; border-radius: 1.5rem; background-size: cover; background-position: center; border: 1px solid var(--glass-border); }
     .provider-details h4 { margin: 0 0 0.4rem; font-size: 1.1rem; }
     .badge { background: rgba(59,130,246,0.1); color: var(--primary); font-size: 0.65rem; font-weight: 900; text-transform: uppercase; padding: 0.3rem 0.6rem; border-radius: 0.5rem; }
@@ -381,7 +393,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 
     /* Success Overlay */
     .success-booking-overlay {
-      position: fixed; inset: 0; background: rgba(2, 4, 16, 0.95); z-index: 2000;
+      position: fixed; inset: 0; background: var(--bg); z-index: 2000;
       display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);
     }
     .success-card {
@@ -425,10 +437,9 @@ export class ServiceBookingComponent implements OnInit {
   };
 
   serviceOptions = [
-    { id: 1, name: 'Classic Haircut', duration: '30 min', price: '₹450', level: 'Junior' },
-    { id: 2, name: 'Haircut & Beard Trim', duration: '45 min', price: '₹650', level: 'Senior' },
-    { id: 3, name: 'Premium Grooming Package', duration: '1 hour', price: '₹1,200', level: 'Master' },
-    { id: 4, name: 'Hot Towel Shave', duration: '25 min', price: '₹350', level: 'Senior' }
+    { id: 1, name: 'Standard Service', duration: '30 min', price: '₹450', level: 'Junior' },
+    { id: 2, name: 'Premium Service', duration: '45 min', price: '₹650', level: 'Senior' },
+    { id: 3, name: 'Exclusive Package', duration: '1 hour', price: '₹1,200', level: 'Master' }
   ];
 
   dates = [
@@ -443,8 +454,34 @@ export class ServiceBookingComponent implements OnInit {
 
   timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
-  ngOnInit() {}
+  constructor(private route: ActivatedRoute, private router: Router, private apiService: ApiService) {}
+
+  ngOnInit() {
+    const shopId = this.route.snapshot.paramMap.get('id');
+    if (shopId) {
+      this.apiService.getShopById(shopId).subscribe({
+        next: (shop) => {
+          if (shop) {
+            this.service = {
+              name: shop.name,
+              category: shop.categoryName || 'Local Business',
+              provider: shop.ownerName || 'Verified Partner',
+              // Use a placeholder if no image
+              image: (shop as any).imageUrl || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
+            };
+            
+            // Generate some dynamic service options based on shop type
+            if (shop.categoryName === 'Bakery') {
+              this.serviceOptions = [
+                { id: 1, name: 'Custom Cake Consultation', duration: '15 min', price: 'Free', level: 'Standard' },
+                { id: 2, name: 'Bulk Order Pickup', duration: '10 min', price: 'Varied', level: 'Express' }
+              ];
+            }
+          }
+        }
+      });
+    }
+  }
 
   nextStep() { if (this.step < 3) this.step++; }
   prevStep() { if (this.step > 1) this.step--; }

@@ -105,13 +105,13 @@ import { ApiService } from '../../../core/api.service';
             <span class="footer-logo">Nikat</span>
             <p class="footer-copy">© 2024 Nikat Digital. Local Discovery Redefined.</p>
           </div>
-108:           <div class="footer-links">
-109:             <a href="#">Privacy Policy</a>
-110:             <a href="#">Terms of Service</a>
-111:             <a href="#">Partner with Us</a>
-112:             <a href="#">Help Center</a>
-113:             <a routerLink="/admin-login">Admin Login</a>
-114:           </div>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Partner with Us</a>
+            <a href="#">Help Center</a>
+            <a routerLink="/admin-login">Admin Login</a>
+          </div>
           <div class="footer-social">
             <button class="social-btn"><span class="material-symbols-outlined">public</span></button>
             <button class="social-btn"><span class="material-symbols-outlined">share</span></button>

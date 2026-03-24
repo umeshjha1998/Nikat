@@ -1,23 +1,29 @@
-# Nikat Agent Instructions
+# Nikat - Agentic Workflow Instructions
 
-## Overview
-This document serves as the entry point for AI agents working on the Nikat platform. To ensure architectural integrity and design consistency, agents **MUST** reference the specialized modules in `docs/agents/`.
+## 1. Overview
+This document serves as the foundational, root-level instruction file for AI agents interacting with the Nikat platform. This repository adheres to an **agentic workflow standard**, requiring autonomous agents to safely navigate, comprehend, and iterate on the project without breaking existing architecture.
 
-## 🧭 Navigation & Core Guidelines
-For detailed instructions, refer to the following:
-- **[Central Hub](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/project-knowledge-base.md)**: The starting point for all project knowledge.
-- **[Frontend](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/frontend-guidelines.md)**: Angular & Design System rules.
-- **[Backend](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/backend-guidelines.md)**: Spring Boot & Security rules.
-- **[Business Logic](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/database-and-logic-rules.md)**: Single Source of Truth (SSOT) & Domain rules.
-- **[Workflow](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/workflow-and-deployment.md)**: Tool usage & Infrastructure details.
+## 2. Navigating the Repository
+You must always default to checking `docs/agents/` for domain-specific instructions before attempting to restructure any code:
+- **[Tech Stack and Architecture](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/tech-stack-and-architecture.md)**
+- **[Data Models](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/data-models.md)**
+- **[Core Features and Logic](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/core-features-and-logic.md)**
+- **[UI and UX Guidelines](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/ui-ux-guidelines.md)**
+- **[Agent Workflow Rules](file:///e:/My%20folder/Education/Git/Nikat/docs/agents/agent-workflow-rules.md)**
 
-## 🛠️ Mandatory Agent Environment
-Ensure the following skills are available:
-- `angular-best-practices`, `java-springboot`, `agent-browser`, `neon-postgres`, `design-md`.
+## 3. How Agents Should Understand the Project
+- **Holistic Review**: Always review the above documents to grasp the big picture before diving directly into a deeply nested component or controller.
+- **Roles and Features**: Understand how features branch across different roles (Admin, User, Shop, Service Provider) by consulting `core-features-and-logic.md`.
+- **UI/UX Match**: Never create basic or raw templates unless experimenting. Use the exact styles and components specified in `ui-ux-guidelines.md`.
 
-## 📜 Architecture Purity (CRITICAL)
-- **Single Source of Truth**: All updates to entities MUST modify the original canonical data record.
-- **Strict Separation**: Frontend in `frontend/`, Backend in `backend/`.
-- **Infrastructure**: Maintain compatibility with the free-tier stack (Vercel, Render, Neon).
+## 4. Single Source of Truth
+- The backend (`backend/`) database and business layer are the canonical **Single Source of Truth** for all entities, constraints, relationships, validations, and security boundaries.
+- The frontend (`frontend/`) is purely a display and action-dispatching layer. Do not duplicate backend business logic validations on the frontend (beyond basic form validation).
 
-Please refer to `README.md` for local and production deployment instructions.
+## 5. Working Safely & Preserving Architecture
+- **No Rogue Libraries**: Do not install unverified npm packages or Maven dependencies without user permission.
+- **Strict Separation**: Frontend code stays in `frontend/`, backend in `backend/`. Do not mix scripts or configs across this boundary.
+- **Rule Verification**: Before executing modifications, cross-reference your plan against constraints listed in `agent-workflow-rules.md`.
+- **Backwards Compatibility**: When adding to data models or creating API endpoints, ensure endpoints used by legacy features or other agents remain unaffected.
+
+Refer to `README.md` for project background, roles overview, environment variables, and deployment instructions.

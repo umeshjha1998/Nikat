@@ -80,7 +80,7 @@ import { ApiService } from '../../../core/api.service';
       <!-- Action Hub -->
       <section class="action-hub">
         <div class="action-cards">
-          <div class="action-card primary-action">
+          <div class="action-card primary-action" [routerLink]="['/book-service', shopId]">
             <span class="material-symbols-outlined action-icon">calendar_today</span>
             <div>
               <h4>Book Appointment</h4>
@@ -197,6 +197,27 @@ import { ApiService } from '../../../core/api.service';
           </div>
         </div>
       </div>
+
+      <!-- Footer -->
+      <footer class="page-footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <span class="footer-logo">Nikat</span>
+            <p class="footer-copy">© 2024 Nikat Digital. Local Discovery Redefined.</p>
+          </div>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Partner with Us</a>
+            <a href="#">Help Center</a>
+            <a routerLink="/admin-login">Admin Login</a>
+          </div>
+          <div class="footer-social">
+            <button class="social-btn"><span class="material-symbols-outlined">public</span></button>
+            <button class="social-btn"><span class="material-symbols-outlined">share</span></button>
+          </div>
+        </div>
+      </footer>
     </div>
   `,
   styles: [`
@@ -429,6 +450,38 @@ import { ApiService } from '../../../core/api.service';
     .node-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .tag { font-size: 0.75rem; font-weight: 700; color: #fc9df7; }
 
+    /* Footer */
+    .page-footer {
+      margin-top: 5rem; padding: 3rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: #05092f;
+      transition: all 0.3s ease;
+    }
+    .footer-inner {
+      max-width: 80rem; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      .footer-inner { flex-direction: row; justify-content: space-between; }
+    }
+    .footer-brand { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    @media (min-width: 768px) { .footer-brand { align-items: flex-start; } }
+    .footer-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.125rem; font-weight: 700; color: #e2e3ff; }
+    .footer-copy { color: #a3a8d5; font-size: 0.875rem; margin: 0; }
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+    .footer-links a { color: #a3a8d5; font-size: 0.875rem; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #5eb4ff; }
+    .footer-social { display: flex; gap: 1rem; }
+    .social-btn {
+      width: 2.5rem; height: 2.5rem; border-radius: 50%;
+      background: rgba(24,32,86,0.6); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: #e2e3ff; cursor: pointer; transition: all 0.2s;
+    }
+    .social-btn:hover { color: #fff; border-color: #5eb4ff; background: #5eb4ff; }
+    .social-btn .material-symbols-outlined { font-size: 1.25rem; }
+
     @media (max-width: 768px) {
       .bento-gallery {
         grid-template-columns: 1fr;
@@ -445,6 +498,7 @@ import { ApiService } from '../../../core/api.service';
 export class ShopDetailComponent implements OnInit {
   activeTab: 'products' | 'about' | 'reviews' = 'products';
   isFavorited = false;
+  shopId: string | null = null;
 
   shop: any = {
     name: 'The Golden Crust',
@@ -505,9 +559,9 @@ export class ShopDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.apiService.getShopById(id).subscribe({
+    this.shopId = this.route.snapshot.paramMap.get('id');
+    if (this.shopId) {
+      this.apiService.getShopById(this.shopId).subscribe({
         next: (s: any) => {
           if (s) {
             this.shop = {

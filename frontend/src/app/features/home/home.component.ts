@@ -160,7 +160,7 @@ import { ApiService } from '../../core/api.service';
             </div>
             <div class="f-col">
               <h4>Ownership</h4>
-              <a routerLink="/admin-login">Admin Portal</a>
+              <a routerLink="/admin-login">Admin Login</a>
               <a routerLink="/login">Merchant Hub</a>
               <a routerLink="/register">Join Partner Program</a>
             </div>
