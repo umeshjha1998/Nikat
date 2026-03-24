@@ -9,6 +9,26 @@
 - **Service Providers / Technicians**: Can manage their offered services, receive service requests, and track their ratings.
 - **Administrators**: Have a powerful dashboard to manage approvals, platform statistics, advertisements, user roles, security logs, and a community hub.
 
+### Business Flowchart
+
+```mermaid
+flowchart TD
+    User([Customer/User]) -->|Browses| Platform(Nikat Platform)
+    User -->|Books/Buys| Service(Services/Products)
+    User -->|Leaves Feedback| Review(Reviews & Ratings)
+    
+    Provider([Shop/Service Provider]) -->|Lists Business| Platform
+    Provider -->|Manages| Service
+    Provider -->|Fulfills| Booking(Bookings/Appointments)
+    
+    Service --> Booking
+    Booking --> Review
+    
+    Admin([System Admin]) -->|Approves/Rejects| Provider
+    Admin -->|Manages Ads/Content| Platform
+    Admin -->|Monitors| Analytics(Platform Analytics)
+```
+
 ## 3. Technology Stack & Architecture
 This project uses a modern web stack optimized for scalable, free-tier hosting:
 - **Frontend**: Angular 18+ (Standalone Components), utilizing dynamic theming, a dark-mode-first glassmorphic UI (Stitch Design System). Deployed on **Vercel**.
@@ -17,6 +37,23 @@ This project uses a modern web stack optimized for scalable, free-tier hosting:
 - **External APIs**: Resend API for email services.
 
 The architecture is strictly decoupled: `frontend/` contains only the Angular app, communicating via RESTful JSON endpoints with the `backend/`. The backend acts as the single source of truth for all business logic, data persistence, and security validations.
+
+### Architecture Flowchart
+
+```mermaid
+flowchart LR
+    Client((Frontend\nAngular 18+)) <-->|JSON over REST / JWT| Server((Backend\nSpring Boot 3.x))
+    Server <-->|JPA / JDBC| Database[(PostgreSQL\nNeon.tech)]
+    Server -->|API Calls| Exterior(Resend Email API)
+    
+    subgraph Vercel
+        Client
+    end
+    
+    subgraph Render.com
+        Server
+    end
+```
 
 ## 4. Repository & Module Breakdown
 - `frontend/`: Contains the complete Angular application (UI, components, services, routes, assets, core UI state).
