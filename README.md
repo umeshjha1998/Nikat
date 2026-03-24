@@ -58,7 +58,7 @@ flowchart LR
 ## 4. Repository & Module Breakdown
 - `frontend/`: Contains the complete Angular application (UI, components, services, routes, assets, core UI state).
 - `backend/`: Contains the complete Spring Boot API (controllers, services, repositories, security configs, domain models).
-- `docs/agents/`: Dedicated directory for AI Agent guidelines, architecture details, data models, and workflows.
+- `.agent/`: Dedicated directory for AI Agent guidelines, architecture details, data models, and workflows.
 
 ## 5. Development Setup & Environment Variables
 
@@ -95,4 +95,4 @@ flowchart LR
 ## 7. Important Implementation Notes
 - **Source of Truth**: All data and state validations must happen in the backend. The frontend is exclusively a presentation layer representing the state retrieved from the backend.
 - **UI/UX Consistency**: Any new frontend component must follow the existing Deep Sea, glassmorphism design system to maintain visual parity.
-- **Agent Interfacing**: Both human developers and AI Agents must follow the structured guidelines in `docs/agents/` to prevent regressions.
+- **Agent Interfacing**: Both human developers and AI Agents must follow the structured guidelines in `.agent/` to prevent regressions.

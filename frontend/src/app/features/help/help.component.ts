@@ -13,8 +13,8 @@ import { RouterModule } from '@angular/router';
         <div class="nav-inner">
           <a routerLink="/" class="brand">Nikat <span>Support</span></a>
           <div class="nav-links">
-            <a href="#faqs">FAQs</a>
-            <a href="#contact">Contact</a>
+            <a (click)="scrollTo('faqs')">FAQs</a>
+            <a (click)="scrollTo('contact')">Contact</a>
             <a routerLink="/community" class="btn-hub">Community Hub</a>
           </div>
         </div>
@@ -137,7 +137,7 @@ import { RouterModule } from '@angular/router';
     .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
     .brand span { font-weight: 400; color: var(--text-muted); font-size: 1rem; }
     .nav-links { display: flex; align-items: center; gap: 2rem; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.2s; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.2s; cursor: pointer; }
     .nav-links a:hover { color: #fff; }
     .btn-hub { background: var(--glass); border: 1px solid var(--glass-border); padding: 0.6rem 1.25rem; border-radius: 1rem; color: #fff !important; }
 
@@ -236,6 +236,10 @@ export class HelpComponent {
     { title: 'Billing & Payouts', desc: 'Manage your earnings, refunds, and subscription plans.', icon: 'account_balance_wallet', bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' },
     { title: 'Safety & Privacy', desc: 'How we protect your data and ensure a secure experience.', icon: 'verified_user', bg: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }
   ];
+
+  scrollTo(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
 
   faqs: any[] = [
     { q: 'How do I book a service?', a: 'Browse services, select your preferred provider, pick a date and time, then confirm your booking. You\'ll receive a confirmation via email and notification.', open: false },
