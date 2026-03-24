@@ -54,7 +54,9 @@ import { ThemeToggleComponent } from '../../core/theme-toggle/theme-toggle.compo
           </div>
         </div>
 
-        <router-outlet></router-outlet>
+        <div class="admin-content">
+          <router-outlet></router-outlet>
+        </div>
       </main>
     </div>
   `,

@@ -56,7 +56,9 @@
   background: var(--surface-container-low); flex-shrink: 0;
   transition: background 0.3s ease, border-color 0.3s ease;
 }
-.admin-topbar + * { padding: 2.5rem; flex: 1; }
+
+/* Content area wrapping router-outlet */
+.admin-content { padding: 2.5rem; flex: 1; overflow-y: auto; }
 .topbar-left { display: flex; align-items: center; }
 .topbar-title {
   font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem;
