@@ -354,8 +354,8 @@ export class RegisterComponent {
       this.authService.register(data).subscribe({
         next: () => {
           this.isLoading = false;
-          this.successMessage = 'Account created successfully! Redirecting...';
-          setTimeout(() => this.router.navigate(['/login']), 2000);
+          this.successMessage = 'Account created successfully! Redirecting to verification...';
+          setTimeout(() => this.router.navigate(['/verify-otp']), 2000);
         },
         error: (err: any) => {
           this.isLoading = false;

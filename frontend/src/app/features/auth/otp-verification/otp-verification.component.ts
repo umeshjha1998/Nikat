@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-otp-verification',
@@ -193,6 +193,8 @@ export class OtpVerificationComponent {
 
   @ViewChildren('otpInput') inputs!: QueryList<ElementRef>;
 
+  constructor(private router: Router) {}
+
   onInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
@@ -223,7 +225,7 @@ export class OtpVerificationComponent {
     this.isLoading = true;
     setTimeout(() => {
       this.isLoading = false;
-      // Verification logic here
+      this.router.navigate(['/dashboard']);
     }, 2000);
   }
 
