@@ -247,8 +247,9 @@ import { ApiService, ServiceDto } from '../../core/api.service';
 
     .services-page {
       min-height: 100vh;
-      background: #05092f;
-      color: #e2e3ff;
+      background: var(--bg);
+      color: var(--text-main);
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .main-content {
@@ -276,7 +277,7 @@ import { ApiService, ServiceDto } from '../../core/api.service';
       font-size: 1.875rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #e2e3ff;
+      color: var(--text-main);
       margin: 0 0 1rem;
     }
 
@@ -288,24 +289,24 @@ import { ApiService, ServiceDto } from '../../core/api.service';
       left: 1rem;
       top: 50%;
       transform: translateY(-50%);
-      color: #a3a8d5;
+      color: var(--text-muted);
       transition: color 0.2s;
     }
-    .search-input-wrap:focus-within .search-icon { color: #5eb4ff; }
+    .search-input-wrap:focus-within .search-icon { color: var(--accent); }
     .search-input {
       width: 100%;
-      background: #182056;
-      border: none;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       padding: 0.75rem 1rem 0.75rem 3rem;
-      color: #e2e3ff;
+      color: var(--text-main);
       font-family: inherit;
       font-size: 0.875rem;
       outline: none;
-      transition: box-shadow 0.2s;
+      transition: all 0.3s ease;
     }
-    .search-input::placeholder { color: #a3a8d5; }
-    .search-input:focus { box-shadow: 0 0 0 2px rgba(94,180,255,0.5); }
+    .search-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
 
     .section-label {
       display: block;
@@ -313,7 +314,7 @@ import { ApiService, ServiceDto } from '../../core/api.service';
       text-transform: uppercase;
       letter-spacing: 0.12em;
       font-weight: 700;
-      color: #a3a8d5;
+      color: var(--text-muted);
       padding: 0 0.5rem;
       margin-bottom: 0.5rem;
     }
@@ -322,10 +323,12 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     .categories-section { display: flex; flex-direction: column; gap: 0.5rem; }
 
     .cat-group {
-      background: #080e38;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       overflow: hidden;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
     .cat-header {
       width: 100%;
@@ -335,16 +338,16 @@ import { ApiService, ServiceDto } from '../../core/api.service';
       padding: 1rem;
       background: transparent;
       border: none;
-      color: #e2e3ff;
+      color: var(--text-main);
       cursor: pointer;
       transition: background 0.2s;
     }
-    .cat-header:hover { background: #0e1442; }
+    .cat-header:hover { background: var(--glass-border); }
     .cat-header-left { display: flex; align-items: center; gap: 0.75rem; }
-    .cat-icon { color: #5eb4ff; font-size: 1.25rem; }
+    .cat-icon { color: var(--accent); font-size: 1.25rem; }
     .cat-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.875rem; }
-    .cat-chevron { color: #a3a8d5; font-size: 1.25rem; transition: transform 0.3s; }
-    .cat-chevron.rotated { transform: rotate(90deg); color: #5eb4ff; }
+    .cat-chevron { color: var(--text-muted); font-size: 1.25rem; transition: transform 0.3s; }
+    .cat-chevron.rotated { transform: rotate(90deg); color: var(--accent); }
 
     .cat-children {
       padding: 0 1rem 1rem 2.75rem;
@@ -354,51 +357,52 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     }
     .cat-child {
       font-size: 0.75rem;
-      color: #a3a8d5;
+      color: var(--text-muted);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .cat-child:hover, .cat-child.active { color: #5eb4ff; font-weight: 700; }
+    .cat-child:hover, .cat-child.active { color: var(--accent); font-weight: 700; }
 
     /* Quick Filters */
-    .quick-filters { border-top: 1px solid rgba(64,69,108,0.1); padding-top: 1rem; }
+    .quick-filters { border-top: 1px solid var(--border-color); padding-top: 1rem; }
     .filter-options { display: flex; flex-direction: column; gap: 1rem; padding: 0 0.5rem; }
     .filter-option { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
     .custom-checkbox {
       width: 1.25rem; height: 1.25rem;
-      border: 2px solid #40456c; border-radius: 0.25rem;
+      border: 2px solid var(--border-color); border-radius: 0.25rem;
       display: flex; align-items: center; justify-content: center;
       transition: border-color 0.2s;
+      background: var(--glass);
     }
-    .filter-option:hover .custom-checkbox { border-color: #5eb4ff; }
+    .filter-option:hover .custom-checkbox { border-color: var(--accent); }
     .check-fill {
       width: 0.75rem; height: 0.75rem;
-      background: #5eb4ff; border-radius: 2px;
+      background: var(--accent); border-radius: 2px;
       opacity: 0; transition: opacity 0.2s;
     }
     .custom-checkbox.checked .check-fill { opacity: 1; }
-    .filter-text { font-size: 0.875rem; font-weight: 500; color: #e2e3ff; flex: 1; }
+    .filter-text { font-size: 0.875rem; font-weight: 500; color: var(--text-main); flex: 1; }
     .open-dot {
       width: 0.5rem; height: 0.5rem; border-radius: 50%;
-      background: #6bfe9c;
-      box-shadow: 0 0 8px rgba(107,254,156,0.6);
+      background: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
     }
 
     /* Price Range */
-    .price-range-section { border-top: 1px solid rgba(64,69,108,0.1); padding-top: 1rem; }
+    .price-range-section { border-top: 1px solid var(--border-color); padding-top: 1rem; }
     .price-slider {
       width: 100%;
       height: 0.375rem;
-      background: #182056;
+      background: var(--border-color);
       border-radius: 9999px;
       appearance: none;
       -webkit-appearance: none;
-      accent-color: #5eb4ff;
+      accent-color: var(--accent);
       cursor: pointer;
       margin: 0.5rem 0;
     }
     .price-labels { display: flex; justify-content: space-between; }
-    .price-labels span { font-size: 0.625rem; font-weight: 700; color: #a3a8d5; }
+    .price-labels span { font-size: 0.625rem; font-weight: 700; color: var(--text-muted); }
 
     /* ── Content Area ── */
     .content-area { flex: 1; display: flex; flex-direction: column; gap: 2rem; }
@@ -406,14 +410,16 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     .active-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
     .vibe-chip {
       display: flex; align-items: center; gap: 0.5rem;
-      background: #131a4c; color: #e2e3ff;
+      background: var(--card-bg); color: var(--text-main);
+      border: 1px solid var(--border-color);
       padding: 0.375rem 0.75rem; border-radius: 9999px;
       font-size: 0.75rem; font-weight: 700;
       font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.3s ease;
     }
-    .vibe-chip.accent { background: #fc9df7; color: #651469; }
+    .vibe-chip.accent { background: var(--accent); color: white; border-color: var(--accent); }
     .chip-close { font-size: 0.875rem; cursor: pointer; }
-    .clear-btn { font-size: 0.75rem; font-weight: 700; color: #5eb4ff; background: none; border: none; cursor: pointer; padding: 0.375rem 0.75rem; }
+    .clear-btn { font-size: 0.75rem; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0.375rem 0.75rem; }
 
     /* Results Grid */
     .results-grid {
@@ -423,35 +429,35 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     }
 
     .result-card {
-      background: rgba(24,32,86,0.6);
-      backdrop-filter: blur(20px);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 1rem;
       padding: 1rem;
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      transition: transform 0.3s;
+      transition: all 0.3s ease;
     }
-    .result-card:hover { transform: translateY(-4px); }
+    .result-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
     .result-card.featured {
       grid-column: 1 / -1;
       flex-direction: row;
       padding: 1.5rem;
       gap: 1.5rem;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
       position: relative;
       overflow: hidden;
     }
     .card-glow {
       position: absolute; top: 0; right: 0;
       width: 8rem; height: 8rem;
-      background: rgba(94,180,255,0.1);
+      background: var(--accent-glow);
       filter: blur(48px);
       z-index: 0;
       transition: background 0.3s;
     }
-    .result-card.featured:hover .card-glow { background: rgba(94,180,255,0.2); }
+    .result-card.featured:hover .card-glow { background: var(--accent-glow); opacity: 0.4; }
 
     .card-image {
       width: 12rem; height: 12rem; border-radius: 0.75rem; overflow: hidden; flex-shrink: 0;
@@ -462,40 +468,42 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
     .recommended-badge {
       display: inline-block;
-      background: rgba(107,254,156,0.2); color: #6bfe9c;
+      background: rgba(16, 185, 129, 0.1); color: #10b981;
       font-size: 0.625rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.1em;
       padding: 0.25rem 0.5rem; border-radius: 9999px;
       margin-bottom: 0.5rem;
+      border: 1px solid rgba(16, 185, 129, 0.2);
     }
     .card-title {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.25rem; font-weight: 800; color: #e2e3ff; margin: 0;
+      font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin: 0;
     }
     .rating-badge {
       display: flex; align-items: center; gap: 0.25rem;
-      background: #182056; padding: 0.25rem 0.5rem; border-radius: 0.5rem;
+      background: var(--glass); padding: 0.25rem 0.5rem; border-radius: 0.5rem;
+      border: 1px solid var(--glass-border);
     }
     .star-filled { font-size: 0.875rem; color: #facc15; font-variation-settings: 'FILL' 1; }
     .rating-value { font-size: 0.75rem; font-weight: 700; }
-    .card-desc { font-size: 0.875rem; color: #a3a8d5; line-height: 1.6; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .card-meta { display: flex; flex-wrap: wrap; gap: 1rem; }
-    .meta-item { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 700; color: #a3a8d5; }
-    .meta-item .material-symbols-outlined { font-size: 0.875rem; color: #5eb4ff; }
+    .meta-item { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
+    .meta-item .material-symbols-outlined { font-size: 0.875rem; color: var(--accent); }
 
     .btn-book {
       display: inline-block;
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
       color: white; border: none; border-radius: 0.75rem;
       padding: 0.75rem 2rem;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 700; font-size: 0.875rem;
       text-decoration: none; text-align: center;
-      box-shadow: 0 8px 24px rgba(94,180,255,0.2);
+      box-shadow: 0 8px 24px var(--accent-glow);
       cursor: pointer; transition: all 0.2s;
       align-self: flex-start;
     }
-    .btn-book:hover { box-shadow: 0 12px 32px rgba(94,180,255,0.3); }
+    .btn-book:hover { box-shadow: 0 12px 32px var(--accent-glow); transform: translateY(-1px); }
     .btn-book:active { transform: scale(0.95); }
 
     /* Regular Cards */
@@ -505,33 +513,33 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     .card-image-sm img { width: 100%; height: 100%; object-fit: cover; }
     .open-badge {
       position: absolute; top: 0.5rem; right: 0.5rem;
-      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      background: var(--card-bg); border: 1px solid var(--border-color);
       padding: 0.25rem 0.5rem; border-radius: 0.5rem;
-      font-size: 0.625rem; font-weight: 700; color: #6bfe9c;
+      font-size: 0.625rem; font-weight: 700; color: #10b981;
       display: flex; align-items: center; gap: 0.375rem;
     }
-    .open-indicator { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: #6bfe9c; }
+    .open-indicator { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: #10b981; }
 
     .card-body-sm { display: flex; flex-direction: column; gap: 0.5rem; }
-    .card-title-sm { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #e2e3ff; margin: 0; font-size: 1rem; }
-    .card-desc-sm { font-size: 0.75rem; color: #a3a8d5; margin: 0; }
+    .card-title-sm { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: var(--text-main); margin: 0; font-size: 1rem; }
+    .card-desc-sm { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
     .card-footer-sm { display: flex; align-items: center; justify-content: space-between; padding-top: 0.5rem; }
-    .price-distance { font-size: 0.875rem; font-weight: 700; color: #5eb4ff; }
-    .rating-mini { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 700; }
+    .price-distance { font-size: 0.875rem; font-weight: 700; color: var(--accent); }
+    .rating-mini { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 700; color: var(--text-main); }
 
     /* Load More */
     .load-more-wrap { display: flex; justify-content: center; padding: 2rem 0; }
     .btn-load-more {
       display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.5rem 1.5rem;
+      padding: 0.75rem 2rem;
       border-radius: 9999px;
-      border: 1px solid rgba(64,69,108,0.3);
-      background: transparent; color: #a3a8d5;
+      border: 1px solid var(--border-color);
+      background: var(--glass); color: var(--text-muted);
       font-weight: 700; font-size: 0.75rem;
       text-transform: uppercase; letter-spacing: 0.12em;
-      cursor: pointer; transition: all 0.2s;
+      cursor: pointer; transition: all 0.3s ease;
     }
-    .btn-load-more:hover { color: #5eb4ff; border-color: #5eb4ff; }
+    .btn-load-more:hover { color: var(--accent); border-color: var(--accent); background: var(--glass-border); }
     .btn-load-more .material-symbols-outlined { font-size: 0.875rem; }
 
     @media (max-width: 768px) {
@@ -542,6 +550,7 @@ import { ApiService, ServiceDto } from '../../core/api.service';
       .card-image { width: 100%; height: 12rem; }
     }
   `]
+
 })
 export class ServicesComponent implements OnInit {
   services: ServiceDto[] = [];

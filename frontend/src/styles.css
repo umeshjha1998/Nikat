@@ -3,6 +3,8 @@
 
 :root {
   --primary: #3b82f6;
+  --accent: #5eb4ff;
+  --accent-glow: rgba(94, 180, 255, 0.4);
   --bg: #020410;
   --header-bg: rgba(24, 32, 86, 0.6);
   --glass: rgba(255, 255, 255, 0.03);
@@ -18,6 +20,8 @@
 .light-theme {
   --bg: #f8fafc;
   --header-bg: rgba(255, 255, 255, 0.9);
+  --accent: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.2);
   --glass: rgba(0, 0, 0, 0.03);
   --glass-border: rgba(0, 0, 0, 0.08);
   --text-main: #0f172a;

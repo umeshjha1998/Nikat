@@ -105,12 +105,13 @@ import { ApiService } from '../../../core/api.service';
             <span class="footer-logo">Nikat</span>
             <p class="footer-copy">© 2024 Nikat Digital. Local Discovery Redefined.</p>
           </div>
-          <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Partner with Us</a>
-            <a href="#">Help Center</a>
-          </div>
+108:           <div class="footer-links">
+109:             <a href="#">Privacy Policy</a>
+110:             <a href="#">Terms of Service</a>
+111:             <a href="#">Partner with Us</a>
+112:             <a href="#">Help Center</a>
+113:             <a routerLink="/admin-login">Admin Login</a>
+114:           </div>
           <div class="footer-social">
             <button class="social-btn"><span class="material-symbols-outlined">public</span></button>
             <button class="social-btn"><span class="material-symbols-outlined">share</span></button>
@@ -122,42 +123,43 @@ import { ApiService } from '../../../core/api.service';
   styles: [`
     :host { display: block; font-family: 'Manrope', sans-serif; }
 
-    .shops-page { min-height: 100vh; background: #05092f; color: #e2e3ff; }
+    .shops-page { min-height: 100vh; background: var(--bg); color: var(--text-main); transition: all 0.3s ease; }
 
     /* Hero */
     .hero-section { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem 3rem; }
     .hero-inner {
-      background: linear-gradient(135deg, rgba(94,180,255,0.1), rgba(252,157,247,0.05));
+      background: linear-gradient(135deg, var(--accent-glow), var(--glass));
       padding: 3rem; border-radius: 1.5rem;
-      border: 1px solid rgba(64,69,108,0.1);
+      border: 1px solid var(--glass-border);
       position: relative; overflow: hidden;
+      transition: all 0.3s ease;
     }
     .hero-content { position: relative; z-index: 10; max-width: 40rem; }
     .hero-title {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 3rem; font-weight: 800;
       letter-spacing: -0.02em; line-height: 1.1;
-      margin: 0 0 1rem; color: #e2e3ff;
+      margin: 0 0 1rem; color: var(--text-main);
     }
-    .text-accent { color: #5eb4ff; }
+    .text-accent { color: var(--accent); }
     .hero-desc {
-      color: #a3a8d5; font-size: 1.125rem;
+      color: var(--text-muted); font-size: 1.125rem;
       line-height: 1.6; margin: 0 0 2rem;
     }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
     .btn-location {
       display: flex; align-items: center; gap: 0.5rem;
       padding: 0.625rem 1.5rem; border-radius: 9999px;
-      background: #131a4c; border: none;
-      color: #e2e3ff; font-weight: 600; cursor: pointer;
-      transition: background 0.2s;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      color: var(--text-main); font-weight: 600; cursor: pointer;
+      transition: all 0.2s;
     }
-    .btn-location:hover { background: #182056; }
-    .btn-location .material-symbols-outlined { color: #5eb4ff; }
+    .btn-location:hover { border-color: var(--accent); background: var(--glass); }
+    .btn-location .material-symbols-outlined { color: var(--accent); }
     .hero-glow {
       position: absolute; right: -5rem; top: -5rem;
       width: 24rem; height: 24rem;
-      background: rgba(94,180,255,0.1);
+      background: var(--accent-glow);
       filter: blur(100px); border-radius: 50%;
     }
 
@@ -171,24 +173,26 @@ import { ApiService } from '../../../core/api.service';
       position: sticky; top: 72px; z-index: 40;
     }
     .category-bar-inner {
-      background: rgba(5,9,47,0.8); backdrop-filter: blur(12px);
+      background: var(--bg); opacity: 0.98; backdrop-filter: blur(12px);
       padding: 1rem 0;
       display: flex; flex-wrap: wrap; gap: 1rem;
       align-items: center; justify-content: space-between;
+      transition: background 0.3s ease;
+      border-bottom: 1px solid var(--border-color);
     }
     .category-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .pill {
       padding: 0.5rem 1.25rem; border-radius: 0.75rem;
       font-family: 'Manrope', sans-serif;
       font-size: 0.875rem; font-weight: 600;
-      background: #0e1442; color: #a3a8d5; border: none;
+      background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border-color);
       cursor: pointer; transition: all 0.2s;
     }
-    .pill:hover { color: #e2e3ff; }
-    .pill.active { background: #5eb4ff; color: #000; font-weight: 700; }
+    .pill:hover { color: var(--text-main); border-color: var(--accent); }
+    .pill.active { background: var(--primary); color: #fff; font-weight: 700; border-color: var(--primary); }
     .btn-filter {
       display: flex; align-items: center; gap: 0.5rem;
-      background: none; border: none; color: #5eb4ff;
+      background: none; border: none; color: var(--accent);
       font-weight: 600; cursor: pointer;
     }
     .filter-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; }
@@ -205,83 +209,86 @@ import { ApiService } from '../../../core/api.service';
 
     /* Shop Card */
     .shop-card {
-      background: #080e38; border-radius: 1.5rem;
-      overflow: hidden; cursor: pointer;
-      transition: all 0.3s;
+      background: var(--card-bg); border-radius: 1.5rem;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
-    .shop-card:hover { background: #0e1442; }
-    .shop-image { position: relative; height: 14rem; overflow: hidden; }
+    .shop-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .shop-image { position: relative; height: 14rem; overflow: hidden; border-radius: 1.5rem 1.5rem 0 0; }
     .shop-image img {
       width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.5s;
+      transition: transform 0.5s ease;
     }
     .shop-card:hover .shop-image img { transform: scale(1.05); }
 
     .status-badge {
       position: absolute; top: 1rem; left: 1rem;
-      background: rgba(107,254,156,0.9); color: #005f2f;
+      background: rgba(16, 185, 129, 0.9); color: #fff;
       padding: 0.25rem 0.75rem; border-radius: 9999px;
       font-size: 0.75rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.05em;
       display: flex; align-items: center; gap: 0.375rem;
       backdrop-filter: blur(10px);
     }
-    .status-badge.closed { background: rgba(159,5,25,0.9); color: #ffa8a3; }
+    .status-badge.closed { background: rgba(239, 68, 68, 0.9); color: #fff; }
     .status-dot {
       width: 0.375rem; height: 0.375rem; border-radius: 50%;
-      background: #005f2f;
+      background: #fff;
     }
-    .status-badge.closed .status-dot { background: #ff716c; }
 
     .rating-overlay {
       position: absolute; bottom: 1rem; right: 1rem;
       background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
       padding: 0.25rem 0.5rem; border-radius: 0.5rem;
       display: flex; align-items: center; gap: 0.25rem;
-      color: #e2e3ff;
+      color: #fff;
     }
     .star-filled { font-size: 0.875rem; color: #facc15; font-variation-settings: 'FILL' 1; }
     .rating-text { font-size: 0.75rem; font-weight: 700; }
 
     .shop-info { padding: 1.5rem; }
     .info-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
-    .shop-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 700; color: #e2e3ff; margin: 0; }
+    .shop-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0; }
     .shop-tag {
       padding: 0.125rem 0.5rem; border-radius: 0.25rem;
       font-size: 0.625rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.12em;
     }
-    .tag-tertiary { background: #fc9df7; color: #651469; }
-    .tag-primary { background: rgba(94,180,255,0.2); color: #5eb4ff; }
-    .tag-secondary { background: rgba(107,254,156,0.2); color: #6bfe9c; }
-    .shop-desc { color: #a3a8d5; font-size: 0.875rem; margin: 0 0 1.5rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .tag-tertiary { background: var(--accent); color: white; }
+    .tag-primary { background: var(--glass); color: var(--primary); border: 1px solid var(--glass-border); }
+    .tag-secondary { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .shop-desc { color: var(--text-muted); font-size: 0.875rem; margin: 0 0 1.5rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
     .info-footer {
       display: flex; align-items: center; justify-content: space-between;
-      padding-top: 1rem; border-top: 1px solid rgba(64,69,108,0.1);
+      padding-top: 1rem; border-top: 1px solid var(--border-color);
     }
     .footer-left { display: flex; flex-direction: column; }
-    .footer-label { font-size: 0.625rem; color: #a3a8d5; text-transform: uppercase; letter-spacing: 0.12em; }
-    .footer-value { color: #e2e3ff; font-weight: 700; }
+    .footer-label { font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .footer-value { color: var(--text-main); font-weight: 700; }
 
     .btn-view {
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
-      color: #000; border: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; border: none;
       padding: 0.625rem 1.25rem; border-radius: 0.75rem;
       font-weight: 700; font-size: 0.875rem;
       cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
-    .btn-view:hover { opacity: 0.9; }
+    .btn-view:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 16px var(--accent-glow); }
     .btn-view:active { transform: scale(0.95); }
     .btn-view.secondary {
-      background: #131a4c; color: #e2e3ff;
+      background: var(--card-bg); color: var(--text-main);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
     }
-    .btn-view.secondary:hover { background: #182056; }
+    .btn-view.secondary:hover { border-color: var(--accent); background: var(--glass); }
 
     /* Partner Card */
     .partner-card {
-      background: #080e38; border-radius: 1.5rem;
-      overflow: hidden; border: 2px solid rgba(94,180,255,0.2);
+      background: var(--card-bg); border-radius: 1.5rem;
+      overflow: hidden; border: 2px solid var(--primary);
     }
     .partner-inner {
       height: 100%; display: flex; flex-direction: column;
@@ -290,26 +297,29 @@ import { ApiService } from '../../../core/api.service';
     }
     .partner-icon-wrap {
       width: 5rem; height: 5rem; border-radius: 50%;
-      background: #182056;
+      background: var(--glass);
       display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--glass-border);
     }
-    .partner-icon { font-size: 2.5rem; color: #5eb4ff; }
-    .partner-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 700; color: #e2e3ff; margin: 0; }
-    .partner-desc { color: #a3a8d5; font-size: 0.875rem; margin: 0; }
+    .partner-icon { font-size: 2.5rem; color: var(--accent); }
+    .partner-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0; }
+    .partner-desc { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
     .btn-partner {
       width: 100%;
-      background: #1e2660; color: #5eb4ff;
-      border: 1px solid rgba(94,180,255,0.3);
+      background: var(--glass); color: var(--accent);
+      border: 1px solid var(--glass-border);
       padding: 0.75rem; border-radius: 0.75rem;
       font-weight: 700; cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-partner:hover { background: #5eb4ff; color: #000; }
+    .btn-partner:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 
     /* Footer */
     .page-footer {
       margin-top: 3rem; padding: 3rem 1.5rem;
-      border-top: 1px solid rgba(64,69,108,0.15);
+      border-top: 1px solid var(--border-color);
+      background: var(--bg);
+      transition: all 0.3s ease;
     }
     .footer-inner {
       max-width: 80rem; margin: 0 auto;
@@ -321,20 +331,21 @@ import { ApiService } from '../../../core/api.service';
     }
     .footer-brand { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
     @media (min-width: 768px) { .footer-brand { align-items: flex-start; } }
-    .footer-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.125rem; font-weight: 700; color: #e2e3ff; }
-    .footer-copy { color: rgba(226,227,255,0.5); font-size: 0.875rem; margin: 0; }
+    .footer-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.125rem; font-weight: 700; color: var(--text-main); }
+    .footer-copy { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
     .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
-    .footer-links a { color: rgba(226,227,255,0.5); font-size: 0.875rem; text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: #fff; }
+    .footer-links a { color: var(--text-muted); font-size: 0.875rem; text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
     .footer-social { display: flex; gap: 1rem; }
     .social-btn {
       width: 2.5rem; height: 2.5rem; border-radius: 50%;
-      background: #0e1442; border: none;
+      background: var(--card-bg); border: 1px solid var(--border-color);
       display: flex; align-items: center; justify-content: center;
-      color: #e2e3ff; cursor: pointer; transition: color 0.2s;
+      color: var(--text-main); cursor: pointer; transition: all 0.2s;
     }
-    .social-btn:hover { color: #5eb4ff; }
+    .social-btn:hover { color: #fff; border-color: var(--accent); background: var(--accent); }
     .social-btn .material-symbols-outlined { font-size: 1.25rem; }
+
   `]
 })
 export class BrowseComponent implements OnInit {
