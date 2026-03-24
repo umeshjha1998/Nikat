@@ -1,11 +1,12 @@
 import { Component, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-otp-verification',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ThemeToggleComponent],
   template: `
     <div class="split-auth">
       <!-- Left: Visual Side -->
@@ -40,7 +41,10 @@ import { Router, RouterModule } from '@angular/router';
       <main class="auth-main">
         <header class="main-head">
           <a routerLink="/" class="brand">Nikat</a>
-          <button class="btn-ghost-sm" routerLink="/login">Cancel</button>
+          <div class="head-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <app-theme-toggle></app-theme-toggle>
+            <button class="btn-ghost-sm" routerLink="/login">Cancel</button>
+          </div>
         </header>
 
         <div class="form-scroll-wrap">
@@ -91,20 +95,15 @@ import { Router, RouterModule } from '@angular/router';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --prime-light: #60a5fa;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-muted: #94a3b8;
+      display: block;
       font-family: 'Manrope', sans-serif;
     }
 
-    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; }
+    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; transition: all 0.3s ease; }
 
     /* Visual Side */
     .auth-visual {
-      flex: 1; position: relative; background: #05081d; display: flex; align-items: center; padding: 5rem;
+      flex: 1; position: relative; background: var(--header-bg); display: flex; align-items: center; padding: 5rem;
       border-right: 1px solid var(--glass-border);
     }
     .v-content { position: relative; z-index: 10; max-width: 480px; }
@@ -112,7 +111,7 @@ import { Router, RouterModule } from '@angular/router';
       display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; background: rgba(59, 130, 246, 0.1);
       color: var(--prime-light); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
     }
-    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: #fff; }
+    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-main); }
     .auth-visual h1 span { color: var(--prime-light); }
     .auth-visual p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 4rem; }
     
@@ -133,10 +132,10 @@ import { Router, RouterModule } from '@angular/router';
     }
 
     /* Main Side */
-    .auth-main { width: 600px; display: flex; flex-direction: column; background: #020410; }
+    .auth-main { width: 600px; display: flex; flex-direction: column; background: var(--bg); transition: all 0.3s ease; }
     .main-head { height: 6rem; display: flex; align-items: center; justify-content: space-between; padding: 2rem 4rem; }
-    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
-    .btn-ghost-sm { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
+    .btn-ghost-sm { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
 
     .form-scroll-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 4rem; }
     .form-container { width: 100%; max-width: 400px; text-align: center; }
@@ -149,14 +148,14 @@ import { Router, RouterModule } from '@angular/router';
     .security-shield .material-icons { font-size: 2.5rem; }
 
     .auth-title-wrap { margin-bottom: 3rem; }
-    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main); }
     .auth-title-wrap p { color: var(--text-muted); font-size: 1rem; }
 
     /* OTP Inputs */
     .otp-grid { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 3rem; }
     .otp-box-premium {
       width: 50px; height: 64px; border-radius: 1rem; border: 1px solid var(--glass-border);
-      background: rgba(255, 255, 255, 0.02); color: #fff; font-size: 1.5rem; font-weight: 800;
+      background: var(--glass); color: var(--text-main); font-size: 1.5rem; font-weight: 800;
       text-align: center; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; transition: 0.2s;
     }
     .otp-box-premium:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
@@ -176,6 +175,11 @@ import { Router, RouterModule } from '@angular/router';
     }
     .btn-text-link:hover { background: rgba(59, 130, 246, 0.1); }
     .btn-text-link .material-icons { font-size: 1rem; }
+
+    @media (max-width: 1100px) {
+      .auth-visual { display: none; }
+      .auth-main { width: 100%; }
+    }
 
     .loader-dots::after { content: '...'; animation: d 1.5s infinite; }
     @keyframes d { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }

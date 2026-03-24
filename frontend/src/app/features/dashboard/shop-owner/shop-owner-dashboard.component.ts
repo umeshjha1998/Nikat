@@ -231,29 +231,21 @@ import { AuthService } from '../../../core/auth.service';
     :host {
       --primary: #3ddc84;
       --primary-glow: rgba(61, 220, 132, 0.3);
-      --bg-deep: #050921;
-      --bg-surface: rgba(14, 21, 58, 0.45);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-main: #e2e3ff;
-      --text-muted: #a3a8d5;
       font-family: 'Manrope', sans-serif;
     }
 
     .dashboard-layout {
       display: flex;
       min-height: 100vh;
-      background: radial-gradient(circle at 0% 0%, rgba(30, 41, 99, 0.4) 0%, transparent 40%),
-                  radial-gradient(circle at 100% 100%, rgba(20, 30, 80, 0.4) 0%, transparent 40%),
-                  #020412;
+      background: var(--bg);
       color: var(--text-main);
     }
 
     /* Sidebar Styles */
     .dashboard-sidebar {
       width: 260px;
-      background: rgba(4, 7, 26, 0.6);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid var(--glass-border);
+      background: var(--surface-container);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       padding: 2rem 0;
@@ -318,12 +310,12 @@ import { AuthService } from '../../../core/auth.service';
     }
 
     .nav-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
+      background: var(--glass);
+      color: var(--text-main);
     }
 
     .nav-item.active {
-      background: rgba(61, 220, 132, 0.1);
+      background: var(--glass);
       color: var(--primary);
       font-weight: 600;
     }
@@ -842,5 +834,15 @@ export class ShopOwnerDashboardComponent implements OnInit {
   ];
 
   constructor(private apiService: ApiService, private authService: AuthService) {}
+
+  get currentUser() {
+    return this.authService.currentUser;
+  }
+
+  get userInitial(): string {
+    const name = this.currentUser?.firstName || 'O';
+    return name.charAt(0).toUpperCase();
+  }
+
   ngOnInit() {}
 }

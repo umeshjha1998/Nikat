@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-service-provider-dashboard',
@@ -50,10 +51,10 @@ import { ApiService } from '../../../core/api.service';
         </nav>
 
         <div class="user-profile-mini">
-          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" alt="avatar" class="mini-avatar">
+          <div class="avatar-circle-mini">{{userInitial}}</div>
           <div class="user-details">
-            <span class="name">Elena V.</span>
-            <span class="role">Lead Stylist</span>
+            <span class="name">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
+            <span class="role">{{currentUser?.role}}</span>
           </div>
           <span class="material-icons">expand_more</span>
         </div>
@@ -194,31 +195,23 @@ import { ApiService } from '../../../core/api.service';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
     :host {
-      --primary: #c084fc;
-      --primary-glow: rgba(192, 132, 252, 0.3);
-      --bg-deep: #050921;
-      --bg-surface: rgba(26, 14, 58, 0.45);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-main: #e2e3ff;
-      --text-muted: #a3a8d5;
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.3);
       font-family: 'Manrope', sans-serif;
     }
 
     .dashboard-layout {
       display: flex;
       min-height: 100vh;
-      background: radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
-                  radial-gradient(circle at 0% 100%, rgba(30, 41, 99, 0.4) 0%, transparent 40%),
-                  #020412;
+      background: var(--bg);
       color: var(--text-main);
     }
 
     /* Sidebar - Reusing styles for consistency */
     .dashboard-sidebar {
       width: 260px;
-      background: rgba(4, 7, 26, 0.6);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid var(--glass-border);
+      background: var(--surface-container);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       padding: 2rem 0;
@@ -304,14 +297,21 @@ import { ApiService } from '../../../core/api.service';
 
     .user-profile-mini {
       padding: 1.25rem; margin: 0 1rem;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--glass);
       border-radius: 1rem;
       display: flex; align-items: center; gap: 0.75rem;
+      color: var(--text-main);
     }
 
-    .mini-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.1); }
+    .avatar-circle-mini {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #6d28d9);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 800; font-size: 0.9rem;
+    }
+
     .user-details { flex: 1; display: flex; flex-direction: column; }
-    .user-details .name { font-size: 0.85rem; font-weight: 700; color: #fff; }
+    .user-details .name { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
     .user-details .role { font-size: 0.7rem; color: var(--text-muted); }
 
     /* Main Content */
@@ -430,6 +430,16 @@ export class ServiceProviderDashboardComponent implements OnInit {
     { name: 'Home Visit', price: '1,800', bookings: 12, icon: 'home' }
   ];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private authService: AuthService) {}
+
+  get currentUser() {
+    return this.authService.currentUser;
+  }
+
+  get userInitial(): string {
+    const name = this.currentUser?.firstName || 'P';
+    return name.charAt(0).toUpperCase();
+  }
+
   ngOnInit() {}
 }

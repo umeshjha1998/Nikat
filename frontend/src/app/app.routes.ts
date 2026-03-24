@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
 import { adminGuard } from './core/admin.guard';
+import { roleGuard } from './core/role.guard';
 
 export const routes: Routes = [
   // Public Pages
@@ -23,9 +24,24 @@ export const routes: Routes = [
   { path: 'admin-login', loadComponent: () => import('./features/auth/admin-login/admin-login.component').then(c => c.AdminLoginComponent) },
 
   // Protected — Dashboards
-  { path: 'dashboard', canActivate: [authGuard], loadComponent: () => import('./features/dashboard/dashboard.component').then(c => c.DashboardComponent) },
-  { path: 'shop-dashboard', canActivate: [authGuard], loadComponent: () => import('./features/dashboard/shop-owner/shop-owner-dashboard.component').then(c => c.ShopOwnerDashboardComponent) },
-  { path: 'provider-dashboard', canActivate: [authGuard], loadComponent: () => import('./features/dashboard/service-provider/service-provider-dashboard.component').then(c => c.ServiceProviderDashboardComponent) },
+  { 
+    path: 'dashboard', 
+    canActivate: [roleGuard], 
+    data: { expectedRole: 'USER' },
+    loadComponent: () => import('./features/dashboard/dashboard.component').then(c => c.DashboardComponent) 
+  },
+  { 
+    path: 'shop-dashboard', 
+    canActivate: [roleGuard], 
+    data: { expectedCondition: 'isShopOwner' },
+    loadComponent: () => import('./features/dashboard/shop-owner/shop-owner-dashboard.component').then(c => c.ShopOwnerDashboardComponent) 
+  },
+  { 
+    path: 'provider-dashboard', 
+    canActivate: [roleGuard], 
+    data: { expectedCondition: 'isServiceProvider' },
+    loadComponent: () => import('./features/dashboard/service-provider/service-provider-dashboard.component').then(c => c.ServiceProviderDashboardComponent) 
+  },
 
   // Checkout Flow
   { path: 'checkout/cart', loadComponent: () => import('./features/checkout/cart/cart.component').then(c => c.CartComponent) },

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ThemeService } from '../../core/theme.service';
 import { AuthService } from '../../core/auth.service';
+import { ThemeToggleComponent } from '../../core/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ThemeToggleComponent],
   template: `
     <div class="admin-layout">
       <aside class="admin-sidebar">
@@ -31,10 +32,7 @@ import { AuthService } from '../../core/auth.service';
           <a routerLink="/admin/settings" routerLinkActive="active" class="nav-item"><span class="material-icons">settings</span> Settings</a>
         </nav>
         <div class="sidebar-footer">
-          <button class="theme-toggle-admin" (click)="toggleTheme()">
-            <span class="material-icons">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
-            {{ isDarkMode() ? 'Light Mode' : 'Dark Mode' }}
-          </button>
+          <app-theme-toggle></app-theme-toggle>
         </div>
       </aside>
 

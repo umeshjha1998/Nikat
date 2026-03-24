@@ -116,12 +116,6 @@ import { RouterModule } from '@angular/router';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --prime-light: #60a5fa;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
     }
 
@@ -129,22 +123,22 @@ import { RouterModule } from '@angular/router';
 
     /* Visual Side */
     .auth-visual {
-      flex: 1; position: relative; background: #05081d; display: flex; align-items: center; padding: 5rem;
+      flex: 1; position: relative; background: var(--surface-container-low); display: flex; align-items: center; padding: 5rem;
       border-right: 1px solid var(--glass-border);
     }
     .v-content { position: relative; z-index: 10; max-width: 480px; }
     .v-badge {
       display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; background: rgba(59, 130, 246, 0.1);
-      color: var(--prime-light); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
+      color: var(--accent); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
     }
-    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: #fff; }
-    .auth-visual h1 span { color: var(--prime-light); }
+    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-main); }
+    .auth-visual h1 span { color: var(--accent); }
     .auth-visual p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 4rem; }
     
     .security-features { display: flex; flex-direction: column; gap: 2rem; }
     .sf-item { display: flex; gap: 1.25rem; }
-    .sf-item .material-icons { font-size: 2rem; color: var(--prime-light); margin-top: 0.25rem; }
-    .sf-text h3 { color: #fff; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .sf-item .material-icons { font-size: 2rem; color: var(--accent); margin-top: 0.25rem; }
+    .sf-text h3 { color: var(--text-main); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
     .sf-text p { font-size: 0.9rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
 
     .v-blur-orb {
@@ -153,10 +147,10 @@ import { RouterModule } from '@angular/router';
     }
 
     /* Main Side */
-    .auth-main { width: 600px; display: flex; flex-direction: column; background: #020410; }
+    .auth-main { width: 600px; display: flex; flex-direction: column; background: var(--bg); }
     .main-head { height: 6rem; display: flex; align-items: center; justify-content: space-between; padding: 2rem 4rem; }
-    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
-    .btn-ghost-sm { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
+    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
+    .btn-ghost-sm { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
 
     .form-scroll-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 4rem; }
     .form-container { width: 100%; max-width: 400px; }
@@ -169,25 +163,25 @@ import { RouterModule } from '@angular/router';
     .reset-icon-prime .material-icons { font-size: 2.5rem; }
 
     .auth-title-wrap { margin-bottom: 2.5rem; }
-    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main); }
     .auth-title-wrap p { color: var(--text-muted); font-size: 1rem; }
 
     /* Inputs */
     .f-group { margin-bottom: 1.5rem; }
     .f-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .input-icon-wrap { position: relative; display: flex; align-items: center; }
-    .input-icon-wrap .material-icons { position: absolute; left: 1.25rem; color: #475569; font-size: 1.25rem; }
+    .input-icon-wrap .material-icons { position: absolute; left: 1.25rem; color: var(--text-muted); font-size: 1.25rem; }
     input {
       width: 100%; padding: 1.1rem 1.25rem 1.1rem 3.5rem; border-radius: 1.25rem;
-      background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
-      color: #fff; font-size: 1rem; transition: 0.2s; outline: none;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      color: var(--text-main); font-size: 1rem; transition: 0.2s; outline: none;
     }
     input:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
 
     /* Checklist */
     .password-checklist { margin: 2rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
     .check-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-    .check-item.active { color: #fff; }
+    .check-item.active { color: var(--text-main); }
     .check-item.active .material-icons { color: #10b981; }
     .check-item .material-icons { font-size: 1rem; }
 
@@ -196,7 +190,7 @@ import { RouterModule } from '@angular/router';
       font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%;
       display: flex; align-items: center; justify-content: center; gap: 0.75rem;
     }
-    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
+    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--accent-glow); }
 
     /* Success Stage */
     .success-stage-premium { text-align: center; }
@@ -206,7 +200,7 @@ import { RouterModule } from '@angular/router';
       border: 2px solid rgba(16, 185, 129, 0.2);
     }
     .celebrate-icon .material-icons { font-size: 3.5rem; }
-    .success-stage-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: #fff; margin-bottom: 1rem; }
+    .success-stage-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; }
     .success-stage-premium p { color: var(--text-muted); line-height: 1.6; margin-bottom: 3rem; font-size: 1.1rem; }
 
     @media (max-width: 1100px) {

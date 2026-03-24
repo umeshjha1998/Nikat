@@ -144,12 +144,6 @@ import { RouterModule } from '@angular/router';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --prime-light: #60a5fa;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
     }
 
@@ -159,7 +153,7 @@ import { RouterModule } from '@angular/router';
     .checkout-stepper { margin-bottom: 4rem; }
     .stepper-inner { display: flex; align-items: center; justify-content: center; gap: 1rem; }
     .step { display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); opacity: 0.6; }
-    .step.active { color: #fff; opacity: 1; }
+    .step.active { color: var(--text-main); opacity: 1; }
     .s-icon { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
     .s-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .step-connector { width: 60px; height: 2px; background: var(--glass-border); position: relative; top: -1px; }
@@ -168,7 +162,7 @@ import { RouterModule } from '@angular/router';
     
     .cart-hero { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 2rem; }
     .back-link-premium { display: flex; align-items: center; gap: 0.5rem; color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem; }
-    .cart-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3rem; font-weight: 800; color: #fff; margin: 0; }
+    .cart-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3rem; font-weight: 800; color: var(--text-main); margin: 0; }
     .cart-hero h1 span { color: var(--text-muted); font-weight: 400; font-size: 1.5rem; margin-left: 0.5rem; }
     
     .btn-ghost-danger { background: transparent; border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 0.6rem 1.25rem; border-radius: 2rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
@@ -182,27 +176,27 @@ import { RouterModule } from '@angular/router';
       display: flex; gap: 1.5rem; background: var(--glass); border: 1px solid var(--glass-border);
       border-radius: 1.5rem; padding: 1.5rem; transition: 0.3s;
     }
-    .cart-card-premium:hover { border-color: var(--primary); transform: translateX(8px); background: rgba(255,255,255,0.05); }
+    .cart-card-premium:hover { border-color: var(--primary); transform: translateX(8px); background: var(--surface-container); }
     
     .i-img { width: 140px; height: 140px; border-radius: 1.25rem; background-size: cover; background-position: center; flex-shrink: 0; position: relative; }
     .i-tag { position: absolute; top: 0.75rem; left: 0.75rem; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: #fff; padding: 0.25rem 0.6rem; border-radius: 0.5rem; font-size: 0.65rem; font-weight: 800; }
 
     .i-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .i-head { display: flex; justify-content: space-between; align-items: flex-start; }
-    .i-titles h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; color: #fff; margin: 0 0 0.25rem; }
+    .i-titles h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; color: var(--text-main); margin: 0 0 0.25rem; }
     .i-titles p { font-size: 0.85rem; color: var(--text-muted); }
     .i-titles p span { color: var(--primary); font-weight: 700; }
-    .i-remove { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 0.5rem; transition: 0.2s; }
+    .i-remove { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; transition: 0.2s; }
     .i-remove:hover { color: #f87171; transform: scale(1.1); }
 
     .i-foot { display: flex; justify-content: space-between; align-items: flex-end; }
     .i-pricing { display: flex; flex-direction: column; }
     .price-curr { font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through; display: none; }
-    .price-total { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; }
+    .price-total { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
     
-    .i-controls { display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.3); border-radius: 3rem; border: 1px solid var(--glass-border); padding: 0.25rem; }
-    .ctrl-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .ctrl-btn:hover { background: rgba(255,255,255,0.1); }
+    .i-controls { display: flex; align-items: center; gap: 0.5rem; background: var(--glass); border-radius: 3rem; border: 1px solid var(--glass-border); padding: 0.25rem; }
+    .ctrl-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .ctrl-btn:hover { background: var(--surface-container); }
     .ctrl-btn .material-icons { font-size: 1.1rem; }
     .qty-val { min-width: 30px; text-align: center; font-weight: 800; color: var(--primary); font-size: 0.95rem; }
 
@@ -212,38 +206,38 @@ import { RouterModule } from '@angular/router';
     .promo-box-premium { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1.5rem; padding: 1.5rem; }
     .promo-box-premium label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem; }
     .promo-input-group { display: flex; gap: 0.5rem; }
-    .promo-input-group input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 0.75rem 1rem; border-radius: 1rem; color: #fff; font-size: 0.9rem; outline: none; transition: 0.2s; }
+    .promo-input-group input { flex: 1; background: var(--surface-container-low); border: 1px solid var(--glass-border); padding: 0.75rem 1rem; border-radius: 1rem; color: var(--text-main); font-size: 0.9rem; outline: none; transition: 0.2s; }
     .promo-input-group input:focus { border-color: var(--primary); }
     .promo-input-group button { background: var(--primary); border: none; color: #fff; padding: 0.75rem 1.25rem; border-radius: 1rem; font-weight: 700; cursor: pointer; }
 
-    .order-receipt-premium { background: #080c24; border: 1px solid var(--glass-border); border-radius: 1.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    .order-receipt-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 2rem; }
+    .order-receipt-premium { background: var(--surface-container-low); border: 1px solid var(--glass-border); border-radius: 1.5rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .order-receipt-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; color: var(--text-main); margin-bottom: 2rem; }
     .receipt-row { display: flex; justify-content: space-between; margin-bottom: 1.25rem; color: var(--text-muted); font-size: 0.95rem; font-weight: 600; }
     .receipt-row .free { color: #10b981; font-weight: 800; }
     .receipt-row.discount { color: #f87171; }
     .receipt-divider { height: 1px; background: var(--glass-border); margin: 1.5rem 0; }
-    .grand-total { font-size: 1.5rem; font-weight: 800; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .grand-total { font-size: 1.5rem; font-weight: 800; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
     
     .btn-checkout-prime { 
       background: var(--primary); color: #fff; border: none; padding: 1.25rem; border-radius: 1.25rem;
       font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; text-decoration: none;
       display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 1rem;
     }
-    .btn-checkout-prime:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4); }
-    .crypto-hint { margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: #475569; font-size: 0.75rem; font-weight: 700; }
+    .btn-checkout-prime:hover { transform: translateY(-3px); box-shadow: 0 10px 40px var(--accent-glow); }
+    .crypto-hint { margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; }
     .crypto-hint .material-icons { font-size: 0.9rem; }
 
     /* Empty state */
     .cart-empty-state-premium { text-align: center; padding: 6rem 2rem; }
     .e-orb { width: 120px; height: 120px; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--text-muted); }
     .e-orb .material-icons { font-size: 4rem; }
-    .cart-empty-state-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; color: #fff; margin-bottom: 1rem; }
+    .cart-empty-state-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; color: var(--text-main); margin-bottom: 1rem; }
     .cart-empty-state-premium p { font-size: 1.1rem; color: var(--text-muted); max-width: 400px; margin: 0 auto 3rem; line-height: 1.6; }
     .btn-prime-glow {
        background: var(--primary); color: #fff; border: none; padding: 1.25rem 2.5rem; border-radius: 3rem;
        font-weight: 800; font-size: 1rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; transition: 0.3s;
     }
-    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
+    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--accent-glow); }
 
     @media (max-width: 1000px) {
       .cart-grid { grid-template-columns: 1fr; }

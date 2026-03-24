@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, RegisterRequest } from '../../../core/auth.service';
+import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ThemeToggleComponent],
   template: `
     <div class="split-auth">
       <!-- Left: Visual Side -->
@@ -35,7 +36,10 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
       <main class="auth-main">
         <header class="main-head">
           <a routerLink="/" class="brand">Nikat</a>
-          <p>Have an account? <a routerLink="/login" class="link-prime">Sign In</a></p>
+          <div class="head-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <app-theme-toggle></app-theme-toggle>
+            <p style="margin: 0;">Have an account? <a routerLink="/login" class="link-prime">Sign In</a></p>
+          </div>
         </header>
 
         <div class="form-scroll-wrap">

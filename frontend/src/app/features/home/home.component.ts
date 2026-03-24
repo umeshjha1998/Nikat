@@ -214,7 +214,7 @@ import { ApiService } from '../../core/api.service';
     .f-item .material-icons { font-size: 1.1rem; color: var(--primary); }
 
     /* Showcase */
-    .experience-showcase { padding: 8rem 0; background: linear-gradient(180deg, var(--bg) 0%, #080c24 100%); }
+    .experience-showcase { padding: 8rem 0; background: linear-gradient(180deg, var(--bg) 0%, var(--surface-container-low) 100%); }
     .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
     .showcase-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
     .sh-left h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin: 0 0 0.5rem; }
@@ -276,7 +276,7 @@ import { ApiService } from '../../core/api.service';
     .f-col a { display: block; color: var(--text-muted); text-decoration: none; margin-bottom: 1.25rem; font-weight: 600; font-size: 0.95rem; transition: 0.2s; }
     .f-col a:hover { color: var(--primary); }
 
-    .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.9rem; }
+    .f-bottom { border-top: 1px solid var(--glass-border); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.9rem; }
     .f-utils { display: flex; gap: 3rem; }
     .f-utils a { color: var(--text-muted); text-decoration: none; }
 

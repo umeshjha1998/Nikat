@@ -14,9 +14,7 @@
     </nav>
 
     <div class="header-actions">
-      <button class="theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-        <span class="material-icons">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
-      </button>
+      <app-theme-toggle></app-theme-toggle>
 
       <!-- Not logged in: Show Sign In / Join Now -->
       <ng-container *ngIf="!isLoggedIn">

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,10 +50,10 @@ import { RouterModule } from '@angular/router';
         </nav>
 
         <div class="dash-user-card">
-          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User">
+          <div class="avatar-circle">{{userInitial}}</div>
           <div class="u-meta">
-            <h5>Jane Cooper</h5>
-            <span>Silver Tier</span>
+            <h5>{{currentUser?.firstName}} {{currentUser?.lastName}}</h5>
+            <span>{{currentUser?.role}}</span>
           </div>
           <button class="btn-dots"><span class="material-icons">more_vert</span></button>
         </div>
@@ -62,8 +63,8 @@ import { RouterModule } from '@angular/router';
       <main class="dash-content">
         <header class="dash-header">
           <div class="h-left">
-            <h1>Welcome Back, <span>Jane</span></h1>
-            <p>You have 2 upcoming appointments this week.</p>
+            <h1>Welcome Back, <span>{{currentUser?.firstName}}</span></h1>
+            <p>You have {{bookings.length}} upcoming appointments this week.</p>
           </div>
           <div class="h-right">
             <button class="btn-search-trigger" routerLink="/browse">
@@ -193,21 +194,18 @@ import { RouterModule } from '@angular/router';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #94a3b8;
+      --primary: #c084fc;
+      --primary-glow: rgba(192, 132, 252, 0.3);
       font-family: 'Manrope', sans-serif;
     }
 
-    .dashboard-premium-layout { display: flex; min-height: 100vh; background: var(--bg); color: #fff; }
+    .dashboard-premium-layout { display: flex; min-height: 100vh; background: var(--bg); color: var(--text-main); }
 
     /* Sidebar */
-    .dash-sidebar { width: 280px; background: rgba(2, 4, 16, 0.8); backdrop-filter: blur(20px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 2rem 1.25rem; flex-shrink: 0; }
+    .dash-sidebar { width: 280px; background: var(--surface-container); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 2rem 1.25rem; flex-shrink: 0; }
     .dash-brand { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; padding: 0 0.5rem; }
-    .brand-hex { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), #1d4ed8); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 0 20px rgba(59,130,246,0.3); }
-    .brand-info h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; margin: 0; }
+    .brand-hex { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), #8b5cf6); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 0 20px var(--primary-glow); }
+    .brand-info h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; margin: 0; color: var(--text-main); }
     .brand-info p { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 2px 0 0; }
 
     .dash-nav { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
@@ -217,16 +215,16 @@ import { RouterModule } from '@angular/router';
     .d-nav-item.logout { margin-top: auto; color: #ef4444; }
     .nav-spacer { height: 2rem; }
 
-    .dash-user-card { background: var(--glass); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 1.25rem; display: flex; align-items: center; gap: 1rem; margin-top: 2rem; }
-    .dash-user-card img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-    .u-meta h5 { font-size: 0.9rem; margin: 0; }
+    .dash-user-card { background: var(--glass); border: 1px solid var(--border-color); padding: 1rem; border-radius: 1.25rem; display: flex; align-items: center; gap: 1rem; margin-top: 2rem; color: var(--text-main); }
+    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
+    .u-meta h5 { font-size: 0.9rem; margin: 0; color: var(--text-main); }
     .u-meta span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
     .btn-dots { background: transparent; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; }
 
     /* Content */
     .dash-content { flex: 1; padding: 3rem 4rem; overflow-y: auto; }
     .dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3.5rem; }
-    .dash-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.75rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .dash-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.75rem; font-weight: 800; margin: 0 0 0.5rem; color: var(--text-main); }
     .dash-header h1 span { color: var(--primary); }
     .dash-header p { font-size: 1.15rem; color: var(--text-muted); }
 
@@ -238,14 +236,14 @@ import { RouterModule } from '@angular/router';
 
     /* Stats */
     .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem; }
-    .stat-glass-card { background: #080c24; border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2.25rem; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .stat-glass-card { background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 2rem; padding: 2.25rem; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: var(--text-main); }
     .stat-glass-card:hover { transform: translateY(-8px); border-color: var(--primary); }
     .s-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .s-label { font-size: 0.75rem; font-weight: 950; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.1em; }
     .s-icon { color: var(--primary); }
-    .s-body h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin: 0 0 1rem; }
+    .s-body h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin: 0 0 1rem; color: var(--text-main); }
     .s-body p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
-    .s-progress { height: 6px; background: rgba(59,130,246,0.1); border-radius: 3px; margin: 1rem 0; }
+    .s-progress { height: 6px; background: var(--border-color); border-radius: 3px; margin: 1rem 0; }
     .bar { height: 100%; background: var(--primary); border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); }
 
     .avatar-group { display: flex; gap: -8px; margin-top: 1rem; }
@@ -304,6 +302,16 @@ import { RouterModule } from '@angular/router';
   `]
 })
 export class DashboardComponent {
+  private authService = inject(AuthService);
+
+  get currentUser() {
+    return this.authService.currentUser;
+  }
+
+  get userInitial(): string {
+    return this.currentUser?.firstName?.charAt(0).toUpperCase() || 'U';
+  }
+
   bookings = [
     { service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
     { service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }

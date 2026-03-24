@@ -169,12 +169,6 @@ import { FormsModule } from '@angular/forms';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --prime-light: #60a5fa;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
     }
 
@@ -184,7 +178,7 @@ import { FormsModule } from '@angular/forms';
     .checkout-stepper { margin-bottom: 4rem; }
     .stepper-inner { display: flex; align-items: center; justify-content: center; gap: 1rem; }
     .step { display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); opacity: 0.6; }
-    .step.active { color: #fff; opacity: 1; }
+    .step.active { color: var(--text-main); opacity: 1; }
     .step.done { color: #10b981; opacity: 1; }
     .s-icon { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
     .s-icon .material-icons { font-size: 1.1rem; }
@@ -195,7 +189,7 @@ import { FormsModule } from '@angular/forms';
     .checkout-main-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
     .checkout-hero { margin-bottom: 3rem; }
-    .checkout-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3rem; font-weight: 800; color: #fff; margin: 0; }
+    .checkout-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3rem; font-weight: 800; color: var(--text-main); margin: 0; }
     .checkout-hero h1 span { color: var(--primary); }
     .checkout-hero p { color: var(--text-muted); font-size: 1.1rem; margin-top: 0.5rem; }
 
@@ -203,19 +197,19 @@ import { FormsModule } from '@angular/forms';
     .checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 3rem; align-items: start; }
 
     .checkout-section-premium { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2.5rem; }
-    .section-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; color: #fff; }
+    .section-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; color: var(--text-main); }
     .section-head .material-icons { color: var(--primary); font-size: 2rem; }
     .section-head h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; margin: 0; }
 
     .premium-checkout-form { display: flex; flex-direction: column; gap: 1.5rem; }
     .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .f-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .f-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .f-group input {
        width: 100%; padding: 1.1rem 1.25rem; border-radius: 1.25rem;
-       background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
-       color: #fff; font-size: 1rem; transition: 0.2s; outline: none; box-sizing: border-box;
+       background: var(--surface-container-low); border: 1px solid var(--glass-border);
+       color: var(--text-main); font-size: 1rem; transition: 0.2s; outline: none; box-sizing: border-box;
     }
-    .f-group input:focus { border-color: var(--primary); background: rgba(0,0,0,0.3); }
+    .f-group input:focus { border-color: var(--primary); background: var(--surface-container); }
 
     .input-with-icon { position: relative; display: flex; align-items: center; }
     .prefix { position: absolute; left: 1.25rem; color: var(--text-muted); font-weight: 800; font-size: 0.9rem; }
@@ -223,39 +217,39 @@ import { FormsModule } from '@angular/forms';
 
     /* Delivery Methods */
     .delivery-methods { margin-top: 1rem; }
-    .delivery-methods h3 { font-size: 1rem; color: #fff; margin-bottom: 1.25rem; }
+    .delivery-methods h3 { font-size: 1rem; color: var(--text-main); margin-bottom: 1.25rem; }
     .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .method-card {
-      background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
+      background: var(--surface-container-low); border: 1px solid var(--glass-border);
       border-radius: 1.25rem; padding: 1.25rem; cursor: pointer; display: flex; align-items: center; gap: 1rem; transition: 0.2s;
     }
-    .method-card:hover { border-color: rgba(255,255,255,0.2); }
-    .method-card.active { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
+    .method-card:hover { border-color: var(--outline-variant); }
+    .method-card.active { border-color: var(--primary); background: var(--accent-glow); }
     .m-icon { color: var(--text-muted); }
     .method-card.active .m-icon { color: var(--primary); }
     .m-info { flex: 1; display: flex; flex-direction: column; }
-    .m-title { font-weight: 800; color: #fff; font-size: 0.9rem; }
+    .m-title { font-weight: 800; color: var(--text-main); font-size: 0.9rem; }
     .m-time { font-size: 0.75rem; color: var(--text-muted); }
-    .m-price { font-weight: 800; color: #fff; font-size: 0.9rem; }
+    .m-price { font-weight: 800; color: var(--text-main); font-size: 0.9rem; }
     .m-price.free { color: #10b981; }
 
     .form-actions-premium { margin-top: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; border-top: 1px solid var(--glass-border); pt: 2rem; padding-top: 2rem; }
-    .btn-link { display: flex; align-items: center; gap: 0.5rem; color: #64748b; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.2s; }
-    .btn-link:hover { color: #fff; }
+    .btn-link { display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.2s; }
+    .btn-link:hover { color: var(--text-main); }
     .btn-prime-glow {
        background: var(--primary); color: #fff; border: none; padding: 1.25rem 2.5rem; border-radius: 1.25rem;
        font-weight: 800; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; transition: 0.3s;
     }
-    .btn-prime-glow:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
+    .btn-prime-glow:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--accent-glow); }
 
     /* Summary Sidebar */
-    .summary-card-premium { background: #080c24; border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    .summary-card-premium h3 { font-family: 'Plus Jakarta Sans', sans-serif; color: #fff; font-size: 1.25rem; margin-bottom: 2rem; }
+    .summary-card-premium { background: var(--surface-container-low); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .summary-card-premium h3 { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); font-size: 1.25rem; margin-bottom: 2rem; }
     
     .mini-item-list { display: flex; flex-direction: column; gap: 1.25rem; }
     .mini-item { display: flex; gap: 1rem; align-items: center; }
     .mi-thumb { width: 48px; height: 48px; border-radius: 0.75rem; background-size: cover; background-position: center; border: 1px solid var(--glass-border); }
-    .mi-info h4 { font-size: 0.9rem; color: #fff; margin: 0; }
+    .mi-info h4 { font-size: 0.9rem; color: var(--text-main); margin: 0; }
     .mi-info p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
     
     .mini-divider { height: 1px; background: var(--glass-border); margin: 1.5rem 0; }
@@ -263,11 +257,11 @@ import { FormsModule } from '@angular/forms';
     .mini-calc { display: flex; flex-direction: column; gap: 1rem; }
     .m-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
     .m-row .free { color: #10b981; font-weight: 800; }
-    .m-row.total { font-size: 1.5rem; font-weight: 800; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .m-row.total { font-size: 1.5rem; font-weight: 800; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
 
     .safety-badge { margin-top: 2rem; display: flex; gap: 1rem; align-items: flex-start; background: rgba(16, 185, 129, 0.05); padding: 1.5rem; border-radius: 1.5rem; border: 1px solid rgba(16, 185, 129, 0.1); }
     .safety-badge .material-icons { color: #10b981; }
-    .safety-badge p { font-size: 0.8rem; color: #94a3b8; line-height: 1.5; margin: 0; font-weight: 600; }
+    .safety-badge p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin: 0; font-weight: 600; }
 
     @media (max-width: 1000px) {
       .checkout-grid { grid-template-columns: 1fr; }

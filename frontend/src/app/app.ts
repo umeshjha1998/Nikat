@@ -3,10 +3,12 @@ import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from './core/theme.service';
 import { AuthService } from './core/auth.service';
+import { ThemeToggleComponent } from './core/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  standalone: true,
+  imports: [RouterOutlet, RouterModule, CommonModule, ThemeToggleComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
