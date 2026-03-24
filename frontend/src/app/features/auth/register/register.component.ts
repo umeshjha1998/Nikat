@@ -170,20 +170,14 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --prime-light: #60a5fa;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
     }
 
-    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; }
+    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; transition: background-color 0.3s ease; }
 
     /* Visual Side */
     .auth-visual {
-      flex: 1; position: relative; background: #05081d; display: flex; align-items: center; padding: 5rem;
+      flex: 1; position: relative; background: var(--header-bg); display: flex; align-items: center; padding: 5rem;
       border-right: 1px solid var(--glass-border);
     }
     .v-content { position: relative; z-index: 10; max-width: 500px; }
@@ -191,13 +185,13 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
       display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; background: rgba(59, 130, 246, 0.1);
       color: var(--prime-light); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
     }
-    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: #fff; }
+    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-main); }
     .auth-visual h1 span { color: var(--prime-light); }
     .auth-visual p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 3rem; }
     
     .stats-grid { display: flex; gap: 3rem; }
     .stat { display: flex; flex-direction: column; }
-    .stat .num { font-size: 2rem; font-weight: 800; color: #fff; }
+    .stat .num { font-size: 2rem; font-weight: 800; color: var(--text-main); }
     .stat .lab { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
 
     .v-blur-orb {
@@ -206,9 +200,9 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
     }
 
     /* Main Side */
-    .auth-main { width: 600px; display: flex; flex-direction: column; background: #020410; }
+    .auth-main { width: 600px; display: flex; flex-direction: column; background: var(--bg); transition: all 0.3s ease; }
     .main-head { height: 6rem; display: flex; align-items: center; justify-content: space-between; padding: 2rem 4rem; }
-    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
     .link-prime { color: var(--primary); text-decoration: none; font-weight: 700; margin-left: 0.5rem; }
 
     .form-scroll-wrap { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 2rem 4rem 6rem 4rem; }
@@ -216,7 +210,7 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
 
     .step-pill { font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 0.75rem; display: block; }
     .step-label-wrap { margin-bottom: 3rem; }
-    .step-label-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+    .step-label-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main); }
     .step-label-wrap p { color: var(--text-muted); font-size: 1rem; }
 
     /* Role Cards */
@@ -233,7 +227,7 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
       background: rgba(255,255,255,0.05); color: var(--text-muted); transition: 0.3s;
     }
     .r-card-prime.active .r-icon { background: var(--primary); color: #fff; box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3); }
-    .r-text h3 { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+    .r-text h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem; }
     .r-text p { font-size: 0.85rem; color: var(--text-muted); }
     .r-check { margin-left: auto; color: var(--primary); opacity: 0; transform: scale(0.5); transition: 0.3s; }
     .r-card-prime.active .r-check { opacity: 1; transform: scale(1); }
@@ -242,8 +236,8 @@ import { AuthService, RegisterRequest } from '../../../core/auth.service';
     .f-group { margin-bottom: 1.5rem; }
     .f-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
     input, textarea {
-      width: 100%; padding: 1rem 1.25rem; border-radius: 1rem; border: 1px solid var(--glass-border);
-      background: rgba(255,255,255,0.02); color: #fff; font-family: inherit; font-size: 1rem; transition: 0.2s;
+      width: 100%; padding: 1rem 1.25rem; border-radius: 1rem; border: 1px solid var(--border-color);
+      background: var(--glass); color: var(--text-main); font-family: inherit; font-size: 1rem; transition: 0.2s;
     }
     input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); outline: none; }
     .input-grid { display: flex; gap: 1rem; }

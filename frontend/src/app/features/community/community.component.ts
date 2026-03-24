@@ -8,20 +8,7 @@ import { ApiService } from '../../core/api.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="community-premium-wrapper">
-      <!-- Navbar (Consistent) -->
-      <nav class="premium-nav-glass">
-        <div class="nav-inner">
-          <a routerLink="/" class="brand">Nikat <span>Community</span></a>
-          <div class="nav-links">
-            <a routerLink="/browse">Shops</a>
-            <a routerLink="/services">Services</a>
-            <a class="active">Discussions</a>
-          </div>
-          <button class="btn-prime-tiny">Create Post</button>
-        </div>
-      </nav>
-
+    <div class="community-page">
       <main class="hub-main">
         <!-- Hero Section -->
         <section class="hub-hero">
@@ -29,11 +16,10 @@ import { ApiService } from '../../core/api.service';
             <span class="h-badge">Nexus of Neighborhoods</span>
             <h1>The pulse of your <span>community.</span></h1>
             <p>Connect with your neighbors, share updates, and discover what's happening just around the corner.</p>
-            
+
             <div class="hub-search-premium">
-              <span class="material-icons">search</span>
+              <span class="material-symbols-outlined">search</span>
               <input type="text" placeholder="Search discussions, events, or local help...">
-              <kbd>⌘ K</kbd>
             </div>
           </div>
           <div class="hero-bg-glow"></div>
@@ -56,7 +42,7 @@ import { ApiService } from '../../core/api.service';
                 <div class="p-header">
                   <div class="p-author">
                     <div class="a-hex">
-                      <span class="material-icons">person</span>
+                      <span class="material-symbols-outlined">person</span>
                     </div>
                     <div class="a-info">
                       <h4>{{post.authorName}}</h4>
@@ -72,15 +58,15 @@ import { ApiService } from '../../core/api.service';
                 <div class="p-footer">
                   <div class="p-stats">
                     <div class="s-item">
-                      <span class="material-icons">favorite_border</span>
+                      <span class="material-symbols-outlined">favorite_border</span>
                       <span>24</span>
                     </div>
                     <div class="s-item">
-                      <span class="material-icons">chat_bubble_outline</span>
+                      <span class="material-symbols-outlined">chat_bubble_outline</span>
                       <span>12</span>
                     </div>
                     <div class="s-item">
-                      <span class="material-icons">ios_share</span>
+                      <span class="material-symbols-outlined">share</span>
                     </div>
                   </div>
                   <button class="btn-more-blur">Read Full Story</button>
@@ -91,7 +77,7 @@ import { ApiService } from '../../core/api.service';
             <ng-template #emptyState>
               <div class="empty-state-premium">
                 <div class="e-icon-box">
-                  <span class="material-icons">forum</span>
+                  <span class="material-symbols-outlined">forum</span>
                 </div>
                 <h3>Start the conversation</h3>
                 <p>Be the first to share something with your community.</p>
@@ -102,149 +88,211 @@ import { ApiService } from '../../core/api.service';
 
           <!-- Right: Sidebar -->
           <aside class="side-col">
-             <section class="side-widget-glass">
-                <h3>Trending #Nodes</h3>
-                <div class="trending-list">
-                  <a href="#" class="t-item">
-                    <span>#ArtisanMarket</span>
-                    <span class="t-count">1.2k</span>
-                  </a>
-                  <a href="#" class="t-item">
-                    <span>#SafeStreets</span>
-                    <span class="t-count">840</span>
-                  </a>
-                  <a href="#" class="t-item">
-                    <span>#SummerMixer</span>
-                    <span class="t-count">420</span>
-                  </a>
-                </div>
-             </section>
+            <section class="side-widget-glass">
+              <h3>Trending #Nodes</h3>
+              <div class="trending-list">
+                <a href="#" class="t-item">
+                  <span>#ArtisanMarket</span>
+                  <span class="t-count">1.2k</span>
+                </a>
+                <a href="#" class="t-item">
+                  <span>#SafeStreets</span>
+                  <span class="t-count">840</span>
+                </a>
+                <a href="#" class="t-item">
+                  <span>#SummerMixer</span>
+                  <span class="t-count">420</span>
+                </a>
+              </div>
+            </section>
 
-             <section class="side-widget-glass highlight">
-               <div class="w-head">
-                 <span class="material-icons">event</span>
-                 <h4>Weekend Mixer</h4>
-               </div>
-               <p>Join us at Central Plaza this Saturday for local music and food.</p>
-               <button class="btn-glass-full">Join Event</button>
-             </section>
+            <section class="side-widget-glass highlight">
+              <div class="w-head">
+                <span class="material-symbols-outlined">event</span>
+                <h4>Weekend Mixer</h4>
+              </div>
+              <p>Join us at Central Plaza this Saturday for local music and food.</p>
+              <button class="btn-glass-full">Join Event</button>
+            </section>
 
-             <section class="member-preview">
-                <h3>Active Neighbors</h3>
-                <div class="m-grid">
-                  <div class="m-avatar" *ngFor="let i of [1,2,3,4,5,6]"></div>
-                  <div class="m-plus">+120</div>
-                </div>
-             </section>
+            <section class="member-preview">
+              <h3>Active Neighbors</h3>
+              <div class="m-grid">
+                <div class="m-avatar" *ngFor="let i of [1,2,3,4,5,6]"></div>
+                <div class="m-plus">+120</div>
+              </div>
+            </section>
           </aside>
         </div>
       </main>
     </div>
   `,
   styles: [`
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
-
     :host {
-      --primary: #3b82f6;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #94a3b8;
+      display: block;
       font-family: 'Manrope', sans-serif;
     }
 
-    .community-premium-wrapper { min-height: 100vh; background: var(--bg); color: #fff; }
-
-    /* Nav */
-    .premium-nav-glass { height: 5rem; background: rgba(2, 4, 16, 0.6); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 1000; }
-    .nav-inner { max-width: 1300px; height: 100%; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
-    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; }
-    .brand span { font-weight: 400; color: var(--text-muted); font-size: 0.9rem; margin-left: 0.4rem; }
-    .nav-links { display: flex; gap: 2.5rem; }
-    .nav-links a { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-decoration: none; transition: 0.2s; cursor: pointer; }
-    .nav-links a.active { color: var(--primary); }
-    .btn-prime-tiny { background: var(--primary); border: none; padding: 0.5rem 1.25rem; border-radius: 0.75rem; color: #fff; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
+    .community-page { min-height: 100vh; background: #05092f; color: #e2e3ff; }
 
     /* Hero */
-    .hub-hero { padding: 8rem 2rem 6rem; text-align: center; position: relative; overflow: hidden; }
+    .hub-hero { padding: 3rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
     .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
-    .h-badge { display: inline-block; padding: 0.4rem 1rem; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--primary); border-radius: 2rem; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
-    .hub-hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 4.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.04em; }
-    .hub-hero h1 span { color: var(--primary); }
-    .hub-hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 3.5rem; line-height: 1.6; }
+    .h-badge {
+      display: inline-block; padding: 0.4rem 1rem;
+      background: rgba(94,180,255,0.1); border: 1px solid rgba(94,180,255,0.2);
+      color: #5eb4ff; border-radius: 2rem;
+      font-size: 0.75rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+    .hub-hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 3.5rem; font-weight: 800;
+      margin: 0 0 1rem; letter-spacing: -0.04em;
+    }
+    .hub-hero h1 span { color: #5eb4ff; }
+    .hub-hero p { font-size: 1.125rem; color: #a3a8d5; max-width: 600px; margin: 0 auto 3rem; line-height: 1.6; }
 
     .hub-search-premium {
-      max-width: 700px; margin: 0 auto; background: var(--glass); border: 1px solid var(--glass-border);
-      border-radius: 1.5rem; padding: 0.6rem; display: flex; align-items: center; backdrop-filter: blur(20px);
-      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+      max-width: 700px; margin: 0 auto;
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; padding: 0.5rem;
+      display: flex; align-items: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
-    .hub-search-premium .material-icons { margin: 0 1.25rem; color: var(--primary); font-size: 1.75rem; }
-    .hub-search-premium input { flex: 1; background: transparent; border: none; color: #fff; font-size: 1.15rem; outline: none; padding: 0.75rem 0; font-family: 'Manrope', sans-serif; }
-    .hub-search-premium kbd { background: rgba(255,255,255,0.1); padding: 0.4rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-right: 1rem; }
-    .hero-bg-glow { position: absolute; width: 800px; height: 800px; background: radial-gradient(circle, rgba(59,130,246,0.08), transparent 70%); top: -200px; left: 50%; transform: translateX(-50%); filter: blur(100px); }
+    .hub-search-premium .material-symbols-outlined { margin: 0 1.25rem; color: #5eb4ff; font-size: 1.5rem; }
+    .hub-search-premium input {
+      flex: 1; background: transparent; border: none;
+      color: #e2e3ff; font-size: 1rem; outline: none;
+      padding: 0.75rem 0; font-family: 'Manrope', sans-serif;
+    }
+    .hub-search-premium input::placeholder { color: #a3a8d5; }
+    .hero-bg-glow {
+      position: absolute; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(94,180,255,0.08), transparent 70%);
+      top: -150px; left: 50%; transform: translateX(-50%); filter: blur(80px);
+    }
 
     /* Layout */
-    .hub-layout { max-width: 1300px; margin: 0 auto; padding: 0 2rem 10rem; display: grid; grid-template-columns: 1fr 340px; gap: 4rem; }
-    .feed-filters { display: flex; gap: 1rem; margin-bottom: 3rem; }
-    .f-pill { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 0.6rem 1.5rem; border-radius: 1.25rem; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
-    .f-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .hub-layout { max-width: 80rem; margin: 0 auto; padding: 0 2rem 6rem; display: grid; grid-template-columns: 1fr 22rem; gap: 3rem; }
+    .feed-filters { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+    .f-pill {
+      background: #0e1442; color: #a3a8d5;
+      padding: 0.5rem 1.25rem; border-radius: 0.75rem;
+      font-weight: 700; cursor: pointer; font-size: 0.85rem;
+      border: none; transition: all 0.2s;
+    }
+    .f-pill:hover { color: #e2e3ff; }
+    .f-pill.active { background: #5eb4ff; color: #000; }
 
-    .posts-stack { display: flex; flex-direction: column; gap: 2rem; }
-    .post-card-premium { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 2.25rem; padding: 2.5rem; position: relative; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-    .post-card-premium:hover { background: rgba(255,255,255,0.05); border-color: var(--primary); transform: translateY(-8px); }
-    .p-type { position: absolute; top: 1.5rem; right: 2rem; font-size: 0.7rem; font-weight: 950; text-transform: uppercase; color: var(--primary); letter-spacing: 0.1em; background: rgba(59,130,246,0.1); padding: 0.3rem 0.8rem; border-radius: 0.5rem; }
+    .posts-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+    .post-card-premium {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; padding: 2rem;
+      position: relative; transition: all 0.3s;
+    }
+    .post-card-premium:hover { background: rgba(24,32,86,0.8); transform: translateY(-4px); }
+    .p-type {
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-size: 0.625rem; font-weight: 700;
+      text-transform: uppercase; color: #5eb4ff; letter-spacing: 0.1em;
+      background: rgba(94,180,255,0.1);
+      padding: 0.25rem 0.75rem; border-radius: 0.5rem;
+    }
 
-    .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+    .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
     .p-author { display: flex; align-items: center; gap: 1rem; }
-    .a-hex { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), #1e40af); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; }
-    .a-info h4 { font-size: 1.05rem; font-weight: 800; margin: 0 0 0.1rem; }
-    .a-info span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
-    .p-time { font-size: 0.8rem; color: #4b5563; font-weight: 700; }
+    .a-hex {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #5eb4ff, #182056);
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      display: flex; align-items: center; justify-content: center;
+      color: #e2e3ff;
+    }
+    .a-info h4 { font-size: 1rem; font-weight: 800; margin: 0 0 0.1rem; }
+    .a-info span { font-size: 0.75rem; color: #a3a8d5; font-weight: 600; }
+    .p-time { font-size: 0.75rem; color: #40456c; font-weight: 700; }
 
-    .p-body h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.65rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
-    .p-body p { font-size: 1.05rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; }
+    .p-body h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0 0 0.75rem; line-height: 1.2; }
+    .p-body p { font-size: 0.95rem; color: #a3a8d5; line-height: 1.7; margin: 0 0 1.5rem; }
 
-    .p-footer { border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .p-footer { border-top: 1px solid rgba(64,69,108,0.15); padding-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; }
     .p-stats { display: flex; gap: 1.5rem; }
-    .s-item { display: flex; align-items: center; gap: 0.4rem; color: #4b5563; font-size: 0.85rem; font-weight: 800; cursor: pointer; transition: 0.2s; }
-    .s-item:hover { color: var(--primary); }
-    .s-item .material-icons { font-size: 1.25rem; }
-    .btn-more-blur { background: var(--glass); border: 1px solid var(--glass-border); color: #fff; padding: 0.6rem 1.25rem; border-radius: 1rem; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+    .s-item { display: flex; align-items: center; gap: 0.375rem; color: #40456c; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: color 0.2s; }
+    .s-item:hover { color: #5eb4ff; }
+    .s-item .material-symbols-outlined { font-size: 1.125rem; }
+    .btn-more-blur {
+      background: #0e1442; border: none;
+      color: #e2e3ff; padding: 0.5rem 1rem; border-radius: 0.75rem;
+      font-weight: 700; font-size: 0.8rem; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-more-blur:hover { background: #182056; }
 
     /* Sidebar */
-    .side-col { display: flex; flex-direction: column; gap: 2.5rem; }
-    .side-widget-glass { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2rem; }
-    .side-widget-glass h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; margin-bottom: 1.5rem; }
-    
-    .trending-list { display: flex; flex-direction: column; gap: 1.25rem; }
-    .t-item { display: flex; justify-content: space-between; text-decoration: none; color: var(--text-muted); font-weight: 700; font-size: 0.95rem; transition: 0.2s; }
-    .t-item:hover { color: #fff; transform: translateX(4px); }
-    .t-count { font-size: 0.75rem; color: #4b5563; }
+    .side-col { display: flex; flex-direction: column; gap: 2rem; }
+    .side-widget-glass {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; padding: 1.5rem;
+    }
+    .side-widget-glass h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; margin: 0 0 1.25rem; }
 
-    .side-widget-glass.highlight { background: linear-gradient(135deg, #1e40af, #020410); border-color: rgba(59,130,246,0.3); }
-    .w-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-    .w-head .material-icons { color: var(--primary); }
-    .w-head h4 { font-size: 1.1rem; font-weight: 800; margin: 0; }
-    .side-widget-glass.highlight p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem; }
-    .btn-glass-full { width: 100%; height: 44px; border-radius: 1rem; background: var(--primary); border: none; color: #fff; font-weight: 800; cursor: pointer; }
+    .trending-list { display: flex; flex-direction: column; gap: 1rem; }
+    .t-item { display: flex; justify-content: space-between; text-decoration: none; color: #a3a8d5; font-weight: 700; font-size: 0.875rem; transition: all 0.2s; }
+    .t-item:hover { color: #e2e3ff; transform: translateX(4px); }
+    .t-count { font-size: 0.75rem; color: #40456c; }
 
-    .member-preview h3 { font-size: 1rem; margin-bottom: 1.25rem; }
+    .side-widget-glass.highlight {
+      background: linear-gradient(135deg, rgba(94,180,255,0.15), rgba(5,9,47,1));
+      border: 1px solid rgba(94,180,255,0.2);
+    }
+    .w-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .w-head .material-symbols-outlined { color: #5eb4ff; }
+    .w-head h4 { font-size: 1rem; font-weight: 800; margin: 0; }
+    .side-widget-glass.highlight p { font-size: 0.875rem; color: #a3a8d5; line-height: 1.5; margin: 0 0 1.25rem; }
+    .btn-glass-full {
+      width: 100%; padding: 0.75rem; border-radius: 0.75rem;
+      background: #5eb4ff; border: none; color: #000;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-glass-full:hover { box-shadow: 0 8px 24px rgba(94,180,255,0.3); }
+
+    .member-preview h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; margin: 0 0 1.25rem; }
     .m-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
-    .m-avatar { width: 48px; height: 48px; border-radius: 1rem; background: var(--glass); border: 1px solid var(--glass-border); }
-    .m-plus { width: 48px; height: 48px; border-radius: 1rem; border: 1px dashed var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--text-muted); }
+    .m-avatar { width: 48px; height: 48px; border-radius: 1rem; background: rgba(24,32,86,0.6); }
+    .m-plus {
+      width: 48px; height: 48px; border-radius: 1rem;
+      border: 1px dashed rgba(64,69,108,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 800; color: #a3a8d5;
+    }
 
     /* Empty state */
-    .empty-state-premium { text-align: center; padding: 6rem 2rem; }
-    .e-icon-box { width: 90px; height: 90px; border-radius: 2rem; background: var(--glass); display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--text-muted); }
-    .e-icon-box .material-icons { font-size: 2.5rem; }
-    .empty-state-premium h3 { font-size: 1.75rem; margin-bottom: 1rem; }
-    .empty-state-premium p { color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.1rem; }
-    .btn-prime-glow { background: var(--primary); border: none; color: #fff; padding: 1rem 2.5rem; border-radius: 1.25rem; font-weight: 800; cursor: pointer; box-shadow: 0 0 30px rgba(59,130,246,0.3); }
+    .empty-state-premium { text-align: center; padding: 5rem 2rem; }
+    .e-icon-box {
+      width: 5rem; height: 5rem; border-radius: 1.5rem;
+      background: #0e1442;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem; color: #a3a8d5;
+    }
+    .e-icon-box .material-symbols-outlined { font-size: 2.5rem; }
+    .empty-state-premium h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; margin: 0 0 0.75rem; }
+    .empty-state-premium p { color: #a3a8d5; margin: 0 0 2rem; font-size: 1rem; }
+    .btn-prime-glow {
+      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
+      border: none; color: #000;
+      padding: 0.875rem 2rem; border-radius: 0.75rem;
+      font-weight: 700; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(94,180,255,0.2);
+      transition: all 0.2s;
+    }
+    .btn-prime-glow:hover { box-shadow: 0 12px 32px rgba(94,180,255,0.3); }
 
-    @media (max-width: 1100px) {
+    @media (max-width: 1024px) {
       .hub-layout { grid-template-columns: 1fr; }
       .side-col { display: none; }
-      .hub-hero h1 { font-size: 3rem; }
+      .hub-hero h1 { font-size: 2.5rem; }
     }
   `]
 })
@@ -259,18 +307,17 @@ export class CommunityComponent implements OnInit {
         if (data && data.length > 0) {
           this.posts = data;
         } else {
-          // Mock some premium data if none exists
           this.posts = [
-            { 
-              authorName: 'David Chen', 
-              title: 'Neighborhood Summer Mixer - Volunteers Needed!', 
-              content: 'We are planning our annual community mixer and need some hands for set up and coordination. Last year was a blast, let s make this one even better!',
+            {
+              authorName: 'David Chen',
+              title: 'Neighborhood Summer Mixer - Volunteers Needed!',
+              content: 'We are planning our annual community mixer and need some hands for set up and coordination. Last year was a blast, let\'s make this one even better!',
               postType: 'Announcement',
               location: 'South Side'
             },
-            { 
-              authorName: 'Sarah Miller', 
-              title: 'Best Coffee Bean Recommendation?', 
+            {
+              authorName: 'Sarah Miller',
+              title: 'Best Coffee Bean Recommendation?',
               content: 'Looking for locally roasted coffee beans that work well for French press. Any hidden gems I should check out? Preference for dark roasts.',
               postType: 'Discussion',
               location: 'Cedar Ave'
@@ -279,15 +326,15 @@ export class CommunityComponent implements OnInit {
         }
       },
       error: () => {
-         this.posts = [
-            { 
-              authorName: 'David Chen', 
-              title: 'Neighborhood Summer Mixer - Volunteers Needed!', 
-              content: 'We are planning our annual community mixer and need some hands for set up and coordination. Last year was a blast, let s make this one even better!',
-              postType: 'Announcement',
-              location: 'South Side'
-            }
-          ];
+        this.posts = [
+          {
+            authorName: 'David Chen',
+            title: 'Neighborhood Summer Mixer - Volunteers Needed!',
+            content: 'We are planning our annual community mixer and need some hands for set up and coordination. Last year was a blast, let\'s make this one even better!',
+            postType: 'Announcement',
+            location: 'South Side'
+          }
+        ];
       }
     });
   }

@@ -4,9 +4,28 @@
 :root {
   --primary: #3b82f6;
   --bg: #020410;
+  --header-bg: rgba(24, 32, 86, 0.6);
   --glass: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.1);
+  --text-main: #ffffff;
   --text-muted: #94a3b8;
+  --border-color: rgba(64, 69, 108, 0.3);
+  --nav-link: #a3a8d5;
+  --nav-link-hover: #e2e3ff;
+  --card-bg: rgba(30, 41, 59, 0.5);
+}
+
+.light-theme {
+  --bg: #f8fafc;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --glass: rgba(0, 0, 0, 0.03);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --nav-link: #475569;
+  --nav-link-hover: #0f172a;
+  --card-bg: #ffffff;
 }
 
 * {
@@ -19,8 +38,9 @@ html, body {
   height: 100%;
   background-color: var(--bg);
   font-family: 'Manrope', sans-serif;
-  color: #fff;
+  color: var(--text-main);
   scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Custom Selection */

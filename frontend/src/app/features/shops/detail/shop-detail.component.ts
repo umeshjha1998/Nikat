@@ -8,378 +8,498 @@ import { ApiService } from '../../../core/api.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="shop-detail-premium">
-      <!-- Adaptive Hero Section -->
-      <section class="hero-mount" [style.backgroundImage]="'url(' + shop.image + ')'">
-        <div class="hero-glass-overlay">
-          <div class="top-navigation">
-            <a routerLink="/browse" class="btn-back-glass">
-              <span class="material-icons">arrow_back</span>
-              Explore Nikat
-            </a>
-            <div class="action-spread">
-              <button class="btn-icon-glass"><span class="material-icons">favorite_border</span></button>
-              <button class="btn-icon-glass"><span class="material-icons">share</span></button>
+    <div class="shop-view-page">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <a routerLink="/browse" class="btn-back">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Back to Shops
+        </a>
+        <div class="top-actions">
+          <button class="btn-icon-glass" (click)="isFavorited = !isFavorited">
+            <span class="material-symbols-outlined" [class.filled]="isFavorited">{{isFavorited ? 'favorite' : 'favorite_border'}}</span>
+          </button>
+          <button class="btn-icon-glass">
+            <span class="material-symbols-outlined">share</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bento Gallery Grid -->
+      <section class="bento-gallery">
+        <div class="bento-main">
+          <img [src]="shop.images[0]" [alt]="shop.name" class="bento-img">
+          <div class="bento-overlay">
+            <div class="verified-badge" *ngIf="shop.isOpen">
+              <span class="material-symbols-outlined">verified</span>
+              Verified Business
             </div>
           </div>
+        </div>
+        <div class="bento-side-top">
+          <img [src]="shop.images[1]" alt="Product showcase" class="bento-img">
+        </div>
+        <div class="bento-side-bottom">
+          <img [src]="shop.images[2]" alt="Ambiance" class="bento-img">
+          <div class="bento-count" *ngIf="galleryImages.length > 3">
+            <span class="material-symbols-outlined">photo_library</span>
+            +{{galleryImages.length - 3}} More
+          </div>
+        </div>
+      </section>
 
-          <div class="shop-prime-meta">
-            <div class="badge-cluster">
-              <span class="badge-pill verified" *ngIf="shop.isOpen">
-                <span class="material-icons">verified</span> Verified
-              </span>
-              <span class="badge-pill category">{{shop.category}}</span>
+      <!-- Shop Info Header -->
+      <section class="info-header">
+        <div class="info-left">
+          <div class="category-chip">
+            <span class="chip-dot"></span>
+            {{shop.category}}
+          </div>
+          <h1 class="shop-title">{{shop.name}}</h1>
+          <p class="shop-tagline">{{shop.tagline}}</p>
+          <div class="meta-row">
+            <div class="meta-item rating-item">
+              <span class="material-symbols-outlined star-filled">star</span>
+              <strong>{{shop.rating}}</strong>
+              <span class="meta-muted">({{shop.reviewCount}} reviews)</span>
             </div>
-            <h1>{{shop.name}}</h1>
-            <div class="meta-stats">
-              <div class="stat-item rating">
-                <span class="material-icons">star</span>
-                <strong>{{shop.rating}}</strong>
-                <span class="count">({{shop.reviewCount}} reviews)</span>
-              </div>
-              <div class="divider"></div>
-              <div class="stat-item loc">
-                <span class="material-icons">location_on</span>
-                {{shop.address}}
-              </div>
-              <div class="divider"></div>
-              <div class="stat-item status" [class.is-open]="shop.isOpen">
-                <span class="dot"></span>
-                {{shop.isOpen ? 'Open Now' : 'Closed'}} • Closes 9 PM
-              </div>
+            <div class="meta-divider"></div>
+            <div class="meta-item">
+              <span class="material-symbols-outlined">location_on</span>
+              {{shop.address}}
+            </div>
+            <div class="meta-divider"></div>
+            <div class="meta-item">
+              <span class="status-dot" [class.open]="shop.isOpen"></span>
+              {{shop.isOpen ? 'Open Now' : 'Closed'}} · {{shop.hours}}
             </div>
           </div>
         </div>
       </section>
 
-      <div class="detail-grid">
-        <!-- Sticky Booking / Info Sidebar -->
-        <aside class="sidebar-sticky">
-          <div class="booking-card-glass">
-            <div class="card-header">
-              <h3>Reservations</h3>
-              <p>Book your slot instantly</p>
+      <!-- Action Hub -->
+      <section class="action-hub">
+        <div class="action-cards">
+          <div class="action-card primary-action">
+            <span class="material-symbols-outlined action-icon">calendar_today</span>
+            <div>
+              <h4>Book Appointment</h4>
+              <p>Reserve your slot instantly</p>
             </div>
-            <div class="quick-info-list">
-              <div class="info-row">
-                <span class="material-icons">schedule</span>
-                <div class="txt">
-                  <label>Service Time</label>
-                  <span>Approx. 45 - 60 mins</span>
+          </div>
+          <div class="action-card">
+            <span class="material-symbols-outlined action-icon">call</span>
+            <div>
+              <h4>Call Shop</h4>
+              <p>Speak to the owner directly</p>
+            </div>
+          </div>
+          <div class="action-card">
+            <span class="material-symbols-outlined action-icon">near_me</span>
+            <div>
+              <h4>Get Directions</h4>
+              <p>Navigate via Google Maps</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Tabs -->
+      <div class="content-wrapper">
+        <nav class="tab-bar">
+          <button [class.active]="activeTab === 'products'" (click)="activeTab = 'products'">Products</button>
+          <button [class.active]="activeTab === 'about'" (click)="activeTab = 'about'">About</button>
+          <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Reviews</button>
+        </nav>
+
+        <div class="tab-content">
+          <!-- Products Tab -->
+          <div *ngIf="activeTab === 'products'" class="products-panel">
+            <div class="product-card" *ngFor="let p of products">
+              <div class="product-image">
+                <img [src]="p.image" [alt]="p.name">
+                <div class="product-price-badge">{{p.price}}</div>
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">{{p.name}}</h3>
+                <p class="product-desc">{{p.description}}</p>
+                <div class="product-chips" *ngIf="p.chips">
+                  <span class="glass-chip" *ngFor="let chip of p.chips">{{chip}}</span>
+                </div>
+                <div class="product-footer">
+                  <span class="product-time" *ngIf="p.time">
+                    <span class="material-symbols-outlined">schedule</span>
+                    {{p.time}}
+                  </span>
+                  <button class="btn-add">
+                    <span class="material-symbols-outlined">add</span>
+                    Add
+                  </button>
                 </div>
               </div>
-              <div class="info-row">
-                <span class="material-icons">payments</span>
-                <div class="txt">
-                  <label>Pricing</label>
-                  <span>Starting from ₹450</span>
-                </div>
-              </div>
             </div>
-            <button class="btn-book-prime">Book Appointment Now</button>
-            <p class="card-note">Free cancellation up to 24h prior</p>
           </div>
 
-          <div class="biz-info-glass">
-            <h4>Location & Hours</h4>
-            <div class="mini-map">
-              <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=400" alt="map">
-              <button class="btn-dir">Get Directions</button>
-            </div>
-            <p class="full-addr">{{shop.address}}</p>
-          </div>
-        </aside>
-
-        <!-- Main Content Scroll -->
-        <main class="main-scroll">
-          <nav class="section-tabs">
-            <button [class.active]="activeSection === 'services'" (click)="activeSection = 'services'">Services</button>
-            <button [class.active]="activeSection === 'gallery'" (click)="activeSection = 'gallery'">Gallery</button>
-            <button [class.active]="activeSection === 'reviews'" (click)="activeSection = 'reviews'">Reviews</button>
-            <button [class.active]="activeSection === 'about'" (click)="activeSection = 'about'">About</button>
-          </nav>
-
-          <!-- Services Section -->
-          <section class="content-block" *ngIf="activeSection === 'services'">
-            <div class="menu-category" *ngFor="let cat of ['Featured Services', 'Grooming', 'Styling']">
-              <h3>{{cat}}</h3>
-              <div class="service-list">
-                <div class="service-card-premium" *ngFor="let p of products">
-                  <div class="s-info">
-                    <h4>{{p.name}}</h4>
-                    <p>{{p.description}}</p>
-                    <div class="s-meta">
-                      <span class="price">{{p.price}}</span>
-                      <span class="time">45 mins</span>
-                    </div>
-                  </div>
-                  <div class="s-action">
-                    <button class="btn-add-s">Select</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Gallery Section -->
-          <section class="content-block" *ngIf="activeSection === 'gallery'">
-            <div class="gallery-layout">
-              <div class="g-item" *ngFor="let img of galleryImages">
-                <img [src]="img" alt="Gallery">
-              </div>
-            </div>
-          </section>
-
-          <!-- Reviews Section -->
-          <section class="content-block" *ngIf="activeSection === 'reviews'">
-            <div class="reviews-hub">
-              <div class="overview-card">
-                <div class="big-score">{{shop.rating}}</div>
-                <div class="stars-cluster">
-                  <span class="material-icons" *ngFor="let s of [1,2,3,4,5]">star</span>
-                </div>
-                <p>Based on {{shop.reviewCount}} verified reviews</p>
-              </div>
-              
-              <div class="review-stream">
-                <div class="review-node-glass" *ngFor="let r of reviews">
-                  <div class="node-header">
-                    <div class="avatar">{{r.initials}}</div>
-                    <div class="node-meta">
-                      <h5>{{r.name}}</h5>
-                      <span>{{r.date}}</span>
-                    </div>
-                    <div class="node-rating">
-                      <span class="material-icons">star</span>
-                      {{r.rating}}
-                    </div>
-                  </div>
-                  <p class="node-text">{{r.comment}}</p>
-                  <div class="node-tags">
-                    <span class="tag">#Professional</span>
-                    <span class="tag">#Clean</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- About Section -->
-          <section class="content-block" *ngIf="activeSection === 'about'">
-            <div class="about-glass">
+          <!-- About Tab -->
+          <div *ngIf="activeTab === 'about'" class="about-panel">
+            <div class="about-card">
               <h3>Our Story</h3>
               <p>{{shop.description}}</p>
-              
+            </div>
+            <div class="amenities-card">
+              <h3>Amenities</h3>
               <div class="amenities-grid">
-                <div class="amenity">
-                  <span class="material-icons">wifi</span>
-                  Free Wi-Fi
-                </div>
-                <div class="amenity">
-                  <span class="material-icons">local_parking</span>
-                  Free Parking
-                </div>
-                <div class="amenity">
-                  <span class="material-icons">ac_unit</span>
-                  Air Conditioned
-                </div>
-                <div class="amenity">
-                  <span class="material-icons">credit_card</span>
-                  Digital Payments
+                <div class="amenity" *ngFor="let a of amenities">
+                  <span class="material-symbols-outlined">{{a.icon}}</span>
+                  <span>{{a.label}}</span>
                 </div>
               </div>
             </div>
-          </section>
-        </main>
+            <div class="hours-card">
+              <h3>Business Hours</h3>
+              <div class="hours-list">
+                <div class="hours-row" *ngFor="let h of businessHours">
+                  <span class="day">{{h.day}}</span>
+                  <span class="time" [class.closed]="h.closed">{{h.closed ? 'Closed' : h.time}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reviews Tab -->
+          <div *ngIf="activeTab === 'reviews'" class="reviews-panel">
+            <div class="reviews-summary">
+              <div class="score-big">{{shop.rating}}</div>
+              <div class="stars-row">
+                <span class="material-symbols-outlined star-filled" *ngFor="let s of getStars(shop.rating)">star</span>
+              </div>
+              <p class="score-label">Based on {{shop.reviewCount}} verified reviews</p>
+            </div>
+            <div class="review-list">
+              <div class="review-node" *ngFor="let r of reviews">
+                <div class="node-head">
+                  <div class="node-avatar" [style.background]="r.color">{{r.initials}}</div>
+                  <div class="node-meta">
+                    <h5>{{r.name}}</h5>
+                    <span>{{r.date}}</span>
+                  </div>
+                  <div class="node-rating">
+                    <span class="material-symbols-outlined star-filled">star</span>
+                    {{r.rating}}
+                  </div>
+                </div>
+                <p class="node-body">{{r.comment}}</p>
+                <div class="node-tags" *ngIf="r.tags">
+                  <span class="tag" *ngFor="let t of r.tags">#{{t}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `,
   styles: [`
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
+    :host { display: block; font-family: 'Manrope', sans-serif; }
 
-    :host {
-      --primary: #3b82f6;
-      --primary-glow: rgba(59, 130, 246, 0.4);
-      --glass-bg: rgba(13, 18, 45, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-main: #e2e8f0;
-      --text-muted: #94a3b8;
-      font-family: 'Manrope', sans-serif;
+    .shop-view-page { min-height: 100vh; background: #05092f; color: #e2e3ff; padding-bottom: 4rem; }
+
+    /* Top Bar */
+    .top-bar {
+      max-width: 80rem; margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .btn-back {
+      display: flex; align-items: center; gap: 0.5rem;
+      color: #a3a8d5; text-decoration: none;
+      font-weight: 700; font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: #5eb4ff; }
+    .top-actions { display: flex; gap: 0.75rem; }
+    .btn-icon-glass {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border: none; color: #a3a8d5; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-icon-glass:hover { color: #5eb4ff; background: rgba(24,32,86,0.8); }
+    .btn-icon-glass .filled { color: #ff516c; font-variation-settings: 'FILL' 1; }
+
+    /* Bento Gallery */
+    .bento-gallery {
+      max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 14rem 14rem;
+      gap: 0.75rem;
+      height: 29rem;
+    }
+    .bento-main { grid-row: 1 / 3; position: relative; border-radius: 1.5rem; overflow: hidden; }
+    .bento-side-top { border-radius: 1.5rem; overflow: hidden; }
+    .bento-side-bottom { position: relative; border-radius: 1.5rem; overflow: hidden; }
+    .bento-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .bento-main:hover .bento-img,
+    .bento-side-top:hover .bento-img,
+    .bento-side-bottom:hover .bento-img { transform: scale(1.03); }
+
+    .bento-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.5rem;
+      background: linear-gradient(transparent, rgba(5,9,47,0.9));
+    }
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      background: rgba(94,180,255,0.2); backdrop-filter: blur(12px);
+      padding: 0.375rem 0.75rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700; color: #5eb4ff;
+    }
+    .bento-count {
+      position: absolute; bottom: 1rem; right: 1rem;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+      padding: 0.5rem 0.75rem; border-radius: 0.75rem;
+      display: flex; align-items: center; gap: 0.375rem;
+      font-size: 0.75rem; font-weight: 700; color: #e2e3ff;
     }
 
-    .shop-detail-premium {
-      min-height: 100vh;
-      background: #020410;
-      color: var(--text-main);
+    /* Info Header */
+    .info-header {
+      max-width: 80rem; margin: 0 auto;
+      padding: 2rem 1.5rem 0;
     }
+    .category-chip {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #131a4c; padding: 0.375rem 0.75rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700; color: #fc9df7;
+      margin-bottom: 1rem;
+    }
+    .chip-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: #fc9df7; }
+    .shop-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem; font-weight: 800;
+      margin: 0 0 0.5rem; letter-spacing: -0.02em;
+    }
+    .shop-tagline { color: #a3a8d5; font-size: 1.125rem; margin: 0 0 1.5rem; line-height: 1.5; }
 
-    /* Hero Section */
-    .hero-mount {
-      height: 60vh; background-size: cover; background-position: center; position: relative;
+    .meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; }
+    .meta-item {
+      display: flex; align-items: center; gap: 0.375rem;
+      font-size: 0.875rem; font-weight: 600; color: #a3a8d5;
     }
-    .hero-glass-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(2,4,16,0.3) 0%, rgba(2,4,16,0.95) 100%);
-      display: flex; flex-direction: column; justify-content: space-between; padding: 2rem 4rem;
-    }
+    .meta-item .material-symbols-outlined { font-size: 1rem; color: #5eb4ff; }
+    .rating-item { color: #facc15; }
+    .rating-item strong { color: #e2e3ff; }
+    .meta-muted { color: #a3a8d5; }
+    .star-filled { color: #facc15; font-variation-settings: 'FILL' 1; }
+    .meta-divider { width: 1px; height: 1rem; background: rgba(64,69,108,0.3); }
+    .status-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #ef4444; }
+    .status-dot.open { background: #6bfe9c; box-shadow: 0 0 8px rgba(107,254,156,0.6); }
 
-    .top-navigation { display: flex; justify-content: space-between; align-items: center; }
-    .btn-back-glass {
-      background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: #fff;
-      padding: 0.75rem 1.5rem; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.2);
-      text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;
+    /* Action Hub */
+    .action-hub { max-width: 80rem; margin: 0 auto; padding: 2rem 1.5rem; }
+    .action-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .action-card {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1rem; padding: 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .action-card:hover { background: rgba(24,32,86,0.8); transform: translateY(-2px); }
+    .action-card.primary-action {
+      background: linear-gradient(135deg, rgba(94,180,255,0.15), rgba(24,32,86,0.6));
+      border: 1px solid rgba(94,180,255,0.2);
+    }
+    .action-icon { font-size: 1.5rem; color: #5eb4ff; }
+    .action-card h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; margin: 0 0 0.25rem; }
+    .action-card p { font-size: 0.75rem; color: #a3a8d5; margin: 0; }
+
+    /* Tabs */
+    .content-wrapper { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
+    .tab-bar {
+      display: flex; gap: 0.5rem;
+      background: #080e38; padding: 0.375rem; border-radius: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .tab-bar button {
+      flex: 1; padding: 0.75rem;
+      background: transparent; border: none; color: #a3a8d5;
+      font-weight: 700; font-size: 0.875rem; border-radius: 0.5rem;
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .tab-bar button.active { background: rgba(24,32,86,0.6); color: #e2e3ff; }
+    .tab-bar button:hover:not(.active) { color: #e2e3ff; }
+    .tab-content { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Products Panel */
+    .products-panel {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 1.5rem;
+    }
+    .product-card {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; overflow: hidden;
       transition: all 0.3s;
     }
-    .btn-back-glass:hover { background: rgba(255,255,255,0.2); transform: translateX(-5px); }
-
-    .action-spread { display: flex; gap: 1rem; }
-    .btn-icon-glass {
-      width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; transition: all 0.3s;
+    .product-card:hover { background: rgba(24,32,86,0.8); transform: translateY(-4px); }
+    .product-image { position: relative; height: 12rem; overflow: hidden; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .product-card:hover .product-image img { transform: scale(1.05); }
+    .product-price-badge {
+      position: absolute; bottom: 0.75rem; right: 0.75rem;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+      padding: 0.375rem 0.75rem; border-radius: 0.5rem;
+      font-size: 1rem; font-weight: 800; color: #5eb4ff;
     }
-    .btn-icon-glass:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
-
-    .shop-prime-meta { max-width: 1200px; margin: 0 auto; width: 100%; }
-    .badge-cluster { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
-    .badge-pill { padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem; }
-    .badge-pill.verified { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-pill.category { background: rgba(255,255,255,0.1); color: var(--text-muted); border: 1px solid var(--glass-border); }
-
-    .shop-prime-meta h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 4rem; font-weight: 800; margin: 0 0 1.5rem 0; letter-spacing: -2px; }
-
-    .meta-stats { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-    .stat-item { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--text-main); }
-    .stat-item.rating { color: #f59e0b; }
-    .stat-item .material-icons { font-size: 1.25rem; }
-    .divider { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
-    .stat-item.is-open .dot { background: #10b981; box-shadow: 0 0 10px #10b981; }
-
-    /* Layout Content */
-    .detail-grid { max-width: 1400px; margin: -5rem auto 0; padding: 0 4rem 5rem; display: flex; gap: 4rem; position: relative; z-index: 20; }
-    .sidebar-sticky { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2rem; }
-    .sidebar-sticky > div { position: sticky; top: 2rem; } /* Will need fix for multiple sticky */
-
-    .booking-card-glass {
-      background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
-      border-radius: 2.5rem; padding: 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    .product-info { padding: 1.5rem; }
+    .product-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.125rem; font-weight: 700; margin: 0 0 0.5rem; }
+    .product-desc { font-size: 0.875rem; color: #a3a8d5; line-height: 1.5; margin: 0 0 1rem; }
+    .product-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .glass-chip {
+      background: #0e1442; padding: 0.25rem 0.5rem; border-radius: 0.375rem;
+      font-size: 0.625rem; font-weight: 700; color: #a3a8d5;
+      text-transform: uppercase; letter-spacing: 0.1em;
     }
-    .card-header h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.6rem; margin: 0 0 0.25rem 0; }
-    .card-header p { color: var(--text-muted); margin: 0 0 2rem 0; font-size: 0.95rem; }
-
-    .quick-info-list { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem; }
-    .info-row { display: flex; align-items: center; gap: 1rem; }
-    .info-row .material-icons { width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; color: var(--primary); }
-    .info-row .txt label { display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 2px; }
-    .info-row .txt span { font-weight: 700; font-size: 1rem; }
-
-    .btn-book-prime {
-      width: 100%; padding: 1.25rem; border-radius: 1.5rem; border: none;
-      background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff;
-      font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;
-      box-shadow: 0 10px 30px var(--primary-glow); margin-bottom: 1rem;
+    .product-footer { display: flex; justify-content: space-between; align-items: center; }
+    .product-time { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #a3a8d5; }
+    .product-time .material-symbols-outlined { font-size: 0.875rem; color: #5eb4ff; }
+    .btn-add {
+      display: flex; align-items: center; gap: 0.25rem;
+      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
+      color: #000; border: none; border-radius: 0.75rem;
+      padding: 0.625rem 1rem; font-weight: 700; font-size: 0.875rem;
+      cursor: pointer; transition: all 0.2s;
     }
-    .btn-book-prime:hover { transform: translateY(-3px); box-shadow: 0 15px 40px var(--primary-glow); }
-    .card-note { text-align: center; font-size: 0.8rem; color: var(--text-muted); }
+    .btn-add:hover { box-shadow: 0 8px 24px rgba(94,180,255,0.2); }
+    .btn-add:active { transform: scale(0.95); }
+    .btn-add .material-symbols-outlined { font-size: 1rem; }
 
-    .biz-info-glass {
-      background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 1.5rem;
+    /* About Panel */
+    .about-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+    .about-card, .amenities-card, .hours-card {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; padding: 2rem;
     }
-    .mini-map { height: 15vw; min-height: 150px; border-radius: 1.5rem; overflow: hidden; position: relative; margin: 1rem 0; }
-    .mini-map img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) invert(0.9); }
-    .btn-dir { position: absolute; bottom: 1rem; right: 1rem; background: #fff; color: #000; border: none; padding: 0.6rem 1.2rem; border-radius: 1rem; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
-
-    .main-scroll { flex: 1; min-width: 0; }
-    .section-tabs { display: flex; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 1.5rem; margin-bottom: 3rem; }
-    .section-tabs button { flex: 1; border: none; background: transparent; color: var(--text-muted); padding: 1rem; border-radius: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: inherit; }
-    .section-tabs button.active { background: var(--glass-bg); color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-
-    .content-block { animation: fadeIn 0.5s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .menu-category { margin-bottom: 3.5rem; }
-    .menu-category h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.8rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--glass-border); }
-    
-    .service-list { display: flex; flex-direction: column; gap: 1.25rem; }
-    .service-card-premium {
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      padding: 1.75rem 2rem; border-radius: 1.75rem; transition: all 0.3s;
+    .about-card h3, .amenities-card h3, .hours-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 800; margin: 0 0 1rem;
     }
-    .service-card-premium:hover { border-color: var(--primary); transform: translateX(5px); }
-    .s-info h4 { font-size: 1.25rem; font-weight: 800; margin: 0 0 0.4rem 0; }
-    .s-info p { color: var(--text-muted); margin: 0 0 1rem 0; font-size: 0.95rem; line-height: 1.5; }
-    .s-meta { display: flex; gap: 1.5rem; }
-    .s-meta span { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
-    .s-meta .time { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+    .about-card p { color: #a3a8d5; line-height: 1.8; margin: 0; font-size: 1rem; }
+    .amenities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1rem; }
+    .amenity { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; }
+    .amenity .material-symbols-outlined { color: #5eb4ff; }
+    .hours-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .hours-row { display: flex; justify-content: space-between; padding: 0.5rem 0; }
+    .hours-row .day { font-weight: 700; }
+    .hours-row .time { color: #a3a8d5; }
+    .hours-row .time.closed { color: #ef4444; }
 
-    .btn-add-s { background: #fff; color: #000; border: none; padding: 0.75rem 1.75rem; border-radius: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; }
-    .btn-add-s:hover { background: var(--primary); color: #fff; }
+    /* Reviews Panel */
+    .reviews-panel { display: flex; flex-direction: column; gap: 2rem; }
+    .reviews-summary {
+      text-align: center;
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      padding: 3rem; border-radius: 1.5rem;
+    }
+    .score-big { font-size: 4rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1; margin-bottom: 0.5rem; }
+    .stars-row { display: flex; justify-content: center; gap: 0.25rem; margin-bottom: 0.75rem; }
+    .score-label { font-size: 0.875rem; color: #a3a8d5; margin: 0; }
 
-    .gallery-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-    .g-item { height: 280px; border-radius: 1.5rem; overflow: hidden; border: 1px solid var(--glass-border); }
-    .g-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-    .g-item:hover img { transform: scale(1.1); }
+    .review-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .review-node {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      padding: 1.5rem; border-radius: 1.25rem;
+    }
+    .node-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .node-avatar {
+      width: 2.75rem; height: 2.75rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.875rem; color: #000;
+    }
+    .node-meta h5 { margin: 0; font-size: 0.95rem; font-weight: 700; }
+    .node-meta span { font-size: 0.75rem; color: #a3a8d5; }
+    .node-rating {
+      margin-left: auto;
+      background: rgba(250,204,21,0.1); color: #facc15;
+      padding: 0.25rem 0.75rem; border-radius: 9999px;
+      font-weight: 800; font-size: 0.875rem;
+      display: flex; align-items: center; gap: 0.25rem;
+    }
+    .node-body { color: #a3a8d5; line-height: 1.7; margin: 0 0 0.75rem; font-size: 0.95rem; }
+    .node-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { font-size: 0.75rem; font-weight: 700; color: #fc9df7; }
 
-    .reviews-hub { display: flex; flex-direction: column; gap: 3rem; }
-    .overview-card { text-align: center; background: var(--glass-bg); padding: 3rem; border-radius: 2.5rem; border: 1px solid var(--glass-border); }
-    .big-score { font-size: 5rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1; margin-bottom: 0.5rem; }
-    .stars-cluster { color: #f59e0b; margin-bottom: 1rem; }
-    .review-stream { display: flex; flex-direction: column; gap: 1.5rem; }
-    .review-node-glass { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 2rem; border-radius: 2rem; }
-    .node-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
-    .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; }
-    .node-meta h5 { margin: 0; font-size: 1rem; }
-    .node-meta span { color: var(--text-muted); font-size: 0.8rem; }
-    .node-rating { margin-left: auto; background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 4px 12px; border-radius: 2rem; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 4px; }
-    .node-text { line-height: 1.7; color: var(--text-muted); }
-
-    .about-glass { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 3rem; border-radius: 2.5rem; }
-    .about-glass p { font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 3rem; }
-    .amenities-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-    .amenity { display: flex; align-items: center; gap: 1rem; font-weight: 700; color: var(--text-main); }
-    .amenity .material-icons { color: var(--primary); }
-
-    @media (max-width: 1024px) {
-      .detail-grid { flex-direction: column; padding: 0 2rem 5rem; gap: 2rem; }
-      .sidebar-sticky { width: 100%; order: 2; }
-      .main-scroll { order: 1; }
-      .hero-mount { height: 40vh; }
-      .hero-glass-overlay { padding: 2rem; }
-      .shop-prime-meta h1 { font-size: 2.5rem; }
+    @media (max-width: 768px) {
+      .bento-gallery {
+        grid-template-columns: 1fr;
+        grid-template-rows: 16rem;
+        height: auto;
+      }
+      .bento-side-top, .bento-side-bottom { display: none; }
+      .shop-title { font-size: 1.75rem; }
+      .action-cards { grid-template-columns: 1fr; }
+      .products-panel { grid-template-columns: 1fr; }
     }
   `]
 })
 export class ShopDetailComponent implements OnInit {
-  activeSection: 'services' | 'gallery' | 'reviews' | 'about' = 'services';
+  activeTab: 'products' | 'about' | 'reviews' = 'products';
+  isFavorited = false;
+
   shop: any = {
-    name: 'Urban Fade Barbershop', 
-    category: 'Salon & Grooming', 
-    rating: 4.8, 
+    name: 'The Golden Crust',
+    category: 'Artisan Bakery',
+    tagline: 'Where tradition meets taste. Hand-crafted artisan breads and pastries baked fresh daily with locally sourced ingredients.',
+    rating: 4.8,
     reviewCount: 128,
-    address: '42 Premium Skyline, Downtown Core', 
-    hours: '9:00 AM - 9:00 PM', 
+    address: '42 Baker Street, Downtown Core',
+    hours: 'Closes 9 PM',
     isOpen: true,
-    description: 'A sanctuary for the modern gentleman. We blend traditional barbering techniques with contemporary styles to give you the sharpest look in the city. Our master stylists specialize in high-fades, straight-razor shaves, and grooming consultations.',
-    image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
+    description: 'Founded in 2019, The Golden Crust is a neighborhood bakery that believes in the art of slow-fermented bread. We source our wheat from organic farms and every loaf is given 24 hours of fermentation for that perfect crust and tang. Our pastry chef trained in Paris and brings a fusion of French technique with local Indian flavors.',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDt5Jyfc8T2q_H_cOv2GbLu4JlJaXx--NL_i4FjuEiNDxaNPUKgGvH1N1wCsJcLXMHq8BfOtheFfFaB2lxC53fqH64cVOLDuPIR2hIxEYYzrSgHdfKH8YCNEwq_fAVkidHllvZopbHxFScIqJ5dVHPWnHt9xxcLT0yz-wlCGBN_3xBBD8bU-f9qdAaLy6dlYZw7fhdZWCgVZkWJ3RK2NLAExSGDYPGqpN1zn-TwONPG3w3cjkZTrQ5qWZHYPnkJB547Nm7AvT3IPLB',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCUsuAfvwhrFfOLDeqIh9jssV5dDYr4128gK4R1OjZxeSCTrgLiXW_sLN_0I2baZ3EsypaWtPfiUNvYRrGdPWD5WlkT7vuYJN2CX9cnA4SnBsHmZuJCFnUQBUdJWH3qOJyab8dFMnxIme0I7QjwsZGFMGiDvzCLKaJN1mHfCzXtGlwKkDtFgLmN_yFEKvQ9ndJUTlB6YqTUiTEoYKmRFphZC2NuYu6euyu4xT0bEdwcLhuSL16lOZr82Mh8KRsn9plMdkPyt7NvYRx6'
+    ]
   };
 
   products = [
-    { name: 'Signature Fade Cut', description: 'Our most popular service. Includes consultation, precision fade, and style styling.', price: '₹450', image: 'https://images.unsplash.com/photo-1599351474290-288d848c47ac?w=400&q=80' },
-    { name: 'Traditional Hot Shave', description: 'Luxurious 30-minute experience with hot towels, essential oils, and straight razor.', price: '₹350', image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80' },
-    { name: 'Beard Sculpture & Trim', description: 'Complete beard redesign and maintenance using premium oils and precision trimmers.', price: '₹250', image: 'https://images.unsplash.com/photo-1512690196236-d5a7139e8396?w=400&q=80' }
+    { name: 'Sourdough Boule', description: '24-hour fermented with organic wheat. Crispy crust with a tangy, airy interior.', price: '₹180', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm', chips: ['Organic', 'Vegan', 'Slow Fermented'], time: 'Baked at 6 AM' },
+    { name: 'Butter Croissant', description: 'Flaky layers of French-style pastry made with premium Amul butter.', price: '₹120', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt5Jyfc8T2q_H_cOv2GbLu4JlJaXx--NL_i4FjuEiNDxaNPUKgGvH1N1wCsJcLXMHq8BfOtheFfFaB2lxC53fqH64cVOLDuPIR2hIxEYYzrSgHdfKH8YCNEwq_fAVkidHllvZopbHxFScIqJ5dVHPWnHt9xxcLT0yz-wlCGBN_3xBBD8bU-f9qdAaLy6dlYZw7fhdZWCgVZkWJ3RK2NLAExSGDYPGqpN1zn-TwONPG3w3cjkZTrQ5qWZHYPnkJB547Nm7AvT3IPLB', chips: ['Popular', 'Buttery'], time: 'Fresh batch hourly' },
+    { name: 'Masala Patties', description: 'Spiced potato-pea filling in golden, flaky pastry. A neighborhood favorite!', price: '₹60', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUsuAfvwhrFfOLDeqIh9jssV5dDYr4128gK4R1OjZxeSCTrgLiXW_sLN_0I2baZ3EsypaWtPfiUNvYRrGdPWD5WlkT7vuYJN2CX9cnA4SnBsHmZuJCFnUQBUdJWH3qOJyab8dFMnxIme0I7QjwsZGFMGiDvzCLKaJN1mHfCzXtGlwKkDtFgLmN_yFEKvQ9ndJUTlB6YqTUiTEoYKmRFphZC2NuYu6euyu4xT0bEdwcLhuSL16lOZr82Mh8KRsn9plMdkPyt7NvYRx6', chips: ['Bestseller', 'Spicy'], time: 'Available till 8 PM' },
+    { name: 'Chocolate Lava Cake', description: 'Rich Belgian chocolate with a warm, molten center. Served with vanilla cream.', price: '₹250', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCM1Qnj0VQEg70OrDBJmRJJWTVNTT3y_Grqv_5MwrPY-hnO0pioqbHD1hKnuzVR3X4IaexULI2Nvz0mVCi30BxotDpzU8NIXlO1gzdlKqgHfMbIRTytX2fdcqdLLjgRT6PB7mF_Bh_zjCbpL99ST2_s6zss2t5CZvMa9xLms2AwjtVb0PPqpMrsgwGEyH7qbNFNkjzRoczmWMM77uDuHuNgSyVu-B-SuFjC6899oWRM26K35PbnNI1ClKn79xDjVuUQEWlRBfj9Q2PH', chips: ['Indulgent', 'Premium'], time: 'Made to order' }
   ];
 
   galleryImages = [
-    'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600',
-    'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600',
-    'https://images.unsplash.com/photo-1532710093739-9470acff878b?w=600',
-    'https://images.unsplash.com/photo-1599351474290-288d848c47ac?w=600'
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuDt5Jyfc8T2q_H_cOv2GbLu4JlJaXx--NL_i4FjuEiNDxaNPUKgGvH1N1wCsJcLXMHq8BfOtheFfFaB2lxC53fqH64cVOLDuPIR2hIxEYYzrSgHdfKH8YCNEwq_fAVkidHllvZopbHxFScIqJ5dVHPWnHt9xxcLT0yz-wlCGBN_3xBBD8bU-f9qdAaLy6dlYZw7fhdZWCgVZkWJ3RK2NLAExSGDYPGqpN1zn-TwONPG3w3cjkZTrQ5qWZHYPnkJB547Nm7AvT3IPLB',
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuCUsuAfvwhrFfOLDeqIh9jssV5dDYr4128gK4R1OjZxeSCTrgLiXW_sLN_0I2baZ3EsypaWtPfiUNvYRrGdPWD5WlkT7vuYJN2CX9cnA4SnBsHmZuJCFnUQBUdJWH3qOJyab8dFMnxIme0I7QjwsZGFMGiDvzCLKaJN1mHfCzXtGlwKkDtFgLmN_yFEKvQ9ndJUTlB6YqTUiTEoYKmRFphZC2NuYu6euyu4xT0bEdwcLhuSL16lOZr82Mh8KRsn9plMdkPyt7NvYRx6',
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuCM1Qnj0VQEg70OrDBJmRJJWTVNTT3y_Grqv_5MwrPY-hnO0pioqbHD1hKnuzVR3X4IaexULI2Nvz0mVCi30BxotDpzU8NIXlO1gzdlKqgHfMbIRTytX2fdcqdLLjgRT6PB7mF_Bh_zjCbpL99ST2_s6zss2t5CZvMa9xLms2AwjtVb0PPqpMrsgwGEyH7qbNFNkjzRoczmWMM77uDuHuNgSyVu-B-SuFjC6899oWRM26K35PbnNI1ClKn79xDjVuUQEWlRBfj9Q2PH'
   ];
 
   reviews = [
-    { name: 'Sarah M.', initials: 'SM', rating: 5, date: '2 days ago', comment: 'Absolutely incredible experience! The attention to detail is unmatched. Rahul is a master of his craft. The atmosphere is professional and high-end.' },
-    { name: 'James K.', initials: 'JK', rating: 4.5, date: '1 week ago', comment: 'Best fade I\'ve had in a long time. The waiting area is comfortable and they offer great coffee while you wait.' }
+    { name: 'Priya S.', initials: 'PS', rating: 5, date: '2 days ago', comment: 'The sourdough is absolutely incredible! You can taste the 24-hour fermentation. The crust is perfect – crispy and golden. This bakery has completely replaced my bread brand loyalty.', tags: ['Authentic', 'Value'], color: '#fc9df7' },
+    { name: 'Rahul M.', initials: 'RM', rating: 4, date: '1 week ago', comment: 'Great pastries, especially the butter croissant. The chocolate lava cake is a must-try. Slightly pricey but the quality justifies it. Cozy ambiance too.', tags: ['Professional', 'Clean'], color: '#5eb4ff' },
+    { name: 'Ananya K.', initials: 'AK', rating: 5, date: '2 weeks ago', comment: 'Best masala patties in the neighborhood! Hot, flaky, and perfectly spiced. I come here every evening with my kids. The staff is always friendly and welcoming.', tags: ['Friendly', 'Quick'], color: '#6bfe9c' }
+  ];
+
+  amenities = [
+    { icon: 'wifi', label: 'Free Wi-Fi' },
+    { icon: 'local_parking', label: 'Street Parking' },
+    { icon: 'ac_unit', label: 'Air Conditioned' },
+    { icon: 'credit_card', label: 'Digital Payments' },
+    { icon: 'child_care', label: 'Kid Friendly' },
+    { icon: 'accessible', label: 'Wheelchair Access' }
+  ];
+
+  businessHours = [
+    { day: 'Monday', time: '6:00 AM - 9:00 PM', closed: false },
+    { day: 'Tuesday', time: '6:00 AM - 9:00 PM', closed: false },
+    { day: 'Wednesday', time: '6:00 AM - 9:00 PM', closed: false },
+    { day: 'Thursday', time: '6:00 AM - 9:00 PM', closed: false },
+    { day: 'Friday', time: '6:00 AM - 10:00 PM', closed: false },
+    { day: 'Saturday', time: '7:00 AM - 10:00 PM', closed: false },
+    { day: 'Sunday', time: 'Closed', closed: true }
   ];
 
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
@@ -390,8 +510,10 @@ export class ShopDetailComponent implements OnInit {
       this.apiService.getShopById(id).subscribe({
         next: (s: any) => {
           if (s) {
-            this.shop = { ...this.shop, ...s,
-              image: s.imageUrl || this.shop.image,
+            this.shop = {
+              ...this.shop,
+              ...s,
+              images: [s.imageUrl || this.shop.images[0], ...this.shop.images.slice(1)],
               category: s.categoryName || this.shop.category,
               isOpen: s.status === 'APPROVED',
               reviewCount: s.reviewCount || this.shop.reviewCount,

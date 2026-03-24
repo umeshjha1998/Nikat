@@ -1,176 +1,412 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-reviews',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="reviews-page">
-      <div class="page-header">
-        <div class="header-content">
-          <h1>Review & Rating Hub</h1>
-          <p>See what the community says about local businesses and services</p>
-        </div>
-      </div>
-
-      <div class="reviews-content">
-        <!-- Stats Bar -->
-        <div class="stats-bar">
-          <div class="stat-item">
-            <span class="stat-num">12,400+</span>
-            <span class="stat-label">Total Reviews</span>
+      <!-- Header & Stats -->
+      <section class="header-section">
+        <div class="header-inner">
+          <div class="header-content">
+            <h1 class="page-title">Community Reviews</h1>
+            <p class="page-subtitle">
+              Real stories from real people. See what the Nikat community is saying about local businesses.
+            </p>
           </div>
-          <div class="stat-item">
-            <span class="stat-num">4.6</span>
-            <span class="stat-label">Avg. Rating</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-num">94%</span>
-            <span class="stat-label">Would Recommend</span>
-          </div>
-        </div>
-
-        <!-- Filter Row -->
-        <div class="filter-row">
-          <div class="filter-chips">
-            <button class="chip" [class.active]="activeFilter === 'all'" (click)="activeFilter = 'all'">All Reviews</button>
-            <button class="chip" [class.active]="activeFilter === 'recent'" (click)="activeFilter = 'recent'">Recent</button>
-            <button class="chip" [class.active]="activeFilter === 'top'" (click)="activeFilter = 'top'">Highest Rated</button>
-            <button class="chip" [class.active]="activeFilter === 'shops'" (click)="activeFilter = 'shops'">Shops</button>
-            <button class="chip" [class.active]="activeFilter === 'services'" (click)="activeFilter = 'services'">Services</button>
+          <div class="stats-bar">
+            <div class="stat-card">
+              <span class="stat-value">12.4k</span>
+              <span class="stat-label">Total Reviews</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">4.6</span>
+              <span class="stat-label">Average Rating</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">850+</span>
+              <span class="stat-label">Verified Places</span>
+            </div>
+            <div class="stat-card highlight">
+              <span class="stat-value">25</span>
+              <span class="stat-label">New Today</span>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Reviews List -->
-        <div class="reviews-list">
-          <div class="review-card" *ngFor="let r of reviews">
-            <div class="review-top">
-              <div class="review-user">
-                <div class="avatar">{{r.initials}}</div>
-                <div>
-                  <h4>{{r.userName}}</h4>
-                  <span class="review-date">{{r.date}}</span>
+      <div class="main-layout">
+        <!-- Submit Review -->
+        <aside class="submit-section">
+          <div class="submit-card">
+            <h2 class="submit-title">Share Your Experience</h2>
+            <p class="submit-desc">Your voice matters. Help others discover great local services and shops.</p>
+            <div class="form">
+              <!-- Business Name -->
+              <div class="form-group">
+                <label>Business Name</label>
+                <input type="text" placeholder="Search for a shop or service..." [(ngModel)]="newReview.businessName" class="form-input">
+              </div>
+
+              <!-- Star Rating -->
+              <div class="form-group">
+                <label>Your Rating</label>
+                <div class="star-rating-input">
+                  <button class="star-btn" *ngFor="let s of [1,2,3,4,5]" (click)="newReview.rating = s">
+                    <span class="material-symbols-outlined" [class.filled]="s <= newReview.rating">star</span>
+                  </button>
                 </div>
               </div>
-              <div class="review-stars">
-                <span class="material-icons filled" *ngFor="let s of getStars(r.rating)">star</span>
-                <span class="material-icons" *ngFor="let s of getEmptyStars(r.rating)">star</span>
+
+              <!-- Review Text -->
+              <div class="form-group">
+                <label>Your Review</label>
+                <textarea placeholder="Tell others about your experience..." [(ngModel)]="newReview.comment" class="form-textarea" rows="4"></textarea>
               </div>
-            </div>
-            <div class="review-target">
-              <span class="material-icons">{{r.targetType === 'shop' ? 'storefront' : 'build'}}</span>
-              <a [routerLink]="r.targetType === 'shop' ? ['/shop', r.targetId] : ['/services']">{{r.targetName}}</a>
-            </div>
-            <p class="review-text">{{r.comment}}</p>
-            <div class="review-actions">
-              <button class="action-btn"><span class="material-icons">thumb_up</span> {{r.helpful}}</button>
-              <button class="action-btn"><span class="material-icons">reply</span> Reply</button>
+
+              <!-- Tags -->
+              <div class="form-group">
+                <label>Quick Tags</label>
+                <div class="tag-pills">
+                  <button class="tag-pill" *ngFor="let tag of availableTags" (click)="toggleTag(tag)" [class.active]="newReview.tags.includes(tag)">
+                    {{tag}}
+                  </button>
+                </div>
+              </div>
+
+              <button class="btn-submit" (click)="submitReview()">
+                <span class="material-symbols-outlined">send</span>
+                Submit Review
+              </button>
             </div>
           </div>
-        </div>
+        </aside>
+
+        <!-- Review Feed -->
+        <section class="feed-section">
+          <div class="feed-header">
+            <h2 class="feed-title">Recent Reviews</h2>
+            <div class="feed-filters">
+              <button class="feed-pill" [class.active]="activeFilter === 'all'" (click)="activeFilter = 'all'">All</button>
+              <button class="feed-pill" [class.active]="activeFilter === 'shops'" (click)="activeFilter = 'shops'">Shops</button>
+              <button class="feed-pill" [class.active]="activeFilter === 'services'" (click)="activeFilter = 'services'">Services</button>
+              <button class="feed-pill" [class.active]="activeFilter === 'food'" (click)="activeFilter = 'food'">Food & Drink</button>
+            </div>
+          </div>
+
+          <div class="review-list">
+            <div class="review-card" *ngFor="let review of reviews; let i = index" [class.featured]="i === 0">
+              <!-- Review Header -->
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="avatar" [style.background]="review.avatarColor">
+                    {{review.initials}}
+                  </div>
+                  <div>
+                    <h4 class="reviewer-name">{{review.name}}</h4>
+                    <span class="review-date">{{review.date}}</span>
+                  </div>
+                </div>
+                <div class="review-rating">
+                  <span class="material-symbols-outlined star-filled" *ngFor="let s of getStars(review.rating)">star</span>
+                  <span class="material-symbols-outlined star-empty" *ngFor="let s of getEmptyStars(review.rating)">star</span>
+                </div>
+              </div>
+
+              <!-- Business Referenced -->
+              <div class="reviewed-biz" *ngIf="review.businessName">
+                <span class="material-symbols-outlined biz-icon">storefront</span>
+                <span class="biz-name">{{review.businessName}}</span>
+                <span class="biz-category">{{review.category}}</span>
+              </div>
+
+              <!-- Review Body -->
+              <p class="review-body">{{review.comment}}</p>
+
+              <!-- Tags -->
+              <div class="review-tags" *ngIf="review.tags && review.tags.length > 0">
+                <span class="review-tag" *ngFor="let tag of review.tags">#{{tag}}</span>
+              </div>
+
+              <!-- Actions -->
+              <div class="review-actions">
+                <button class="action-btn" (click)="review.liked = !review.liked" [class.liked]="review.liked">
+                  <span class="material-symbols-outlined">{{review.liked ? 'favorite' : 'favorite_border'}}</span>
+                  {{review.likes + (review.liked ? 1 : 0)}}
+                </button>
+                <button class="action-btn">
+                  <span class="material-symbols-outlined">comment</span>
+                  Reply
+                </button>
+                <button class="action-btn">
+                  <span class="material-symbols-outlined">share</span>
+                  Share
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Load More -->
+          <div class="load-more-wrap">
+            <button class="btn-load-more">
+              Load More Reviews
+              <span class="material-symbols-outlined">expand_more</span>
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   `,
   styles: [`
-    .reviews-page { background: #05092f; min-height: 100vh; }
+    :host { display: block; font-family: 'Manrope', sans-serif; }
 
-    .page-header {
-      background: linear-gradient(180deg, #0e1442 0%, #05092f 100%);
-      padding: 4rem 2rem 3rem;
-      text-align: center;
+    .reviews-page { min-height: 100vh; background: #05092f; color: #e2e3ff; }
+
+    /* Header */
+    .header-section { max-width: 80rem; margin: 0 auto; padding: 2rem 1.5rem; }
+    .header-inner { display: flex; flex-direction: column; gap: 2rem; }
+    .page-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem; font-weight: 800;
+      letter-spacing: -0.02em; margin: 0;
+      background: linear-gradient(to right, #e2e3ff, #5eb4ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .header-content { max-width: 600px; margin: 0 auto; }
-    .header-content h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; color: #e2e3ff; margin-bottom: 0.75rem; }
-    .header-content p { color: #a3a8d5; font-size: 1.1rem; }
+    .page-subtitle { color: #a3a8d5; font-size: 1.1rem; margin: 0.5rem 0 0; max-width: 38rem; line-height: 1.6; }
 
-    .reviews-content { max-width: 900px; margin: 0 auto; padding: 2rem; }
-
-    .stats-bar {
-      display: flex; justify-content: center; gap: 3rem;
-      background: #080e38; border-radius: 1rem; padding: 2rem;
-      margin-bottom: 2rem;
+    .stats-bar { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    @media (min-width: 768px) { .stats-bar { grid-template-columns: repeat(4, 1fr); } }
+    .stat-card {
+      background: #080e38;
+      padding: 1.5rem; border-radius: 1rem;
+      display: flex; flex-direction: column; gap: 0.25rem;
     }
-    .stat-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
-    .stat-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 800; color: #e2e3ff; }
-    .stat-label { font-size: 0.75rem; color: #6e739d; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-card.highlight { background: rgba(94,180,255,0.1); }
+    .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; color: #e2e3ff; }
+    .stat-card.highlight .stat-value { color: #5eb4ff; }
+    .stat-label { font-size: 0.75rem; color: #a3a8d5; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
 
-    .filter-row { margin-bottom: 2rem; }
-    .filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .chip {
-      background: transparent; border: 1px solid #40456c; color: #a3a8d5;
-      padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.85rem;
-      font-weight: 600; cursor: pointer; transition: all 0.2s;
+    /* Layout */
+    .main-layout {
+      max-width: 80rem; margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      display: flex; gap: 2rem;
     }
-    .chip.active { background: rgba(94,180,255,0.15); border-color: #5eb4ff; color: #5eb4ff; }
 
-    .reviews-list { display: flex; flex-direction: column; gap: 1.25rem; }
-    .review-card { background: #080e38; border-radius: 1rem; padding: 1.75rem; }
+    /* Submit Section */
+    .submit-section { width: 22rem; flex-shrink: 0; position: sticky; top: 5rem; align-self: flex-start; }
+    .submit-card {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; padding: 2rem;
+    }
+    .submit-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .submit-desc { color: #a3a8d5; font-size: 0.875rem; margin: 0 0 1.5rem; line-height: 1.5; }
 
-    .review-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
-    .review-user { display: flex; gap: 0.75rem; align-items: center; }
-    .avatar {
-      width: 44px; height: 44px; border-radius: 50%;
+    .form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-size: 0.75rem; color: #a3a8d5; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
+    .form-input, .form-textarea {
+      background: #080e38; border: none; border-radius: 0.75rem;
+      padding: 0.75rem 1rem; color: #e2e3ff;
+      font-size: 0.875rem; font-family: inherit;
+      outline: none; transition: box-shadow 0.2s;
+      resize: none;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: #40456c; }
+    .form-input:focus, .form-textarea:focus { box-shadow: 0 0 0 2px rgba(94,180,255,0.4); }
+
+    /* Star Input */
+    .star-rating-input { display: flex; gap: 0.25rem; }
+    .star-btn {
+      background: none; border: none; cursor: pointer; padding: 0.25rem;
+      color: rgba(250,204,21,0.3); transition: color 0.15s;
+    }
+    .star-btn .material-symbols-outlined { font-size: 1.75rem; }
+    .star-btn .filled { color: #facc15; font-variation-settings: 'FILL' 1; }
+
+    /* Tags */
+    .tag-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag-pill {
+      background: #0e1442; color: #a3a8d5; border: none;
+      padding: 0.375rem 0.75rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .tag-pill:hover { color: #e2e3ff; }
+    .tag-pill.active { background: #5eb4ff; color: #000; font-weight: 700; }
+
+    .btn-submit {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
       background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
+      color: #000; border: none; border-radius: 0.75rem;
+      padding: 0.875rem; font-weight: 700; font-size: 0.875rem;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 8px 24px rgba(94,180,255,0.2);
+    }
+    .btn-submit:hover { box-shadow: 0 12px 32px rgba(94,180,255,0.3); }
+    .btn-submit:active { transform: scale(0.95); }
+
+    /* Feed */
+    .feed-section { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+    .feed-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+    .feed-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0; }
+    .feed-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .feed-pill {
+      padding: 0.375rem 1rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600;
+      background: #0e1442; color: #a3a8d5; border: none;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .feed-pill:hover { color: #e2e3ff; }
+    .feed-pill.active { background: #5eb4ff; color: #000; font-weight: 700; }
+
+    /* Review Card */
+    .review-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .review-card {
+      background: rgba(24,32,86,0.6); backdrop-filter: blur(20px);
+      border-radius: 1.5rem; padding: 2rem;
+      animation: fadeUp 0.4s ease;
+      transition: background 0.2s;
+    }
+    .review-card:hover { background: rgba(24,32,86,0.8); }
+    .review-card.featured {
+      border-left: 3px solid #5eb4ff;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .reviewer-info { display: flex; align-items: center; gap: 1rem; }
+    .avatar {
+      width: 2.75rem; height: 2.75rem; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      color: #003151; font-weight: 700; font-size: 0.85rem;
+      font-weight: 800; font-size: 0.875rem; color: #000;
     }
-    .review-user h4 { color: #e2e3ff; font-size: 0.95rem; }
-    .review-date { font-size: 0.75rem; color: #6e739d; }
-    .review-stars .material-icons { font-size: 1rem; color: #40456c; }
-    .review-stars .material-icons.filled { color: #F59E0B; }
+    .reviewer-name { margin: 0; font-size: 1rem; font-weight: 700; }
+    .review-date { font-size: 0.75rem; color: #a3a8d5; }
+    .review-rating { display: flex; gap: 0.125rem; }
+    .star-filled { color: #facc15; font-size: 1rem; font-variation-settings: 'FILL' 1; }
+    .star-empty { color: rgba(250,204,21,0.2); font-size: 1rem; }
 
-    .review-target {
-      display: flex; align-items: center; gap: 0.5rem;
-      margin-bottom: 0.75rem;
+    .reviewed-biz {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #0e1442; padding: 0.5rem 0.75rem; border-radius: 0.5rem;
+      margin-bottom: 1rem;
     }
-    .review-target .material-icons { font-size: 1rem; color: #5eb4ff; }
-    .review-target a { color: #5eb4ff; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
-    .review-target a:hover { text-decoration: underline; }
+    .biz-icon { font-size: 1rem; color: #5eb4ff; }
+    .biz-name { font-size: 0.875rem; font-weight: 700; color: #e2e3ff; }
+    .biz-category { font-size: 0.625rem; color: #a3a8d5; text-transform: uppercase; letter-spacing: 0.1em; }
 
-    .review-text { color: #a3a8d5; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+    .review-body { color: #a3a8d5; font-size: 0.95rem; line-height: 1.7; margin: 0 0 1rem; }
+
+    .review-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .review-tag { font-size: 0.75rem; font-weight: 700; color: #fc9df7; }
 
     .review-actions { display: flex; gap: 1rem; }
     .action-btn {
-      display: flex; align-items: center; gap: 0.3rem;
-      background: transparent; border: none; color: #6e739d;
-      font-size: 0.8rem; cursor: pointer; transition: color 0.2s;
+      display: flex; align-items: center; gap: 0.375rem;
+      background: none; border: none; color: #a3a8d5;
+      font-size: 0.75rem; font-weight: 600;
+      cursor: pointer; transition: color 0.2s;
     }
-    .action-btn:hover { color: #e2e3ff; }
-    .action-btn .material-icons { font-size: 1rem; }
+    .action-btn:hover { color: #5eb4ff; }
+    .action-btn.liked { color: #ff516c; }
+    .action-btn .material-symbols-outlined { font-size: 1rem; }
 
-    @media (max-width: 768px) {
-      .stats-bar { flex-direction: column; gap: 1.5rem; }
+    /* Load More */
+    .load-more-wrap { display: flex; justify-content: center; padding: 2rem 0; }
+    .btn-load-more {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1.5rem; border-radius: 9999px;
+      border: 1px solid rgba(64,69,108,0.3);
+      background: transparent; color: #a3a8d5;
+      font-weight: 700; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-load-more:hover { color: #5eb4ff; border-color: #5eb4ff; }
+    .btn-load-more .material-symbols-outlined { font-size: 0.875rem; }
+
+    @media (max-width: 900px) {
+      .main-layout { flex-direction: column; }
+      .submit-section { width: 100%; position: static; }
     }
   `]
 })
 export class ReviewsComponent implements OnInit {
   activeFilter = 'all';
+  availableTags = ['Clean', 'Friendly', 'Quick', 'Value', 'Professional', 'Authentic'];
+
+  newReview = {
+    businessName: '',
+    rating: 0,
+    comment: '',
+    tags: [] as string[]
+  };
+
   reviews = [
-    { userName: 'Sarah Mitchell', initials: 'SM', rating: 5, date: '2 days ago', targetType: 'shop', targetId: 1, targetName: 'The Golden Crust', comment: 'Absolutely incredible sourdough! The best I\'ve had in town. The atmosphere is cozy and the staff are always friendly and welcoming.', helpful: 24 },
-    { userName: 'James Kim', initials: 'JK', rating: 4, date: '5 days ago', targetType: 'service', targetId: 1, targetName: 'Urban Fade Barbershop', comment: 'Great haircut and the hot towel service was a nice touch. The shop was clean and professional. Would recommend to anyone looking for a quality barber.', helpful: 18 },
-    { userName: 'Priya Patel', initials: 'PP', rating: 5, date: '1 week ago', targetType: 'shop', targetId: 2, targetName: 'Iron Haven Gym', comment: 'Best gym in the neighborhood. The equipment is top-notch and the personal trainers really know what they\'re doing. Worth every penny!', helpful: 31 },
-    { userName: 'Marcus Chen', initials: 'MC', rating: 3, date: '2 weeks ago', targetType: 'service', targetId: 2, targetName: 'Quick Fix Tech', comment: 'They fixed my laptop screen but it took longer than expected. The quality of work was good though. Fair pricing for the area.', helpful: 7 }
+    { name: 'Priya S.', initials: 'PS', rating: 5, date: '2 hours ago', businessName: 'The Golden Crust', category: 'Bakery', comment: 'The sourdough bread here is absolutely phenomenal. Crispy crust, soft interior, and the aroma fills the entire street. Best bakery discovery I\'ve made through Nikat!', tags: ['Authentic', 'Value'], avatarColor: '#fc9df7', likes: 24, liked: false },
+    { name: 'Rahul M.', initials: 'RM', rating: 4, date: '5 hours ago', businessName: 'TechFix Pro', category: 'Electronics', comment: 'Got my iPhone screen replaced in under 45 minutes. The quality is excellent and the price was very reasonable compared to the authorized service center. Highly recommend!', tags: ['Quick', 'Professional'], avatarColor: '#5eb4ff', likes: 18, liked: false },
+    { name: 'Ananya K.', initials: 'AK', rating: 5, date: '1 day ago', businessName: 'Sweet Delights', category: 'Sweets', comment: 'Their milk cake is to die for! Pure ghee taste that reminds me of my grandmother\'s kitchen. The kaju katli is equally impressive. A hidden gem in the neighborhood.', tags: ['Authentic', 'Friendly'], avatarColor: '#6bfe9c', likes: 42, liked: false },
+    { name: 'Vikram J.', initials: 'VJ', rating: 3, date: '2 days ago', businessName: 'Quick Stitch', category: 'Tailoring', comment: 'Decent tailoring work but delivery took longer than promised. The fitting was good though, and the fabric quality was maintained. Would give another chance.', tags: ['Professional'], avatarColor: '#facc15', likes: 6, liked: false },
+    { name: 'Meera D.', initials: 'MD', rating: 5, date: '3 days ago', businessName: 'Green Basket', category: 'Grocery', comment: 'Finally found a reliable source for organic vegetables! Everything is fresh and the prices are fair. Their home delivery is super quick too. Love this service!', tags: ['Clean', 'Value', 'Quick'], avatarColor: '#ff8c42', likes: 31, liked: false }
   ];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
     this.apiService.getReviews().subscribe({
-      next: (reviews: any[]) => {
-        if (reviews && reviews.length > 0) {
-          this.reviews = reviews.map((r: any) => ({
-            userName: r.reviewerName || 'Anonymous', initials: (r.reviewerName || 'A')[0],
-            rating: r.rating || 4, date: 'Recently',
-            targetType: r.shopId ? 'shop' : 'service', targetId: r.shopId || r.serviceId || 1,
-            targetName: r.shopName || r.serviceName || 'Business',
-            comment: r.comment || '', helpful: 0
+      next: (data: any[]) => {
+        if (data && data.length > 0) {
+          const apiReviews = data.map(r => ({
+            name: r.userName || 'Anonymous',
+            initials: (r.userName || 'A').substring(0, 2).toUpperCase(),
+            rating: r.rating || 4,
+            date: r.createdAt || 'Recently',
+            businessName: r.shopName || r.serviceName || '',
+            category: r.category || '',
+            comment: r.comment || '',
+            tags: [],
+            avatarColor: '#5eb4ff',
+            likes: r.likes || 0,
+            liked: false
           }));
+          this.reviews = [...apiReviews, ...this.reviews];
         }
       }
     });
+  }
+
+  toggleTag(tag: string) {
+    const idx = this.newReview.tags.indexOf(tag);
+    if (idx > -1) {
+      this.newReview.tags.splice(idx, 1);
+    } else {
+      this.newReview.tags.push(tag);
+    }
+  }
+
+  submitReview() {
+    if (!this.newReview.businessName || !this.newReview.rating || !this.newReview.comment) return;
+    const review = {
+      name: 'You',
+      initials: 'YO',
+      rating: this.newReview.rating,
+      date: 'Just now',
+      businessName: this.newReview.businessName,
+      category: '',
+      comment: this.newReview.comment,
+      tags: [...this.newReview.tags],
+      avatarColor: '#5eb4ff',
+      likes: 0,
+      liked: false
+    };
+    this.reviews.unshift(review);
+    this.newReview = { businessName: '', rating: 0, comment: '', tags: [] };
   }
 
   getStars(n: number): number[] { return Array(Math.floor(n)).fill(0); }

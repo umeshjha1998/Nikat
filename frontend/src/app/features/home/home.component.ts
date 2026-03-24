@@ -1,33 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="landing-premium-wrapper">
-      <!-- Navbar (Integrated for overlay look) -->
-      <nav class="premium-nav">
-        <div class="nav-brand">
-          <div class="brand-hexagon-small">
-            <span class="material-icons">architecture</span>
-          </div>
-          <h1>Nikat</h1>
-        </div>
-        <div class="nav-links">
-          <a routerLink="/browse">Explore</a>
-          <a routerLink="/community">Community</a>
-          <a routerLink="/help">Resources</a>
-        </div>
-        <div class="nav-auth">
-          <button class="btn-text" routerLink="/login">Sign In</button>
-          <button class="btn-prime-glow" routerLink="/register">Get Started</button>
-        </div>
-      </nav>
-
       <!-- Hero Section -->
       <header class="hero-premium">
         <div class="hero-visual-layer">
@@ -199,35 +181,13 @@ import { ApiService } from '../../core/api.service';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
     :host {
-      --primary: #3b82f6;
-      --accent: #22c55e;
-      --bg: #020410;
-      --glass: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
     }
 
-    .landing-premium-wrapper { background: var(--bg); color: #fff; min-height: 100vh; overflow-x: hidden; }
-
-    /* Nav */
-    .premium-nav { position: absolute; top: 0; left: 0; right: 0; padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between; z-index: 100; }
-    .nav-brand { display: flex; align-items: center; gap: 0.75rem; }
-    .nav-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
-    .brand-hexagon-small { width: 32px; height: 32px; background: var(--primary); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; }
-    .brand-hexagon-small .material-icons { font-size: 1.1rem; }
-
-    .nav-links { display: flex; gap: 2.5rem; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: 0.2s; }
-    .nav-links a:hover { color: #fff; }
-
-    .nav-auth { display: flex; align-items: center; gap: 1.5rem; }
-    .btn-text { background: transparent; border: none; color: #fff; font-weight: 700; cursor: pointer; }
-    .btn-prime-glow { background: var(--primary); border: none; color: #fff; padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 0 20px rgba(59,130,246,0.3); transition: 0.2s; }
-    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(59,130,246,0.5); }
+    .landing-premium-wrapper { background: var(--bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; transition: all 0.3s ease; }
 
     /* Hero */
-    .hero-premium { min-height: 90vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; }
+    .hero-premium { min-height: 80vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; }
     .hero-visual-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
     .glow-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(150px); opacity: 0.15; }
     .orb-gold { background: #f59e0b; top: -10%; right: -10%; }
@@ -240,10 +200,10 @@ import { ApiService } from '../../core/api.service';
     .text-gradient { background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero-desc { font-size: 1.35rem; color: var(--text-muted); line-height: 1.6; max-width: 700px; margin: 0 auto 3.5rem; }
 
-    .search-container-premium { background: rgba(13, 18, 45, 0.6); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 0.75rem; border-radius: 2rem; display: flex; align-items: center; gap: 1rem; max-width: 680px; margin: 0 auto 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+    .search-container-premium { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 0.75rem; border-radius: 2rem; display: flex; align-items: center; gap: 1rem; max-width: 680px; margin: 0 auto 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.2); transition: all 0.3s ease; }
     .s-input-group { flex: 1; display: flex; align-items: center; gap: 1rem; padding-left: 1.25rem; }
     .s-input-group .material-icons { color: var(--text-muted); }
-    .s-input-group input { background: transparent; border: none; color: #fff; font-size: 1.1rem; width: 100%; outline: none; }
+    .s-input-group input { background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; width: 100%; outline: none; }
     .btn-action-glow { background: var(--primary); border: none; color: #fff; padding: 1rem 2rem; border-radius: 1.5rem; font-weight: 800; cursor: pointer; transition: 0.2s; }
     .btn-action-glow:hover { transform: scale(1.02); }
 
@@ -303,7 +263,7 @@ import { ApiService } from '../../core/api.service';
     .v-rect .material-icons { font-size: 5rem; color: var(--primary); }
 
     /* Footer */
-    .footer-premium { background: #000; padding: 8rem 4rem 4rem; }
+    .footer-premium { background: var(--bg); border-top: 1px solid var(--border-color); padding: 8rem 4rem 4rem; }
     .f-top { display: flex; gap: 10rem; margin-bottom: 8rem; }
     .f-col-brand { max-width: 340px; }
     .f-col-brand p { color: var(--text-muted); margin: 2rem 0; line-height: 1.6; font-weight: 600; }

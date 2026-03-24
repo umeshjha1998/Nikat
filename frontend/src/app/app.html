@@ -7,13 +7,16 @@
     </div>
     
     <nav class="desktop-nav">
-      <a routerLink="/browse" routerLinkActive="active">Discover</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Discover</a>
+      <a routerLink="/browse" routerLinkActive="active">Shops</a>
       <a routerLink="/services" routerLinkActive="active">Services</a>
-      <a routerLink="/browse" routerLinkActive="active" [queryParams]="{view: 'shops'}">Shops</a>
       <a routerLink="/community" routerLinkActive="active">Community</a>
     </nav>
 
     <div class="header-actions">
+      <button class="theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <span class="material-icons">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
       <a routerLink="/login" class="btn btn-secondary nav-btn">Sign In</a>
       <a routerLink="/register" class="btn btn-primary glow-effect nav-btn">Join Now</a>
     </div>
