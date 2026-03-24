@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../core/api.service';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-community',
@@ -57,15 +58,15 @@ import { ApiService } from '../../core/api.service';
                 </div>
                 <div class="p-footer">
                   <div class="p-stats">
-                    <div class="s-item">
+                    <div class="s-item" (click)="onLike(post)">
                       <span class="material-symbols-outlined">favorite_border</span>
                       <span>24</span>
                     </div>
-                    <div class="s-item">
+                    <div class="s-item" (click)="onComment(post)">
                       <span class="material-symbols-outlined">chat_bubble_outline</span>
                       <span>12</span>
                     </div>
-                    <div class="s-item">
+                    <div class="s-item" (click)="onShare(post)">
                       <span class="material-symbols-outlined">share</span>
                     </div>
                   </div>
@@ -81,7 +82,7 @@ import { ApiService } from '../../core/api.service';
                 </div>
                 <h3>Start the conversation</h3>
                 <p>Be the first to share something with your community.</p>
-                <button class="btn-prime-glow">Create First Post</button>
+                <button class="btn-prime-glow" (click)="createPost()">Create First Post</button>
               </div>
             </ng-template>
           </div>
@@ -112,7 +113,7 @@ import { ApiService } from '../../core/api.service';
                 <h4>Weekend Mixer</h4>
               </div>
               <p>Join us at Central Plaza this Saturday for local music and food.</p>
-              <button class="btn-glass-full">Join Event</button>
+              <button class="btn-glass-full" (click)="joinEvent()">Join Event</button>
             </section>
 
             <section class="member-preview">
@@ -302,7 +303,11 @@ import { ApiService } from '../../core/api.service';
 export class CommunityComponent implements OnInit {
   posts: any[] = [];
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.apiService.getCommunityPosts().subscribe({
@@ -340,5 +345,39 @@ export class CommunityComponent implements OnInit {
         ];
       }
     });
+  }
+
+  /** Redirects to login if not authenticated; returns true if logged in */
+  private requireLogin(): boolean {
+    if (!this.authService.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
+  }
+
+  onLike(post: any): void {
+    if (!this.requireLogin()) return;
+    // TODO: Like post logic
+  }
+
+  onComment(post: any): void {
+    if (!this.requireLogin()) return;
+    // TODO: Open comment section / navigate to post detail
+  }
+
+  onShare(post: any): void {
+    if (!this.requireLogin()) return;
+    // TODO: Share post logic
+  }
+
+  createPost(): void {
+    if (!this.requireLogin()) return;
+    // TODO: Navigate to create post form
+  }
+
+  joinEvent(): void {
+    if (!this.requireLogin()) return;
+    // TODO: Join event logic
   }
 }

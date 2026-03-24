@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-shop-detail',
@@ -16,7 +17,7 @@ import { ApiService } from '../../../core/api.service';
           Back to Shops
         </a>
         <div class="top-actions">
-          <button class="btn-icon-glass" (click)="isFavorited = !isFavorited">
+          <button class="btn-icon-glass" (click)="toggleFavorite()">
             <span class="material-symbols-outlined" [class.filled]="isFavorited">{{isFavorited ? 'favorite' : 'favorite_border'}}</span>
           </button>
           <button class="btn-icon-glass">
@@ -80,7 +81,7 @@ import { ApiService } from '../../../core/api.service';
       <!-- Action Hub -->
       <section class="action-hub">
         <div class="action-cards">
-          <div class="action-card primary-action" [routerLink]="['/book-service', shopId]">
+          <div class="action-card primary-action" (click)="bookAppointment()">
             <span class="material-symbols-outlined action-icon">calendar_today</span>
             <div>
               <h4>Book Appointment</h4>
@@ -131,7 +132,7 @@ import { ApiService } from '../../../core/api.service';
                     <span class="material-symbols-outlined">schedule</span>
                     {{p.time}}
                   </span>
-                  <button class="btn-add">
+                  <button class="btn-add" (click)="addProduct(p)">
                     <span class="material-symbols-outlined">add</span>
                     Add
                   </button>
@@ -561,7 +562,12 @@ export class ShopDetailComponent implements OnInit {
     { day: 'Sunday', time: 'Closed', closed: true }
   ];
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.shopId = this.route.snapshot.paramMap.get('id');
@@ -582,6 +588,31 @@ export class ShopDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  /** Redirects to login if not authenticated; returns true if logged in */
+  private requireLogin(): boolean {
+    if (!this.authService.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
+  }
+
+  bookAppointment(): void {
+    if (this.requireLogin()) {
+      this.router.navigate(['/book-service', this.shopId]);
+    }
+  }
+
+  addProduct(product: any): void {
+    if (!this.requireLogin()) return;
+    // TODO: Add product to cart logic
+  }
+
+  toggleFavorite(): void {
+    if (!this.requireLogin()) return;
+    this.isFavorited = !this.isFavorited;
   }
 
   getStars(n: number): number[] { return Array(Math.floor(n)).fill(0); }

@@ -44,6 +44,21 @@ export class App {
     this.themeService.toggleTheme();
   }
 
+  goToDashboard(): void {
+    const user = this.authService.currentUser;
+    if (!user) return;
+
+    if (user.role === 'ADMIN') {
+      this.router.navigate(['/admin']);
+    } else if (user.isShopOwner) {
+      this.router.navigate(['/shop-dashboard']);
+    } else if (user.isServiceProvider) {
+      this.router.navigate(['/provider-dashboard']);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);

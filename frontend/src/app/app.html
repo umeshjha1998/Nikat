@@ -25,7 +25,7 @@
       <!-- Logged in: Show user menu with logout -->
       <ng-container *ngIf="isLoggedIn">
         <div class="user-menu">
-          <div class="user-avatar" [title]="userDisplayName">{{ userInitial }}</div>
+          <div class="user-avatar" title="Go to Dashboard" (click)="goToDashboard()">{{ userInitial }}</div>
           <span class="user-greeting">{{ currentUser?.firstName }}</span>
           <button class="btn-logout" (click)="logout()" title="Logout">
             <span class="material-icons">logout</span>
