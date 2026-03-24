@@ -9,208 +9,425 @@ import { ApiService } from '../../../core/api.service';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="dashboard-layout">
+      <!-- Sidebar -->
       <aside class="dashboard-sidebar">
-        <div class="user-profile-summary">
-          <div class="avatar provider"><span class="material-icons">design_services</span></div>
-          <div class="user-info">
-            <h3>Service Provider</h3>
-            <p>Management Portal</p>
+        <div class="business-brand">
+          <div class="brand-hexagon provider">
+            <span class="material-icons">architecture</span>
+          </div>
+          <div class="brand-text">
+            <h3>Pro Studio</h3>
+            <p>Nikat for Experts</p>
           </div>
         </div>
+
         <nav class="sidebar-nav">
-          <a class="nav-item active"><span class="material-icons">space_dashboard</span> Overview</a>
-          <a class="nav-item"><span class="material-icons">calendar_month</span> Appointments</a>
-          <a class="nav-item"><span class="material-icons">build</span> My Services</a>
-          <a class="nav-item"><span class="material-icons">group</span> Clients</a>
-          <a class="nav-item"><span class="material-icons">star</span> Reviews</a>
-          <a class="nav-item"><span class="material-icons">settings</span> Settings</a>
+          <a class="nav-item active">
+            <span class="material-icons">auto_graph</span>
+            <span>Performance</span>
+          </a>
+          <a class="nav-item">
+            <span class="material-icons">calendar_month</span>
+            <span>Schedule</span>
+          </a>
+          <a class="nav-item">
+            <span class="material-icons">design_services</span>
+            <span>Services</span>
+          </a>
+          <a class="nav-item">
+            <span class="material-icons">group</span>
+            <span>Clients</span>
+          </a>
+          <div class="nav-divider"></div>
+          <a class="nav-item">
+            <span class="material-icons">star_outline</span>
+            <span>Reviews</span>
+          </a>
+          <a class="nav-item">
+            <span class="material-icons">settings</span>
+            <span>Settings</span>
+          </a>
         </nav>
+
+        <div class="user-profile-mini">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" alt="avatar" class="mini-avatar">
+          <div class="user-details">
+            <span class="name">Elena V.</span>
+            <span class="role">Lead Stylist</span>
+          </div>
+          <span class="material-icons">expand_more</span>
+        </div>
       </aside>
 
+      <!-- Main Content -->
       <main class="dashboard-main">
         <header class="dashboard-header">
-          <div>
+          <div class="header-titles">
             <h1>Service Dashboard</h1>
-            <p class="subtitle">Manage appointments, clients, and services</p>
+            <p class="subtitle">Efficiently managing your time, clients, and professional growth.</p>
           </div>
-          <button class="btn-glow"><span class="material-icons">add</span> Add Service</button>
+          <div class="header-actions">
+            <button class="btn-primary-glow">
+              <span class="material-icons">add</span>
+              Add Service
+            </button>
+          </div>
         </header>
 
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon appts"><span class="material-icons">event_available</span></div>
-            <div class="stat-content">
+        <!-- Stats Overview -->
+        <div class="stats-container">
+          <div class="stat-card-glass">
+            <div class="stat-header">
               <span class="stat-label">Today's Appointments</span>
+            </div>
+            <div class="stat-main">
               <span class="stat-value">5</span>
-              <span class="stat-change">Next at 2:30 PM</span>
+              <span class="stat-sub">Next: 2:30 PM</span>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon earnings"><span class="material-icons">account_balance_wallet</span></div>
-            <div class="stat-content">
-              <span class="stat-label">This Month's Earnings</span>
+
+          <div class="stat-card-glass">
+            <div class="stat-header">
+              <span class="stat-label">Monthly Earnings</span>
+              <span class="trend positive">+15.3%</span>
+            </div>
+            <div class="stat-main">
               <span class="stat-value">₹32,400</span>
-              <span class="stat-change positive">+15.3% from last month</span>
+              <div class="earnings-bar"></div>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon clients"><span class="material-icons">people</span></div>
-            <div class="stat-content">
-              <span class="stat-label">Total Clients</span>
+
+          <div class="stat-card-glass">
+            <div class="stat-header">
+              <span class="stat-label">Clients</span>
+              <span class="trend positive">+4 new</span>
+            </div>
+            <div class="stat-main">
               <span class="stat-value">67</span>
-              <span class="stat-change positive">+4 new this week</span>
+              <div class="client-avatars">
+                <img src="https://i.pravatar.cc/150?u=1" alt="c">
+                <img src="https://i.pravatar.cc/150?u=2" alt="c">
+                <img src="https://i.pravatar.cc/150?u=3" alt="c">
+                <span class="more">+64</span>
+              </div>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon rating"><span class="material-icons">star</span></div>
-            <div class="stat-content">
-              <span class="stat-label">Average Rating</span>
+
+          <div class="stat-card-glass">
+            <div class="stat-header">
+              <span class="stat-label">Avg Rating</span>
+              <span class="material-icons rating-icon">star</span>
+            </div>
+            <div class="stat-main">
               <span class="stat-value">4.8</span>
-              <span class="stat-change positive">Based on 56 reviews</span>
+              <span class="stat-sub">56 Reviews</span>
             </div>
           </div>
         </div>
 
-        <!-- Today's Schedule -->
-        <section class="dashboard-section">
-          <div class="section-header">
-            <h2>Today's Schedule</h2>
-            <a class="view-all">Full Calendar <span class="material-icons">arrow_forward</span></a>
-          </div>
-          <div class="schedule-list">
-            <div class="schedule-item" *ngFor="let apt of todayAppointments" [class.current]="apt.current">
-              <div class="time-block">
-                <span class="time">{{apt.time}}</span>
-                <span class="duration">{{apt.duration}}</span>
+        <div class="dashboard-grid">
+          <!-- Left Column: Schedule -->
+          <div class="grid-col-2">
+            <section class="content-card-dark">
+              <div class="card-header">
+                <h2>Today's Schedule</h2>
+                <a class="link-btn">Full Calendar</a>
               </div>
-              <div class="divider-line" [class.active]="apt.current"></div>
-              <div class="appointment-info">
-                <h4>{{apt.service}}</h4>
-                <p>{{apt.client}} · {{apt.location}}</p>
+              <div class="schedule-timeline">
+                <div class="schedule-item" *ngFor="let apt of todayAppointments" [class.current]="apt.current">
+                  <div class="time-slot">
+                    <span class="time">{{apt.time}}</span>
+                    <span class="duration">{{apt.duration}}</span>
+                  </div>
+                  <div class="timeline-dot" [class.active]="apt.current"></div>
+                  <div class="appointment-card">
+                    <div class="apt-header">
+                      <h3>{{apt.service}}</h3>
+                      <span class="apt-status" [class]="apt.status">{{apt.status}}</span>
+                    </div>
+                    <p class="apt-meta">
+                      <span class="material-icons">person</span> {{apt.client}}
+                      <span class="divider">|</span>
+                      <span class="material-icons">location_on</span> {{apt.location}}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <span class="apt-status" [class]="apt.status">{{apt.status}}</span>
-            </div>
+            </section>
           </div>
-        </section>
 
-        <!-- Active Services -->
-        <section class="dashboard-section">
-          <div class="section-header">
-            <h2>Active Services</h2>
-          </div>
-          <div class="services-grid">
-            <div class="service-card" *ngFor="let svc of activeServices">
-              <div class="service-header">
-                <span class="service-icon"><span class="material-icons">{{svc.icon}}</span></span>
-                <h4>{{svc.name}}</h4>
+          <!-- Right Column: Active Services -->
+          <div class="grid-col-1">
+            <section class="content-card-dark">
+              <div class="card-header">
+                <h2>Active Services</h2>
               </div>
-              <p class="service-desc">{{svc.description}}</p>
-              <div class="service-footer">
-                <span class="price">₹{{svc.price}}</span>
-                <span class="bookings">{{svc.bookings}} bookings</span>
+              <div class="services-mini-list">
+                <div class="service-mini-card" *ngFor="let svc of activeServices">
+                  <div class="svc-icon-box">
+                    <span class="material-icons">{{svc.icon}}</span>
+                  </div>
+                  <div class="svc-details">
+                    <h4>{{svc.name}}</h4>
+                    <div class="svc-stats">
+                      <span class="price">₹{{svc.price}}</span>
+                      <span class="bookings">{{svc.bookings}} bookings</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+              <button class="btn-full-width">Manage all Services</button>
+            </section>
+
+            <section class="content-card-dark upgrade-panel">
+              <span class="material-icons-outlined crown">workspace_premium</span>
+              <h3>Nikat Premium</h3>
+              <p>Unlock advanced analytics and client automated reminders.</p>
+              <button class="btn-premium">Upgrade Now</button>
+            </section>
           </div>
-        </section>
+        </div>
       </main>
     </div>
   `,
   styles: [`
-    .dashboard-layout { display: flex; min-height: 100vh; background: #05092f; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
-    .dashboard-sidebar { width: 270px; background: #080e38; border-right: 1px solid rgba(255,255,255,0.05); padding: 2rem 0; flex-shrink: 0; }
-    .user-profile-summary { display: flex; align-items: center; gap: 1rem; padding: 0 1.5rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .avatar.provider { background: linear-gradient(135deg, #c084fc, #8b5cf6); color: #1a0040; }
-    .avatar .material-icons { font-size: 1.5rem; }
-    .user-info h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 700; color: #e2e3ff; }
-    .user-info p { font-size: 0.8rem; color: #6e739d; }
+    :host {
+      --primary: #c084fc;
+      --primary-glow: rgba(192, 132, 252, 0.3);
+      --bg-deep: #050921;
+      --bg-surface: rgba(26, 14, 58, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-main: #e2e3ff;
+      --text-muted: #a3a8d5;
+      font-family: 'Manrope', sans-serif;
+    }
 
-    .sidebar-nav { display: flex; flex-direction: column; gap: 0.25rem; padding: 0 0.75rem; }
-    .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; color: #a3a8d5; text-decoration: none; border-radius: 0.75rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-    .nav-item:hover { background: rgba(255,255,255,0.04); color: #e2e3ff; }
-    .nav-item.active { background: rgba(192,132,252,0.08); color: #c084fc; }
-    .nav-item .material-icons { font-size: 1.25rem; }
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      background: radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                  radial-gradient(circle at 0% 100%, rgba(30, 41, 99, 0.4) 0%, transparent 40%),
+                  #020412;
+      color: var(--text-main);
+    }
 
-    .dashboard-main { flex: 1; padding: 2.5rem; overflow-y: auto; }
+    /* Sidebar - Reusing styles for consistency */
+    .dashboard-sidebar {
+      width: 260px;
+      background: rgba(4, 7, 26, 0.6);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 0;
+      flex-shrink: 0;
+    }
 
-    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .dashboard-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 700; color: #e2e3ff; }
-    .subtitle { font-size: 0.9rem; color: #6e739d; margin-top: 0.25rem; }
-    .btn-glow { display: flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #c084fc, #8b5cf6); border: none; color: #1a0040; font-weight: 700; padding: 0.75rem 1.5rem; border-radius: 2rem; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
-    .btn-glow:hover { box-shadow: 0 6px 20px rgba(192,132,252,0.3); }
-    .btn-glow .material-icons { font-size: 1.1rem; }
+    .business-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 1.5rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
-    .stat-card { background: #080e38; border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; transition: all 0.2s; }
-    .stat-card:hover { border-color: #40456c; }
-    .stat-icon { width: 50px; height: 50px; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; }
-    .stat-icon.appts { background: rgba(192,132,252,0.1); color: #c084fc; }
-    .stat-icon.earnings { background: rgba(107,254,156,0.1); color: #6bfe9c; }
-    .stat-icon.clients { background: rgba(94,180,255,0.1); color: #5eb4ff; }
-    .stat-icon.rating { background: rgba(245,158,11,0.1); color: #F59E0B; }
-    .stat-icon .material-icons { font-size: 1.5rem; }
-    .stat-content { display: flex; flex-direction: column; }
-    .stat-label { font-size: 0.8rem; color: #6e739d; }
-    .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #e2e3ff; }
-    .stat-change { font-size: 0.75rem; color: #6e739d; }
-    .stat-change.positive { color: #6bfe9c; }
+    .brand-hexagon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
 
-    .dashboard-section { background: #080e38; border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
-    .section-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.2rem; color: #e2e3ff; }
-    .view-all { display: flex; align-items: center; gap: 0.25rem; font-size: 0.85rem; color: #c084fc; cursor: pointer; font-weight: 600; text-decoration: none; }
-    .view-all .material-icons { font-size: 1rem; }
+    .brand-text h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      margin: 0;
+      color: #fff;
+    }
 
-    .schedule-list { display: flex; flex-direction: column; gap: 0; }
-    .schedule-item { display: flex; align-items: center; gap: 1.25rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .schedule-item.current { background: rgba(192,132,252,0.04); margin: 0 -1.5rem; padding: 1rem 1.5rem; border-radius: 0.75rem; }
-    .time-block { text-align: right; min-width: 70px; }
-    .time { display: block; font-weight: 700; color: #e2e3ff; font-size: 0.9rem; }
-    .duration { font-size: 0.75rem; color: #6e739d; }
-    .divider-line { width: 3px; height: 40px; background: #40456c; border-radius: 2px; }
-    .divider-line.active { background: #c084fc; }
-    .appointment-info { flex: 1; }
-    .appointment-info h4 { font-size: 0.95rem; color: #e2e3ff; }
-    .appointment-info p { font-size: 0.8rem; color: #6e739d; }
-    .apt-status { padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; text-transform: capitalize; }
-    .apt-status.confirmed { background: rgba(107,254,156,0.1); color: #6bfe9c; }
-    .apt-status.upcoming { background: rgba(94,180,255,0.1); color: #5eb4ff; }
-    .apt-status.completed { background: rgba(110,115,157,0.15); color: #a3a8d5; }
+    .brand-text p {
+      margin: 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
 
-    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-    .service-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 0.75rem; padding: 1.25rem; transition: all 0.2s; }
-    .service-card:hover { border-color: #40456c; }
-    .service-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
-    .service-icon { width: 36px; height: 36px; border-radius: 0.5rem; background: rgba(192,132,252,0.1); display: flex; align-items: center; justify-content: center; }
-    .service-icon .material-icons { font-size: 1.1rem; color: #c084fc; }
-    .service-header h4 { font-size: 0.95rem; color: #e2e3ff; }
-    .service-desc { font-size: 0.8rem; color: #6e739d; margin-bottom: 1rem; line-height: 1.5; }
-    .service-footer { display: flex; justify-content: space-between; align-items: center; }
-    .price { font-weight: 800; color: #6bfe9c; font-size: 1rem; }
-    .bookings { font-size: 0.75rem; color: #6e739d; }
+    .sidebar-nav {
+      margin-top: 2rem;
+      padding: 0 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
 
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: rgba(192, 132, 252, 0.1);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute; left: 0; top: 20%; bottom: 20%; width: 3px;
+      background: var(--primary); border-radius: 0 4px 4px 0;
+      box-shadow: 2px 0 10px var(--primary-glow);
+    }
+
+    .nav-divider { height: 1px; background: rgba(255, 255, 255, 0.05); margin: 1rem 0; }
+
+    .user-profile-mini {
+      padding: 1.25rem; margin: 0 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    .mini-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.1); }
+    .user-details { flex: 1; display: flex; flex-direction: column; }
+    .user-details .name { font-size: 0.85rem; font-weight: 700; color: #fff; }
+    .user-details .role { font-size: 0.7rem; color: var(--text-muted); }
+
+    /* Main Content */
+    .dashboard-main { flex: 1; padding: 3rem; overflow-y: auto; }
+
+    .dashboard-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; }
+    .header-titles h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem; font-weight: 800; margin: 0 0 0.5rem 0;
+      background: linear-gradient(135deg, #fff 0%, #a3a8d5 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-titles .subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 500px; }
+
+    .btn-primary-glow {
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      border: none; color: #1a0040; padding: 0.85rem 1.75rem; border-radius: 2rem;
+      font-weight: 700; display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; box-shadow: 0 4px 20px var(--primary-glow); transition: all 0.3s ease;
+    }
+
+    /* Stats Grid */
+    .stats-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card-glass {
+      background: var(--bg-surface); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px); border-radius: 1.5rem; padding: 1.75rem;
+    }
+    .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: #fff; display: block; }
+    .stat-sub { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    .trend.positive { color: #6bfe9c; font-size: 0.8rem; font-weight: 800; }
+    .rating-icon { color: #ffb800; }
+
+    .earnings-bar { height: 4px; width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 2px; margin-top: 1rem; position: relative; }
+    .earnings-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 65%; background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
+
+    .client-avatars { display: flex; align-items: center; margin-top: 0.75rem; }
+    .client-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--bg-deep); margin-left: -8px; }
+    .client-avatars img:first-child { margin-left: 0; }
+    .client-avatars .more { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-left: 8px; }
+
+    /* Dashboard Grid */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
+    .content-card-dark { background: rgba(8, 12, 40, 0.5); border: 1px solid var(--glass-border); border-radius: 1.5rem; padding: 2rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .card-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 700; margin: 0; }
+    .link-btn { font-size: 0.9rem; color: var(--primary); font-weight: 700; cursor: pointer; }
+
+    /* Timeline */
+    .schedule-timeline { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 100px; }
+    .schedule-timeline::before { content: ''; position: absolute; left: 118px; top: 0; bottom: 0; width: 2px; background: rgba(255, 255, 255, 0.05); }
+
+    .schedule-item { display: flex; align-items: flex-start; gap: 2rem; position: relative; padding: 1.5rem 0; }
+    .time-slot { width: 80px; position: absolute; left: -100px; text-align: right; }
+    .time { font-weight: 800; color: #fff; display: block; font-size: 1rem; }
+    .duration { font-size: 0.75rem; color: var(--text-muted); }
+
+    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #1a1e3d; border: 2px solid rgba(255, 255, 255, 0.1); z-index: 1; position: absolute; left: 13px; transform: translateX(-50%); top: 1.8rem; transition: all 0.3s ease; }
+    .timeline-dot.active { border-color: var(--primary); background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
+
+    .appointment-card { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; padding: 1.25rem; transition: all 0.3s ease; }
+    .schedule-item.current .appointment-card { background: rgba(192, 132, 252, 0.08); border-color: rgba(192, 132, 252, 0.2); transform: scale(1.02); }
+    .apt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .apt-header h3 { font-size: 1.1rem; margin: 0; }
+    .apt-meta { margin: 0; color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+    .apt-meta .material-icons { font-size: 0.9rem; color: var(--primary); }
+    .apt-meta .divider { color: rgba(255, 255, 255, 0.1); }
+
+    .apt-status { font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 1rem; text-transform: uppercase; }
+    .apt-status.confirmed { background: rgba(94, 180, 255, 0.15); color: #5eb4ff; }
+    .apt-status.completed { background: rgba(107, 254, 156, 0.15); color: #6bfe9c; }
+    .apt-status.upcoming { background: rgba(255, 255, 255, 0.05); color: #ccc; }
+
+    /* Services List */
+    .services-mini-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+    .service-mini-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.02); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.04); transition: all 0.3s ease; }
+    .service-mini-card:hover { transform: translateX(5px); background: rgba(255, 255, 255, 0.05); }
+    .svc-icon-box { width: 44px; height: 44px; border-radius: 0.75rem; background: rgba(192, 132, 252, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); }
+    .svc-details h4 { font-size: 0.95rem; margin: 0 0 0.25rem 0; }
+    .svc-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
+    .price { color: #6bfe9c; font-weight: 700; }
+    .bookings { color: var(--text-muted); }
+
+    .btn-full-width { width: 100%; padding: 0.85rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: #fff; font-weight: 700; cursor: pointer; }
+
+    .upgrade-panel { margin-top: 2rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(192, 132, 252, 0.05)); border: 1px solid rgba(192, 132, 252, 0.2); text-align: center; }
+    .crown { font-size: 2.5rem; color: #ffb800; margin-bottom: 1rem; }
+    .upgrade-panel h3 { margin: 0 0 0.5rem 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .upgrade-panel p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .btn-premium { width: 100%; padding: 0.85rem; border-radius: 1rem; border: none; background: #fff; color: #000; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2); }
+
+    @media (max-width: 1100px) { .dashboard-grid { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
-      .dashboard-layout { flex-direction: column; }
-      .dashboard-sidebar { width: 100%; }
-      .sidebar-nav { flex-direction: row; overflow-x: auto; }
+      .stats-container { grid-template-columns: repeat(2, 1fr); }
       .dashboard-main { padding: 1.5rem; }
+      .schedule-timeline { padding-left: 80px; }
+      .schedule-timeline::before { left: 98px; }
+      .timeline-dot { left: -7px; }
+      .time-slot { left: -80px; width: 60px; }
     }
   `]
 })
 export class ServiceProviderDashboardComponent implements OnInit {
   todayAppointments = [
     { time: '10:00 AM', duration: '45 min', service: 'Classic Haircut', client: 'Raj P.', location: 'In-store', status: 'completed', current: false },
-    { time: '11:30 AM', duration: '1 hr', service: 'Full Grooming Package', client: 'Amit S.', location: 'In-store', status: 'completed', current: false },
+    { time: '11:00 AM', duration: '1 hr', service: 'Full Grooming Package', client: 'Amit S.', location: 'In-store', status: 'completed', current: false },
     { time: '2:30 PM', duration: '30 min', service: 'Beard Trim & Shape', client: 'Vikram R.', location: 'In-store', status: 'confirmed', current: true },
     { time: '4:00 PM', duration: '1 hr', service: 'Hair Coloring', client: 'Neha K.', location: 'Home visit', status: 'upcoming', current: false },
     { time: '6:00 PM', duration: '45 min', service: 'Premium Fade', client: 'Arjun M.', location: 'In-store', status: 'upcoming', current: false }
   ];
 
   activeServices = [
-    { name: 'Classic Haircut', description: 'Precision cut with shampoo and styling', price: '350', bookings: 45, icon: 'content_cut' },
-    { name: 'Full Grooming Package', description: 'Haircut, beard trim, facial, and scalp massage', price: '1,200', bookings: 28, icon: 'spa' },
-    { name: 'Home Visit - Premium', description: 'Full range of services at your doorstep', price: '1,800', bookings: 12, icon: 'home' }
+    { name: 'Classic Haircut', price: '350', bookings: 45, icon: 'content_cut' },
+    { name: 'Grooming Package', price: '1,200', bookings: 28, icon: 'spa' },
+    { name: 'Home Visit', price: '1,800', bookings: 12, icon: 'home' }
   ];
 
   constructor(private apiService: ApiService) {}

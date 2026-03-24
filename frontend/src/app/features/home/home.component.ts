@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 
 @Component({
@@ -8,771 +8,365 @@ import { ApiService } from '../../core/api.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="home-container">
+    <div class="landing-premium-wrapper">
+      <!-- Navbar (Integrated for overlay look) -->
+      <nav class="premium-nav">
+        <div class="nav-brand">
+          <div class="brand-hexagon-small">
+            <span class="material-icons">architecture</span>
+          </div>
+          <h1>Nikat</h1>
+        </div>
+        <div class="nav-links">
+          <a routerLink="/browse">Explore</a>
+          <a routerLink="/community">Community</a>
+          <a routerLink="/help">Resources</a>
+        </div>
+        <div class="nav-auth">
+          <button class="btn-text" routerLink="/login">Sign In</button>
+          <button class="btn-prime-glow" routerLink="/register">Get Started</button>
+        </div>
+      </nav>
+
       <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="hero-bg-orb orb-1"></div>
-        <div class="hero-bg-orb orb-2"></div>
+      <header class="hero-premium">
+        <div class="hero-visual-layer">
+          <div class="glow-orb orb-gold"></div>
+          <div class="glow-orb orb-blue"></div>
+          <div class="grid-mesh"></div>
+        </div>
+        
         <div class="hero-content">
-          <span class="hero-badge">✦ Your Neighborhood, Reimagined</span>
-          <h1>Find the soul<br>of your city.</h1>
-          <p>Discover hidden gems, trusted services, and vibrant local businesses — all curated for your community.</p>
-          <div class="search-bar">
-            <span class="material-icons search-icon">search</span>
-            <input type="text" placeholder="Search for 'Barbershop', 'Cafe', 'Plumber'..." [(value)]="searchQuery" (keyup.enter)="onSearch()">
-            <button class="btn-glow" (click)="onSearch()">Search</button>
+          <div class="badge-float">
+            <span class="material-icons">verified</span>
+            Trusted by 20,000+ Locals
           </div>
-          <div class="hero-stats">
-            <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">Local Businesses</span></div>
-            <div class="stat-divider"></div>
-            <div class="stat"><span class="stat-num">18,000+</span><span class="stat-label">Happy Users</span></div>
-            <div class="stat-divider"></div>
-            <div class="stat"><span class="stat-num">4.8</span><span class="stat-label">Avg. Rating</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Browse Categories -->
-      <section class="content-section">
-        <div class="section-header">
-          <div>
-            <h2>Browse Categories</h2>
-            <p class="section-subtitle">Quick access to essential services</p>
-          </div>
-          <a routerLink="/browse" class="view-all-link">View All <span class="material-icons">arrow_forward</span></a>
-        </div>
-        <div class="category-grid">
-          <div class="category-card" *ngFor="let cat of categories" [routerLink]="['/browse']" [queryParams]="{category: cat.name}">
-            <div class="category-icon-wrap">
-              <span class="material-icons">{{cat.icon}}</span>
+          <h1 class="hero-title">
+            The heart of your city, <br>
+            <span class="text-gradient">all in one place.</span>
+          </h1>
+          <p class="hero-desc">
+            Discover elite services, artisanal shops, and the vibrant pulse of your neighborhood. 
+            Nikat is your gateway to local excellence.
+          </p>
+          
+          <div class="search-container-premium">
+            <div class="s-input-group">
+              <span class="material-icons">search</span>
+              <input type="text" placeholder="What are you looking for today?" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()">
             </div>
-            <h3>{{cat.name}}</h3>
-            <span class="category-count">{{cat.count}} listings</span>
+            <button class="btn-action-glow" (click)="onSearch()">Find Now</button>
           </div>
-        </div>
-      </section>
 
-      <!-- Near You -->
-      <section class="content-section">
-        <div class="section-header">
-          <div>
-            <h2>Near You</h2>
-            <p class="section-subtitle">Top-rated businesses in your area</p>
-          </div>
-          <a routerLink="/browse" class="view-all-link">View All <span class="material-icons">arrow_forward</span></a>
-        </div>
-        <div class="shop-grid">
-          <div class="shop-card" *ngFor="let shop of nearbyShops" [routerLink]="['/shop', shop.id || 1]">
-            <div class="shop-image" [style.backgroundImage]="'url(' + shop.image + ')'">
-              <div class="shop-badge" *ngIf="shop.featured">
-                <span class="material-icons">star</span> Featured
-              </div>
-              <div class="shop-rating-badge">
-                <span class="material-icons">star</span> {{shop.rating}}
-              </div>
-            </div>
-            <div class="shop-info">
-              <h3>{{shop.name}}</h3>
-              <p class="shop-category">{{shop.category}}</p>
-              <p class="shop-desc">{{shop.description}}</p>
-              <div class="shop-meta">
-                <span class="distance"><span class="material-icons">location_on</span> {{shop.distance}}</span>
-                <span class="status" [class.open]="shop.isOpen">{{shop.isOpen ? 'Open Now' : 'Closed'}}</span>
-              </div>
-            </div>
+          <div class="hero-quick-filters">
+            <span class="f-label">Quick Search:</span>
+            <button class="f-item" *ngFor="let tag of quickTags" (click)="onTagClick(tag)">
+              <span class="material-icons">{{tag.icon}}</span>
+              {{tag.label}}
+            </button>
           </div>
         </div>
-      </section>
+      </header>
 
-      <!-- Curated Collections -->
-      <section class="content-section collections-section">
-        <div class="section-header">
-          <div>
-            <h2>Curated Collections</h2>
-            <p class="section-subtitle">Hand-picked by our community team</p>
+      <!-- Featured Experience -->
+      <section class="experience-showcase">
+        <div class="container">
+          <div class="showcase-header">
+            <div class="sh-left">
+              <h2>Curated Experiences</h2>
+              <p>Hand-picked services that define quality in your area.</p>
+            </div>
+            <button class="btn-outline-glass" routerLink="/browse">View All</button>
           </div>
-        </div>
-        <div class="collections-grid">
-          <div class="collection-card" *ngFor="let col of collections">
-            <div class="collection-image" [style.backgroundImage]="'url(' + col.image + ')'">
-              <div class="collection-overlay">
-                <span class="collection-tag">{{col.tag}}</span>
-                <h3>{{col.title}}</h3>
-                <p>{{col.desc}}</p>
-                <a class="collection-cta" routerLink="/browse">Explore <span class="material-icons">arrow_forward</span></a>
+
+          <div class="showcase-grid">
+            <div class="exp-card" *ngFor="let shop of nearbyShops" [routerLink]="['/shop', shop.id || 1]">
+              <div class="exp-img-wrap">
+                <img [src]="shop.image" alt="Shop">
+                <div class="exp-overlay">
+                  <div class="e-rating">
+                    <span class="material-icons">star</span>
+                    {{shop.rating}}
+                  </div>
+                  <div class="e-badge" *ngIf="shop.featured">Featured</div>
+                </div>
+              </div>
+              <div class="exp-details">
+                <div class="e-cat">{{shop.category}}</div>
+                <h3>{{shop.name}}</h3>
+                <div class="e-meta">
+                  <span><span class="material-icons">near_me</span> {{shop.distance}}</span>
+                  <span class="dot"></span>
+                  <span>{{shop.priceLevel}}</span>
+                  <span class="status-dot" [class.open]="shop.isOpen"></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Community CTA -->
-      <section class="cta-section">
-        <div class="cta-content">
-          <div class="cta-icon"><span class="material-icons">groups</span></div>
-          <h2>Join the Nikat Community</h2>
-          <p>Share recommendations, ask for advice, and stay connected with your neighbors.</p>
-          <div class="cta-buttons">
-            <a routerLink="/community" class="btn-glow">Explore Community</a>
-            <a routerLink="/register" class="btn-outline">Create Account</a>
+      <!-- The Nikat Ecosystem (Stats) -->
+      <section class="ecosystem-section">
+        <div class="eco-grid">
+          <div class="eco-item">
+            <h2 class="eco-val">2.4k+</h2>
+            <p>Active Listings</p>
+          </div>
+          <div class="eco-divider"></div>
+          <div class="eco-item">
+            <h2 class="eco-val">150+</h2>
+            <p>Neighborhood Nodes</p>
+          </div>
+          <div class="eco-divider"></div>
+          <div class="eco-item">
+            <h2 class="eco-val">48k</h2>
+            <p>Annual Bookings</p>
           </div>
         </div>
       </section>
 
-      <!-- Footer -->
-      <footer class="site-footer">
-        <div class="footer-content">
-          <div class="footer-brand">
-            <h3>Nikat</h3>
-            <p>Connecting vibrant communities through local discovery and trusted services since 2024.</p>
-            <div class="footer-social">
-              <a href="#"><span class="material-icons">public</span></a>
+      <!-- Business Propulsion Banner -->
+      <section class="business-propulsion">
+        <div class="prop-card">
+          <div class="prop-content">
+            <span class="prop-badge">Partner with Nikat</span>
+            <h2>Scale your business <br>with precision.</h2>
+            <p>Join the ecosystem of elite service providers and reach customers who value excellence.</p>
+            <div class="prop-actions">
+              <button class="btn-prime-glow" routerLink="/register">Register Business</button>
+              <button class="btn-text-white" routerLink="/login">Merchant Login <span class="material-icons">arrow_right_alt</span></button>
+            </div>
+          </div>
+          <div class="prop-visual">
+            <div class="v-rect">
+              <span class="material-icons">trending_up</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer Premium -->
+      <footer class="footer-premium">
+        <div class="f-top">
+          <div class="f-col-brand">
+            <div class="nav-brand">
+              <div class="brand-hexagon-small">
+                <span class="material-icons">architecture</span>
+              </div>
+              <h1>Nikat</h1>
+            </div>
+            <p>Redefining local discovery through modern technology and community spirit.</p>
+            <div class="f-social">
+              <a href="#"><span class="material-icons">language</span></a>
               <a href="#"><span class="material-icons">chat</span></a>
-              <a href="#"><span class="material-icons">photo_camera</span></a>
+              <a href="#"><span class="material-icons">alternate_email</span></a>
             </div>
           </div>
-          <div class="footer-links">
-            <div class="footer-col">
-              <h4>Discover</h4>
-              <a routerLink="/browse">Browse Shops</a>
-              <a routerLink="/services">Find Services</a>
-              <a routerLink="/community">Community Hub</a>
-              <a routerLink="/reviews">Reviews</a>
+          <div class="f-links-wrap">
+            <div class="f-col">
+              <h4>Platform</h4>
+              <a routerLink="/browse">Discovery</a>
+              <a routerLink="/community">Community</a>
+              <a routerLink="/services">Find Experts</a>
             </div>
-            <div class="footer-col">
-              <h4>For Business</h4>
-              <a routerLink="/register">List Your Shop</a>
-              <a routerLink="/register">Offer Services</a>
-              <a routerLink="/login">Business Login</a>
+            <div class="f-col">
+              <h4>Resources</h4>
+              <a routerLink="/help">Center</a>
+              <a href="#">Security</a>
+              <a href="#">Privacy</a>
             </div>
-            <div class="footer-col">
-              <h4>Support</h4>
-              <a routerLink="/help">Help Center</a>
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Contact Us</a>
+            <div class="f-col">
+              <h4>Ownership</h4>
+              <a routerLink="/admin-login">Admin Portal</a>
+              <a routerLink="/login">Merchant Hub</a>
+              <a routerLink="/register">Join Partner Program</a>
             </div>
           </div>
         </div>
-        <div class="footer-bottom">
-          <span>© 2024 Nikat. Explore your community.</span>
-          <a routerLink="/admin-login" class="admin-link">
-            <span class="material-icons">login</span> Admin Login
-          </a>
+        <div class="f-bottom">
+          <p>© 2024 Nikat Co. Empowering communities worldwide.</p>
+          <div class="f-utils">
+            <a href="#">Terms</a>
+            <a href="#">Cookies</a>
+            <a href="#">Legal</a>
+          </div>
         </div>
       </footer>
     </div>
   `,
   styles: [`
-    .home-container {
-      background-color: #05092f;
-      min-height: 100vh;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
 
-    /* ─── Hero ─── */
-    .hero-section {
-      position: relative;
-      padding: 6rem 2rem 4rem;
-      text-align: center;
-      overflow: hidden;
-      background: linear-gradient(180deg, #0e1442 0%, #05092f 100%);
-    }
-    .hero-bg-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.15;
-      pointer-events: none;
-    }
-    .orb-1 { width: 600px; height: 600px; background: #5eb4ff; top: -200px; left: -100px; }
-    .orb-2 { width: 500px; height: 500px; background: #6bfe9c; bottom: -200px; right: -100px; }
-
-    .hero-content {
-      max-width: 800px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: rgba(94, 180, 255, 0.1);
-      border: 1px solid rgba(94, 180, 255, 0.2);
-      color: #5eb4ff;
-      padding: 0.5rem 1.25rem;
-      border-radius: 2rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-      letter-spacing: 0.02em;
-    }
-    .hero-content h1 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 4rem;
-      font-weight: 800;
-      color: #e2e3ff;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-    }
-    .hero-content > p {
+    :host {
+      --primary: #3b82f6;
+      --accent: #22c55e;
+      --bg: #020410;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-muted: #94a3b8;
       font-family: 'Manrope', sans-serif;
-      font-size: 1.2rem;
-      color: #a3a8d5;
-      max-width: 560px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.6;
     }
 
-    .search-bar {
-      display: flex;
-      background-color: #182056;
-      border-radius: 3rem;
-      padding: 0.5rem;
-      border: 1px solid #40456c;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-      align-items: center;
-      max-width: 640px;
-      margin: 0 auto 3rem;
-    }
-    .search-icon {
-      color: #a3a8d5;
-      margin-left: 1rem;
-      margin-right: 0.5rem;
-      font-size: 1.5rem;
-    }
-    .search-bar input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #e2e3ff;
-      font-family: 'Manrope', sans-serif;
-      font-size: 1rem;
-      padding: 0.75rem 0.5rem;
-      outline: none;
-    }
-    .search-bar input::placeholder { color: #6e739d; }
+    .landing-premium-wrapper { background: var(--bg); color: #fff; min-height: 100vh; overflow-x: hidden; }
 
-    .btn-glow {
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
-      border: none;
-      color: #003151;
-      font-weight: 700;
-      padding: 0.85rem 2rem;
-      border-radius: 2rem;
-      cursor: pointer;
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.95rem;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .btn-glow:hover {
-      box-shadow: 0 6px 20px rgba(94, 180, 255, 0.4);
-      transform: translateY(-2px);
-    }
+    /* Nav */
+    .premium-nav { position: absolute; top: 0; left: 0; right: 0; padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between; z-index: 100; }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; }
+    .nav-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
+    .brand-hexagon-small { width: 32px; height: 32px; background: var(--primary); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; }
+    .brand-hexagon-small .material-icons { font-size: 1.1rem; }
 
-    .hero-stats {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-    }
-    .stat { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
-    .stat-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 800; color: #e2e3ff; }
-    .stat-label { font-size: 0.8rem; color: #6e739d; text-transform: uppercase; letter-spacing: 0.05em; }
-    .stat-divider { width: 1px; height: 40px; background: #40456c; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: 0.2s; }
+    .nav-links a:hover { color: #fff; }
 
-    /* ─── Sections ─── */
-    .content-section {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 4rem 2rem 0;
-    }
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 2rem;
-    }
-    .section-header h2 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #e2e3ff;
-    }
-    .section-subtitle {
-      font-size: 0.875rem;
-      color: #6e739d;
-      margin-top: 0.25rem;
-    }
-    .view-all-link {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #5eb4ff;
-      text-decoration: none;
-      transition: gap 0.2s;
-    }
-    .view-all-link:hover { gap: 0.5rem; }
-    .view-all-link .material-icons { font-size: 1.1rem; }
+    .nav-auth { display: flex; align-items: center; gap: 1.5rem; }
+    .btn-text { background: transparent; border: none; color: #fff; font-weight: 700; cursor: pointer; }
+    .btn-prime-glow { background: var(--primary); border: none; color: #fff; padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 0 20px rgba(59,130,246,0.3); transition: 0.2s; }
+    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(59,130,246,0.5); }
 
-    /* ─── Categories ─── */
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 1rem;
-    }
-    .category-card {
-      background-color: #080e38;
-      border-radius: 1rem;
-      padding: 1.75rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s;
-      text-decoration: none;
-      display: block;
-    }
-    .category-card:hover {
-      background-color: #0e1442;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-    .category-icon-wrap {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: rgba(94, 180, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-    }
-    .category-icon-wrap .material-icons {
-      font-size: 1.75rem;
-      color: #5eb4ff;
-    }
-    .category-card h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #e2e3ff;
-      margin-bottom: 0.25rem;
-    }
-    .category-count {
-      font-size: 0.75rem;
-      color: #6e739d;
-    }
+    /* Hero */
+    .hero-premium { min-height: 90vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; }
+    .hero-visual-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .glow-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(150px); opacity: 0.15; }
+    .orb-gold { background: #f59e0b; top: -10%; right: -10%; }
+    .orb-blue { background: #3b82f6; bottom: -10%; left: -10%; }
+    .grid-mesh { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; }
 
-    /* ─── Shop Grid ─── */
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-    .shop-card {
-      background-color: #080e38;
-      border-radius: 1rem;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.25s;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-    }
-    .shop-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-    }
-    .shop-image {
-      height: 200px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .shop-badge {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
-      color: #003151;
-      padding: 0.25rem 0.75rem;
-      border-radius: 2rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    .shop-badge .material-icons { font-size: 0.875rem; }
-    .shop-rating-badge {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-      background: rgba(5, 9, 47, 0.85);
-      backdrop-filter: blur(8px);
-      padding: 0.3rem 0.6rem;
-      border-radius: 1rem;
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: #e2e3ff;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    .shop-rating-badge .material-icons { font-size: 0.9rem; color: #F59E0B; }
-    .shop-info {
-      padding: 1.5rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .shop-info h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #e2e3ff;
-      margin-bottom: 0.25rem;
-    }
-    .shop-category {
-      font-size: 0.8rem;
-      color: #5eb4ff;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-    .shop-desc {
-      font-size: 0.875rem;
-      color: #a3a8d5;
-      line-height: 1.5;
-      margin-bottom: 1rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .shop-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      margin-top: auto;
-    }
-    .distance {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      color: #a3a8d5;
-    }
-    .distance .material-icons { font-size: 0.9rem; }
-    .status { font-weight: 700; color: #6e739d; }
-    .status.open { color: #6bfe9c; }
+    .hero-content { position: relative; z-index: 10; max-width: 900px; }
+    .badge-float { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--primary); padding: 0.5rem 1.25rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 700; margin-bottom: 2rem; }
+    .hero-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 5rem; font-weight: 800; line-height: 1.05; margin: 0 0 2rem; letter-spacing: -0.04em; }
+    .text-gradient { background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc { font-size: 1.35rem; color: var(--text-muted); line-height: 1.6; max-width: 700px; margin: 0 auto 3.5rem; }
 
-    /* ─── Collections ─── */
-    .collections-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 1.5rem;
-    }
-    .collection-card { border-radius: 1rem; overflow: hidden; }
-    .collection-image {
-      height: 280px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .collection-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(5,9,47,0.2) 0%, rgba(5,9,47,0.9) 100%);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .collection-tag {
-      display: inline-block;
-      background: rgba(107, 254, 156, 0.15);
-      color: #6bfe9c;
-      padding: 0.25rem 0.75rem;
-      border-radius: 1rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-      width: fit-content;
-    }
-    .collection-overlay h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #e2e3ff;
-      margin-bottom: 0.5rem;
-    }
-    .collection-overlay p {
-      font-size: 0.875rem;
-      color: #a3a8d5;
-      margin-bottom: 1rem;
-    }
-    .collection-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      color: #5eb4ff;
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-decoration: none;
-      transition: gap 0.2s;
-    }
-    .collection-cta:hover { gap: 0.5rem; }
-    .collection-cta .material-icons { font-size: 1rem; }
+    .search-container-premium { background: rgba(13, 18, 45, 0.6); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 0.75rem; border-radius: 2rem; display: flex; align-items: center; gap: 1rem; max-width: 680px; margin: 0 auto 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+    .s-input-group { flex: 1; display: flex; align-items: center; gap: 1rem; padding-left: 1.25rem; }
+    .s-input-group .material-icons { color: var(--text-muted); }
+    .s-input-group input { background: transparent; border: none; color: #fff; font-size: 1.1rem; width: 100%; outline: none; }
+    .btn-action-glow { background: var(--primary); border: none; color: #fff; padding: 1rem 2rem; border-radius: 1.5rem; font-weight: 800; cursor: pointer; transition: 0.2s; }
+    .btn-action-glow:hover { transform: scale(1.02); }
 
-    /* ─── CTA Section ─── */
-    .cta-section {
-      padding: 5rem 2rem;
-      text-align: center;
-    }
-    .cta-content {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .cta-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(94,180,255,0.15), rgba(107,254,156,0.1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 2rem;
-    }
-    .cta-icon .material-icons { font-size: 2.5rem; color: #5eb4ff; }
-    .cta-content h2 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #e2e3ff;
-      margin-bottom: 1rem;
-    }
-    .cta-content > p {
-      color: #a3a8d5;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-    }
-    .cta-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .btn-outline {
-      border: 1px solid #40456c;
-      background: transparent;
-      color: #e2e3ff;
-      padding: 0.85rem 2rem;
-      border-radius: 2rem;
-      cursor: pointer;
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: #a3a8d5;
-    }
+    .hero-quick-filters { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .f-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; }
+    .f-item { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 0.5rem 1.25rem; border-radius: 2rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .f-item:hover { color: #fff; border-color: var(--primary); background: rgba(59,130,246,0.1); }
+    .f-item .material-icons { font-size: 1.1rem; color: var(--primary); }
 
-    /* ─── Footer ─── */
-    .site-footer {
-      background-color: #000000;
-      padding: 4rem 2rem 0;
-    }
-    .footer-content {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: flex;
-      gap: 4rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .footer-brand {
-      flex: 1;
-      max-width: 320px;
-    }
-    .footer-brand h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: #5eb4ff;
-      margin-bottom: 1rem;
-    }
-    .footer-brand p {
-      font-size: 0.875rem;
-      color: #6e739d;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    .footer-social {
-      display: flex;
-      gap: 1rem;
-    }
-    .footer-social a {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #0e1442;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #a3a8d5;
-      transition: all 0.2s;
-    }
-    .footer-social a:hover {
-      background: rgba(94,180,255,0.15);
-      color: #5eb4ff;
-    }
-    .footer-social a .material-icons { font-size: 1.2rem; }
-    .footer-links {
-      display: flex;
-      gap: 4rem;
-      flex: 2;
-    }
-    .footer-col h4 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #e2e3ff;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 1rem;
-    }
-    .footer-col a {
-      display: block;
-      font-size: 0.875rem;
-      color: #6e739d;
-      text-decoration: none;
-      margin-bottom: 0.75rem;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: #e2e3ff; }
-    .footer-bottom {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 1.5rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: #40456c;
-    }
-    .admin-link {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      color: #40456c;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .admin-link:hover { color: #a3a8d5; }
-    .admin-link .material-icons { font-size: 1rem; }
+    /* Showcase */
+    .experience-showcase { padding: 8rem 0; background: linear-gradient(180deg, var(--bg) 0%, #080c24 100%); }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    .showcase-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
+    .sh-left h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .sh-left p { font-size: 1.1rem; color: var(--text-muted); }
+    .btn-outline-glass { background: var(--glass); border: 1px solid var(--glass-border); color: #fff; padding: 0.75rem 1.75rem; border-radius: 1rem; font-weight: 700; cursor: pointer; }
 
-    /* ─── Responsive ─── */
-    @media (max-width: 768px) {
-      .hero-content h1 { font-size: 2.5rem; }
-      .hero-stats { flex-direction: column; gap: 1rem; }
-      .stat-divider { width: 40px; height: 1px; }
-      .search-bar {
-        flex-direction: column;
-        border-radius: 1rem;
-        padding: 1rem;
-      }
-      .search-bar input { width: 100%; margin-bottom: 0.75rem; }
-      .btn-glow { width: 100%; justify-content: center; }
-      .category-grid { grid-template-columns: repeat(3, 1fr); }
-      .shop-grid { grid-template-columns: 1fr; }
-      .collections-grid { grid-template-columns: 1fr; }
-      .footer-content { flex-direction: column; gap: 2rem; }
-      .footer-links { flex-direction: column; gap: 2rem; }
-      .cta-buttons { flex-direction: column; }
+    .showcase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .exp-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 2rem; overflow: hidden; transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; }
+    .exp-card:hover { transform: translateY(-12px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .exp-img-wrap { position: relative; height: 260px; overflow: hidden; }
+    .exp-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+    .exp-card:hover .exp-img-wrap img { transform: scale(1.1); }
+    .exp-overlay { position: absolute; inset: 0; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent 40%, rgba(0,0,0,0.6)); }
+    .e-rating { align-self: flex-end; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 0.4rem 0.8rem; border-radius: 1rem; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
+    .e-rating .material-icons { font-size: 1rem; color: #f59e0b; }
+    .e-badge { background: var(--primary); color: #fff; padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; width: fit-content; }
+
+    .exp-details { padding: 1.5rem 2rem 2.25rem; }
+    .e-cat { font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+    .exp-details h3 { font-size: 1.4rem; font-weight: 800; margin: 0 0 1rem; }
+    .e-meta { display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
+    .e-meta .material-icons { font-size: 1rem; }
+    .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--glass-border); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4b5563; margin-left: auto; }
+    .status-dot.open { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+    /* Ecosystem */
+    .ecosystem-section { padding: 6rem 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+    .eco-grid { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; text-align: center; }
+    .eco-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg, #fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .eco-grid p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+    .eco-divider { width: 1px; height: 80px; background: var(--glass-border); }
+
+    /* Propulsion */
+    .business-propulsion { padding: 10rem 2rem; }
+    .prop-card { max-width: 1100px; margin: 0 auto; background: linear-gradient(135deg, #0a113d, #020410); border: 1px solid var(--glass-border); border-radius: 3rem; padding: 5rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
+    .prop-card::after { content: ''; position: absolute; top: -50%; right: -20%; width: 500px; height: 500px; background: var(--primary); border-radius: 50%; filter: blur(200px); opacity: 0.1; }
+    .prop-content { max-width: 600px; position: relative; z-index: 5; }
+    .prop-badge { color: var(--primary); font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 1.5rem; }
+    .prop-content h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3rem; font-weight: 800; margin: 0 0 1.5rem; line-height: 1.1; }
+    .prop-content p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; line-height: 1.6; }
+    .prop-actions { display: flex; align-items: center; gap: 2rem; }
+    .btn-text-white { background: transparent; border: none; color: #e2e8f0; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+
+    .prop-visual { width: 160px; height: 160px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 3rem; display: flex; align-items: center; justify-content: center; transform: rotate(15deg); }
+    .v-rect .material-icons { font-size: 5rem; color: var(--primary); }
+
+    /* Footer */
+    .footer-premium { background: #000; padding: 8rem 4rem 4rem; }
+    .f-top { display: flex; gap: 10rem; margin-bottom: 8rem; }
+    .f-col-brand { max-width: 340px; }
+    .f-col-brand p { color: var(--text-muted); margin: 2rem 0; line-height: 1.6; font-weight: 600; }
+    .f-social { display: flex; gap: 1.5rem; }
+    .f-social a { color: var(--text-muted); transition: 0.2s; }
+    .f-social a:hover { color: #fff; }
+
+    .f-links-wrap { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; }
+    .f-col h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 2rem; }
+    .f-col a { display: block; color: var(--text-muted); text-decoration: none; margin-bottom: 1.25rem; font-weight: 600; font-size: 0.95rem; transition: 0.2s; }
+    .f-col a:hover { color: #fff; }
+
+    .f-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.9rem; }
+    .f-utils { display: flex; gap: 3rem; }
+    .f-utils a { color: var(--text-muted); text-decoration: none; }
+
+    @media (max-width: 1200px) {
+      .hero-title { font-size: 3.5rem; }
+      .f-top { flex-direction: column; gap: 4rem; }
+      .showcase-grid { grid-template-columns: repeat(2, 1fr); }
     }
   `]
 })
 export class HomeComponent implements OnInit {
   searchQuery = '';
+  currentYear = new Date().getFullYear();
 
-  categories = [
-    { name: 'Restaurants', icon: 'restaurant', count: 340 },
-    { name: 'Cafes', icon: 'local_cafe', count: 185 },
-    { name: 'Barbershops', icon: 'content_cut', count: 96 },
-    { name: 'Fitness', icon: 'fitness_center', count: 72 },
-    { name: 'Groceries', icon: 'local_grocery_store', count: 210 },
-    { name: 'Spas', icon: 'spa', count: 48 },
-    { name: 'Tech Repair', icon: 'build', count: 65 },
-    { name: 'Tutoring', icon: 'school', count: 114 }
+  quickTags = [
+    { label: 'Near me', icon: 'near_me' },
+    { label: 'Top Rated', icon: 'star' },
+    { label: 'Wellness', icon: 'spa' },
+    { label: 'Saved', icon: 'bookmark' }
   ];
 
   nearbyShops = [
     {
-      id: 1, name: 'The Golden Grind', category: 'Cafe & Workspace',
-      description: 'Artisanal coffee and workspace perfect for remote teams and creative sessions.',
-      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80',
-      rating: 4.8, distance: '0.8 mi', isOpen: true, featured: true
-    },
-    {
-      id: 2, name: 'Iron Haven Gym', category: 'Fitness Center',
-      description: '24/7 access elite training facility with modern equipment and personal coaches.',
-      image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
-      rating: 4.9, distance: '1.2 mi', isOpen: true, featured: false
-    },
-    {
-      id: 3, name: 'Velvet Cut Studio', category: 'Barbershop',
-      description: 'Traditional grooming with a modern twist. The neighborhood\'s finest for over a decade.',
+      id: 1, name: 'Urban Fade Barbershop', category: 'Grooming & Styles',
       image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80',
-      rating: 4.7, distance: '0.5 mi', isOpen: false, featured: true
-    }
-  ];
-
-  collections = [
-    {
-      title: 'Elite Professional Networks',
-      desc: 'Connect with the top consultants and freelancers in your vicinity.',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
-      tag: 'Business'
+      rating: 4.8, distance: '0.8 mi', isOpen: true, featured: true, priceLevel: '$$'
     },
     {
-      title: 'Hidden Eateries',
-      desc: 'Authentic flavors your neighbors are keeping secret.',
-      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
-      tag: 'Food & Drink'
+      id: 2, name: 'Glow Spa Premium', category: 'Wellness & Care',
+      image: 'https://images.unsplash.com/photo-1544161515-4af6b1d46152?w=800&q=80',
+      rating: 4.9, distance: '1.2 mi', isOpen: true, featured: false, priceLevel: '$$$'
+    },
+    {
+      id: 3, name: 'Downtown Brews', category: 'Artisanal Cafe',
+      image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&q=80',
+      rating: 4.7, distance: '0.5 mi', isOpen: false, featured: true, priceLevel: '$'
     }
   ];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private router: Router) {}
 
-  ngOnInit() {
-    this.apiService.getShops().subscribe({
-      next: (shops: any[]) => {
-        if (shops && shops.length > 0) {
-          this.nearbyShops = shops.slice(0, 6).map((s: any) => ({
-            id: s.id, name: s.name, category: s.categoryName || 'Local Business',
-            description: s.description || '',
-            image: s.imageUrl || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80',
-            rating: s.averageRating || 4.5, distance: '1.0 mi',
-            isOpen: s.status === 'APPROVED', featured: s.featured || false
-          }));
-        }
-      }
-    });
-  }
+  ngOnInit() {}
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      // Navigate to search results
+      this.router.navigate(['/browse'], { queryParams: { q: this.searchQuery } });
     }
+  }
+
+  onTagClick(tag: any) {
+    this.router.navigate(['/browse'], { queryParams: { tag: tag.label } });
   }
 }

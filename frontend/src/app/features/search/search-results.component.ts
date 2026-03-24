@@ -48,13 +48,22 @@ import { RouterModule, Router } from '@angular/router';
     </div>
   `,
   styles: [`
-    .search-page { background: #05092f; min-height: 100vh; }
+    .search-page {
+      background: radial-gradient(circle at 15% 50%, rgba(20, 30, 80, 0.5), transparent 50%), radial-gradient(circle at 85% 30%, rgba(26, 45, 94, 0.6), transparent 50%), #05092f;
+      min-height: 100vh; color: #e2e3ff;
+    }
 
-    .search-header { background: #080e38; padding: 2rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .search-header {
+      background: rgba(8, 14, 56, 0.45);
+      backdrop-filter: blur(16px);
+      padding: 2.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
     .search-container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
     .search-bar {
-      display: flex; align-items: center; background: #182056; border-radius: 3rem;
-      padding: 0.5rem; border: 1px solid #40456c; margin-bottom: 1.25rem;
+      display: flex; align-items: center; background: rgba(8, 14, 56, 0.45); border-radius: 3rem;
+      padding: 0.5rem; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 1.25rem;
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
     }
     .search-bar .material-icons { color: #a3a8d5; margin-left: 1rem; margin-right: 0.5rem; font-size: 1.5rem; }
     .search-bar input {
@@ -63,31 +72,36 @@ import { RouterModule, Router } from '@angular/router';
     }
     .btn-glow {
       background: linear-gradient(135deg, #5eb4ff, #2aa7ff); border: none; color: #003151;
-      font-weight: 700; padding: 0.75rem 1.75rem; border-radius: 2rem; cursor: pointer;
-      font-family: 'Manrope', sans-serif; font-size: 0.9rem; transition: all 0.2s;
+      font-weight: 700; padding: 0.85rem 2rem; border-radius: 2rem; cursor: pointer;
+      font-family: 'Manrope', sans-serif; font-size: 0.95rem; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .btn-glow:hover { box-shadow: 0 6px 20px rgba(94,180,255,0.4); }
+    .btn-glow:hover { box-shadow: 0 6px 20px rgba(94,180,255,0.4); transform: translateY(-2px); }
 
     .filter-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .filter-chip {
-      background: transparent; border: 1px solid #40456c; color: #a3a8d5;
-      padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.85rem;
-      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); color: #a3a8d5;
+      padding: 0.6rem 1.25rem; border-radius: 2rem; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
     }
+    .filter-chip:hover { background: rgba(255, 255, 255, 0.08); color: #e2e3ff; }
     .filter-chip.active { background: rgba(94,180,255,0.15); border-color: #5eb4ff; color: #5eb4ff; }
 
-    .results-content { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .results-count { color: #6e739d; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .results-content { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+    .results-count { color: #a3a8d5; font-size: 0.95rem; margin-bottom: 2rem; font-weight: 500; }
 
-    .results-grid { display: flex; flex-direction: column; gap: 1.25rem; }
+    .results-grid { display: flex; flex-direction: column; gap: 1.5rem; }
     .result-card {
-      display: flex; background: #080e38; border-radius: 1rem; overflow: hidden;
-      cursor: pointer; transition: all 0.25s; text-decoration: none;
+      display: flex;
+      background: rgba(8, 14, 56, 0.35); border-radius: 1.25rem; overflow: hidden;
+      cursor: pointer; transition: all 0.3s ease; text-decoration: none;
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
-    .result-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
+    .result-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 20px rgba(94, 180, 255, 0.1); border-color: rgba(94, 180, 255, 0.3); }
     .result-image {
-      width: 240px; flex-shrink: 0; background-size: cover; background-position: center;
-      position: relative; min-height: 180px;
+      width: 260px; flex-shrink: 0; background-size: cover; background-position: center;
+      position: relative; min-height: 200px;
     }
     .result-rating {
       position: absolute; top: 0.75rem; left: 0.75rem;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -7,77 +7,225 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="auth-page">
-      <div class="auth-card">
-        <div class="auth-brand"><a routerLink="/" class="logo">Nikat</a></div>
-        <div class="auth-header">
-          <div class="icon-circle"><span class="material-icons">pin</span></div>
-          <h1>Verify Your Account</h1>
-          <p>We've sent a 6-digit code to <strong>j***@email.com</strong></p>
+    <div class="split-auth">
+      <!-- Left: Visual Side -->
+      <aside class="auth-visual">
+        <div class="v-content">
+          <div class="v-badge">Verification Sent</div>
+          <h1>One last <span>bridge</span> to cross.</h1>
+          <p>We've dispatched a secure 6-digit verification code to your registered credentials. Enter it to activate your portal.</p>
+          
+          <div class="verify-steps">
+            <div class="v-step active">
+              <span class="v-num">1</span>
+              <span class="v-lab">Registration</span>
+              <span class="material-icons check">check_circle</span>
+            </div>
+            <div class="v-step-line"></div>
+            <div class="v-step current">
+              <span class="v-num">2</span>
+              <span class="v-lab">OTP Verify</span>
+            </div>
+            <div class="v-step-line"></div>
+            <div class="v-step">
+              <span class="v-num">3</span>
+              <span class="v-lab">Success</span>
+            </div>
+          </div>
         </div>
-        <div class="otp-inputs">
-          <input *ngFor="let d of digits; let i = index" type="text" maxlength="1" class="otp-box"
-            [value]="digits[i]" (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)">
+        <div class="v-blur-orb"></div>
+      </aside>
+
+      <!-- Right: Form Side -->
+      <main class="auth-main">
+        <header class="main-head">
+          <a routerLink="/" class="brand">Nikat</a>
+          <button class="btn-ghost-sm" routerLink="/login">Cancel</button>
+        </header>
+
+        <div class="form-scroll-wrap">
+          <div class="form-container">
+            <header class="auth-title-wrap">
+              <div class="security-shield">
+                <span class="material-icons">verified_user</span>
+              </div>
+              <h2>Verify Identity</h2>
+              <p>Type in the code sent to your device.</p>
+            </header>
+
+            <div class="otp-grid">
+               <input 
+                #otpInput
+                *ngFor="let d of digits; let i = index" 
+                type="text" 
+                maxlength="1" 
+                class="otp-box-premium"
+                [value]="digits[i]" 
+                (input)="onInput($event, i)" 
+                (keydown)="onKeyDown($event, i)"
+                autocomplete="one-time-code"
+                inputmode="numeric"
+              >
+            </div>
+
+            <div class="actions-footer">
+              <button class="btn-prime-glow" [disabled]="!isComplete() || isLoading" (click)="verify()">
+                <span *ngIf="!isLoading">Confirm Code</span>
+                <span *ngIf="isLoading" class="loader-dots">Verifying</span>
+              </button>
+            </div>
+
+            <div class="resend-section">
+              <p *ngIf="countdown > 0">Resend code available in <span>{{countdown}}s</span></p>
+              <button *ngIf="countdown === 0" class="btn-text-link" (click)="resend()">
+                <span class="material-icons">refresh</span>
+                Didn't get it? Resend Code
+              </button>
+            </div>
+          </div>
         </div>
-        <button class="btn-glow full-width" [disabled]="!isComplete()">Verify</button>
-        <div class="resend-row">
-          <p>Didn't receive the code?</p>
-          <button class="link-btn" (click)="resend()">Resend Code</button>
-        </div>
-        <div class="timer" *ngIf="countdown > 0">Resend available in {{countdown}}s</div>
-      </div>
+      </main>
     </div>
   `,
   styles: [`
-    .auth-page { min-height: 100vh; background: #05092f; display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .auth-card { max-width: 440px; width: 100%; background: #080e38; border-radius: 1.5rem; padding: 3rem; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-    .auth-brand { margin-bottom: 2rem; }
-    .logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #5eb4ff, #2aa7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
-    .auth-header { margin-bottom: 2rem; }
-    .icon-circle { width: 64px; height: 64px; border-radius: 50%; background: rgba(94,180,255,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-    .icon-circle .material-icons { font-size: 2rem; color: #5eb4ff; }
-    .auth-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 700; color: #e2e3ff; margin-bottom: 0.5rem; }
-    .auth-header p { color: #a3a8d5; font-size: 0.95rem; }
-    .auth-header strong { color: #e2e3ff; }
-    .otp-inputs { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 2rem; }
-    .otp-box {
-      width: 52px; height: 60px; background: #0e1442; border: 1px solid #40456c;
-      border-radius: 0.75rem; text-align: center; font-size: 1.5rem; font-weight: 700;
-      color: #e2e3ff; outline: none; caret-color: #5eb4ff;
-      font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.2s;
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :host {
+      --primary: #3b82f6;
+      --prime-light: #60a5fa;
+      --bg: #020410;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-muted: #94a3b8;
+      font-family: 'Manrope', sans-serif;
     }
-    .otp-box:focus { border-color: #5eb4ff; box-shadow: 0 0 0 3px rgba(94,180,255,0.15); }
-    .btn-glow { background: linear-gradient(135deg, #5eb4ff, #2aa7ff); border: none; color: #003151; font-weight: 700; padding: 0.85rem 2rem; border-radius: 2rem; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
-    .btn-glow:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(94,180,255,0.4); }
-    .btn-glow:disabled { opacity: 0.4; cursor: not-allowed; }
-    .full-width { width: 100%; }
-    .resend-row { margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    .resend-row p { color: #6e739d; font-size: 0.85rem; margin: 0; }
-    .link-btn { background: none; border: none; color: #5eb4ff; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
-    .timer { color: #6e739d; font-size: 0.8rem; margin-top: 0.75rem; }
+
+    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; }
+
+    /* Visual Side */
+    .auth-visual {
+      flex: 1; position: relative; background: #05081d; display: flex; align-items: center; padding: 5rem;
+      border-right: 1px solid var(--glass-border);
+    }
+    .v-content { position: relative; z-index: 10; max-width: 480px; }
+    .v-badge {
+      display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; background: rgba(59, 130, 246, 0.1);
+      color: var(--prime-light); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
+    }
+    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: #fff; }
+    .auth-visual h1 span { color: var(--prime-light); }
+    .auth-visual p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 4rem; }
+    
+    .verify-steps { display: flex; align-items: center; gap: 1rem; }
+    .v-step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .v-num { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); }
+    .v-lab { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .v-step.active .v-num { border-color: var(--primary); color: var(--primary); }
+    .v-step.active .v-lab { color: var(--primary); }
+    .v-step.current .v-num { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+    .v-step.current .v-lab { color: #fff; }
+    .v-step-line { width: 40px; height: 1px; background: var(--glass-border); margin-bottom: 1.5rem; }
+    .check { color: var(--primary); font-size: 1rem; margin-top: -0.25rem; }
+
+    .v-blur-orb {
+      position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%); filter: blur(80px);
+    }
+
+    /* Main Side */
+    .auth-main { width: 600px; display: flex; flex-direction: column; background: #020410; }
+    .main-head { height: 6rem; display: flex; align-items: center; justify-content: space-between; padding: 2rem 4rem; }
+    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .btn-ghost-sm { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+
+    .form-scroll-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 4rem; }
+    .form-container { width: 100%; max-width: 400px; text-align: center; }
+
+    .security-shield {
+      width: 64px; height: 64px; border-radius: 1.25rem; background: rgba(59, 130, 246, 0.1);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--primary);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .security-shield .material-icons { font-size: 2.5rem; }
+
+    .auth-title-wrap { margin-bottom: 3rem; }
+    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+    .auth-title-wrap p { color: var(--text-muted); font-size: 1rem; }
+
+    /* OTP Inputs */
+    .otp-grid { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 3rem; }
+    .otp-box-premium {
+      width: 50px; height: 64px; border-radius: 1rem; border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.02); color: #fff; font-size: 1.5rem; font-weight: 800;
+      text-align: center; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; transition: 0.2s;
+    }
+    .otp-box-premium:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+
+    .btn-prime-glow {
+      background: var(--primary); color: #fff; border: none; padding: 1.1rem; border-radius: 1.25rem;
+      font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%;
+    }
+    .btn-prime-glow:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
+    .btn-prime-glow:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .resend-section { margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
+    .resend-section span { color: var(--primary); font-weight: 800; }
+    .btn-text-link {
+      background: none; border: none; color: var(--primary); font-weight: 800; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 2rem; transition: 0.2s;
+    }
+    .btn-text-link:hover { background: rgba(59, 130, 246, 0.1); }
+    .btn-text-link .material-icons { font-size: 1rem; }
+
+    .loader-dots::after { content: '...'; animation: d 1.5s infinite; }
+    @keyframes d { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }
+
+    @media (max-width: 1100px) {
+      .auth-visual { display: none; }
+      .auth-main { width: 100%; }
+    }
   `]
 })
 export class OtpVerificationComponent {
   digits = ['', '', '', '', '', ''];
   countdown = 0;
+  isLoading = false;
+
+  @ViewChildren('otpInput') inputs!: QueryList<ElementRef>;
 
   onInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    this.digits[index] = input.value;
-    if (input.value && index < 5) {
-      const next = input.parentElement?.querySelectorAll('input')[index + 1];
-      next?.focus();
+    const value = input.value;
+    
+    // Only allow numbers
+    if (!/^\d*$/.test(value)) {
+      input.value = '';
+      return;
+    }
+
+    this.digits[index] = value;
+    if (value && index < 5) {
+      const inputArr = this.inputs.toArray();
+      inputArr[index + 1].nativeElement.focus();
     }
   }
 
   onKeyDown(event: KeyboardEvent, index: number) {
     if (event.key === 'Backspace' && !this.digits[index] && index > 0) {
-      const prev = (event.target as HTMLElement).parentElement?.querySelectorAll('input')[index - 1];
-      prev?.focus();
+      const inputArr = this.inputs.toArray();
+      inputArr[index - 1].nativeElement.focus();
     }
   }
 
   isComplete(): boolean { return this.digits.every(d => d.length === 1); }
+
+  verify() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+      // Verification logic here
+    }, 2000);
+  }
 
   resend() {
     this.countdown = 30;

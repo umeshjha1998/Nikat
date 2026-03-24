@@ -7,76 +7,218 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="auth-page">
-      <div class="auth-card">
-        <div class="auth-brand"><a routerLink="/" class="logo">Nikat</a></div>
-        <div class="auth-header">
-          <div class="icon-circle"><span class="material-icons">vpn_key</span></div>
-          <h1>Set New Password</h1>
-          <p>Your new password must be different from previously used passwords.</p>
-        </div>
-        <form (submit)="onSubmit($event)" *ngIf="!success">
-          <div class="form-group">
-            <label>New Password</label>
-            <div class="input-wrapper">
-              <span class="material-icons">lock</span>
-              <input type="password" placeholder="Enter new password" required>
+    <div class="split-auth">
+      <!-- Left: Visual Side -->
+      <aside class="auth-visual">
+        <div class="v-content">
+          <div class="v-badge">Security Center</div>
+          <h1>Security first, <span>peace of mind</span> second.</h1>
+          <p>Resetting your password is a critical security step. Ensure your new credentials are unique and strong.</p>
+          
+          <div class="security-features">
+            <div class="sf-item">
+              <span class="material-icons">policy</span>
+              <div class="sf-text">
+                <h3>End-to-End Encryption</h3>
+                <p>Your password is hashed before it even hits our servers.</p>
+              </div>
+            </div>
+            <div class="sf-item">
+              <span class="material-icons">history</span>
+              <div class="sf-text">
+                <h3>Historical Safety</h3>
+                <p>We check against millions of pwned passwords for your safety.</p>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <label>Confirm Password</label>
-            <div class="input-wrapper">
-              <span class="material-icons">lock</span>
-              <input type="password" placeholder="Confirm new password" required>
+        </div>
+        <div class="v-blur-orb"></div>
+      </aside>
+
+      <!-- Right: Form Side -->
+      <main class="auth-main">
+        <header class="main-head">
+          <a routerLink="/" class="brand">Nikat</a>
+          <a routerLink="/login" class="btn-ghost-sm">Cancel</a>
+        </header>
+
+        <div class="form-scroll-wrap">
+          <div class="form-container">
+            <header class="auth-title-wrap" *ngIf="!success">
+              <div class="reset-icon-prime">
+                <span class="material-icons">lock_reset</span>
+              </div>
+              <h2>New Credentials</h2>
+              <p>Forge a stronger password for your account.</p>
+            </header>
+
+            <form (submit)="onSubmit($event)" *ngIf="!success" class="premium-form">
+              <div class="f-group">
+                <label>New Password</label>
+                <div class="input-icon-wrap">
+                  <span class="material-icons">lock</span>
+                  <input type="password" placeholder="At least 8 characters" required>
+                </div>
+              </div>
+
+              <div class="f-group">
+                <label>Confirm New Password</label>
+                <div class="input-icon-wrap">
+                  <span class="material-icons">lock_clock</span>
+                  <input type="password" placeholder="Must match exactly" required>
+                </div>
+              </div>
+
+              <div class="password-checklist">
+                <div class="check-item active">
+                  <span class="material-icons">check_circle</span>
+                  Minimum 8 characters
+                </div>
+                <div class="check-item">
+                  <span class="material-icons">radio_button_unchecked</span>
+                  Include a special character (#, $, etc)
+                </div>
+                <div class="check-item">
+                  <span class="material-icons">radio_button_unchecked</span>
+                  At least one uppercase letter
+                </div>
+              </div>
+
+              <div class="actions-footer">
+                <button type="submit" class="btn-prime-glow">
+                  Update Password
+                  <span class="material-icons">update</span>
+                </button>
+              </div>
+            </form>
+
+            <!-- Success State -->
+            <div class="success-stage-premium" *ngIf="success">
+              <div class="celebrate-icon">
+                <span class="material-icons">verified</span>
+              </div>
+              <h2>Security Updated</h2>
+              <p>Your password has been successfully reset. Your account is now more secure than ever.</p>
+              
+              <div class="actions-footer">
+                <button routerLink="/login" class="btn-prime-glow">
+                  Proceed to Sign In
+                  <span class="material-icons">arrow_forward</span>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="password-rules">
-            <div class="rule"><span class="material-icons check">check_circle</span> At least 8 characters</div>
-            <div class="rule"><span class="material-icons">radio_button_unchecked</span> One uppercase letter</div>
-            <div class="rule"><span class="material-icons">radio_button_unchecked</span> One number or symbol</div>
-          </div>
-          <button type="submit" class="btn-glow full-width">Reset Password</button>
-        </form>
-        <div class="success-state" *ngIf="success">
-          <div class="success-icon"><span class="material-icons">check_circle</span></div>
-          <h2>Password Reset!</h2>
-          <p>Your password has been successfully reset. You can now log in with your new password.</p>
-          <a routerLink="/login" class="btn-glow full-width">Go to Login</a>
         </div>
-      </div>
+      </main>
     </div>
   `,
   styles: [`
-    .auth-page { min-height: 100vh; background: #05092f; display: flex; align-items: center; justify-content: center; padding: 2rem; }
-    .auth-card { max-width: 440px; width: 100%; background: #080e38; border-radius: 1.5rem; padding: 3rem; border: 1px solid rgba(255,255,255,0.05); }
-    .auth-brand { text-align: center; margin-bottom: 2rem; }
-    .logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #5eb4ff, #2aa7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
-    .auth-header { text-align: center; margin-bottom: 2rem; }
-    .icon-circle { width: 64px; height: 64px; border-radius: 50%; background: rgba(94,180,255,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-    .icon-circle .material-icons { font-size: 2rem; color: #5eb4ff; }
-    .auth-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 700; color: #e2e3ff; margin-bottom: 0.5rem; }
-    .auth-header p { color: #a3a8d5; font-size: 0.95rem; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #a3a8d5; margin-bottom: 0.5rem; }
-    .input-wrapper { display: flex; align-items: center; background: #0e1442; border: 1px solid #40456c; border-radius: 0.75rem; padding: 0 1rem; }
-    .input-wrapper:focus-within { border-color: #5eb4ff; }
-    .input-wrapper .material-icons { color: #6e739d; font-size: 1.25rem; margin-right: 0.75rem; }
-    .input-wrapper input { flex: 1; background: transparent; border: none; color: #e2e3ff; padding: 0.85rem 0; font-size: 0.95rem; outline: none; font-family: 'Manrope', sans-serif; }
-    .password-rules { margin-bottom: 1.5rem; }
-    .rule { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #6e739d; margin-bottom: 0.4rem; }
-    .rule .material-icons { font-size: 1rem; }
-    .rule .check { color: #6bfe9c; }
-    .btn-glow { background: linear-gradient(135deg, #5eb4ff, #2aa7ff); border: none; color: #003151; font-weight: 700; padding: 0.85rem 2rem; border-radius: 2rem; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; }
-    .btn-glow:hover { box-shadow: 0 6px 20px rgba(94,180,255,0.4); }
-    .full-width { width: 100%; }
-    .success-state { text-align: center; }
-    .success-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(107,254,156,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-    .success-icon .material-icons { font-size: 2.5rem; color: #6bfe9c; }
-    .success-state h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; color: #e2e3ff; margin-bottom: 0.75rem; }
-    .success-state p { color: #a3a8d5; font-size: 0.9rem; margin-bottom: 2rem; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :host {
+      --primary: #3b82f6;
+      --prime-light: #60a5fa;
+      --bg: #020410;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-muted: #94a3b8;
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; }
+
+    /* Visual Side */
+    .auth-visual {
+      flex: 1; position: relative; background: #05081d; display: flex; align-items: center; padding: 5rem;
+      border-right: 1px solid var(--glass-border);
+    }
+    .v-content { position: relative; z-index: 10; max-width: 480px; }
+    .v-badge {
+      display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; background: rgba(59, 130, 246, 0.1);
+      color: var(--prime-light); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
+    }
+    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: #fff; }
+    .auth-visual h1 span { color: var(--prime-light); }
+    .auth-visual p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 4rem; }
+    
+    .security-features { display: flex; flex-direction: column; gap: 2rem; }
+    .sf-item { display: flex; gap: 1.25rem; }
+    .sf-item .material-icons { font-size: 2rem; color: var(--prime-light); margin-top: 0.25rem; }
+    .sf-text h3 { color: #fff; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .sf-text p { font-size: 0.9rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
+
+    .v-blur-orb {
+      position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%); filter: blur(80px);
+    }
+
+    /* Main Side */
+    .auth-main { width: 600px; display: flex; flex-direction: column; background: #020410; }
+    .main-head { height: 6rem; display: flex; align-items: center; justify-content: space-between; padding: 2rem 4rem; }
+    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .btn-ghost-sm { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
+
+    .form-scroll-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 4rem; }
+    .form-container { width: 100%; max-width: 400px; }
+
+    .reset-icon-prime {
+      width: 64px; height: 64px; border-radius: 1.5rem; background: rgba(59, 130, 246, 0.1);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--primary);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .reset-icon-prime .material-icons { font-size: 2.5rem; }
+
+    .auth-title-wrap { margin-bottom: 2.5rem; }
+    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+    .auth-title-wrap p { color: var(--text-muted); font-size: 1rem; }
+
+    /* Inputs */
+    .f-group { margin-bottom: 1.5rem; }
+    .f-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .input-icon-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon-wrap .material-icons { position: absolute; left: 1.25rem; color: #475569; font-size: 1.25rem; }
+    input {
+      width: 100%; padding: 1.1rem 1.25rem 1.1rem 3.5rem; border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+      color: #fff; font-size: 1rem; transition: 0.2s; outline: none;
+    }
+    input:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
+
+    /* Checklist */
+    .password-checklist { margin: 2rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
+    .check-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .check-item.active { color: #fff; }
+    .check-item.active .material-icons { color: #10b981; }
+    .check-item .material-icons { font-size: 1rem; }
+
+    .btn-prime-glow {
+      background: var(--primary); color: #fff; border: none; padding: 1.1rem; border-radius: 1.25rem;
+      font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    }
+    .btn-prime-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
+
+    /* Success Stage */
+    .success-stage-premium { text-align: center; }
+    .celebrate-icon {
+      width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.1);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: #10b981;
+      border: 2px solid rgba(16, 185, 129, 0.2);
+    }
+    .celebrate-icon .material-icons { font-size: 3.5rem; }
+    .success-stage-premium h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: #fff; margin-bottom: 1rem; }
+    .success-stage-premium p { color: var(--text-muted); line-height: 1.6; margin-bottom: 3rem; font-size: 1.1rem; }
+
+    @media (max-width: 1100px) {
+      .auth-visual { display: none; }
+      .auth-main { width: 100%; }
+    }
   `]
 })
 export class ResetPasswordComponent {
   success = false;
-  onSubmit(e: Event) { e.preventDefault(); this.success = true; }
+  onSubmit(e: Event) { 
+    e.preventDefault(); 
+    this.success = true; 
+  }
 }

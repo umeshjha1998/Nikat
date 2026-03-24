@@ -7,369 +7,305 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="dashboard-layout">
-      <!-- Sidebar -->
-      <aside class="dashboard-sidebar">
-        <div class="user-profile-summary">
-          <div class="avatar">
-            <span class="material-icons">person</span>
+    <div class="dashboard-premium-layout">
+      <!-- Side Navigation -->
+      <aside class="dash-sidebar">
+        <div class="dash-brand">
+          <div class="brand-hex">
+            <span class="material-icons">fingerprint</span>
           </div>
-          <div class="user-info">
-            <h3>Jane Doe</h3>
-            <p>Member</p>
+          <div class="brand-info">
+            <h3>My Nikat</h3>
+            <p>Member Since 2024</p>
           </div>
         </div>
-        
-        <nav class="sidebar-nav">
-          <a routerLink="/dashboard" class="active">
-            <span class="material-icons">space_dashboard</span> Overview
+
+        <nav class="dash-nav">
+          <a class="d-nav-item active">
+            <span class="material-icons">grid_view</span>
+            <span>Overview</span>
           </a>
-          <a href="#">
-            <span class="material-icons">calendar_today</span> My Bookings
+          <a class="d-nav-item">
+            <span class="material-icons">event_note</span>
+            <span>Bookings</span>
           </a>
-          <a href="#">
-            <span class="material-icons">favorite</span> Favorites
+          <a class="d-nav-item">
+            <span class="material-icons">favorite</span>
+            <span>Saved Shops</span>
           </a>
-          <a href="#">
-            <span class="material-icons">chat</span> Messages
+          <a class="d-nav-item">
+            <span class="material-icons">shopping_bag</span>
+            <span>Orders</span>
           </a>
-          <a href="#">
-            <span class="material-icons">star</span> My Reviews
+          <div class="nav-spacer"></div>
+          <a class="d-nav-item">
+            <span class="material-icons">settings</span>
+            <span>Settings</span>
           </a>
-          <a href="#">
-            <span class="material-icons">settings</span> Settings
+          <a class="d-nav-item logout">
+            <span class="material-icons">logout</span>
+            <span>Sign Out</span>
           </a>
         </nav>
+
+        <div class="dash-user-card">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User">
+          <div class="u-meta">
+            <h5>Jane Cooper</h5>
+            <span>Silver Tier</span>
+          </div>
+          <button class="btn-dots"><span class="material-icons">more_vert</span></button>
+        </div>
       </aside>
 
       <!-- Main Content -->
-      <main class="dashboard-main">
-        <header class="dashboard-header">
-          <h1>Dashboard Overview</h1>
+      <main class="dash-content">
+        <header class="dash-header">
+          <div class="h-left">
+            <h1>Welcome Back, <span>Jane</span></h1>
+            <p>You have 2 upcoming appointments this week.</p>
+          </div>
+          <div class="h-right">
+            <button class="btn-search-trigger" routerLink="/browse">
+              <span class="material-icons">search</span>
+              Find Services
+            </button>
+            <div class="notif-bell">
+              <span class="material-icons">notifications</span>
+              <span class="n-dot"></span>
+            </div>
+          </div>
         </header>
 
-        <div class="dashboard-stats">
-          <div class="stat-card">
-            <div class="stat-icon"><span class="material-icons">book_online</span></div>
-            <div class="stat-content">
-              <h3>Upcoming Bookings</h3>
-              <p class="stat-value">2</p>
+        <!-- Stats Grid -->
+        <section class="dash-stats">
+          <div class="stat-glass-card">
+            <div class="s-head">
+              <span class="s-label">Total Points</span>
+              <span class="material-icons s-icon">stars</span>
+            </div>
+            <div class="s-body">
+              <h2>1,250</h2>
+              <div class="s-progress">
+                <div class="bar" style="width: 65%"></div>
+              </div>
+              <p>250 pts to Gold Tier</p>
             </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon"><span class="material-icons">history</span></div>
-            <div class="stat-content">
-              <h3>Past Services</h3>
-              <p class="stat-value">14</p>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon"><span class="material-icons">favorite</span></div>
-            <div class="stat-content">
-              <h3>Saved Shops</h3>
-              <p class="stat-value">5</p>
-            </div>
-          </div>
-        </div>
 
-        <section class="dashboard-section">
-          <h2>Upcoming Appointments</h2>
-          <div class="booking-list">
-            <div class="booking-card">
-              <div class="booking-date">
-                <span class="month">OCT</span>
-                <span class="day">28</span>
+          <div class="stat-glass-card">
+            <div class="s-head">
+              <span class="s-label">Bookings</span>
+              <span class="material-icons s-icon">calendar_today</span>
+            </div>
+            <div class="s-body">
+              <h2>14</h2>
+              <p>Across 5 categories</p>
+              <div class="avatar-group">
+                <span class="a-mini">S</span>
+                <span class="a-mini">B</span>
+                <span class="a-mini">+2</span>
               </div>
-              <div class="booking-details">
-                <h3>Haircut & Beard Trim</h3>
-                <p>at Urban Fade Barbershop</p>
-                <div class="time-location">
-                  <span><span class="material-icons">schedule</span> 2:30 PM</span>
-                  <span><span class="material-icons">location_on</span> 1.2 miles</span>
-                </div>
-              </div>
-              <div class="booking-actions">
-                <button class="btn btn-outline">Reschedule</button>
-              </div>
+            </div>
+          </div>
+
+          <div class="stat-glass-card wallet">
+            <div class="s-head">
+              <span class="s-label">Nikat Credit</span>
+              <span class="material-icons s-icon">account_balance_wallet</span>
+            </div>
+            <div class="s-body">
+              <h2>₹450</h2>
+              <button class="btn-topup">Top Up</button>
             </div>
           </div>
         </section>
+
+        <!-- Main Grid -->
+        <div class="dash-main-grid">
+           <!-- Left: Bookings -->
+           <section class="dash-section">
+             <div class="section-head">
+               <h3>Upcoming Bookings</h3>
+               <a href="#">View All</a>
+             </div>
+
+             <div class="booking-stack">
+               <div class="booking-item-premium" *ngFor="let b of bookings">
+                 <div class="b-date-box" [class.alt]="b.alt">
+                   <span class="m">{{b.month}}</span>
+                   <span class="d">{{b.day}}</span>
+                 </div>
+                 <div class="b-info">
+                    <h4>{{b.service}}</h4>
+                    <p><span class="material-icons">storefront</span> {{b.shop}}</p>
+                    <div class="b-meta">
+                      <span><span class="material-icons">schedule</span> {{b.time}}</span>
+                      <span class="status-tag" [class]="b.status">{{b.status}}</span>
+                    </div>
+                 </div>
+                 <div class="b-actions">
+                   <button class="btn-outline">Reschedule</button>
+                   <button class="btn-icon-blur"><span class="material-icons">more_horiz</span></button>
+                 </div>
+               </div>
+             </div>
+           </section>
+
+           <!-- Right: Recent Activity & Recommendations -->
+           <aside class="dash-side-col">
+             <section class="dash-section">
+                <div class="section-head">
+                  <h3>Recent Activity</h3>
+                </div>
+                <div class="activity-feed">
+                  <div class="act-item">
+                    <div class="act-icon"><span class="material-icons">reviews</span></div>
+                    <div class="act-text">
+                      <p>You reviewed <strong>Urban Fade</strong></p>
+                      <span>2 days ago</span>
+                    </div>
+                  </div>
+                  <div class="act-item">
+                    <div class="act-icon green"><span class="material-icons">payments</span></div>
+                    <div class="act-text">
+                      <p>Refund processed for <strong>Spa Order</strong></p>
+                      <span>5 days ago</span>
+                    </div>
+                  </div>
+                </div>
+             </section>
+
+             <section class="promo-card">
+               <div class="p-content">
+                 <h4>Refer & Earn</h4>
+                 <p>Get ₹200 for every friend you invite to Nikat.</p>
+                 <button class="btn-prime">Invite Friends</button>
+               </div>
+               <span class="material-icons p-deco">redeem</span>
+             </section>
+           </aside>
+        </div>
       </main>
     </div>
   `,
   styles: [`
-    .dashboard-layout {
-      display: flex;
-      min-height: calc(100vh - 72px);
-      background-color: var(--bg-color);
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :host {
+      --primary: #3b82f6;
+      --bg: #020410;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-muted: #94a3b8;
+      font-family: 'Manrope', sans-serif;
     }
 
-    .dashboard-sidebar {
-      width: 280px;
-      background-color: #080e38; /* surface-container-low */
-      border-right: 1px solid var(--border-color);
-      padding: 2rem 0;
-      display: flex;
-      flex-direction: column;
-    }
+    .dashboard-premium-layout { display: flex; min-height: 100vh; background: var(--bg); color: #fff; }
 
-    .user-profile-summary {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0 2rem 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      margin-bottom: 2rem;
-    }
+    /* Sidebar */
+    .dash-sidebar { width: 280px; background: rgba(2, 4, 16, 0.8); backdrop-filter: blur(20px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 2rem 1.25rem; flex-shrink: 0; }
+    .dash-brand { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; padding: 0 0.5rem; }
+    .brand-hex { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), #1d4ed8); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 0 20px rgba(59,130,246,0.3); }
+    .brand-info h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; margin: 0; }
+    .brand-info p { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 2px 0 0; }
 
-    .avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #003151;
-    }
+    .dash-nav { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+    .d-nav-item { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.25rem; border-radius: 1rem; color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: 0.2s; cursor: pointer; }
+    .d-nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .d-nav-item.active { background: rgba(59,130,246,0.1); color: var(--primary); }
+    .d-nav-item.logout { margin-top: auto; color: #ef4444; }
+    .nav-spacer { height: 2rem; }
 
-    .avatar .material-icons {
-      font-size: 1.5rem;
-    }
+    .dash-user-card { background: var(--glass); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 1.25rem; display: flex; align-items: center; gap: 1rem; margin-top: 2rem; }
+    .dash-user-card img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .u-meta h5 { font-size: 0.9rem; margin: 0; }
+    .u-meta span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+    .btn-dots { background: transparent; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; }
 
-    .user-info h3 {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
+    /* Content */
+    .dash-content { flex: 1; padding: 3rem 4rem; overflow-y: auto; }
+    .dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3.5rem; }
+    .dash-header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.75rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .dash-header h1 span { color: var(--primary); }
+    .dash-header p { font-size: 1.15rem; color: var(--text-muted); }
 
-    .user-info p {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
+    .h-right { display: flex; align-items: center; gap: 1.5rem; }
+    .btn-search-trigger { background: var(--glass); border: 1px solid var(--glass-border); color: #fff; padding: 0.85rem 1.5rem; border-radius: 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-search-trigger:hover { background: rgba(255,255,255,0.1); }
+    .notif-bell { position: relative; width: 48px; height: 48px; border-radius: 50%; background: var(--glass); display: flex; align-items: center; justify-content: center; transform: 0.2s; cursor: pointer; }
+    .notif-bell .n-dot { position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid var(--bg); }
 
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      padding: 0 1rem;
-      gap: 0.5rem;
-    }
+    /* Stats */
+    .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem; }
+    .stat-glass-card { background: #080c24; border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2.25rem; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .stat-glass-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+    .s-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .s-label { font-size: 0.75rem; font-weight: 950; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.1em; }
+    .s-icon { color: var(--primary); }
+    .s-body h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin: 0 0 1rem; }
+    .s-body p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+    .s-progress { height: 6px; background: rgba(59,130,246,0.1); border-radius: 3px; margin: 1rem 0; }
+    .bar { height: 100%; background: var(--primary); border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); }
 
-    .sidebar-nav a {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      border-radius: var(--border-radius-md);
-      transition: all var(--transition-fast);
-      font-weight: 500;
-    }
+    .avatar-group { display: flex; gap: -8px; margin-top: 1rem; }
+    .a-mini { width: 30px; height: 30px; border-radius: 50%; background: #1e293b; border: 2px solid #080c24; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; }
 
-    .sidebar-nav a:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: var(--text-main);
-    }
+    .wallet { background: linear-gradient(135deg, #0a113d, #05091f); }
+    .btn-topup { background: var(--primary); border: none; padding: 0.6rem 1.25rem; border-radius: 1rem; color: #fff; font-weight: 800; font-size: 0.85rem; margin-top: 1rem; cursor: pointer; }
 
-    .sidebar-nav a.active {
-      background-color: rgba(94, 180, 255, 0.1);
-      color: var(--primary);
-    }
+    /* Grid */
+    .dash-main-grid { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .section-head h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; }
+    .section-head a { color: var(--primary); font-weight: 800; text-decoration: none; font-size: 0.9rem; }
 
-    .sidebar-nav a .material-icons {
-      font-size: 1.25rem;
-    }
+    .booking-stack { display: flex; flex-direction: column; gap: 1.25rem; }
+    .booking-item-premium { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1.75rem; padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; transition: 0.2s; }
+    .booking-item-premium:hover { background: rgba(255,255,255,0.05); }
 
-    .dashboard-main {
-      flex: 1;
-      padding: 2.5rem 3rem;
-      overflow-y: auto;
-    }
+    .b-date-box { width: 70px; height: 75px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .b-date-box.alt { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); }
+    .b-date-box .m { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em; }
+    .b-date-box .d { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; }
 
-    .dashboard-header {
-      margin-bottom: 2.5rem;
-    }
+    .b-info { flex: 1; }
+    .b-info h4 { font-size: 1.15rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .b-info p { font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-weight: 600; margin: 0 0 0.75rem; }
+    .b-info p .material-icons { font-size: 1rem; color: var(--primary); }
+    .b-meta { display: flex; align-items: center; gap: 1.25rem; }
+    .b-meta span { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-muted); font-weight: 700; }
+    .b-meta .material-icons { font-size: 1.1rem; color: var(--primary); }
+    .status-tag { background: rgba(16,185,129,0.1); color: #10b981; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
 
-    .dashboard-header h1 {
-      font-size: 2rem;
-      color: var(--text-main);
-    }
+    .b-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--glass-border); color: #fff; padding: 0.6rem 1.25rem; border-radius: 1rem; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .btn-icon-blur { width: 40px; height: 40px; border-radius: 50%; background: var(--glass); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-    .dashboard-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
+    /* Side Column */
+    .dash-side-col { display: flex; flex-direction: column; gap: 3rem; }
+    .activity-feed { display: flex; flex-direction: column; gap: 2rem; }
+    .act-item { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .act-icon { width: 44px; height: 44px; border-radius: 1rem; background: rgba(59,130,246,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .act-icon.green { background: rgba(16,185,129,0.1); color: #10b981; }
+    .act-text p { font-size: 0.95rem; margin: 0 0 4px; font-weight: 600; }
+    .act-text span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
-    .stat-card {
-      background-color: var(--bg-paper);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-lg);
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      transition: transform var(--transition-fast);
-    }
+    .promo-card { background: linear-gradient(135deg, #1e3a8a, #020410); border: 1px solid var(--primary); border-radius: 2rem; padding: 2.5rem; position: relative; overflow: hidden; }
+    .p-content h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; margin: 0 0 0.75rem; }
+    .p-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem; font-weight: 600; }
+    .btn-prime { background: var(--primary); border: none; padding: 0.75rem 1.5rem; border-radius: 1rem; color: #fff; font-weight: 800; cursor: pointer; }
+    .p-deco { position: absolute; font-size: 6rem; opacity: 0.1; right: -1rem; bottom: -1rem; transform: rotate(-15deg); }
 
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: #40456c;
-    }
-
-    .stat-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: rgba(94, 180, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-    }
-
-    .stat-icon .material-icons {
-      font-size: 1.75rem;
-    }
-
-    .stat-content h3 {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text-main);
-      font-family: var(--font-family-heading);
-    }
-
-    .dashboard-section {
-      background-color: var(--bg-paper);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-lg);
-      padding: 2rem;
-    }
-
-    .dashboard-section h2 {
-      font-size: 1.25rem;
-      margin-bottom: 1.5rem;
-      color: var(--text-main);
-    }
-
-    .booking-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .booking-card {
-      display: flex;
-      align-items: center;
-      padding: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      background-color: rgba(0, 0, 0, 0.1);
-      border-radius: var(--border-radius-md);
-      gap: 1.5rem;
-    }
-
-    .booking-date {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(94, 180, 255, 0.1);
-      color: var(--primary);
-      width: 70px;
-      height: 70px;
-      border-radius: var(--border-radius-md);
-    }
-
-    .booking-date .month {
-      font-size: 0.875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .booking-date .day {
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
-
-    .booking-details {
-      flex: 1;
-    }
-
-    .booking-details h3 {
-      font-size: 1.125rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .booking-details p {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .time-location {
-      display: flex;
-      gap: 1.5rem;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-    }
-
-    .time-location span {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    .time-location .material-icons {
-      font-size: 1rem;
-    }
-
-    .btn-outline {
-      border: 1px solid var(--border-color);
-      background: transparent;
-      color: var(--text-main);
-      padding: 0.5rem 1rem;
-      border-radius: var(--border-radius-md);
-      transition: all var(--transition-fast);
-    }
-
-    .btn-outline:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-color: var(--text-muted);
-    }
-
-    @media (max-width: 992px) {
-      .dashboard-layout {
-        flex-direction: column;
-      }
-      .dashboard-sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        padding: 1.5rem 0;
-      }
-      .sidebar-nav {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .dashboard-main {
-        padding: 1.5rem;
-      }
-      .booking-card {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    @media (max-width: 1200px) {
+      .dash-main-grid { grid-template-columns: 1fr; }
+      .dash-stats { grid-template-columns: repeat(2, 1fr); }
     }
   `]
 })
 export class DashboardComponent {
+  bookings = [
+    { service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
+    { service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }
+  ];
 }

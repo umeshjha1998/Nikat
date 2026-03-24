@@ -9,103 +9,203 @@ import { AuthService, AuthRequest } from '../../../core/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   template: `
-    <div class="auth-container">
-      <div class="auth-card">
-        <div class="auth-header">
-          <span class="brand-logo">Nikat</span>
-          <h1>Welcome back</h1>
-          <p>Sign in to your Nikat account</p>
-        </div>
-
-        <div *ngIf="errorMessage" class="error-banner">
-          <span class="material-symbols-outlined">error</span>
-          {{ errorMessage }}
-        </div>
-
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
-          <div class="form-group">
-            <label for="emailOrPhone">Email or Phone</label>
-            <input
-              type="text"
-              id="emailOrPhone"
-              formControlName="emailOrPhone"
-              placeholder="Enter your email or phone"
-              [class.error]="loginForm.get('emailOrPhone')?.invalid && loginForm.get('emailOrPhone')?.touched"
-            >
-          </div>
-
-          <div class="form-group">
-            <div class="password-header">
-              <label for="password">Password</label>
-              <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+    <div class="split-auth">
+      <!-- Left: Visual Side (Matching Register) -->
+      <aside class="auth-visual">
+        <div class="v-content">
+          <div class="v-badge">Welcome back</div>
+          <h1>Connect with your <span>neighborhood</span> again.</h1>
+          <p>Sign in to access your local orders, bookings, and community updates.</p>
+          
+          <div class="visual-features">
+            <div class="v-feat">
+              <span class="material-icons">verified_user</span>
+              <span>Secure, encrypted authentication</span>
             </div>
-            <input
-              type="password"
-              id="password"
-              formControlName="password"
-              placeholder="Enter your password"
-              [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-            >
+            <div class="v-feat">
+              <span class="material-icons">bolt</span>
+              <span>Instant access to saved shops</span>
+            </div>
           </div>
-
-          <button type="submit" class="btn btn-primary btn-block glow-effect" [disabled]="loginForm.invalid || isLoading">
-            {{ isLoading ? 'Signing in...' : 'Sign In' }}
-          </button>
-        </form>
-
-        <div class="auth-footer">
-          <p>Don't have an account? <a routerLink="/register">Create one</a></p>
         </div>
-      </div>
+        <div class="v-blur-orb"></div>
+      </aside>
+
+      <!-- Right: Form Side -->
+      <main class="auth-main">
+        <header class="main-head">
+          <a routerLink="/" class="brand">Nikat</a>
+          <p>New here? <a routerLink="/register" class="link-prime">Create Account</a></p>
+        </header>
+
+        <div class="form-scroll-wrap">
+          <div class="form-container">
+            <header class="auth-title-wrap">
+              <h2>Sign In</h2>
+              <p>Enter your credentials to manage your local life.</p>
+            </header>
+
+            <div *ngIf="errorMessage" class="alert-premium error">
+              <span class="material-icons">error_outline</span>
+              {{ errorMessage }}
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="premium-form">
+              <div class="f-group">
+                <label>Email or Phone Number</label>
+                <div class="input-icon-wrap">
+                  <span class="material-icons">alternate_email</span>
+                  <input 
+                    type="text" 
+                    formControlName="emailOrPhone" 
+                    placeholder="Enter email or phone"
+                    [class.error]="loginForm.get('emailOrPhone')?.invalid && loginForm.get('emailOrPhone')?.touched"
+                  >
+                </div>
+              </div>
+
+              <div class="f-group">
+                <div class="label-row">
+                  <label>Password</label>
+                  <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+                </div>
+                <div class="input-icon-wrap">
+                  <span class="material-icons">lock_open</span>
+                  <input 
+                    type="password" 
+                    formControlName="password" 
+                    placeholder="Enter secure password"
+                    [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                  >
+                </div>
+              </div>
+
+              <div class="actions-footer">
+                <button type="submit" class="btn-prime-glow" [disabled]="loginForm.invalid || isLoading">
+                  <span *ngIf="!isLoading">Secure Sign In</span>
+                  <span *ngIf="isLoading" class="loader-dots">Authenticating</span>
+                  <span class="material-icons" *ngIf="!isLoading">login</span>
+                </button>
+              </div>
+
+              <div class="social-separator">
+                <span>OR SIGN IN WITH</span>
+              </div>
+
+              <div class="social-grid">
+                <button type="button" class="btn-social">
+                  <img src="https://www.google.com/favicon.ico" alt="Google">
+                  Google
+                </button>
+                <button type="button" class="btn-social">
+                  <img src="https://www.facebook.com/favicon.ico" alt="Facebook">
+                  Facebook
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
     </div>
   `,
   styles: [`
-    .auth-container {
-      display: flex; justify-content: center; align-items: center;
-      min-height: 100vh; background: linear-gradient(135deg, #05092f 0%, #0e1442 100%); padding: 1rem;
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :host {
+      --primary: #3b82f6;
+      --prime-light: #60a5fa;
+      --bg: #020410;
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-muted: #94a3b8;
+      font-family: 'Manrope', sans-serif;
     }
-    .auth-card {
-      background: rgba(24, 32, 86, 0.6); backdrop-filter: blur(20px);
-      border-radius: 1.5rem; padding: 2.5rem; width: 100%; max-width: 440px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4); border: 1px solid rgba(110, 115, 157, 0.2);
+
+    .split-auth { display: flex; min-height: 100vh; background: var(--bg); overflow: hidden; }
+
+    /* Visual Side */
+    .auth-visual {
+      flex: 1; position: relative; background: #05081d; display: flex; align-items: center; padding: 5rem;
+      border-right: 1px solid var(--glass-border);
     }
-    .brand-logo {
-      font-size: 1.5rem; font-weight: 900; letter-spacing: -0.05em;
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; margin-bottom: 1rem;
+    .v-content { position: relative; z-index: 10; max-width: 480px; }
+    .v-badge {
+      display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; background: rgba(59, 130, 246, 0.1);
+      color: var(--prime-light); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2rem;
     }
-    .auth-header { text-align: center; margin-bottom: 2rem; }
-    .auth-header h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #e2e3ff; }
-    .auth-header p { color: #6e739d; }
-    .error-banner {
-      display: flex; align-items: center; gap: 0.5rem;
-      background: rgba(255, 113, 108, 0.15); border: 1px solid rgba(255, 113, 108, 0.3);
-      color: #ff716c; border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.875rem;
+    .auth-visual h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: #fff; }
+    .auth-visual h1 span { color: var(--prime-light); }
+    .auth-visual p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 3rem; }
+    
+    .visual-features { display: flex; flex-direction: column; gap: 1rem; }
+    .v-feat { display: flex; align-items: center; gap: 0.75rem; color: #fff; font-weight: 600; font-size: 0.95rem; }
+    .v-feat .material-icons { color: var(--prime-light); }
+
+    .v-blur-orb {
+      position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%, -50%); filter: blur(80px);
     }
-    .error-banner .material-symbols-outlined { font-size: 1.25rem; }
-    .form-group { margin-bottom: 1.5rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #e2e3ff; font-size: 0.875rem; }
-    .password-header { display: flex; justify-content: space-between; align-items: center; }
-    .forgot-link { font-size: 0.875rem; color: #5eb4ff; text-decoration: none; }
-    .forgot-link:hover { text-decoration: underline; }
+
+    /* Main Side */
+    .auth-main { width: 600px; display: flex; flex-direction: column; background: #020410; }
+    .main-head { height: 6rem; display: flex; align-items: center; justify-content: space-between; padding: 2rem 4rem; }
+    .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .link-prime { color: var(--primary); text-decoration: none; font-weight: 700; margin-left: 0.5rem; }
+
+    .form-scroll-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 4rem; }
+    .form-container { width: 100%; max-width: 400px; }
+
+    .auth-title-wrap { margin-bottom: 2.5rem; }
+    .auth-title-wrap h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
+    .auth-title-wrap p { color: var(--text-muted); font-size: 1rem; }
+
+    /* Inputs */
+    .f-group { margin-bottom: 1.5rem; }
+    .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+    .f-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .forgot-link { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    
+    .input-icon-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon-wrap .material-icons { position: absolute; left: 1.25rem; color: var(--text-muted); font-size: 1.25rem; }
     input {
-      width: 100%; padding: 0.75rem 1rem;
-      border: 1px solid rgba(110, 115, 157, 0.3); border-radius: 0.75rem;
-      background-color: rgba(19, 26, 76, 0.8); color: #e2e3ff;
-      font-family: 'Manrope', sans-serif; transition: all 0.2s; outline: none; box-sizing: border-box;
+      width: 100%; padding: 1rem 1.25rem 1rem 3.5rem; border-radius: 1rem; border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.02); color: #fff; font-family: inherit; font-size: 1rem; transition: 0.2s;
     }
-    input:focus { border-color: #5eb4ff; box-shadow: 0 0 0 2px rgba(94, 180, 255, 0.2); }
-    input.error { border-color: #ff716c; }
-    .btn-block { width: 100%; padding: 0.875rem; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
-    .glow-effect {
-      background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
-      border: none; border-radius: 1.5rem; color: #003151; font-weight: 700; transition: all 0.2s;
+    input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); outline: none; }
+    input.error { border-color: #f87171; }
+
+    /* Actions */
+    .actions-footer { margin-top: 2rem; }
+    .btn-prime-glow {
+      background: var(--primary); color: #fff; border: none; padding: 1.1rem; border-radius: 1.25rem;
+      font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%;
     }
-    .glow-effect:hover { box-shadow: 0 4px 16px rgba(94, 180, 255, 0.4); transform: translateY(-1px); }
-    .glow-effect:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-    .auth-footer { text-align: center; margin-top: 2rem; font-size: 0.875rem; color: #6e739d; }
-    .auth-footer a { color: #5eb4ff; text-decoration: none; font-weight: 600; }
-    .auth-footer a:hover { text-decoration: underline; }
+    .btn-prime-glow:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
+    .btn-prime-glow:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Socials */
+    .social-separator { display: flex; align-items: center; gap: 1rem; margin: 2rem 0; color: var(--text-muted); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; }
+    .social-separator::before, .social-separator::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); }
+    
+    .social-grid { display: flex; gap: 1rem; }
+    .btn-social {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.85rem;
+      background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1rem; color: #fff;
+      font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+    }
+    .btn-social:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+    .btn-social img { width: 18px; height: 18px; }
+
+    .alert-premium { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border-radius: 1rem; margin-bottom: 2rem; font-size: 0.9rem; font-weight: 600; }
+    .alert-premium.error { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .loader-dots::after { content: '...'; animation: d 1.5s infinite; }
+    @keyframes d { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }
+
+    @media (max-width: 1100px) {
+      .auth-visual { display: none; }
+      .auth-main { width: 100%; }
+    }
   `]
 })
 export class LoginComponent {

@@ -7,10 +7,16 @@
     </div>
     
     <nav class="desktop-nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Explore</a>
+      <a routerLink="/browse" routerLinkActive="active">Discover</a>
+      <a routerLink="/services" routerLinkActive="active">Services</a>
+      <a routerLink="/browse" routerLinkActive="active" [queryParams]="{view: 'shops'}">Shops</a>
+      <a routerLink="/community" routerLinkActive="active">Community</a>
+    </nav>
+
+    <div class="header-actions">
       <a routerLink="/login" class="btn btn-secondary nav-btn">Sign In</a>
       <a routerLink="/register" class="btn btn-primary glow-effect nav-btn">Join Now</a>
-    </nav>
+    </div>
     
     <button class="mobile-menu-btn">
       <span class="material-icons">menu</span>

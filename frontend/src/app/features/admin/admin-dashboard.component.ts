@@ -18,6 +18,11 @@ import { RouterModule } from '@angular/router';
           <a routerLink="/admin/users" class="nav-item"><span class="material-icons">people</span> Users</a>
           <a routerLink="/admin/shops" class="nav-item"><span class="material-icons">storefront</span> Shops</a>
           <a routerLink="/admin/services" class="nav-item"><span class="material-icons">design_services</span> Services</a>
+          <a routerLink="/admin/community-hub" class="nav-item"><span class="material-icons">groups</span> Community Hub</a>
+          <a routerLink="/admin/approvals" class="nav-item"><span class="material-icons">verified</span> Approvals</a>
+          <a routerLink="/admin/advertisements" class="nav-item"><span class="material-icons">campaign</span> Advertisements</a>
+          <a routerLink="/admin/stats" class="nav-item"><span class="material-icons">analytics</span> Platform Stats</a>
+          <a routerLink="/admin/security" class="nav-item"><span class="material-icons">security</span> Security Logs</a>
           <a routerLink="/admin/categories" class="nav-item"><span class="material-icons">category</span> Categories</a>
           <a routerLink="/admin/reviews" class="nav-item"><span class="material-icons">rate_review</span> Reviews</a>
           <a routerLink="/admin/reports" class="nav-item"><span class="material-icons">assessment</span> Reports</a>

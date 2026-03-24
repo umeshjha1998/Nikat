@@ -40,6 +40,11 @@ export const routes: Routes = [
   { path: 'admin/reviews', canActivate: [authGuard], loadComponent: () => import('./features/admin/reviews/admin-reviews.component').then(c => c.AdminReviewsComponent) },
   { path: 'admin/reports', canActivate: [authGuard], loadComponent: () => import('./features/admin/reports/admin-reports.component').then(c => c.AdminReportsComponent) },
   { path: 'admin/settings', canActivate: [authGuard], loadComponent: () => import('./features/admin/settings/admin-settings.component').then(c => c.AdminSettingsComponent) },
+  { path: 'admin/community-hub', canActivate: [authGuard], loadComponent: () => import('./features/admin/community-hub/community-hub').then(c => c.CommunityHub) },
+  { path: 'admin/approvals', canActivate: [authGuard], loadComponent: () => import('./features/admin/approvals/approvals').then(c => c.Approvals) },
+  { path: 'admin/advertisements', canActivate: [authGuard], loadComponent: () => import('./features/admin/advertisements/advertisements').then(c => c.Advertisements) },
+  { path: 'admin/stats', canActivate: [authGuard], loadComponent: () => import('./features/admin/platform-stats/platform-stats').then(c => c.PlatformStats) },
+  { path: 'admin/security', canActivate: [authGuard], loadComponent: () => import('./features/admin/security-logs/security-logs').then(c => c.SecurityLogs) },
 
   // Help
   { path: 'help', loadComponent: () => import('./features/help/help.component').then(c => c.HelpComponent) },

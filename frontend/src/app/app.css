@@ -2,13 +2,13 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(24, 32, 86, 0.6); /* surface_variant with opacity */
+  background-color: rgba(24, 32, 86, 0.6);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(64, 69, 108, 0.3); /* ghost border */
+  border-bottom: 1px solid rgba(64, 69, 108, 0.15);
 }
 
 .header-content {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 1rem 2rem;
   display: flex;
@@ -25,7 +25,7 @@
 }
 
 .logo-icon {
-  color: #5eb4ff; /* primary */
+  color: #5eb4ff;
   font-size: 2rem;
 }
 
@@ -40,32 +40,60 @@
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-.desktop-nav a:not(.btn) {
-  color: var(--text-muted);
+.desktop-nav a {
+  color: #a3a8d5;
   font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+  padding: 0.25rem 0;
 }
 
-.desktop-nav a:not(.btn):hover, .desktop-nav a:not(.btn).active {
-  color: var(--text-main);
-  text-decoration: none;
+.desktop-nav a:hover,
+.desktop-nav a.active {
+  color: #e2e3ff;
+}
+
+.desktop-nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #5eb4ff, #2aa7ff);
+  border-radius: 1px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .nav-btn {
   padding: 0.5rem 1.25rem;
   border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
 }
 
 .btn-secondary {
   background-color: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
+  border: 1px solid #40456c;
+  color: #e2e3ff;
 }
 
 .btn-secondary:hover {
   background-color: rgba(255, 255, 255, 0.05);
+  border-color: #a3a8d5;
 }
 
 .glow-effect {
@@ -73,11 +101,11 @@
   border: none;
   color: #003151;
   font-weight: 700;
-  transition: all var(--transition-fast);
+  transition: all 0.2s;
 }
 
 .glow-effect:hover {
-  box-shadow: 0 4px 12px rgba(94, 180, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(94, 180, 255, 0.4);
   transform: translateY(-1px);
 }
 
@@ -91,6 +119,9 @@
 
 @media (max-width: 768px) {
   .desktop-nav {
+    display: none;
+  }
+  .header-actions {
     display: none;
   }
   .mobile-menu-btn {

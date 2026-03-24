@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Security Logs - Nikat Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary": "#005f2f",
+                        "inverse-primary": "#00639e",
+                        "tertiary-container": "#fc9df7",
+                        "error": "#ff716c",
+                        "on-secondary-fixed-variant": "#006a35",
+                        "outline": "#6e739d",
+                        "primary-fixed-dim": "#0099f0",
+                        "inverse-surface": "#fbf8ff",
+                        "on-surface-variant": "#a3a8d5",
+                        "surface-container": "#0e1442",
+                        "error-container": "#9f0519",
+                        "on-primary-fixed-variant": "#002e4d",
+                        "secondary-fixed": "#6bfe9c",
+                        "surface-container-highest": "#182056",
+                        "tertiary-fixed": "#fc9df7",
+                        "primary-fixed": "#2aa7ff",
+                        "secondary-fixed-dim": "#5bef90",
+                        "error-dim": "#d7383b",
+                        "surface-bright": "#1e2660",
+                        "surface-container-lowest": "#000000",
+                        "primary-dim": "#15a4ff",
+                        "surface-tint": "#5eb4ff",
+                        "secondary-dim": "#5bef90",
+                        "surface-container-low": "#080e38",
+                        "surface-container-high": "#131a4c",
+                        "primary-container": "#2aa7ff",
+                        "on-tertiary-fixed": "#47004c",
+                        "tertiary-fixed-dim": "#ec90e9",
+                        "inverse-on-surface": "#4d527a",
+                        "secondary": "#6bfe9c",
+                        "on-tertiary-fixed-variant": "#702073",
+                        "primary": "#5eb4ff",
+                        "on-secondary-container": "#e3ffe4",
+                        "surface-dim": "#05092f",
+                        "surface-variant": "#182056",
+                        "on-secondary-fixed": "#004a23",
+                        "tertiary-dim": "#ec90e9",
+                        "on-primary-container": "#00253f",
+                        "on-tertiary": "#702073",
+                        "on-error": "#490006",
+                        "on-tertiary-container": "#651469",
+                        "on-background": "#e2e3ff",
+                        "on-primary-fixed": "#000000",
+                        "outline-variant": "#40456c",
+                        "surface": "#05092f",
+                        "secondary-container": "#006d37",
+                        "on-error-container": "#ffa8a3",
+                        "background": "#05092f",
+                        "tertiary": "#ffb3f9",
+                        "on-primary": "#003151",
+                        "on-surface": "#e2e3ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #05092f;
+            color: #e2e3ff;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-950 border-r border-white/5 flex flex-col h-full py-6 px-4 gap-2 font-['Plus_Jakarta_Sans'] font-medium text-sm">
+<div class="mb-8 px-2">
+<h1 class="text-2xl font-black tracking-tighter text-blue-500">Nikat Platform</h1>
+<p class="text-slate-500 text-xs mt-1">System Administrator</p>
+</div>
+<nav class="flex-1 space-y-1"><a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Manage Users</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span>Shop Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+<span>Service Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span>Approvals Workflow</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>System Settings</span>
+</a>
+<!-- Active State Logic applied to Security Logs -->
+<a class="flex items-center gap-3 px-3 py-2 bg-blue-500/10 text-blue-400 border-r-2 border-blue-500 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span>Security Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all duration-200 active:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Platform Analytics</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 px-2">
+<button class="w-full bg-primary-container text-on-primary-container py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Entry
+            </button>
+<div class="mt-6 flex items-center gap-3 p-2 rounded-lg bg-white/5">
+<div class="h-8 w-8 rounded-full bg-surface-container-highest flex items-center justify-center text-blue-400 overflow-hidden">
+<img alt="Admin User Avatar" class="h-full w-full object-cover" data-alt="System administrator profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYwDiOLK0C-Zpq7SHBh5dQiAjxeiF1APA0V9PNp2aJojxeMi677EjXtzx10DZGA4HXjZJpvoLBnu06naLI_Ul76h_ghJ5D_kUy5UGUs7csdnCk-8vVhteZbIxV08UykB1E9vZoz5X7EsK_9LRwsMJeHBKHVH3g2SPlWVHARf0TqpQ2F8xA8YWvA1zuZaWGmUo6RL1SlAaS-Kfy7Hd4XeqBuDUNL4cN95sZ68w6PpMgnwKwpnoeykTc7VH6BKHqAiMYGdkNvNL-Vlrk"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold truncate">Admin User</p>
+<p class="text-[10px] text-slate-500">Super Admin</p>
+</div>
+<span class="material-symbols-outlined text-slate-600 text-sm" data-icon="logout">logout</span>
+</div>
+</div>
+</aside>
+<!-- TopNavBar (Authority: JSON) -->
+<header class="fixed top-0 w-full z-40 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-black/50 font-['Plus_Jakarta_Sans'] antialiased flex items-center justify-between px-6 h-16 w-full ml-64 max-w-[calc(100%-16rem)]">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative max-w-md w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-900/40 border-none rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-blue-500 transition-all" placeholder="Search security events..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Hero Section / Editorial Header -->
+<section class="mb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="text-primary font-bold tracking-widest text-[10px] uppercase block mb-2 font-label">System Monitoring</span>
+<h2 class="text-4xl font-black font-headline tracking-tight text-on-background">Security Logs</h2>
+<p class="text-on-surface-variant max-w-xl mt-2 font-body">Chronological audit trail of all system-level activities, access attempts, and administrative modifications.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-bright transition-colors shadow-lg shadow-black/20">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filter View
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary-fixed rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="ios_share">ios_share</span>
+                        Export Log
+                    </button>
+</div>
+</div>
+</section>
+<!-- Dynamic Filter Bar (No Borders Rule) -->
+<section class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-surface-container-low shadow-sm">
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase ml-1">Event Type</label>
+<select class="bg-surface-container-highest border-none rounded-lg text-sm text-on-surface focus:ring-1 focus:ring-primary py-2 px-3">
+<option>All Events</option>
+<option>Login / Auth</option>
+<option>Data Update</option>
+<option>Security Breach</option>
+<option>Export Request</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase ml-1">Date Range</label>
+<div class="flex items-center bg-surface-container-highest rounded-lg px-3 py-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-sm mr-2 text-slate-500" data-icon="calendar_today">calendar_today</span>
+<span>Last 24 Hours</span>
+<span class="material-symbols-outlined text-sm ml-auto text-slate-500" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase ml-1">Actor Identity</label>
+<input class="bg-surface-container-highest border-none rounded-lg text-sm text-on-surface focus:ring-1 focus:ring-primary py-2 px-3" placeholder="User email or ID..." type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase ml-1">Quick Action</label>
+<button class="w-full bg-secondary-container text-on-secondary-container rounded-lg py-2 text-sm font-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+                    Live Refresh
+                </button>
+</div>
+</section>
+<!-- Log Table Container (Tonal Layering Principle) -->
+<section class="bg-surface-container-low rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50">
+<th class="px-6 py-4 text-[11px] font-black text-on-surface-variant uppercase tracking-wider">Timestamp</th>
+<th class="px-6 py-4 text-[11px] font-black text-on-surface-variant uppercase tracking-wider">User/Actor</th>
+<th class="px-6 py-4 text-[11px] font-black text-on-surface-variant uppercase tracking-wider">Event Type</th>
+<th class="px-6 py-4 text-[11px] font-black text-on-surface-variant uppercase tracking-wider">IP Address</th>
+<th class="px-6 py-4 text-[11px] font-black text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-[11px] font-black text-on-surface-variant uppercase tracking-wider"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Oct 24, 14:32:01</span>
+<span class="text-[10px] text-slate-500">2 minutes ago</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">JD</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold">jane.doe@nikat.com</span>
+<span class="text-[10px] text-slate-500">Super Admin</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg text-blue-400" data-icon="login">login</span>
+<span class="text-sm">Login Success</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-mono text-slate-400">192.168.1.45</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-tighter">Verified</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-white">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Oct 24, 14:15:22</span>
+<span class="text-[10px] text-slate-500">19 minutes ago</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-error/10 flex items-center justify-center text-error text-xs font-bold">SY</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold">system-auth-svc</span>
+<span class="text-[10px] text-slate-500">System Bot</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg text-error" data-icon="security">security</span>
+<span class="text-sm">Failed Access Attempt</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-mono text-slate-400">45.22.112.9</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-error/10 text-error text-[10px] font-black uppercase tracking-tighter">Blocked</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-white">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Oct 24, 13:58:40</span>
+<span class="text-[10px] text-slate-500">36 minutes ago</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary text-xs font-bold">AM</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold">a.marcus@nikat.com</span>
+<span class="text-[10px] text-slate-500">Content Mod</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg text-tertiary" data-icon="edit_square">edit_square</span>
+<span class="text-sm">Record Update</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-mono text-slate-400">10.0.0.124</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-tighter">Success</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-white">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Oct 24, 13:42:15</span>
+<span class="text-[10px] text-slate-500">52 minutes ago</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">JD</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold">jane.doe@nikat.com</span>
+<span class="text-[10px] text-slate-500">Super Admin</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg text-primary" data-icon="output">output</span>
+<span class="text-sm">Data Export</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-mono text-slate-400">192.168.1.45</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-tighter">Completed</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-white">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-white/[0.02] transition-colors group border-none">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Oct 24, 12:30:11</span>
+<span class="text-[10px] text-slate-500">2 hours ago</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-error/10 flex items-center justify-center text-error text-xs font-bold">BS</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold">b.smith@nikat.com</span>
+<span class="text-[10px] text-slate-500">Support Lead</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-lg text-error" data-icon="delete_forever">delete_forever</span>
+<span class="text-sm">Bulk Delete</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-sm font-mono text-slate-400">10.0.0.89</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded-md bg-tertiary-container text-on-tertiary-container text-[10px] font-black uppercase tracking-tighter">MFA Required</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-white">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination/Footer -->
+<div class="p-6 bg-surface-container-high/30 flex items-center justify-between">
+<p class="text-xs text-on-surface-variant font-medium">Showing <span class="text-on-surface">1-25</span> of 1,492 entries</p>
+<div class="flex items-center gap-2">
+<button class="h-8 w-8 rounded-lg flex items-center justify-center bg-white/5 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="h-8 px-3 rounded-lg flex items-center justify-center bg-primary/20 text-primary text-xs font-bold">1</button>
+<button class="h-8 px-3 rounded-lg flex items-center justify-center hover:bg-white/5 text-slate-400 text-xs font-bold transition-colors">2</button>
+<button class="h-8 px-3 rounded-lg flex items-center justify-center hover:bg-white/5 text-slate-400 text-xs font-bold transition-colors">3</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center bg-white/5 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Bento Stats Section (Asymmetric Grid) -->
+<section class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 rounded-2xl bg-surface-container-low shadow-lg">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-secondary text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="arrow_upward">arrow_upward</span> 12%
+                    </span>
+</div>
+<h3 class="text-3xl font-black font-headline">99.8%</h3>
+<p class="text-sm text-on-surface-variant mt-1">Auth Success Rate</p>
+</div>
+<div class="p-6 rounded-2xl bg-gradient-to-br from-surface-container-low to-surface-container-high shadow-lg border-l-4 border-error/50">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-error text-3xl" data-icon="gpp_maybe" style="font-variation-settings: 'FILL' 1;">gpp_maybe</span>
+<span class="px-2 py-0.5 rounded-full bg-error/20 text-error text-[10px] font-bold">Alert</span>
+</div>
+<h3 class="text-3xl font-black font-headline text-error-dim">24</h3>
+<p class="text-sm text-on-surface-variant mt-1">Blocked IPs (24h)</p>
+</div>
+<div class="p-6 rounded-2xl bg-surface-container-low shadow-lg relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="database">database</span>
+</div>
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="settings_backup_restore">settings_backup_restore</span>
+<span class="text-on-surface-variant text-[10px] font-bold">3.2 GB Log Vol</span>
+</div>
+<h3 class="text-3xl font-black font-headline">Daily Audit</h3>
+<p class="text-sm text-on-surface-variant mt-1">Status: Optimized</p>
+</div>
+</section>
+</main>
+<!-- Contextual FAB (Restricted Use Case per Instructions) -->
+<!-- Suppression Logic: Suppressed on Details/Transactional screens, but shown on Dashboard/List views where a new entry might be needed -->
+<button class="fixed bottom-8 right-8 h-14 w-14 rounded-full bg-gradient-to-tr from-primary to-primary-container shadow-2xl shadow-primary/40 flex items-center justify-center text-on-primary hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</body></html>
