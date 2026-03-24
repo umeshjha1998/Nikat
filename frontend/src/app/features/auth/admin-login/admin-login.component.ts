@@ -76,7 +76,7 @@ import { AuthService } from '../../../core/auth.service';
     :host {
       --gold: #f59e0b;
       --gold-dark: #b45309;
-      --bg: #030510;
+      --bg: var(--bg);
       --glass: rgba(255, 255, 255, 0.02);
       --glass-border: rgba(255, 255, 255, 0.08);
       font-family: 'Manrope', sans-serif;
@@ -89,15 +89,15 @@ import { AuthService } from '../../../core/auth.service';
 
     .glass-login-container {
       width: 100%; max-width: 480px; position: relative; z-index: 20;
-      background: rgba(8, 12, 36, 0.6); backdrop-filter: blur(24px);
+      background: var(--card-bg); backdrop-filter: blur(24px);
       border-radius: 2.5rem; border: 1px solid var(--glass-border); padding: 3.5rem;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
     .admin-brand-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
     .logo-text {
-      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none;
-      background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none;
+      background: linear-gradient(135deg, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .portal-tag {
       display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 2rem;
@@ -107,20 +107,20 @@ import { AuthService } from '../../../core/auth.service';
     .portal-tag .material-icons { font-size: 1rem; }
 
     .head-text { margin-bottom: 2.5rem; }
-    .head-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: #fff; margin-bottom: 0.75rem; }
-    .head-text p { color: #94a3b8; font-size: 1rem; line-height: 1.6; }
+    .head-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.75rem; }
+    .head-text p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; }
 
     .admin-form-prime { display: flex; flex-direction: column; gap: 1.5rem; }
-    .f-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .f-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
     
     .input-prime-wrap { position: relative; display: flex; align-items: center; }
-    .input-prime-wrap .material-icons { position: absolute; left: 1.25rem; color: #475569; font-size: 1.25rem; }
+    .input-prime-wrap .material-icons { position: absolute; left: 1.25rem; color: var(--text-muted); font-size: 1.25rem; }
     .input-prime-wrap input {
       width: 100%; padding: 1.1rem 1.25rem 1.1rem 3.5rem; border-radius: 1.25rem;
-      background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
-      color: #fff; font-size: 1rem; transition: 0.2s; outline: none;
+      background: rgba(0, 0, 0, 0.05); border: 1px solid var(--glass-border);
+      color: var(--text-main); font-size: 1rem; transition: 0.2s; outline: none;
     }
-    .input-prime-wrap input:focus { border-color: var(--gold); background: rgba(0,0,0,0.3); }
+    .input-prime-wrap input:focus { border-color: var(--gold); background: rgba(0,0,0,0.1); }
 
     .error-premium-msg {
       background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2);
@@ -137,10 +137,10 @@ import { AuthService } from '../../../core/auth.service';
 
     .admin-footer-links { margin-top: 2.5rem; text-align: center; }
     .back-link {
-      display: inline-flex; align-items: center; gap: 0.5rem; color: #64748b; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none;
       font-size: 0.875rem; font-weight: 600; transition: 0.2s;
     }
-    .back-link:hover { color: #fff; }
+    .back-link:hover { color: var(--text-main); }
 
     .ambient-glow { position: absolute; width: 600px; height: 600px; filter: blur(120px); border-radius: 50%; z-index: 10; opacity: 0.4; }
     .ambient-glow.golden { top: -200px; left: -200px; background: radial-gradient(circle, var(--gold), transparent 70%); }
@@ -156,21 +156,39 @@ export class AdminLoginComponent {
   error = '';
   loading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   onLogin(e: Event) {
     e.preventDefault();
     this.loading = true;
     this.error = '';
-    this.authService.login({ emailOrPhone: this.email, password: this.password }).subscribe({
-      next: () => { 
-        this.loading = false; 
-        this.router.navigate(['/admin']); 
-      },
-      error: () => { 
-        this.loading = false; 
-        this.error = 'Invalid admin credentials. Please try again.'; 
-      }
-    });
+
+    // Hardcoded logic for testing as requested
+    if (this.email === 'admin' && this.password === 'admin') {
+      setTimeout(() => {
+        const dummyUser = {
+          id: 'admin-1',
+          firstName: 'System',
+          lastName: 'Administrator',
+          email: 'admin@nikat.com',
+          phone: '0000000000',
+          role: 'ADMIN',
+          isShopOwner: false,
+          isServiceProvider: false,
+          status: 'ACTIVE'
+        };
+        localStorage.setItem('nikat_token', 'mock-admin-session-jwt');
+        localStorage.setItem('nikat_user', JSON.stringify(dummyUser));
+
+        // Use timeout to simulate login delay/process
+        this.loading = false;
+        this.router.navigate(['/admin']);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        this.loading = false;
+        this.error = 'Invalid admin credentials. Please try again';
+      }, 800);
+    }
   }
 }

@@ -1,114 +1,54 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-advertisements',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule],
   template: `
-    <div class="admin-layout">
-      <aside class="admin-sidebar">
-        <div class="admin-brand"><a routerLink="/" class="logo">Nikat</a><span class="admin-tag">Admin</span></div>
-        <nav class="sidebar-nav">
-          <a routerLink="/admin" class="nav-item"><span class="material-icons">space_dashboard</span> Dashboard</a>
-          <a routerLink="/admin/users" class="nav-item"><span class="material-icons">people</span> Users</a>
-          <a routerLink="/admin/shops" class="nav-item"><span class="material-icons">storefront</span> Shops</a>
-          <a routerLink="/admin/services" class="nav-item"><span class="material-icons">design_services</span> Services</a>
-          <a routerLink="/admin/community-hub" class="nav-item"><span class="material-icons">groups</span> Community Hub</a>
-          <a routerLink="/admin/approvals" class="nav-item"><span class="material-icons">verified</span> Approvals</a>
-          <a routerLink="/admin/advertisements" class="nav-item active"><span class="material-icons">campaign</span> Advertisements</a>
-          <a routerLink="/admin/stats" class="nav-item"><span class="material-icons">analytics</span> Platform Stats</a>
-          <a routerLink="/admin/security" class="nav-item"><span class="material-icons">security</span> Security Logs</a>
-          <a routerLink="/admin/categories" class="nav-item"><span class="material-icons">category</span> Categories</a>
-          <a routerLink="/admin/reviews" class="nav-item"><span class="material-icons">rate_review</span> Reviews</a>
-          <a routerLink="/admin/reports" class="nav-item"><span class="material-icons">assessment</span> Reports</a>
-        </nav>
-      </aside>
+    <div class="page-header">
+      <h1>Advertisement Management</h1>
+      <button class="btn-add"><span class="material-icons">add</span> New Campaign</button>
+    </div>
 
-      <main class="admin-main">
-        <div class="page-header">
-          <h1>Manage Advertisements</h1>
-          <div class="header-actions">
-            <button class="outline-btn" style="background: rgba(94, 180, 255, 0.2); border-color: #5eb4ff; color: #5eb4ff;"><span class="material-icons">add</span> New Campaign</button>
-            <div class="search-box"><span class="material-icons">search</span><input type="text" placeholder="Search campaigns..."></div>
-          </div>
-        </div>
+    <div class="stats-grid" style="margin-bottom:1.5rem">
+      <div class="stat-card" *ngFor="let s of adStats">
+        <div class="stat-icon" [style.background]="s.bg" [style.color]="s.color"><span class="material-icons">{{s.icon}}</span></div>
+        <div class="stat-content"><span class="stat-label">{{s.label}}</span><span class="stat-value">{{s.value}}</span></div>
+      </div>
+    </div>
 
-        <div class="stats-grid mt-4">
-          <div class="stat-card" style="border-left: 4px solid #5eb4ff;">
-            <p class="stat-title uppercase">Active Campaigns</p>
-            <div class="stat-value-row">
-              <span class="stat-number">12</span>
-            </div>
-          </div>
-          <div class="stat-card" style="border-left: 4px solid #c084fc;">
-            <p class="stat-title uppercase">Avg. CTR</p>
-            <div class="stat-value-row">
-              <span class="stat-number">4.2%</span>
-              <span class="stat-change text-secondary">+0.8% <span class="material-icons">trending_up</span></span>
-            </div>
-          </div>
-          <div class="stat-card" style="border-left: 4px solid #ffb347;">
-            <p class="stat-title uppercase">Ad Revenue (MTD)</p>
-            <div class="stat-value-row">
-              <span class="stat-number">₹1.8L</span>
-              <span class="stat-change text-primary">+15% <span class="material-icons">trending_up</span></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="content-section mt-4">
-          <div class="section-header space-between">
-            <h2>Live Campaigns</h2>
-          </div>
-
-          <table class="data-table mt-4">
-            <thead>
-              <tr>
-                <th>Campaign Name</th>
-                <th>Sponsor</th>
-                <th>Placement</th>
-                <th>Performance</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <p class="bold">Diwali Special Discounts</p>
-                  <p class="muted sm">Ends in 5 days</p>
-                </td>
-                <td><div class="user-row">Golden Crust Bakery</div></td>
-                <td><span class="badge badge-outline">Featured Shop</span></td>
-                <td><span class="muted text-sm">CTR: 5.1%</span><br><span class="muted text-sm">Impressions: 12k</span></td>
-                <td><span class="badge badge-active">Active</span></td>
-                <td>
-                  <button class="icon-btn text-primary"><span class="material-icons">edit</span></button>
-                  <button class="icon-btn text-error"><span class="material-icons">pause_circle</span></button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p class="bold">Premium Hair Spa Package</p>
-                  <p class="muted sm">Ends in 12 days</p>
-                </td>
-                <td><div class="user-row">Urban Style Salon</div></td>
-                <td><span class="badge badge-outline">Search Banner</span></td>
-                <td><span class="muted text-sm">CTR: 3.8%</span><br><span class="muted text-sm">Impressions: 4k</span></td>
-                <td><span class="badge badge-active">Active</span></td>
-                <td>
-                  <button class="icon-btn text-primary"><span class="material-icons">edit</span></button>
-                  <button class="icon-btn text-error"><span class="material-icons">pause_circle</span></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
+    <div class="table-container">
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th>Advertiser</th><th>Type</th><th>Impressions</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let a of ads">
+            <td class="name-cell">{{a.name}}</td>
+            <td>{{a.advertiser}}</td>
+            <td><span class="badge badge-outline">{{a.type}}</span></td>
+            <td>{{a.impressions}}</td>
+            <td><span class="badge" [class]="'badge-' + a.badge">{{a.status}}</span></td>
+            <td>
+              <button class="icon-btn"><span class="material-icons">edit</span></button>
+              <button class="icon-btn danger"><span class="material-icons">delete</span></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   `,
-  styleUrls: ['../community-hub/community-hub.css']
+  styleUrls: ['../admin-shared.css']
 })
-export class Advertisements {}
+export class Advertisements {
+  adStats = [
+    { label: 'Active Campaigns', value: '12', icon: 'campaign', bg: 'rgba(94,180,255,0.1)', color: '#5eb4ff' },
+    { label: 'Total Spend (MTD)', value: '₹48K', icon: 'payments', bg: 'rgba(107,254,156,0.1)', color: '#6bfe9c' },
+    { label: 'Avg CTR', value: '3.2%', icon: 'ads_click', bg: 'rgba(255,179,71,0.1)', color: '#ffb347' }
+  ];
+  ads = [
+    { name: 'Summer Sale — Golden Crust', advertiser: 'Priya S.', type: 'Banner', impressions: '12.4K', status: 'Active', badge: 'active' },
+    { name: 'New Salon Opening', advertiser: 'Rahul K.', type: 'Popup', impressions: '3.2K', status: 'Pending', badge: 'warning-soft' },
+    { name: 'Wellness Month Promo', advertiser: 'Zen Spa', type: 'Featured', impressions: '8.7K', status: 'Active', badge: 'active' },
+    { name: 'Festive Discount — Home Services', advertiser: 'Amit D.', type: 'Banner', impressions: '1.1K', status: 'Expired', badge: 'error-soft' }
+  ];
+}

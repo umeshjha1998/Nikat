@@ -31,20 +31,27 @@ export const routes: Routes = [
   { path: 'checkout/shipping', canActivate: [authGuard], loadComponent: () => import('./features/checkout/shipping/shipping.component').then(c => c.ShippingComponent) },
   { path: 'checkout/payment', canActivate: [authGuard], loadComponent: () => import('./features/checkout/payment/payment.component').then(c => c.PaymentComponent) },
 
-  // Admin Panel
-  { path: 'admin', canActivate: [authGuard], loadComponent: () => import('./features/admin/admin-dashboard.component').then(c => c.AdminDashboardComponent) },
-  { path: 'admin/users', canActivate: [authGuard], loadComponent: () => import('./features/admin/users/admin-users.component').then(c => c.AdminUsersComponent) },
-  { path: 'admin/shops', canActivate: [authGuard], loadComponent: () => import('./features/admin/shops/admin-shops.component').then(c => c.AdminShopsComponent) },
-  { path: 'admin/services', canActivate: [authGuard], loadComponent: () => import('./features/admin/services/admin-services.component').then(c => c.AdminServicesComponent) },
-  { path: 'admin/categories', canActivate: [authGuard], loadComponent: () => import('./features/admin/categories/admin-categories.component').then(c => c.AdminCategoriesComponent) },
-  { path: 'admin/reviews', canActivate: [authGuard], loadComponent: () => import('./features/admin/reviews/admin-reviews.component').then(c => c.AdminReviewsComponent) },
-  { path: 'admin/reports', canActivate: [authGuard], loadComponent: () => import('./features/admin/reports/admin-reports.component').then(c => c.AdminReportsComponent) },
-  { path: 'admin/settings', canActivate: [authGuard], loadComponent: () => import('./features/admin/settings/admin-settings.component').then(c => c.AdminSettingsComponent) },
-  { path: 'admin/community-hub', canActivate: [authGuard], loadComponent: () => import('./features/admin/community-hub/community-hub').then(c => c.CommunityHub) },
-  { path: 'admin/approvals', canActivate: [authGuard], loadComponent: () => import('./features/admin/approvals/approvals').then(c => c.Approvals) },
-  { path: 'admin/advertisements', canActivate: [authGuard], loadComponent: () => import('./features/admin/advertisements/advertisements').then(c => c.Advertisements) },
-  { path: 'admin/stats', canActivate: [authGuard], loadComponent: () => import('./features/admin/platform-stats/platform-stats').then(c => c.PlatformStats) },
-  { path: 'admin/security', canActivate: [authGuard], loadComponent: () => import('./features/admin/security-logs/security-logs').then(c => c.SecurityLogs) },
+  // Admin Panel — nested under AdminLayoutComponent
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/admin/admin-layout.component').then(c => c.AdminLayoutComponent),
+    children: [
+      { path: '', loadComponent: () => import('./features/admin/admin-dashboard.component').then(c => c.AdminDashboardComponent) },
+      { path: 'users', loadComponent: () => import('./features/admin/users/admin-users.component').then(c => c.AdminUsersComponent) },
+      { path: 'shops', loadComponent: () => import('./features/admin/shops/admin-shops.component').then(c => c.AdminShopsComponent) },
+      { path: 'services', loadComponent: () => import('./features/admin/services/admin-services.component').then(c => c.AdminServicesComponent) },
+      { path: 'categories', loadComponent: () => import('./features/admin/categories/admin-categories.component').then(c => c.AdminCategoriesComponent) },
+      { path: 'reviews', loadComponent: () => import('./features/admin/reviews/admin-reviews.component').then(c => c.AdminReviewsComponent) },
+      { path: 'reports', loadComponent: () => import('./features/admin/reports/admin-reports.component').then(c => c.AdminReportsComponent) },
+      { path: 'settings', loadComponent: () => import('./features/admin/settings/admin-settings.component').then(c => c.AdminSettingsComponent) },
+      { path: 'community-hub', loadComponent: () => import('./features/admin/community-hub/community-hub').then(c => c.CommunityHub) },
+      { path: 'approvals', loadComponent: () => import('./features/admin/approvals/approvals').then(c => c.Approvals) },
+      { path: 'advertisements', loadComponent: () => import('./features/admin/advertisements/advertisements').then(c => c.Advertisements) },
+      { path: 'stats', loadComponent: () => import('./features/admin/platform-stats/platform-stats').then(c => c.PlatformStats) },
+      { path: 'security', loadComponent: () => import('./features/admin/security-logs/security-logs').then(c => c.SecurityLogs) },
+    ]
+  },
 
   // Help
   { path: 'help', loadComponent: () => import('./features/help/help.component').then(c => c.HelpComponent) },

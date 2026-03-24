@@ -1,124 +1,72 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-security-logs',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule],
   template: `
-    <div class="admin-layout">
-      <aside class="admin-sidebar">
-        <div class="admin-brand"><a routerLink="/" class="logo">Nikat</a><span class="admin-tag">Admin</span></div>
-        <nav class="sidebar-nav">
-          <a routerLink="/admin" class="nav-item"><span class="material-icons">space_dashboard</span> Dashboard</a>
-          <a routerLink="/admin/users" class="nav-item"><span class="material-icons">people</span> Users</a>
-          <a routerLink="/admin/shops" class="nav-item"><span class="material-icons">storefront</span> Shops</a>
-          <a routerLink="/admin/services" class="nav-item"><span class="material-icons">design_services</span> Services</a>
-          <a routerLink="/admin/community-hub" class="nav-item"><span class="material-icons">groups</span> Community Hub</a>
-          <a routerLink="/admin/approvals" class="nav-item"><span class="material-icons">verified</span> Approvals</a>
-          <a routerLink="/admin/advertisements" class="nav-item"><span class="material-icons">campaign</span> Advertisements</a>
-          <a routerLink="/admin/stats" class="nav-item"><span class="material-icons">analytics</span> Platform Stats</a>
-          <a routerLink="/admin/security" class="nav-item active"><span class="material-icons">security</span> Security Logs</a>
-          <a routerLink="/admin/categories" class="nav-item"><span class="material-icons">category</span> Categories</a>
-          <a routerLink="/admin/reviews" class="nav-item"><span class="material-icons">rate_review</span> Reviews</a>
-          <a routerLink="/admin/reports" class="nav-item"><span class="material-icons">assessment</span> Reports</a>
-        </nav>
-      </aside>
-
-      <main class="admin-main">
-        <div class="page-header">
-          <h1>Security & Access Logs</h1>
-          <div class="header-actions">
-            <button class="outline-btn"><span class="material-icons">download</span> Export Logs</button>
-            <div class="search-box"><span class="material-icons">search</span><input type="text" placeholder="Search IP, User, Action..."></div>
-          </div>
-        </div>
-
-        <div class="stats-grid mt-4">
-          <div class="stat-card" style="border-left: 4px solid #ff716c;">
-            <p class="stat-title uppercase">Failed Logins</p>
-            <div class="stat-value-row">
-              <span class="stat-number">42</span>
-              <span class="stat-change text-error">+12 <span class="material-icons">trending_up</span></span>
-            </div>
-          </div>
-          <div class="stat-card" style="border-left: 4px solid #c084fc;">
-            <p class="stat-title uppercase">Suspicious Activities</p>
-            <div class="stat-value-row">
-              <span class="stat-number">3</span>
-              <span class="stat-change text-secondary">-2 <span class="material-icons">trending_down</span></span>
-            </div>
-          </div>
-          <div class="stat-card" style="border-left: 4px solid #6bfe9c;">
-            <p class="stat-title uppercase">System Uptime</p>
-            <div class="stat-value-row">
-              <span class="stat-number">99.9%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="content-section mt-4">
-          <div class="section-header space-between">
-            <h2>Recent Activity Logs</h2>
-          </div>
-
-          <table class="data-table mt-4">
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>User / IP</th>
-                <th>Action</th>
-                <th>Status</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><p class="muted sm">Oct 24, 2024</p><p class="bold">14:02:45</p></td>
-                <td>
-                  <p class="bold">admin@nikat.com</p>
-                  <p class="muted sm">IP: 192.168.1.4</p>
-                </td>
-                <td><span class="badge badge-outline">Login</span></td>
-                <td><span class="badge badge-active">Success</span></td>
-                <td><p class="muted sm">Chrome on Windows 11</p></td>
-              </tr>
-              <tr>
-                <td><p class="muted sm">Oct 24, 2024</p><p class="bold">13:45:12</p></td>
-                <td>
-                  <p class="bold">Unknown</p>
-                  <p class="muted sm">IP: 45.33.12.89</p>
-                </td>
-                <td><span class="badge badge-outline">Login</span></td>
-                <td><span class="badge badge-error">Failed</span></td>
-                <td><p class="muted sm">Invalid Password (3 attempts)</p></td>
-              </tr>
-              <tr>
-                <td><p class="muted sm">Oct 24, 2024</p><p class="bold">12:30:00</p></td>
-                <td>
-                  <p class="bold">System</p>
-                  <p class="muted sm">IP: Localhost</p>
-                </td>
-                <td><span class="badge" style="background: rgba(192,132,252,0.1); color: #c084fc;">Backup</span></td>
-                <td><span class="badge badge-active">Success</span></td>
-                <td><p class="muted sm">Automated Database Backup Completed</p></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="pagination flex-between mt-3 px-2">
-            <span class="muted text-sm">Showing 1-3 of 5,024</span>
-            <div class="pagination-controls">
-              <button>&lt;</button>
-              <button class="active">1</button>
-              <button>2</button>
-              <button>&gt;</button>
-            </div>
-          </div>
-        </div>
-      </main>
+    <div class="page-header">
+      <h1>Security Logs</h1>
+      <div class="header-actions">
+        <div class="search-box"><span class="material-icons">search</span><input placeholder="Search logs..."></div>
+        <button class="export-btn"><span class="material-icons">file_download</span> Export</button>
+      </div>
     </div>
+
+    <div class="stats-grid" style="margin-bottom:1.5rem">
+      <div class="stat-card" *ngFor="let s of secStats">
+        <div class="stat-icon" [style.background]="s.bg" [style.color]="s.color"><span class="material-icons">{{s.icon}}</span></div>
+        <div class="stat-content"><span class="stat-label">{{s.label}}</span><span class="stat-value">{{s.value}}</span></div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead><tr><th>Event</th><th>User</th><th>IP Address</th><th>Time</th><th>Severity</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let log of logs">
+            <td class="name-cell">{{log.event}}</td>
+            <td><div class="user-row"><div class="avatar">{{log.initials}}</div><span>{{log.user}}</span></div></td>
+            <td class="muted">{{log.ip}}</td>
+            <td class="muted">{{log.time}}</td>
+            <td><span class="badge" [class]="'badge-' + log.badge">{{log.severity}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <section class="admin-section" style="margin-top:1.5rem">
+      <div class="section-header"><h2><span class="material-icons">warning</span> Active Alerts</h2></div>
+      <div class="escalation-list">
+        <div class="escalation-item" *ngFor="let a of alerts">
+          <div class="dot" [class]="a.dotClass"></div>
+          <div>
+            <p style="font-size:0.9rem;color:var(--on-surface-variant)">{{a.message}}</p>
+            <p class="text-xs muted mt-1">{{a.time}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   `,
-  styleUrls: ['../community-hub/community-hub.css']
+  styleUrls: ['../admin-shared.css']
 })
-export class SecurityLogs {}
+export class SecurityLogs {
+  secStats = [
+    { label: 'Login Attempts (24h)', value: '1,247', icon: 'login', bg: 'rgba(94,180,255,0.1)', color: '#5eb4ff' },
+    { label: 'Failed Logins', value: '23', icon: 'block', bg: 'rgba(255,113,108,0.1)', color: '#ff716c' },
+    { label: 'Active Sessions', value: '342', icon: 'devices', bg: 'rgba(107,254,156,0.1)', color: '#6bfe9c' },
+    { label: 'Threats Blocked', value: '7', icon: 'gpp_bad', bg: 'rgba(255,179,71,0.1)', color: '#ffb347' }
+  ];
+  logs = [
+    { event: 'Admin login', user: 'Priya S.', initials: 'PS', ip: '192.168.1.45', time: '2 min ago', severity: 'Info', badge: 'active' },
+    { event: 'Failed login attempt (3x)', user: 'unknown', initials: '??', ip: '45.33.12.87', time: '15 min ago', severity: 'Warning', badge: 'warning-soft' },
+    { event: 'Password changed', user: 'Rahul K.', initials: 'RK', ip: '192.168.1.22', time: '1 hr ago', severity: 'Info', badge: 'active' },
+    { event: 'Suspicious API call', user: 'Bot', initials: 'BT', ip: '103.89.12.2', time: '2 hrs ago', severity: 'Critical', badge: 'error-soft' },
+    { event: 'User disabled by admin', user: 'Dev P.', initials: 'DP', ip: '192.168.1.45', time: '5 hrs ago', severity: 'Warning', badge: 'warning-soft' }
+  ];
+  alerts = [
+    { message: 'Multiple failed login attempts from IP 45.33.12.87 — consider blocking', time: '15 min ago', dotClass: 'dot-error' },
+    { message: 'Unusual API traffic spike detected — monitoring', time: '2 hrs ago', dotClass: 'dot-tertiary' }
+  ];
+}
