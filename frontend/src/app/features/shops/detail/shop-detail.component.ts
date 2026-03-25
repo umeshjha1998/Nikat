@@ -523,12 +523,7 @@ export class ShopDetailComponent implements OnInit {
     ]
   };
 
-  products = [
-    { name: 'Sourdough Boule', description: '24-hour fermented with organic wheat. Crispy crust with a tangy, airy interior.', price: '₹180', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm', chips: ['Organic', 'Vegan', 'Slow Fermented'], time: 'Baked at 6 AM' },
-    { name: 'Butter Croissant', description: 'Flaky layers of French-style pastry made with premium Amul butter.', price: '₹120', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt5Jyfc8T2q_H_cOv2GbLu4JlJaXx--NL_i4FjuEiNDxaNPUKgGvH1N1wCsJcLXMHq8BfOtheFfFaB2lxC53fqH64cVOLDuPIR2hIxEYYzrSgHdfKH8YCNEwq_fAVkidHllvZopbHxFScIqJ5dVHPWnHt9xxcLT0yz-wlCGBN_3xBBD8bU-f9qdAaLy6dlYZw7fhdZWCgVZkWJ3RK2NLAExSGDYPGqpN1zn-TwONPG3w3cjkZTrQ5qWZHYPnkJB547Nm7AvT3IPLB', chips: ['Popular', 'Buttery'], time: 'Fresh batch hourly' },
-    { name: 'Masala Patties', description: 'Spiced potato-pea filling in golden, flaky pastry. A neighborhood favorite!', price: '₹60', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUsuAfvwhrFfOLDeqIh9jssV5dDYr4128gK4R1OjZxeSCTrgLiXW_sLN_0I2baZ3EsypaWtPfiUNvYRrGdPWD5WlkT7vuYJN2CX9cnA4SnBsHmZuJCFnUQBUdJWH3qOJyab8dFMnxIme0I7QjwsZGFMGiDvzCLKaJN1mHfCzXtGlwKkDtFgLmN_yFEKvQ9ndJUTlB6YqTUiTEoYKmRFphZC2NuYu6euyu4xT0bEdwcLhuSL16lOZr82Mh8KRsn9plMdkPyt7NvYRx6', chips: ['Bestseller', 'Spicy'], time: 'Available till 8 PM' },
-    { name: 'Chocolate Lava Cake', description: 'Rich Belgian chocolate with a warm, molten center. Served with vanilla cream.', price: '₹250', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCM1Qnj0VQEg70OrDBJmRJJWTVNTT3y_Grqv_5MwrPY-hnO0pioqbHD1hKnuzVR3X4IaexULI2Nvz0mVCi30BxotDpzU8NIXlO1gzdlKqgHfMbIRTytX2fdcqdLLjgRT6PB7mF_Bh_zjCbpL99ST2_s6zss2t5CZvMa9xLms2AwjtVb0PPqpMrsgwGEyH7qbNFNkjzRoczmWMM77uDuHuNgSyVu-B-SuFjC6899oWRM26K35PbnNI1ClKn79xDjVuUQEWlRBfj9Q2PH', chips: ['Indulgent', 'Premium'], time: 'Made to order' }
-  ];
+  products: any[] = [];
 
   galleryImages = [
     'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
@@ -585,6 +580,17 @@ export class ShopDetailComponent implements OnInit {
               rating: s.averageRating?.toFixed(1) || this.shop.rating
             };
           }
+        }
+      });
+      
+      this.apiService.getProductsByShop(this.shopId).subscribe({
+        next: (data) => {
+          this.products = data.map(p => ({
+            ...p,
+            price: '₹' + p.price,
+            image: p.imageUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
+            chips: ['Verified', 'Local']
+          }));
         }
       });
     }

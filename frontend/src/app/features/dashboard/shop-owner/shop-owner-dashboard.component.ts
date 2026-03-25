@@ -238,9 +238,8 @@ import { AuthService } from '../../../core/auth.service';
           </div>
         </ng-container>
 
-        <!-- SETTINGS TAB -->
         <ng-container *ngIf="activeTab === 'settings'">
-          <div class="settings-form content-card-dark" *ngIf="currentShop">
+          <div class="settings-form content-card-dark" *ngIf="currentShop; else noShop">
              <h2>Shop Profile Settings</h2>
              <form class="glass-form" (submit)="saveSettings(); $event.preventDefault()">
                 <div class="form-row">
@@ -268,6 +267,12 @@ import { AuthService } from '../../../core/auth.service';
                 <button type="submit" class="btn-primary-glow" style="margin-top: 1rem;">Save Changes</button>
              </form>
           </div>
+          <ng-template #noShop>
+            <div class="empty-state-large">
+               <span class="material-icons">storefront</span>
+               <p>No shop profile found. You may need to register your shop first.</p>
+            </div>
+          </ng-template>
         </ng-container>
 
         <!-- SUPPORT TAB -->
@@ -882,7 +887,7 @@ import { AuthService } from '../../../core/auth.service';
     }
     .reply-input-box input {
        flex: 1; background: var(--glass); border: 1px solid var(--glass-border);
-       color: #fff; padding: 0.75rem 1.25rem; border-radius: 2rem;
+       color: var(--text-main); padding: 0.75rem 1.25rem; border-radius: 2rem;
     }
     .reply-input-box button {
        background: var(--primary); color: #003d20; border: none;
@@ -896,7 +901,7 @@ import { AuthService } from '../../../core/auth.service';
     .form-group label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
     .form-group input, .form-group textarea {
        background: var(--glass); border: 1px solid var(--glass-border);
-       color: #fff; padding: 0.85rem 1.25rem; border-radius: 1rem;
+       color: var(--text-main); padding: 0.85rem 1.25rem; border-radius: 1rem;
        font-family: inherit;
     }
 
@@ -1116,9 +1121,20 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   createNewListing() {
     if (!this.newProduct.name || !this.newProduct.price) return;
-    this.apiService.createProduct(this.newProduct).subscribe(product => {
-      this.products.unshift(product);
-      this.showListingModal = false;
+    if (!this.newProduct.shopId) {
+       alert('Shop profile not loaded. Cannot create listing.');
+       return;
+    }
+    this.apiService.createProduct(this.newProduct).subscribe({
+      next: (product) => {
+        this.products.unshift(product);
+        this.showListingModal = false;
+        alert('Listing created successfully!');
+      },
+      error: (err) => {
+        console.error('Create listing failed', err);
+        alert('Failed to create listing. Is your backend running?');
+      }
     });
   }
 
