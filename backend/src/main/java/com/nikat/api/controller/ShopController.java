@@ -31,6 +31,10 @@ public class ShopController {
     public ResponseEntity<List<ShopDto>> getShopsByOwner(@PathVariable UUID ownerId) {
         return ResponseEntity.ok(shopService.getShopsByOwner(ownerId));
     }
+    @PostMapping("/shops")
+    public ResponseEntity<ShopDto> createShop(@RequestBody ShopDto shopDto) {
+        return ResponseEntity.ok(shopService.createShop(shopDto));
+    }
 
     @PatchMapping("/admin/shops/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")

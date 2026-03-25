@@ -41,6 +41,12 @@ public class Shop {
     @Column(name = "opening_hours", length = 255)
     private String openingHours;
 
+    @Column(name = "opening_time", length = 10)
+    private String openingTime;
+
+    @Column(name = "closing_time", length = 10)
+    private String closingTime;
+
     @Column(length = 50)
     private String status;
 

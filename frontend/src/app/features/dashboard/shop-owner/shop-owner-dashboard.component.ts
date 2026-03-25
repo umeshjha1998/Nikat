@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto } from '../../../core/api.service';
+import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto, CategoryDto } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
@@ -257,12 +257,25 @@ import { AuthService } from '../../../core/auth.service';
                    <textarea rows="4" [(ngModel)]="currentShop.description" name="desc"></textarea>
                 </div>
                 <div class="form-group">
+                   <label>Business Category</label>
+                   <select [(ngModel)]="currentShop.categoryId" name="cat" style="background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.85rem 1.25rem; border-radius: 1rem;">
+                      <option [value]="null">Select Category</option>
+                      <option *ngFor="let c of categories" [value]="c.id">{{c.name}}</option>
+                   </select>
+                </div>
+                <div class="form-group">
                    <label>Business Address</label>
                    <input type="text" [(ngModel)]="currentShop.address" name="address">
                 </div>
-                <div class="form-group">
-                   <label>Opening Hours</label>
-                   <input type="text" [(ngModel)]="currentShop.openingHours" name="hours">
+                <div class="form-row">
+                   <div class="form-group">
+                      <label>Opens At</label>
+                      <input type="time" [(ngModel)]="currentShop.openingTime" name="open">
+                   </div>
+                   <div class="form-group">
+                      <label>Closes At</label>
+                      <input type="time" [(ngModel)]="currentShop.closingTime" name="close">
+                   </div>
                 </div>
                 <button type="submit" class="btn-primary-glow" style="margin-top: 1rem;">Save Changes</button>
              </form>
@@ -973,6 +986,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
   inquiries: InquiryDto[] = [];
   appointments: AppointmentDto[] = [];
   products: ProductDto[] = [];
+  categories: CategoryDto[] = [];
 
   // Modal states
   showListingModal = false;
@@ -1003,6 +1017,14 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadInitialData();
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.apiService.getCategories().subscribe({
+      next: (cats) => this.categories = cats.filter(c => c.isShopCategory),
+      error: (err) => console.error('Failed to load categories:', err)
+    });
   }
 
   async loadInitialData() {
@@ -1024,22 +1046,23 @@ export class ShopOwnerDashboardComponent implements OnInit {
     this.isUploading = true;
     
     const newShop: any = {
-      name: this.currentUser.firstName + "'s Shop",
-      userId: this.currentUser.id,
-      status: 'PENDING_VERIFICATION',
-      description: 'New Shop Profile',
-      address: 'Please update your address'
+      name: (this.currentUser.firstName || 'My') + "'s Shop",
+      ownerId: this.currentUser.id,
+      description: 'Newly initialized shop. Please update your business details.',
+      address: 'Update Address',
+      status: 'PENDING_VERIFICATION'
     };
 
-    // Use specific endpoint to check if available, or update with 'id' parameter
-    this.apiService.updateShop(this.currentUser.id, newShop).subscribe({
-      next: () => {
+    this.apiService.createShop(newShop).subscribe({
+      next: (shop) => {
+        this.currentShop = shop;
         alert('Shop initialized! Please update your details in Settings.');
-        this.loadInitialData();
+        this.loadInitialData(); // Refresh all data
         this.isUploading = false;
       },
-      error: () => {
-        alert('Failed to initialize shop. Professional setup required.');
+      error: (err) => {
+        console.error('Initialization error:', err);
+        alert('Failed to initialize shop. Service may be under maintenance.');
         this.isUploading = false;
       }
     });

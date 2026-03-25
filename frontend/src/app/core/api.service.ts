@@ -14,6 +14,8 @@ export interface ShopDto {
   description: string;
   address: string;
   openingHours: string;
+  openingTime: string;
+  closingTime: string;
   status: string;
   isFeatured: boolean;
   photos: string[];
@@ -94,6 +96,10 @@ export class ApiService {
 
   getShopsByOwner(ownerId: string): Observable<ShopDto[]> {
     return this.http.get<ShopDto[]>(`${this.apiUrl}/shops/owner/${ownerId}`);
+  }
+
+  createShop(shop: any): Observable<ShopDto> {
+    return this.http.post<ShopDto>(`${this.apiUrl}/shops`, shop);
   }
 
   uploadShopPhoto(shopId: string, photoData: string): Observable<void> {

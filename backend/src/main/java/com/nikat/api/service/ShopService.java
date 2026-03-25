@@ -18,6 +18,8 @@ public class ShopService {
 
     private final ShopRepository shopRepository;
     private final ShopPhotoRepository shopPhotoRepository;
+    private final com.nikat.api.repository.UserRepository userRepository;
+    private final com.nikat.api.repository.CategoryRepository categoryRepository;
 
     public List<ShopDto> getAllShops() {
         return shopRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
@@ -35,6 +37,22 @@ public class ShopService {
 
     public List<ShopDto> getShopsByStatus(String status) {
         return shopRepository.findByStatus(status).stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    public ShopDto createShop(ShopDto dto) {
+        com.nikat.api.domain.User owner = userRepository.findById(dto.getOwnerId())
+                .orElseThrow(() -> new RuntimeException("User not found: " + dto.getOwnerId()));
+        
+        Shop shop = Shop.builder()
+                .name(dto.getName())
+                .owner(owner)
+                .description(dto.getDescription())
+                .address(dto.getAddress())
+                .status("PENDING_VERIFICATION")
+                .isFeatured(false)
+                .build();
+        
+        return mapToDto(shopRepository.save(shop));
     }
 
     public ShopDto updateShopStatus(UUID id, String status) {
@@ -63,7 +81,14 @@ public class ShopService {
         shop.setDescription(dto.getDescription());
         shop.setAddress(dto.getAddress());
         shop.setOpeningHours(dto.getOpeningHours());
-        
+        shop.setOpeningTime(dto.getOpeningTime());
+        shop.setClosingTime(dto.getClosingTime());
+
+        if (dto.getCategoryId() != null) {
+            shop.setCategory(categoryRepository.findById(dto.getCategoryId())
+                    .orElse(null));
+        }
+
         return mapToDto(shopRepository.save(shop));
     }
 
@@ -79,6 +104,8 @@ public class ShopService {
                 .description(shop.getDescription())
                 .address(shop.getAddress())
                 .openingHours(shop.getOpeningHours())
+                .openingTime(shop.getOpeningTime())
+                .closingTime(shop.getClosingTime())
                 .status(shop.getStatus())
                 .isFeatured(shop.getIsFeatured())
                 .photos(shopPhotoRepository.findByShopId(shop.getId()).stream().map(ShopPhoto::getPhotoData).collect(Collectors.toList()))
