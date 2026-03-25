@@ -100,6 +100,10 @@ export class ApiService {
     return this.http.post<void>(`${this.apiUrl}/shops/${shopId}/photos`, photoData);
   }
 
+  updateShop(shopId: string, shop: ShopDto): Observable<ShopDto> {
+    return this.http.put<ShopDto>(`${this.apiUrl}/shops/${shopId}`, shop);
+  }
+
   // Dashboard specifics
   getInquiriesByShop(shopId: string): Observable<InquiryDto[]> {
     return this.http.get<InquiryDto[]>(`${this.apiUrl}/inquiries/shop/${shopId}`);
@@ -124,6 +128,14 @@ export class ApiService {
   // Related data
   getProductsByShop(shopId: string): Observable<ProductDto[]> {
     return this.http.get<ProductDto[]>(`${this.apiUrl}/public/products/shop/${shopId}`);
+  }
+
+  createProduct(product: Partial<ProductDto>): Observable<ProductDto> {
+    return this.http.post<ProductDto>(`${this.apiUrl}/products`, product);
+  }
+
+  deleteProduct(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/products/${id}`);
   }
 
   // Services

@@ -46,14 +46,10 @@ import { AuthService } from '../../../core/auth.service';
             <span class="material-icons">settings</span>
             <span>Settings</span>
           </a>
-          <a class="nav-item" (click)="setTab('support')" [class.active]="activeTab === 'support'">
-            <span class="material-icons">help_outline</span>
-            <span>Support</span>
-          </a>
-          <a class="nav-item logout-item" (click)="signOut()" style="color: #ef4444; margin-top: auto;">
+          <div class="nav-item logout-item" (click)="signOut()" style="color: #ef4444; margin-top: auto; cursor: pointer;">
             <span class="material-icons">logout</span>
             <span>Sign Out</span>
-          </a>
+          </div>
         </nav>
 
         <div class="user-profile-mini">
@@ -62,7 +58,6 @@ import { AuthService } from '../../../core/auth.service';
             <span class="name">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
             <span class="role">{{currentUser?.role}}</span>
           </div>
-          <span class="material-icons" style="margin-left: auto;">more_vert</span>
         </div>
       </aside>
 
@@ -70,16 +65,16 @@ import { AuthService } from '../../../core/auth.service';
       <main class="dashboard-main">
         <header class="dashboard-header">
           <div class="header-titles">
-            <h1>{{ activeTab | titlecase }}</h1>
-            <p class="subtitle" *ngIf="activeTab === 'analytics'">Detailed performance metrics and growth insights for {{ currentShop?.name }}.</p>
-            <p class="subtitle" *ngIf="activeTab === 'listings'">Manage your products and showcased services.</p>
+            <h1 style="text-transform: capitalize;">{{ activeTab }}</h1>
+            <p class="subtitle" *ngIf="activeTab === 'analytics'">Detailed performance metrics for {{ currentShop?.name }}.</p>
+            <p class="subtitle" *ngIf="activeTab === 'listings'">Manage your products and services.</p>
           </div>
           <div class="header-actions">
             <button class="btn-outline-glass" (click)="shareProfile()">
               <span class="material-icons">share</span>
               {{ shareBtnText }}
             </button>
-            <button class="btn-primary-glow" *ngIf="activeTab === 'listings'">
+            <button class="btn-primary-glow" *ngIf="activeTab === 'listings'" (click)="openListingModal()">
               <span class="material-icons">add</span>
               New Listing
             </button>
@@ -92,76 +87,33 @@ import { AuthService } from '../../../core/auth.service';
             <div class="stat-card-glass">
               <div class="stat-header">
                 <span class="stat-label">Total Views</span>
-                <span class="trend positive">
-                  <span class="material-icons">trending_up</span> +14.2%
-                </span>
+                <span class="trend positive"><span class="material-icons">trending_up</span> +14%</span>
               </div>
               <div class="stat-main">
-                <span class="stat-value">12.4K</span>
-                <div class="stat-visual views"></div>
+                <span class="stat-value">1.2K</span>
               </div>
             </div>
-
             <div class="stat-card-glass">
               <div class="stat-header">
                 <span class="stat-label">Inquiries</span>
-                <span class="trend positive">
-                  <span class="material-icons">trending_up</span> +5.8%
-                </span>
+                <span class="trend positive"><span class="material-icons">trending_up</span> +5%</span>
               </div>
               <div class="stat-main">
                 <span class="stat-value">{{ inquiries.length }}</span>
-                <div class="stat-visual inquiries"></div>
               </div>
             </div>
-
             <div class="stat-card-glass">
               <div class="stat-header">
-                <span class="stat-label">Appointments</span>
-                <span class="trend positive">
-                   <span class="material-icons">trending_up</span> +2.4%
-                </span>
+                <span class="stat-label">Products</span>
               </div>
               <div class="stat-main">
-                <span class="stat-value">{{ appointments.length }}</span>
-                <span class="stat-meta">Active bookings</span>
+                <span class="stat-value">{{ products.length }}</span>
               </div>
             </div>
           </div>
 
           <div class="dashboard-grid">
             <div class="grid-col-2">
-              <!-- Engagement Trends -->
-              <section class="content-card-dark">
-                <div class="card-header">
-                  <h2>Engagement Trends</h2>
-                  <div class="header-tabs">
-                    <button [class.active]="activeTrend === 'views'" (click)="activeTrend = 'views'">Views</button>
-                    <button [class.active]="activeTrend === 'interactions'" (click)="activeTrend = 'interactions'">Interactions</button>
-                  </div>
-                </div>
-                <div class="chart-container">
-                  <div class="chart-placeholder">
-                    <svg viewBox="0 0 800 200" class="simulated-chart">
-                      <path *ngIf="activeTrend === 'views'" d="M0,150 Q50,140 100,160 T200,100 T300,120 T400,80 T500,90 T600,40 T700,60 T800,20" 
-                            fill="none" stroke="url(#chartGradient)" stroke-width="4" />
-                      <path *ngIf="activeTrend === 'interactions'" d="M0,180 Q100,160 200,170 T400,140 T600,150 T800,120" 
-                            fill="none" stroke="#8b5cf6" stroke-width="4" />
-                      <defs>
-                        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stop-color="#3ddc84" />
-                          <stop offset="100%" stop-color="#6bfe9c" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    <div class="chart-grid-lines">
-                      <span></span><span></span><span></span><span></span>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <!-- Showcase Photos -->
               <section class="content-card-dark">
                 <div class="card-header">
                   <h2>Showcase Photos</h2>
@@ -171,13 +123,6 @@ import { AuthService } from '../../../core/auth.service';
                 <div class="photo-grid">
                   <div class="showcase-img" *ngFor="let photo of currentShop?.photos" 
                        [style.backgroundImage]="'url(' + photo + ')'"></div>
-                  
-                  <!-- Placeholders if no photos -->
-                  <ng-container *ngIf="!currentShop?.photos?.length">
-                    <div class="showcase-img placeholder-img"></div>
-                    <div class="showcase-img placeholder-img"></div>
-                  </ng-container>
-
                   <div class="photo-add-card" (click)="fileInput.click()">
                     <span class="material-icons" *ngIf="!isUploading">add_a_photo</span>
                     <span class="upload-loader" *ngIf="isUploading"></span>
@@ -186,18 +131,14 @@ import { AuthService } from '../../../core/auth.service';
                 </div>
               </section>
             </div>
-
             <div class="grid-col-1">
-              <!-- Recent Inquiries -->
               <section class="content-card-dark inquiries-section">
                 <div class="card-header">
                   <h2>Recent Inquiries</h2>
-                  <span class="dot-badge highlight" *ngIf="newInquiriesCount > 0"></span>
                 </div>
                 <div class="inquiry-list">
                   <div class="inquiry-item" *ngFor="let inquiry of inquiries.slice(0, 3)">
                     <div class="inquiry-user">
-                      <div class="mini-avatar-circle" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ inquiry.userName.charAt(0) }}</div>
                       <div class="user-info">
                         <strong>{{ inquiry.userName }}</strong>
                         <span>{{ inquiry.createdAt | date:'shortTime' }}</span>
@@ -206,12 +147,10 @@ import { AuthService } from '../../../core/auth.service';
                     <p class="inquiry-text">"{{ inquiry.message }}"</p>
                     <div class="inquiry-actions">
                       <button class="btn-reply" (click)="replyInquiry(inquiry)">Reply</button>
-                      <button class="btn-icon" (click)="deleteInquiry(inquiry.id)"><span class="material-icons">delete_outline</span></button>
                     </div>
                   </div>
                   <div *ngIf="inquiries.length === 0" class="empty-state">No recent inquiries</div>
                 </div>
-                <button class="btn-full-width" (click)="setTab('inquiries')">View All Conversations</button>
               </section>
             </div>
           </div>
@@ -221,7 +160,7 @@ import { AuthService } from '../../../core/auth.service';
         <ng-container *ngIf="activeTab === 'listings'">
           <div class="listings-grid">
              <div class="content-card-dark listing-card" *ngFor="let product of products">
-                <img [src]="product.imageUrl || 'assets/placeholder-listing.jpg'" class="listing-thumb">
+                <img [src]="product.imageUrl || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400'" class="listing-thumb">
                 <div class="listing-info">
                    <h3>{{ product.name }}</h3>
                    <p>{{ product.description }}</p>
@@ -231,14 +170,13 @@ import { AuthService } from '../../../core/auth.service';
                    </div>
                 </div>
                 <div class="listing-actions">
-                   <button class="btn-icon"><span class="material-icons">edit</span></button>
-                   <button class="btn-icon"><span class="material-icons">visibility_off</span></button>
+                   <button class="btn-icon" (click)="deleteListing(product.id)"><span class="material-icons">delete</span></button>
                 </div>
              </div>
              <div *ngIf="products.length === 0" class="empty-full-width">
                 <span class="material-icons">inventory_2</span>
-                <p>You haven't added any listings yet. Start showcase your products!</p>
-                <button class="btn-primary-glow">Create First Listing</button>
+                <p>No listings yet. Start showcasing your products!</p>
+                <button class="btn-primary-glow" (click)="openListingModal()">Create First Listing</button>
              </div>
           </div>
         </ng-container>
@@ -258,12 +196,7 @@ import { AuthService } from '../../../core/auth.service';
                 </thead>
                 <tbody>
                    <tr *ngFor="let apt of appointments">
-                      <td>
-                        <div class="user-cell">
-                           <div class="mini-avatar-circle" style="width: 28px; height: 28px; font-size: 0.7rem;">{{ apt.userName.charAt(0) }}</div>
-                           <span>{{ apt.userName }}</span>
-                        </div>
-                      </td>
+                      <td>{{ apt.userName }}</td>
                       <td>{{ apt.appointmentTime | date:'medium' }}</td>
                       <td>{{ apt.serviceType }}</td>
                       <td><span class="badge" [class]="apt.status.toLowerCase()">{{ apt.status }}</span></td>
@@ -275,7 +208,6 @@ import { AuthService } from '../../../core/auth.service';
                 </tbody>
              </table>
              <div *ngIf="appointments.length === 0" class="empty-state-large">
-                <span class="material-icons">calendar_today</span>
                 <p>No appointments booked yet.</p>
              </div>
           </div>
@@ -283,63 +215,90 @@ import { AuthService } from '../../../core/auth.service';
 
         <!-- INQUIRIES TAB -->
         <ng-container *ngIf="activeTab === 'inquiries'">
-          <div class="inquiries-full-view">
-             <div class="inquiry-thread-list">
-                <div class="inquiry-thread-card" *ngFor="let inq of inquiries" [class.new]="inq.status === 'OPEN'">
-                   <div class="thread-header">
-                      <div class="user-cell">
-                         <div class="mini-avatar-circle" style="width: 36px; height: 36px;">{{ inq.userName.charAt(0) }}</div>
-                         <div class="user-meta">
-                            <strong>{{ inq.userName }}</strong>
-                            <span>{{ inq.createdAt | date:'mediumDate' }}</span>
-                         </div>
-                      </div>
-                      <span class="badge" [class]="inq.status.toLowerCase()">{{ inq.status }}</span>
-                   </div>
-                   <div class="thread-content">
-                      <p class="question">Q: {{ inq.message }}</p>
-                      <p class="answer" *ngIf="inq.reply"><strong>A:</strong> {{ inq.reply }}</p>
-                      <div class="reply-input-box" *ngIf="!inq.reply">
-                         <input #replyInput type="text" placeholder="Type your response...">
-                         <button (click)="submitReply(inq.id, replyInput.value)">Send</button>
-                      </div>
+          <div class="inquiry-thread-list">
+             <div class="inquiry-thread-card" *ngFor="let inq of inquiries" [class.new]="inq.status === 'OPEN'">
+                <div class="thread-header">
+                   <strong>{{ inq.userName }}</strong>
+                   <span class="badge" [class]="inq.status.toLowerCase()">{{ inq.status }}</span>
+                </div>
+                <div class="thread-content">
+                   <p class="question">Q: {{ inq.message }}</p>
+                   <p class="answer" *ngIf="inq.reply"><strong>A:</strong> {{ inq.reply }}</p>
+                   <div class="reply-input-box" *ngIf="!inq.reply">
+                      <input #replyInput type="text" placeholder="Type your response...">
+                      <button (click)="submitReply(inq.id, replyInput.value)">Send</button>
                    </div>
                 </div>
              </div>
+             <div *ngIf="inquiries.length === 0" class="empty-state">No inquiries found</div>
           </div>
         </ng-container>
 
         <!-- SETTINGS TAB -->
         <ng-container *ngIf="activeTab === 'settings'">
-          <div class="settings-form content-card-dark">
+          <div class="settings-form content-card-dark" *ngIf="currentShop">
              <h2>Shop Profile Settings</h2>
-             <form class="glass-form">
+             <form class="glass-form" (submit)="saveSettings(); $event.preventDefault()">
                 <div class="form-row">
                    <div class="form-group">
                       <label>Shop Name</label>
-                      <input type="text" [(ngModel)]="currentShop!.name" name="name">
+                      <input type="text" [(ngModel)]="currentShop.name" name="name" required>
                    </div>
                    <div class="form-group">
                       <label>Workers Count</label>
-                      <input type="number" [(ngModel)]="currentShop!.workerCount" name="workers">
+                      <input type="number" [(ngModel)]="currentShop.workerCount" name="workers">
                    </div>
                 </div>
                 <div class="form-group">
                    <label>Business Description</label>
-                   <textarea rows="4" [(ngModel)]="currentShop!.description" name="desc"></textarea>
+                   <textarea rows="4" [(ngModel)]="currentShop.description" name="desc"></textarea>
                 </div>
                 <div class="form-group">
                    <label>Business Address</label>
-                   <input type="text" [(ngModel)]="currentShop!.address" name="address">
+                   <input type="text" [(ngModel)]="currentShop.address" name="address">
                 </div>
                 <div class="form-group">
                    <label>Opening Hours</label>
-                   <input type="text" [(ngModel)]="currentShop!.openingHours" name="hours">
+                   <input type="text" [(ngModel)]="currentShop.openingHours" name="hours">
                 </div>
-                <button class="btn-primary-glow" style="margin-top: 1rem;">Save Changes</button>
+                <button type="submit" class="btn-primary-glow" style="margin-top: 1rem;">Save Changes</button>
              </form>
           </div>
         </ng-container>
+      </main>
+
+      <!-- Create Listing Modal -->
+      <div class="modal-overlay" *ngIf="showListingModal">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h2>Add New Listing</h2>
+            <button class="btn-icon" (click)="showListingModal = false"><span class="material-icons">close</span></button>
+          </div>
+          <form class="glass-form" (submit)="createNewListing(); $event.preventDefault()">
+            <div class="form-group">
+              <label>Product Name</label>
+              <input type="text" [(ngModel)]="newProduct.name" name="pname" required placeholder="e.g. Classic Hair Cut">
+            </div>
+            <div class="form-group">
+              <label>Price (₹)</label>
+              <input type="number" [(ngModel)]="newProduct.price" name="pprice" required>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea rows="3" [(ngModel)]="newProduct.description" name="pdesc" placeholder="Brief details about the product/service"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Image URL (Optional)</label>
+              <input type="text" [(ngModel)]="newProduct.imageUrl" name="pimg" placeholder="https://...">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn-outline-glass" (click)="showListingModal = false">Cancel</button>
+              <button type="submit" class="btn-primary-glow">Create Listing</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
         <!-- SUPPORT TAB -->
         <ng-container *ngIf="activeTab === 'support'">
@@ -948,6 +907,50 @@ import { AuthService } from '../../../core/auth.service';
     @media (max-width: 1280px) {
       .dashboard-grid { grid-template-columns: 1fr; }
     }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-card {
+      background: var(--surface-container);
+      border: 1px solid var(--border-color);
+      border-radius: 1.5rem;
+      width: 90%;
+      max-width: 500px;
+      padding: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .modal-header h2 { margin: 0; font-size: 1.5rem; }
+
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   `]
 })
 export class ShopOwnerDashboardComponent implements OnInit {
@@ -955,11 +958,20 @@ export class ShopOwnerDashboardComponent implements OnInit {
   activeTrend: 'views' | 'interactions' = 'views';
   isUploading = false;
   shareBtnText = 'Share Profile';
-  
   currentShop: ShopDto | null = null;
   inquiries: InquiryDto[] = [];
   appointments: AppointmentDto[] = [];
   products: ProductDto[] = [];
+
+  // Modal states
+  showListingModal = false;
+  newProduct: Partial<ProductDto> = {
+    name: '',
+    description: '',
+    price: 0,
+    isAvailable: true,
+    imageUrl: ''
+  };
 
   constructor(private apiService: ApiService) {}
   private authService = inject(AuthService);
@@ -975,7 +987,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
   }
 
   get newInquiriesCount(): number {
-    return this.inquiries.filter(i => i.status === 'OPEN').length;
+    return this.inquiries.filter((i: InquiryDto) => i.status === 'OPEN').length;
   }
 
   ngOnInit() {
@@ -1007,19 +1019,24 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   shareProfile() {
     if (this.currentShop) {
-      const url = `${window.location.origin}/shops/${this.currentShop.id}`;
+      const url = `${window.location.origin}/shop/${this.currentShop.id}`;
+      
       if (navigator.share) {
         navigator.share({
           title: this.currentShop.name,
           text: `Check out ${this.currentShop.name} on Nikat!`,
           url: url
-        });
+        }).catch(() => this.copyToClipboard(url));
       } else {
-        navigator.clipboard.writeText(url);
-        this.shareBtnText = 'Link Copied!';
-        setTimeout(() => this.shareBtnText = 'Share Profile', 2000);
+        this.copyToClipboard(url);
       }
     }
+  }
+
+  private copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text);
+    this.shareBtnText = 'Link Copied!';
+    setTimeout(() => this.shareBtnText = 'Share Profile', 2000);
   }
 
   async onPhotoUpload(event: any) {
@@ -1028,13 +1045,21 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
     this.isUploading = true;
     try {
-      const compressedBase64 = await this.compressImage(file, 50 * 1024); // 50KB limit
-      this.apiService.uploadShopPhoto(this.currentShop.id, compressedBase64).subscribe(() => {
-        this.currentShop?.photos.push(compressedBase64);
-        this.isUploading = false;
+      const compressedBase64 = await this.compressImage(file, 48 * 1024); 
+      this.apiService.uploadShopPhoto(this.currentShop.id, compressedBase64).subscribe({
+        next: () => {
+          if (!this.currentShop!.photos) this.currentShop!.photos = [];
+          this.currentShop!.photos.push(compressedBase64);
+          this.isUploading = false;
+        },
+        error: (err) => {
+          console.error('Upload failed', err);
+          this.isUploading = false;
+          alert('Upload failed. Please try a smaller image.');
+        }
       });
     } catch (err) {
-      console.error('Upload failed', err);
+      console.error('Compression failed', err);
       this.isUploading = false;
     }
   }
@@ -1050,19 +1075,14 @@ export class ShopOwnerDashboardComponent implements OnInit {
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          
-          // Initial quality
           let quality = 0.8;
           let base64 = '';
-          
           const draw = () => {
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx?.drawImage(img, 0, 0, width, height);
             base64 = canvas.toDataURL('image/jpeg', quality);
-            
-            // If still too large, reduce quality and resize
             if (base64.length > maxSize * 1.33 && quality > 0.1) {
               quality -= 0.1;
               width *= 0.9;
@@ -1076,6 +1096,45 @@ export class ShopOwnerDashboardComponent implements OnInit {
         };
       };
       reader.onerror = reject;
+    });
+  }
+
+  // --- LISTINGS ACTIONS ---
+
+  openListingModal() {
+    this.newProduct = {
+      shopId: this.currentShop?.id,
+      name: '',
+      description: '',
+      price: 0,
+      isAvailable: true,
+      imageUrl: ''
+    };
+    this.showListingModal = true;
+  }
+
+  createNewListing() {
+    if (!this.newProduct.name || !this.newProduct.price) return;
+    this.apiService.createProduct(this.newProduct).subscribe(product => {
+      this.products.unshift(product);
+      this.showListingModal = false;
+    });
+  }
+
+  deleteListing(id: string) {
+    if (confirm('Delete this product?')) {
+      this.apiService.deleteProduct(id).subscribe(() => {
+        this.products = this.products.filter(p => p.id !== id);
+      });
+    }
+  }
+
+  // --- SETTINGS ACTIONS ---
+
+  saveSettings() {
+    if (!this.currentShop) return;
+    this.apiService.updateShop(this.currentShop.id, this.currentShop).subscribe(() => {
+      alert('Settings saved successfully!');
     });
   }
 

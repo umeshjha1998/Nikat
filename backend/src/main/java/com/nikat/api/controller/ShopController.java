@@ -38,6 +38,11 @@ public class ShopController {
         return ResponseEntity.ok(shopService.updateShopStatus(id, status));
     }
 
+    @PutMapping("/shops/{id}")
+    public ResponseEntity<ShopDto> updateShop(@PathVariable UUID id, @RequestBody ShopDto shopDto) {
+        return ResponseEntity.ok(shopService.updateShop(id, shopDto));
+    }
+
     @PostMapping("/shops/{id}/photos")
     public ResponseEntity<Void> uploadPhoto(@PathVariable UUID id, @RequestBody String photoData) {
         shopService.uploadShopPhoto(id, photoData);

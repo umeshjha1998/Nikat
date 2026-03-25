@@ -10,13 +10,24 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/public/products")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/shop/{shopId}")
+    @GetMapping("/public/products/shop/{shopId}")
     public ResponseEntity<List<ProductDto>> getProductsByShop(@PathVariable UUID shopId) {
         return ResponseEntity.ok(productService.getProductsByShop(shopId));
+    }
+
+    @PostMapping("/products")
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productService.createProduct(productDto));
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().build();
     }
 }

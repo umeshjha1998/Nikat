@@ -54,6 +54,19 @@ public class ShopService {
         shopPhotoRepository.save(photo);
     }
 
+    public ShopDto updateShop(UUID id, ShopDto dto) {
+        Shop shop = shopRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
+        
+        shop.setName(dto.getName());
+        shop.setWorkerCount(dto.getWorkerCount());
+        shop.setDescription(dto.getDescription());
+        shop.setAddress(dto.getAddress());
+        shop.setOpeningHours(dto.getOpeningHours());
+        
+        return mapToDto(shopRepository.save(shop));
+    }
+
     private ShopDto mapToDto(Shop shop) {
         return ShopDto.builder()
                 .id(shop.getId())
