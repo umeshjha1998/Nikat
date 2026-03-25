@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="dashboard-premium-layout">
       <!-- Search Overlay (Simple) -->
@@ -237,15 +239,206 @@ import { AuthService } from '../../core/auth.service';
           </div>
         </ng-container>
 
-        <!-- Search Results State -->
-        <div class="tab-content-placeholder" *ngIf="activeTab === 'search-results'">
-            <div class="placeholder-card">
-              <span class="material-icons">info</span>
-              <h3>Search Filter Applied</h3>
-              <p>Showing filtered results for your query. Click View All to reset.</p>
-              <button class="btn-outline" (click)="setTab('overview')">Back to Overview</button>
+        <!-- Bookings Tab -->
+        <ng-container *ngIf="activeTab === 'bookings'">
+          <div class="tab-header-internal">
+            <div class="th-info">
+              <h2>My Bookings</h2>
+              <p>Manage your appointments and service history</p>
             </div>
-        </div>
+            <div class="tab-filters">
+              <button class="filter-chip active">Upcoming</button>
+              <button class="filter-chip">Completed</button>
+              <button class="filter-chip">Cancelled</button>
+            </div>
+          </div>
+
+          <div class="booking-stack full-width">
+            <div class="booking-item-premium" *ngFor="let b of bookings">
+              <div class="b-date-box" [class.alt]="b.alt">
+                <span class="m">{{b.month}}</span>
+                <span class="d">{{b.day}}</span>
+              </div>
+              <div class="b-info">
+                <h4>{{b.service}}</h4>
+                <p><span class="material-icons">storefront</span> {{b.shop}}</p>
+                <div class="b-meta">
+                  <span><span class="material-icons">schedule</span> {{b.time}}</span>
+                  <span class="status-tag" [class]="b.status">{{b.status}}</span>
+                </div>
+              </div>
+              <div class="b-actions">
+                <button class="btn-outline" (click)="showRescheduleModal(b)">Reschedule</button>
+                <div class="opt-container">
+                  <button class="btn-icon-blur" (click)="toggleMenu($event, b)"><span class="material-icons">more_horiz</span></button>
+                  <div class="action-dropdown" *ngIf="activeMenuBooking === b" (click)="$event.stopPropagation()">
+                    <button (click)="viewShop(b)">View Shop Info</button>
+                    <button (click)="messageSupport(b)">Message Support</button>
+                    <button class="danger" (click)="cancelBooking(b)">Cancel Booking</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Saved Shops Tab -->
+        <ng-container *ngIf="activeTab === 'saved'">
+          <div class="tab-header-internal">
+            <div class="th-info">
+              <h2>Saved Shops</h2>
+              <p>Your favorite neighborhoods spots in one place</p>
+            </div>
+            <span class="count-badge-premium">{{savedShops.length}} Shops</span>
+          </div>
+
+          <div class="shops-grid-premium">
+            <div class="shop-card-glass" *ngFor="let s of savedShops">
+              <div class="s-header">
+                <div class="s-img-placeholder">
+                  <span class="material-icons">storefront</span>
+                </div>
+                <button class="btn-unsave" (click)="unsaveShop(s)">
+                  <span class="material-icons">favorite</span>
+                </button>
+              </div>
+              <div class="s-body-internal">
+                <h4>{{s.name}}</h4>
+                <div class="s-meta-items">
+                  <span><span class="material-icons">category</span> {{s.category}}</span>
+                  <span><span class="material-icons">location_on</span> {{s.address}}</span>
+                </div>
+                <button class="btn-glass-action" (click)="viewShop(s)">View Shop</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Orders Tab -->
+        <ng-container *ngIf="activeTab === 'orders'">
+          <div class="tab-header-internal">
+            <div class="th-info">
+              <h2>Order History</h2>
+              <p>Track your product purchases and deliveries</p>
+            </div>
+          </div>
+
+          <div class="orders-list-premium">
+            <div class="order-card-glass" *ngFor="let o of orders">
+              <div class="o-head">
+                <div class="o-main">
+                  <span class="o-id">{{o.id}}</span>
+                  <h4>{{o.shop}}</h4>
+                </div>
+                <span class="status-tag" [class]="o.status.toLowerCase().replace(' ', '-')">{{o.status}}</span>
+              </div>
+              <div class="o-details">
+                <div class="o-detail-item">
+                  <label>Date</label>
+                  <span>{{o.date}}</span>
+                </div>
+                <div class="o-detail-item">
+                  <label>Items</label>
+                  <span>{{o.items}}</span>
+                </div>
+                <div class="o-detail-item">
+                  <label>Total</label>
+                  <span class="price-highlight">{{o.total}}</span>
+                </div>
+              </div>
+              <div class="o-footer">
+                <button class="btn-text">Track Order</button>
+                <div class="dot-divider"></div>
+                <button class="btn-text">Download Invoice</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Settings Tab -->
+        <ng-container *ngIf="activeTab === 'settings'">
+          <div class="tab-header-internal">
+            <div class="th-info">
+              <h2>Settings</h2>
+              <p>Securely manage your profile and account preferences</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <section class="settings-card-premium">
+              <div class="sc-head">
+                <span class="material-icons">person</span>
+                <h3>Profile Information</h3>
+              </div>
+              <div class="sc-body">
+                <div class="form-row">
+                  <div class="form-group-internal">
+                    <label>First Name</label>
+                    <input type="text" [(ngModel)]="userProfile.firstName" placeholder="First Name">
+                  </div>
+                  <div class="form-group-internal">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="userProfile.lastName" placeholder="Last Name">
+                  </div>
+                </div>
+                <div class="form-group-internal">
+                  <label>Email Address</label>
+                  <input type="email" [(ngModel)]="userProfile.email" placeholder="email@example.com">
+                </div>
+                <div class="form-group-internal">
+                  <label>Phone Number</label>
+                  <input type="text" [(ngModel)]="userProfile.phone" placeholder="+91 XXXX XXXX">
+                </div>
+                <button class="btn-prime-save">Save Changes</button>
+              </div>
+            </section>
+
+            <section class="settings-card-premium">
+              <div class="sc-head">
+                <span class="material-icons">security</span>
+                <h3>Security & Privacy</h3>
+              </div>
+              <div class="sc-body">
+                <div class="form-group-internal">
+                  <label>Current Password</label>
+                  <input type="password" placeholder="••••••••">
+                </div>
+                <div class="form-group-internal">
+                  <label>New Password</label>
+                  <input type="password" placeholder="••••••••">
+                </div>
+                <div class="form-group-internal">
+                  <label>Confirm New Password</label>
+                  <input type="password" placeholder="••••••••">
+                </div>
+                <button class="btn-outline-action">Update Password</button>
+              </div>
+            </section>
+
+            <section class="settings-card-premium notify">
+              <div class="sc-head">
+                <span class="material-icons">notifications_active</span>
+                <h3>Notifications</h3>
+              </div>
+              <div class="sc-body">
+                <div class="toggle-group">
+                  <div class="t-info">
+                    <strong>Email Notifications</strong>
+                    <p>Receive updates about your bookings via email</p>
+                  </div>
+                  <div class="t-switch active"></div>
+                </div>
+                <div class="toggle-group">
+                  <div class="t-info">
+                    <strong>SMS Alerts</strong>
+                    <p>Get instant text reminders before appointments</p>
+                  </div>
+                  <div class="t-switch"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </ng-container>
 
         <!-- Dashboard Popups -->
         <div class="modal-backdrop" *ngIf="reschedulingBooking">
@@ -407,6 +600,73 @@ import { AuthService } from '../../core/auth.service';
 
     .view-all-link { cursor: pointer; color: var(--primary); font-weight: 800; text-decoration: none; font-size: 0.9rem; }
 
+    /* Internal Tab Styling */
+    .tab-header-internal { margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; }
+    .th-info h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem; color: var(--text-main); }
+    .th-info p { color: var(--text-muted); font-weight: 600; margin: 0; }
+
+    .tab-filters { display: flex; gap: 0.75rem; }
+    .filter-chip { padding: 0.6rem 1.25rem; border-radius: 2rem; background: var(--glass); border: 1px solid var(--border-color); color: var(--text-muted); font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+    .filter-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
+
+    .booking-stack.full-width { max-width: 900px; }
+
+    /* Saved Shops */
+    .shops-grid-premium { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .shop-card-glass { background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.5rem; overflow: hidden; transition: 0.3s; }
+    .shop-card-glass:hover { transform: translateY(-5px); border-color: var(--primary); background: var(--surface-container-high); }
+    .s-header { height: 140px; background: linear-gradient(45deg, var(--surface-container-high), var(--surface-container-highest)); position: relative; display: flex; align-items: center; justify-content: center; }
+    .s-img-placeholder { width: 60px; height: 60px; background: var(--glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+    .s-img-placeholder .material-icons { font-size: 2rem; }
+    .btn-unsave { position: absolute; top: 1rem; right: 1rem; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.3); border: none; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .s-body-internal { padding: 1.5rem; }
+    .s-body-internal h4 { margin: 0 0 1rem; font-size: 1.2rem; font-weight: 800; }
+    .s-meta-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .s-meta-items span { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .s-meta-items .material-icons { font-size: 1rem; color: var(--primary); }
+    .btn-glass-action { width: 100%; padding: 0.75rem; border-radius: 1rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-glass-action:hover { background: var(--primary); color: #fff; }
+
+    .count-badge-premium { background: var(--primary-glow); color: var(--primary); padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 800; font-size: 0.85rem; }
+
+    /* Orders Tab */
+    .orders-list-premium { display: flex; flex-direction: column; gap: 1.25rem; max-width: 1000px; }
+    .order-card-glass { background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .o-head { display: flex; justify-content: space-between; align-items: flex-start; }
+    .o-id { font-size: 0.75rem; font-weight: 900; color: var(--primary); letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
+    .o-head h4 { margin: 0; font-size: 1.1rem; font-weight: 800; }
+    .o-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1.25rem 0; }
+    .o-detail-item label { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+    .o-detail-item span { font-weight: 700; font-size: 0.95rem; }
+    .price-highlight { color: var(--primary); }
+    .o-footer { display: flex; align-items: center; gap: 1rem; }
+    .btn-text { background: transparent; border: none; color: var(--primary); font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+    .dot-divider { width: 4px; height: 4px; background: var(--border-color); border-radius: 50%; }
+
+    /* Settings Tab */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; }
+    .settings-card-premium { background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 2rem; }
+    .settings-card-premium.notify { grid-column: span 2; }
+    .sc-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; color: var(--primary); }
+    .sc-head h3 { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+    .sc-body { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group-internal { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group-internal label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+    .form-group-internal input { background: var(--bg); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 0.75rem 1rem; color: var(--text-main); font-weight: 600; outline: none; transition: 0.2s; }
+    .form-group-internal input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
+    .btn-prime-save { background: var(--primary); color: #fff; border: none; padding: 0.9rem; border-radius: 0.75rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px var(--primary-glow); }
+    .btn-outline-action { background: transparent; border: 1.5px solid var(--border-color); color: var(--text-main); padding: 0.9rem; border-radius: 0.75rem; font-weight: 800; cursor: pointer; }
+
+    .toggle-group { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 1rem; border: 1px solid var(--border-color); }
+    .t-info strong { display: block; font-size: 0.9rem; margin-bottom: 2px; }
+    .t-info p { font-size: 0.75rem; color: var(--text-muted); margin: 0; font-weight: 600; }
+    .t-switch { width: 44px; height: 24px; background: var(--border-color); border-radius: 12px; position: relative; cursor: pointer; transition: 0.3s; }
+    .t-switch::after { content: ''; position: absolute; left: 4px; top: 4px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.3s; }
+    .t-switch.active { background: var(--primary); }
+    .t-switch.active::after { left: 24px; }
+
+
     @media (max-width: 1200px) {
       .dash-main-grid { grid-template-columns: 1fr; }
       .dash-stats { grid-template-columns: repeat(2, 1fr); }
@@ -483,6 +743,24 @@ export class DashboardComponent implements OnInit {
   reschedulingBooking: any = null;
   availableSlots = ['09:30 AM', '11:15 AM', '01:45 PM', '04:00 PM', '05:30 PM'];
 
+  savedShops = [
+    { id: '1', name: 'Urban Fade Barbershop', category: 'Barber', address: 'MG Road, Bangalore' },
+    { id: '2', name: 'Serenity Spa Hub', category: 'Wellness', address: 'Indiranagar, Bangalore' },
+    { id: '3', name: 'Auto Clinic', category: 'Mechanic', address: 'Koramangala, Bangalore' }
+  ];
+
+  orders = [
+    { id: 'ORD-8821', shop: 'Urban Fade', items: 'Fiber Wax, Sea Salt Spray', total: '₹1,200', date: 'Oct 24, 2026', status: 'Delivered' },
+    { id: 'ORD-7754', shop: 'Serenity Spa', items: 'Essential Oils (Set of 3)', total: '₹850', date: 'Oct 15, 2026', status: 'In Transit' }
+  ];
+
+  userProfile = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  };
+
   bookings = [
     { id: 1, service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
     { id: 2, service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }
@@ -509,6 +787,14 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.currentUser) {
+      this.userProfile = {
+        firstName: this.currentUser.firstName || '',
+        lastName: this.currentUser.lastName || '',
+        email: this.currentUser.email || '',
+        phone: this.currentUser.phone || ''
+      };
+    }
     // Close menus on outside click
     window.addEventListener('click', () => {
       this.activeMenuBooking = null;
@@ -587,6 +873,10 @@ export class DashboardComponent implements OnInit {
       this.bookings = this.bookings.filter(b => b.id !== booking.id);
       this.filteredBookings = [...this.bookings];
     }
+  }
+
+  unsaveShop(shop: any) {
+    this.savedShops = this.savedShops.filter(s => s.id !== shop.id);
   }
 
   signOut() {
