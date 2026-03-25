@@ -32,7 +32,7 @@ public class ShopService {
     }
 
     public List<ShopDto> getShopsByOwner(UUID ownerId) {
-        return shopRepository.findByOwnerId(ownerId).stream().map(this::mapToDto).collect(Collectors.toList());
+        return shopRepository.findByOwnerIdOrderByUpdatedAtDesc(ownerId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     public List<ShopDto> getShopsByStatus(String status) {

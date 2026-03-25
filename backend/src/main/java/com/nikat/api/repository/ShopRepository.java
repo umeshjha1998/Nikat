@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, UUID> {
-    List<Shop> findByOwnerId(UUID ownerId);
+    List<Shop> findByOwnerIdOrderByUpdatedAtDesc(UUID ownerId);
     List<Shop> findByStatus(String status);
 }

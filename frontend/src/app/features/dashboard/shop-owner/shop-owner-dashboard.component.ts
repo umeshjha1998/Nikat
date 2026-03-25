@@ -1016,8 +1016,12 @@ export class ShopOwnerDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadInitialData();
-    this.loadCategories();
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.loadInitialData();
+        this.loadCategories();
+      }
+    });
   }
 
   loadCategories() {
@@ -1028,13 +1032,16 @@ export class ShopOwnerDashboardComponent implements OnInit {
   }
 
   async loadInitialData() {
-    if (!this.currentUser?.id) return;
+    const user = this.authService.currentUser;
+    if (!user?.id) return;
     
-    this.apiService.getShopsByOwner(this.currentUser.id).subscribe({
+    this.apiService.getShopsByOwner(user.id).subscribe({
       next: (shops) => {
         if (shops.length > 0) {
           this.currentShop = shops[0];
           this.loadDashboardData(this.currentShop.id);
+        } else {
+          this.currentShop = null;
         }
       },
       error: (err) => console.error('Failed to load shop:', err)
@@ -1207,8 +1214,15 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   saveSettings() {
     if (!this.currentShop) return;
-    this.apiService.updateShop(this.currentShop.id, this.currentShop).subscribe(() => {
-      alert('Settings saved successfully!');
+    this.apiService.updateShop(this.currentShop.id, this.currentShop).subscribe({
+      next: (updatedShop) => {
+        this.currentShop = updatedShop;
+        alert('Settings saved successfully!');
+      },
+      error: (err) => {
+        console.error('Update failed', err);
+        alert('Failed to save settings. Please try again.');
+      }
     });
   }
 
