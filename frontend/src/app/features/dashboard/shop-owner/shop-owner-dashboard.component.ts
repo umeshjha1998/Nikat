@@ -274,7 +274,7 @@ import { AuthService } from '../../../core/auth.service';
       align-items: center;
       gap: 1rem;
       padding: 0 1.5rem 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .brand-hexagon {
@@ -294,7 +294,7 @@ import { AuthService } from '../../../core/auth.service';
       font-size: 1rem;
       font-weight: 800;
       margin: 0;
-      color: #fff;
+      color: var(--text-main);
     }
 
     .brand-text p {
@@ -365,14 +365,14 @@ import { AuthService } from '../../../core/auth.service';
 
     .nav-divider {
       height: 1px;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--border-color);
       margin: 1rem 0;
     }
 
     .user-profile-mini {
       padding: 1.25rem;
       margin: 0 1rem;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--glass);
       border-radius: 1rem;
       display: flex;
       align-items: center;
@@ -395,7 +395,7 @@ import { AuthService } from '../../../core/auth.service';
     .user-details .name {
       font-size: 0.85rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text-main);
     }
 
     .user-details .role {
@@ -422,7 +422,7 @@ import { AuthService } from '../../../core/auth.service';
       font-size: 2.5rem;
       font-weight: 800;
       margin: 0 0 0.5rem 0;
-      background: linear-gradient(135deg, #fff 0%, #a3a8d5 100%);
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -460,9 +460,9 @@ import { AuthService } from '../../../core/auth.service';
     }
 
     .btn-outline-glass {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--glass);
       border: 1px solid var(--glass-border);
-      color: #fff;
+      color: var(--text-main);
       padding: 0.85rem 1.75rem;
       border-radius: 2rem;
       font-weight: 600;
@@ -522,7 +522,7 @@ import { AuthService } from '../../../core/auth.service';
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2.75rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--text-main);
     }
 
     .trend {
@@ -552,7 +552,7 @@ import { AuthService } from '../../../core/auth.service';
     .stat-visual {
       height: 4px;
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--border-color);
       border-radius: 2px;
       margin-top: 1.5rem;
       position: relative;
@@ -584,8 +584,8 @@ import { AuthService } from '../../../core/auth.service';
     }
 
     .content-card-dark {
-      background: rgba(8, 12, 40, 0.5);
-      border: 1px solid var(--glass-border);
+      background: var(--surface-container);
+      border: 1px solid var(--border-color);
       border-radius: 1.5rem;
       padding: 2.5rem;
     }
@@ -606,7 +606,7 @@ import { AuthService } from '../../../core/auth.service';
 
     .header-tabs {
       display: flex;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--glass);
       padding: 0.3rem;
       border-radius: 2rem;
     }
@@ -657,7 +657,7 @@ import { AuthService } from '../../../core/auth.service';
     .chart-grid-lines span {
       height: 1px;
       width: 100%;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--border-color);
     }
 
     /* Photo Grid */
@@ -684,7 +684,7 @@ import { AuthService } from '../../../core/auth.service';
 
     .photo-add-card {
       aspect-ratio: 1;
-      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border: 2px dashed var(--glass-border);
       border-radius: 1rem;
       display: flex;
       flex-direction: column;
@@ -712,9 +712,9 @@ import { AuthService } from '../../../core/auth.service';
 
     .inquiry-item {
       padding: 1.25rem;
-      background: rgba(255, 255, 255, 0.02);
+      background: var(--glass);
       border-radius: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
     }
 
     .inquiry-user {
@@ -733,7 +733,7 @@ import { AuthService } from '../../../core/auth.service';
     .user-info strong {
       display: block;
       font-size: 0.9rem;
-      color: #fff;
+      color: var(--text-main);
     }
 
     .user-info span {
@@ -775,9 +775,9 @@ import { AuthService } from '../../../core/auth.service';
 
     .btn-full-width {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: none;
-      color: #fff;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
       padding: 1rem;
       border-radius: 1rem;
       font-weight: 700;

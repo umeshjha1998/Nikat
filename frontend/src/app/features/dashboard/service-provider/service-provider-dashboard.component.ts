@@ -239,7 +239,7 @@ import { AuthService } from '../../../core/auth.service';
       align-items: center;
       gap: 1rem;
       padding: 0 1.5rem 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .brand-hexagon {
@@ -259,7 +259,7 @@ import { AuthService } from '../../../core/auth.service';
       font-size: 1rem;
       font-weight: 800;
       margin: 0;
-      color: #fff;
+      color: var(--text-main);
     }
 
     .brand-text p {
@@ -292,8 +292,8 @@ import { AuthService } from '../../../core/auth.service';
     }
 
     .nav-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
+      background: var(--glass);
+      color: var(--text-main);
     }
 
     .nav-item.active {
@@ -309,7 +309,7 @@ import { AuthService } from '../../../core/auth.service';
       box-shadow: 2px 0 10px var(--primary-glow);
     }
 
-    .nav-divider { height: 1px; background: rgba(255, 255, 255, 0.05); margin: 1rem 0; }
+    .nav-divider { height: 1px; background: var(--border-color); margin: 1rem 0; }
 
     .user-profile-mini {
       padding: 1.25rem; margin: 0 1rem;
@@ -337,7 +337,7 @@ import { AuthService } from '../../../core/auth.service';
     .header-titles h1 {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2.5rem; font-weight: 800; margin: 0 0 0.5rem 0;
-      background: linear-gradient(135deg, #fff 0%, #a3a8d5 100%);
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .header-titles .subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 500px; }
@@ -357,12 +357,12 @@ import { AuthService } from '../../../core/auth.service';
     }
     .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
     .stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: #fff; display: block; }
+    .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--text-main); display: block; }
     .stat-sub { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
     .trend.positive { color: #6bfe9c; font-size: 0.8rem; font-weight: 800; }
     .rating-icon { color: #ffb800; }
 
-    .earnings-bar { height: 4px; width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 2px; margin-top: 1rem; position: relative; }
+    .earnings-bar { height: 4px; width: 100%; background: var(--border-color); border-radius: 2px; margin-top: 1rem; position: relative; }
     .earnings-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 65%; background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
 
     .client-avatars { display: flex; align-items: center; margin-top: 0.75rem; }
@@ -372,24 +372,24 @@ import { AuthService } from '../../../core/auth.service';
 
     /* Dashboard Grid */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
-    .content-card-dark { background: rgba(8, 12, 40, 0.5); border: 1px solid var(--glass-border); border-radius: 1.5rem; padding: 2rem; }
+    .content-card-dark { background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 2rem; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     .card-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 700; margin: 0; }
     .link-btn { font-size: 0.9rem; color: var(--primary); font-weight: 700; cursor: pointer; }
 
     /* Timeline */
     .schedule-timeline { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 100px; }
-    .schedule-timeline::before { content: ''; position: absolute; left: 118px; top: 0; bottom: 0; width: 2px; background: rgba(255, 255, 255, 0.05); }
+    .schedule-timeline::before { content: ''; position: absolute; left: 118px; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
 
     .schedule-item { display: flex; align-items: flex-start; gap: 2rem; position: relative; padding: 1.5rem 0; }
     .time-slot { width: 80px; position: absolute; left: -100px; text-align: right; }
-    .time { font-weight: 800; color: #fff; display: block; font-size: 1rem; }
+    .time { font-weight: 800; color: var(--text-main); display: block; font-size: 1rem; }
     .duration { font-size: 0.75rem; color: var(--text-muted); }
 
     .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #1a1e3d; border: 2px solid rgba(255, 255, 255, 0.1); z-index: 1; position: absolute; left: 13px; transform: translateX(-50%); top: 1.8rem; transition: all 0.3s ease; }
     .timeline-dot.active { border-color: var(--primary); background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
 
-    .appointment-card { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; padding: 1.25rem; transition: all 0.3s ease; }
+    .appointment-card { flex: 1; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1.25rem; transition: all 0.3s ease; }
     .schedule-item.current .appointment-card { background: rgba(192, 132, 252, 0.08); border-color: rgba(192, 132, 252, 0.2); transform: scale(1.02); }
     .apt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
     .apt-header h3 { font-size: 1.1rem; margin: 0; }
@@ -404,15 +404,15 @@ import { AuthService } from '../../../core/auth.service';
 
     /* Services List */
     .services-mini-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-    .service-mini-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.02); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.04); transition: all 0.3s ease; }
-    .service-mini-card:hover { transform: translateX(5px); background: rgba(255, 255, 255, 0.05); }
+    .service-mini-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--glass); border-radius: 1rem; border: 1px solid var(--glass-border); transition: all 0.3s ease; }
+    .service-mini-card:hover { transform: translateX(5px); background: var(--glass-border); }
     .svc-icon-box { width: 44px; height: 44px; border-radius: 0.75rem; background: rgba(192, 132, 252, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); }
     .svc-details h4 { font-size: 0.95rem; margin: 0 0 0.25rem 0; }
     .svc-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
     .price { color: #6bfe9c; font-weight: 700; }
     .bookings { color: var(--text-muted); }
 
-    .btn-full-width { width: 100%; padding: 0.85rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: #fff; font-weight: 700; cursor: pointer; }
+    .btn-full-width { width: 100%; padding: 0.85rem; border-radius: 1rem; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-main); font-weight: 700; cursor: pointer; }
 
     .upgrade-panel { margin-top: 2rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(192, 132, 252, 0.05)); border: 1px solid rgba(192, 132, 252, 0.2); text-align: center; }
     .crown { font-size: 2.5rem; color: #ffb800; margin-bottom: 1rem; }

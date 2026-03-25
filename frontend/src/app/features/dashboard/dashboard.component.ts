@@ -223,7 +223,7 @@ import { AuthService } from '../../core/auth.service';
 
     .dash-nav { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .d-nav-item { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.25rem; border-radius: 1rem; color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: 0.2s; cursor: pointer; }
-    .d-nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .d-nav-item:hover { color: var(--text-main); background: var(--glass); }
     .d-nav-item.active { background: rgba(59,130,246,0.1); color: var(--primary); }
     .d-nav-item.logout { margin-top: auto; color: #ef4444; }
     .nav-spacer { height: 2rem; }
@@ -242,8 +242,8 @@ import { AuthService } from '../../core/auth.service';
     .dash-header p { font-size: 1.15rem; color: var(--text-muted); }
 
     .h-right { display: flex; align-items: center; gap: 1.5rem; }
-    .btn-search-trigger { background: var(--glass); border: 1px solid var(--glass-border); color: #fff; padding: 0.85rem 1.5rem; border-radius: 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .btn-search-trigger:hover { background: rgba(255,255,255,0.1); }
+    .btn-search-trigger { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.85rem 1.5rem; border-radius: 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-search-trigger:hover { background: var(--glass-border); }
     .notif-bell { position: relative; width: 48px; height: 48px; border-radius: 50%; background: var(--glass); display: flex; align-items: center; justify-content: center; transform: 0.2s; cursor: pointer; }
     .notif-bell .n-dot { position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid var(--bg); }
 
@@ -260,10 +260,10 @@ import { AuthService } from '../../core/auth.service';
     .bar { height: 100%; background: var(--primary); border-radius: 3px; box-shadow: 0 0 10px var(--primary-glow); }
 
     .avatar-group { display: flex; gap: -8px; margin-top: 1rem; }
-    .a-mini { width: 30px; height: 30px; border-radius: 50%; background: #1e293b; border: 2px solid #080c24; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; }
+    .a-mini { width: 30px; height: 30px; border-radius: 50%; background: var(--surface-container-highest); border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); }
 
-    .wallet { background: linear-gradient(135deg, #0a113d, #05091f); }
-    .btn-topup { background: var(--primary); border: none; padding: 0.6rem 1.25rem; border-radius: 1rem; color: #fff; font-weight: 800; font-size: 0.85rem; margin-top: 1rem; cursor: pointer; }
+    .wallet { background: linear-gradient(135deg, var(--surface-container-high), var(--surface-container-low)); border: 1px solid var(--border-color); }
+    .btn-topup { background: var(--primary); border: none; padding: 0.6rem 1.25rem; border-radius: 1rem; color: #fff; font-weight: 800; font-size: 0.85rem; margin-top: 1rem; cursor: pointer; box-shadow: 0 4px 12px var(--primary-glow); }
 
     /* Grid */
     .dash-main-grid { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; }
@@ -273,7 +273,7 @@ import { AuthService } from '../../core/auth.service';
 
     .booking-stack { display: flex; flex-direction: column; gap: 1.25rem; }
     .booking-item-premium { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1.75rem; padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; transition: 0.2s; }
-    .booking-item-premium:hover { background: rgba(255,255,255,0.05); }
+    .booking-item-premium:hover { background: var(--glass-border); }
 
     .b-date-box { width: 70px; height: 75px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .b-date-box.alt { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); }
@@ -290,8 +290,8 @@ import { AuthService } from '../../core/auth.service';
     .status-tag { background: rgba(16,185,129,0.1); color: #10b981; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
 
     .b-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .btn-outline { background: transparent; border: 1.5px solid var(--glass-border); color: #fff; padding: 0.6rem 1.25rem; border-radius: 1rem; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
-    .btn-icon-blur { width: 40px; height: 40px; border-radius: 50%; background: var(--glass); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--glass-border); color: var(--text-main); padding: 0.6rem 1.25rem; border-radius: 1rem; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .btn-icon-blur { width: 40px; height: 40px; border-radius: 50%; background: var(--glass); border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
     /* Side Column */
     .dash-side-col { display: flex; flex-direction: column; gap: 3rem; }
@@ -302,11 +302,11 @@ import { AuthService } from '../../core/auth.service';
     .act-text p { font-size: 0.95rem; margin: 0 0 4px; font-weight: 600; }
     .act-text span { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
-    .promo-card { background: linear-gradient(135deg, #1e3a8a, #020410); border: 1px solid var(--primary); border-radius: 2rem; padding: 2.5rem; position: relative; overflow: hidden; }
-    .p-content h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; margin: 0 0 0.75rem; }
+    .promo-card { background: linear-gradient(135deg, var(--surface-container-highest), var(--bg)); border: 1px solid var(--primary); border-radius: 2rem; padding: 2.5rem; position: relative; overflow: hidden; }
+    .p-content h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; margin: 0 0 0.75rem; color: var(--text-main); }
     .p-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem; font-weight: 600; }
-    .btn-prime { background: var(--primary); border: none; padding: 0.75rem 1.5rem; border-radius: 1rem; color: #fff; font-weight: 800; cursor: pointer; }
-    .p-deco { position: absolute; font-size: 6rem; opacity: 0.1; right: -1rem; bottom: -1rem; transform: rotate(-15deg); }
+    .btn-prime { background: var(--primary); border: none; padding: 0.75rem 1.5rem; border-radius: 1rem; color: #fff; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px var(--primary-glow); }
+    .p-deco { position: absolute; font-size: 6rem; opacity: 0.05; right: -1rem; bottom: -1rem; transform: rotate(-15deg); color: var(--primary); }
 
     @media (max-width: 1200px) {
       .dash-main-grid { grid-template-columns: 1fr; }
