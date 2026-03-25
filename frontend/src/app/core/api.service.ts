@@ -16,6 +16,7 @@ export interface ShopDto {
   openingHours: string;
   status: string;
   isFeatured: boolean;
+  photos: string[];
 }
 
 export interface ServiceDto {
@@ -42,6 +43,40 @@ export interface CategoryDto {
   isShopCategory: boolean;
 }
 
+export interface InquiryDto {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  shopId: string;
+  message: string;
+  reply: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface AppointmentDto {
+  id: string;
+  userId: string;
+  userName: string;
+  shopId: string;
+  shopName: string;
+  appointmentTime: string;
+  serviceType: string;
+  status: string;
+  notes: string;
+}
+
+export interface ProductDto {
+  id: string;
+  shopId: string;
+  name: string;
+  description: string;
+  price: number;
+  isAvailable: boolean;
+  imageUrl: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private apiUrl = environment.apiUrl;
@@ -55,6 +90,40 @@ export class ApiService {
 
   getShopById(id: string): Observable<ShopDto> {
     return this.http.get<ShopDto>(`${this.apiUrl}/public/shops/${id}`);
+  }
+
+  getShopsByOwner(ownerId: string): Observable<ShopDto[]> {
+    return this.http.get<ShopDto[]>(`${this.apiUrl}/shops/owner/${ownerId}`);
+  }
+
+  uploadShopPhoto(shopId: string, photoData: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/shops/${shopId}/photos`, photoData);
+  }
+
+  // Dashboard specifics
+  getInquiriesByShop(shopId: string): Observable<InquiryDto[]> {
+    return this.http.get<InquiryDto[]>(`${this.apiUrl}/inquiries/shop/${shopId}`);
+  }
+
+  replyInquiry(inquiryId: string, reply: string): Observable<InquiryDto> {
+    return this.http.patch<InquiryDto>(`${this.apiUrl}/inquiries/${inquiryId}/reply`, reply);
+  }
+
+  deleteInquiry(inquiryId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/inquiries/${inquiryId}`);
+  }
+
+  getAppointmentsByShop(shopId: string): Observable<AppointmentDto[]> {
+    return this.http.get<AppointmentDto[]>(`${this.apiUrl}/appointments/shop/${shopId}`);
+  }
+
+  updateAppointmentStatus(appointmentId: string, status: string): Observable<AppointmentDto> {
+    return this.http.patch<AppointmentDto>(`${this.apiUrl}/appointments/${appointmentId}/status?status=${status}`, {});
+  }
+
+  // Related data
+  getProductsByShop(shopId: string): Observable<ProductDto[]> {
+    return this.http.get<ProductDto[]>(`${this.apiUrl}/public/products/shop/${shopId}`);
   }
 
   // Services

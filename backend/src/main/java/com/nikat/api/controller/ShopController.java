@@ -37,4 +37,10 @@ public class ShopController {
     public ResponseEntity<ShopDto> updateShopStatus(@PathVariable UUID id, @RequestParam String status) {
         return ResponseEntity.ok(shopService.updateShopStatus(id, status));
     }
+
+    @PostMapping("/shops/{id}/photos")
+    public ResponseEntity<Void> uploadPhoto(@PathVariable UUID id, @RequestBody String photoData) {
+        shopService.uploadShopPhoto(id, photoData);
+        return ResponseEntity.ok().build();
+    }
 }

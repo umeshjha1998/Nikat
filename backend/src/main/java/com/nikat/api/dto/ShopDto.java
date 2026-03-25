@@ -20,4 +20,5 @@ public class ShopDto {
     private String openingHours;
     private String status;
     private Boolean isFeatured;
+    private java.util.List<String> photos;
 }

@@ -1,23 +1,24 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { ApiService } from '../../../core/api.service';
+import { FormsModule } from '@angular/forms';
+import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-shop-owner-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="dashboard-layout">
       <!-- Sidebar -->
       <aside class="dashboard-sidebar">
-        <div class="business-brand">
+        <div class="business-brand" (click)="setTab('analytics')" style="cursor: pointer;">
           <div class="brand-hexagon">
             <span class="material-icons">architecture</span>
           </div>
           <div class="brand-text">
-            <h3>Business Studio</h3>
+            <h3>{{ currentShop?.name || 'Business Studio' }}</h3>
             <p>Nikat for Partners</p>
           </div>
         </div>
@@ -38,7 +39,7 @@ import { AuthService } from '../../../core/auth.service';
           <a class="nav-item" (click)="setTab('inquiries')" [class.active]="activeTab === 'inquiries'">
             <span class="material-icons">chat_bubble_outline</span>
             <span>Inquiries</span>
-            <span class="badge">4</span>
+            <span class="badge" *ngIf="newInquiriesCount > 0">{{ newInquiriesCount }}</span>
           </a>
           <div class="nav-divider"></div>
           <a class="nav-item" (click)="setTab('settings')" [class.active]="activeTab === 'settings'">
@@ -69,24 +70,24 @@ import { AuthService } from '../../../core/auth.service';
       <main class="dashboard-main">
         <header class="dashboard-header">
           <div class="header-titles">
-            <h1>Urban Craft Coffee</h1>
-            <p class="subtitle">Boutique roastery and community hub in the heart of Downtown. Curating specialty beans since 2018.</p>
+            <h1>{{ activeTab | titlecase }}</h1>
+            <p class="subtitle" *ngIf="activeTab === 'analytics'">Detailed performance metrics and growth insights for {{ currentShop?.name }}.</p>
+            <p class="subtitle" *ngIf="activeTab === 'listings'">Manage your products and showcased services.</p>
           </div>
           <div class="header-actions">
-            <button class="btn-outline-glass">
+            <button class="btn-outline-glass" (click)="shareProfile()">
               <span class="material-icons">share</span>
-              Share Profile
+              {{ shareBtnText }}
             </button>
-            <button class="btn-primary-glow">
+            <button class="btn-primary-glow" *ngIf="activeTab === 'listings'">
               <span class="material-icons">add</span>
               New Listing
             </button>
           </div>
         </header>
 
-        <!-- Stats Overview -->
+        <!-- ANALYTICS TAB -->
         <ng-container *ngIf="activeTab === 'analytics'">
-          <!-- Stats Overview -->
           <div class="stats-container">
             <div class="stat-card-glass">
               <div class="stat-header">
@@ -109,47 +110,43 @@ import { AuthService } from '../../../core/auth.service';
                 </span>
               </div>
               <div class="stat-main">
-                <span class="stat-value">842</span>
+                <span class="stat-value">{{ inquiries.length }}</span>
                 <div class="stat-visual inquiries"></div>
               </div>
             </div>
 
             <div class="stat-card-glass">
               <div class="stat-header">
-                <span class="stat-label">Average Rating</span>
-                <span class="rating-stars">
-                  <span class="material-icons">star</span>
-                  <span class="material-icons">star</span>
-                  <span class="material-icons">star</span>
-                  <span class="material-icons">star</span>
-                  <span class="material-icons">star_half</span>
+                <span class="stat-label">Appointments</span>
+                <span class="trend positive">
+                   <span class="material-icons">trending_up</span> +2.4%
                 </span>
               </div>
               <div class="stat-main">
-                <span class="stat-value">4.9</span>
-                <span class="stat-meta">From 128 reviews</span>
+                <span class="stat-value">{{ appointments.length }}</span>
+                <span class="stat-meta">Active bookings</span>
               </div>
             </div>
           </div>
 
           <div class="dashboard-grid">
-            <!-- Left Column -->
             <div class="grid-col-2">
-              <!-- Engagement Chart Placeholder -->
+              <!-- Engagement Trends -->
               <section class="content-card-dark">
                 <div class="card-header">
                   <h2>Engagement Trends</h2>
                   <div class="header-tabs">
-                    <button class="active">Views</button>
-                    <button>Interactions</button>
+                    <button [class.active]="activeTrend === 'views'" (click)="activeTrend = 'views'">Views</button>
+                    <button [class.active]="activeTrend === 'interactions'" (click)="activeTrend = 'interactions'">Interactions</button>
                   </div>
                 </div>
                 <div class="chart-container">
                   <div class="chart-placeholder">
-                    <!-- Simulated Chart Line -->
                     <svg viewBox="0 0 800 200" class="simulated-chart">
-                      <path d="M0,150 Q50,140 100,160 T200,100 T300,120 T400,80 T500,90 T600,40 T700,60 T800,20" 
+                      <path *ngIf="activeTrend === 'views'" d="M0,150 Q50,140 100,160 T200,100 T300,120 T400,80 T500,90 T600,40 T700,60 T800,20" 
                             fill="none" stroke="url(#chartGradient)" stroke-width="4" />
+                      <path *ngIf="activeTrend === 'interactions'" d="M0,180 Q100,160 200,170 T400,140 T600,150 T800,120" 
+                            fill="none" stroke="#8b5cf6" stroke-width="4" />
                       <defs>
                         <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stop-color="#3ddc84" />
@@ -168,77 +165,207 @@ import { AuthService } from '../../../core/auth.service';
               <section class="content-card-dark">
                 <div class="card-header">
                   <h2>Showcase Photos</h2>
-                  <button class="link-btn">Manage Album</button>
+                  <input type="file" #fileInput style="display: none" (change)="onPhotoUpload($event)" accept="image/*">
+                  <button class="link-btn" (click)="fileInput.click()">Add Photos</button>
                 </div>
                 <div class="photo-grid">
-                  <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80')"></div>
-                  <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80')"></div>
-                  <div class="showcase-img" style="background-image: url('https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=400&q=80')"></div>
-                  <div class="photo-add-card">
-                    <span class="material-icons">add_a_photo</span>
-                    <span>Upload</span>
+                  <div class="showcase-img" *ngFor="let photo of currentShop?.photos" 
+                       [style.backgroundImage]="'url(' + photo + ')'"></div>
+                  
+                  <!-- Placeholders if no photos -->
+                  <ng-container *ngIf="!currentShop?.photos?.length">
+                    <div class="showcase-img placeholder-img"></div>
+                    <div class="showcase-img placeholder-img"></div>
+                  </ng-container>
+
+                  <div class="photo-add-card" (click)="fileInput.click()">
+                    <span class="material-icons" *ngIf="!isUploading">add_a_photo</span>
+                    <span class="upload-loader" *ngIf="isUploading"></span>
+                    <span>{{ isUploading ? 'Uploading...' : 'Upload' }}</span>
                   </div>
                 </div>
               </section>
             </div>
 
-            <!-- Right Column -->
             <div class="grid-col-1">
               <!-- Recent Inquiries -->
               <section class="content-card-dark inquiries-section">
                 <div class="card-header">
                   <h2>Recent Inquiries</h2>
-                  <span class="dot-badge highlight"></span>
+                  <span class="dot-badge highlight" *ngIf="newInquiriesCount > 0"></span>
                 </div>
                 <div class="inquiry-list">
-                  <div class="inquiry-item" *ngFor="let inquiry of recentInquiries">
+                  <div class="inquiry-item" *ngFor="let inquiry of inquiries.slice(0, 3)">
                     <div class="inquiry-user">
-                      <img [src]="inquiry.avatar" class="user-avatar" alt="avatar">
+                      <div class="mini-avatar-circle" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ inquiry.userName.charAt(0) }}</div>
                       <div class="user-info">
-                        <strong>{{inquiry.name}}</strong>
-                        <span>{{inquiry.time}}</span>
+                        <strong>{{ inquiry.userName }}</strong>
+                        <span>{{ inquiry.createdAt | date:'shortTime' }}</span>
                       </div>
                     </div>
-                    <p class="inquiry-text">"{{inquiry.message}}"</p>
+                    <p class="inquiry-text">"{{ inquiry.message }}"</p>
                     <div class="inquiry-actions">
-                      <button class="btn-reply">Reply</button>
-                      <button class="btn-icon"><span class="material-icons">more_horiz</span></button>
+                      <button class="btn-reply" (click)="replyInquiry(inquiry)">Reply</button>
+                      <button class="btn-icon" (click)="deleteInquiry(inquiry.id)"><span class="material-icons">delete_outline</span></button>
                     </div>
                   </div>
+                  <div *ngIf="inquiries.length === 0" class="empty-state">No recent inquiries</div>
                 </div>
-                <button class="btn-full-width">View All Conversations</button>
-              </section>
-
-              <!-- Location Identity -->
-              <section class="content-card-dark location-section">
-                <div class="card-header">
-                  <h2>Location Identity</h2>
-                  <span class="material-icons lock-status">verified</span>
-                </div>
-                <div class="location-content">
-                  <div class="map-mini">
-                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=40" alt="map">
-                    <div class="map-pin"><span class="material-icons">location_on</span></div>
-                  </div>
-                  <div class="address-details">
-                    <p class="address">Downtown Core, 452 Liberty Avenue, Suite 101</p>
-                    <p class="distance">Central Hub Area</p>
-                  </div>
-                </div>
+                <button class="btn-full-width" (click)="setTab('inquiries')">View All Conversations</button>
               </section>
             </div>
           </div>
         </ng-container>
 
-        <!-- Other Tabs Placeholders -->
-        <div class="tab-content-placeholder" *ngIf="activeTab !== 'analytics'" style="margin-top: 2rem;">
-           <div class="content-card-dark" style="padding: 4rem; text-align: center; border: 1px dashed var(--glass-border);">
-              <span class="material-icons" style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem;">construction</span>
-              <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{activeTab | titlecase}} Module</h2>
-              <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem;">This section is currently being updated with advanced management tools for your business.</p>
-              <button class="btn-primary-glow" (click)="setTab('analytics')">Return to Analytics</button>
-           </div>
-        </div>
+        <!-- LISTINGS TAB -->
+        <ng-container *ngIf="activeTab === 'listings'">
+          <div class="listings-grid">
+             <div class="content-card-dark listing-card" *ngFor="let product of products">
+                <img [src]="product.imageUrl || 'assets/placeholder-listing.jpg'" class="listing-thumb">
+                <div class="listing-info">
+                   <h3>{{ product.name }}</h3>
+                   <p>{{ product.description }}</p>
+                   <div class="listing-footer">
+                      <span class="price">₹{{ product.price }}</span>
+                      <span class="status-tag" [class.available]="product.available">{{ product.available ? 'In Stock' : 'Out of Stock' }}</span>
+                   </div>
+                </div>
+                <div class="listing-actions">
+                   <button class="btn-icon"><span class="material-icons">edit</span></button>
+                   <button class="btn-icon"><span class="material-icons">visibility_off</span></button>
+                </div>
+             </div>
+             <div *ngIf="products.length === 0" class="empty-full-width">
+                <span class="material-icons">inventory_2</span>
+                <p>You haven't added any listings yet. Start showcase your products!</p>
+                <button class="btn-primary-glow">Create First Listing</button>
+             </div>
+          </div>
+        </ng-container>
+
+        <!-- APPOINTMENTS TAB -->
+        <ng-container *ngIf="activeTab === 'appointments'">
+          <div class="appointments-view">
+             <table class="data-table">
+                <thead>
+                   <tr>
+                      <th>Customer</th>
+                      <th>Time</th>
+                      <th>Service</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <tr *ngFor="let apt of appointments">
+                      <td>
+                        <div class="user-cell">
+                           <div class="mini-avatar-circle" style="width: 28px; height: 28px; font-size: 0.7rem;">{{ apt.userName.charAt(0) }}</div>
+                           <span>{{ apt.userName }}</span>
+                        </div>
+                      </td>
+                      <td>{{ apt.appointmentTime | date:'medium' }}</td>
+                      <td>{{ apt.serviceType }}</td>
+                      <td><span class="badge" [class]="apt.status.toLowerCase()">{{ apt.status }}</span></td>
+                      <td class="action-cells">
+                         <button class="btn-icon ok" (click)="updateAptStatus(apt.id, 'CONFIRMED')" *ngIf="apt.status === 'PENDING'"><span class="material-icons">check_circle</span></button>
+                         <button class="btn-icon cancel" (click)="updateAptStatus(apt.id, 'CANCELLED')" *ngIf="apt.status !== 'CANCELLED'"><span class="material-icons">cancel</span></button>
+                      </td>
+                   </tr>
+                </tbody>
+             </table>
+             <div *ngIf="appointments.length === 0" class="empty-state-large">
+                <span class="material-icons">calendar_today</span>
+                <p>No appointments booked yet.</p>
+             </div>
+          </div>
+        </ng-container>
+
+        <!-- INQUIRIES TAB -->
+        <ng-container *ngIf="activeTab === 'inquiries'">
+          <div class="inquiries-full-view">
+             <div class="inquiry-thread-list">
+                <div class="inquiry-thread-card" *ngFor="let inq of inquiries" [class.new]="inq.status === 'OPEN'">
+                   <div class="thread-header">
+                      <div class="user-cell">
+                         <div class="mini-avatar-circle" style="width: 36px; height: 36px;">{{ inq.userName.charAt(0) }}</div>
+                         <div class="user-meta">
+                            <strong>{{ inq.userName }}</strong>
+                            <span>{{ inq.createdAt | date:'mediumDate' }}</span>
+                         </div>
+                      </div>
+                      <span class="badge" [class]="inq.status.toLowerCase()">{{ inq.status }}</span>
+                   </div>
+                   <div class="thread-content">
+                      <p class="question">Q: {{ inq.message }}</p>
+                      <p class="answer" *ngIf="inq.reply"><strong>A:</strong> {{ inq.reply }}</p>
+                      <div class="reply-input-box" *ngIf="!inq.reply">
+                         <input #replyInput type="text" placeholder="Type your response...">
+                         <button (click)="submitReply(inq.id, replyInput.value)">Send</button>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </ng-container>
+
+        <!-- SETTINGS TAB -->
+        <ng-container *ngIf="activeTab === 'settings'">
+          <div class="settings-form content-card-dark">
+             <h2>Shop Profile Settings</h2>
+             <form class="glass-form">
+                <div class="form-row">
+                   <div class="form-group">
+                      <label>Shop Name</label>
+                      <input type="text" [(ngModel)]="currentShop!.name" name="name">
+                   </div>
+                   <div class="form-group">
+                      <label>Workers Count</label>
+                      <input type="number" [(ngModel)]="currentShop!.workerCount" name="workers">
+                   </div>
+                </div>
+                <div class="form-group">
+                   <label>Business Description</label>
+                   <textarea rows="4" [(ngModel)]="currentShop!.description" name="desc"></textarea>
+                </div>
+                <div class="form-group">
+                   <label>Business Address</label>
+                   <input type="text" [(ngModel)]="currentShop!.address" name="address">
+                </div>
+                <div class="form-group">
+                   <label>Opening Hours</label>
+                   <input type="text" [(ngModel)]="currentShop!.openingHours" name="hours">
+                </div>
+                <button class="btn-primary-glow" style="margin-top: 1rem;">Save Changes</button>
+             </form>
+          </div>
+        </ng-container>
+
+        <!-- SUPPORT TAB -->
+        <ng-container *ngIf="activeTab === 'support'">
+          <div class="support-view">
+             <div class="support-grid">
+                <div class="content-card-dark help-article">
+                   <span class="material-icons">description</span>
+                   <h3>Getting Started</h3>
+                   <p>Learn how to optimize your storefront and attract more customers.</p>
+                   <a href="#">Read Guide</a>
+                </div>
+                <div class="content-card-dark help-article">
+                   <span class="material-icons">payments</span>
+                   <h3>Payments & Commissions</h3>
+                   <p>Understand how payouts work and manage your billing.</p>
+                   <a href="#">View Policy</a>
+                </div>
+                <div class="content-card-dark contact-card">
+                   <h3>Need Direct Help?</h3>
+                   <p>Our partner success team is available 24/7.</p>
+                   <button class="btn-outline-glass">Contact Support</button>
+                </div>
+             </div>
+          </div>
+        </ng-container>
+
       </main>
     </div>
   `,
@@ -295,6 +422,10 @@ import { AuthService } from '../../../core/auth.service';
       font-weight: 800;
       margin: 0;
       color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
     }
 
     .brand-text p {
@@ -379,11 +510,16 @@ import { AuthService } from '../../../core/auth.service';
       gap: 0.75rem;
     }
 
-    .mini-avatar {
-      width: 36px;
-      height: 36px;
+    .mini-avatar-circle {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
     }
 
     .user-details {
@@ -454,11 +590,6 @@ import { AuthService } from '../../../core/auth.service';
       transition: all 0.3s ease;
     }
 
-    .btn-primary-glow:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px var(--primary-glow);
-    }
-
     .btn-outline-glass {
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -471,11 +602,6 @@ import { AuthService } from '../../../core/auth.service';
       gap: 0.5rem;
       cursor: pointer;
       transition: all 0.3s ease;
-    }
-
-    .btn-outline-glass:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
     }
 
     /* Stats Grid */
@@ -500,7 +626,6 @@ import { AuthService } from '../../../core/auth.service';
     .stat-card-glass:hover {
       border-color: rgba(61, 220, 132, 0.3);
       transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
     }
 
     .stat-header {
@@ -515,7 +640,6 @@ import { AuthService } from '../../../core/auth.service';
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     .stat-value {
@@ -535,20 +659,6 @@ import { AuthService } from '../../../core/auth.service';
 
     .trend.positive { color: var(--primary); }
 
-    .rating-stars {
-      color: #ffb800;
-      display: flex;
-      gap: 2px;
-    }
-
-    .stat-meta {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      display: block;
-      margin-top: 0.5rem;
-    }
-
-    /* Graph Visual in Stat Card */
     .stat-visual {
       height: 4px;
       width: 100%;
@@ -560,13 +670,9 @@ import { AuthService } from '../../../core/auth.service';
 
     .stat-visual::after {
       content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 70%;
+      position: absolute; left: 0; top: 0;
+      height: 100%; width: 70%;
       background: var(--primary);
-      border-radius: 2px;
       box-shadow: 0 0 10px var(--primary-glow);
     }
 
@@ -620,7 +726,6 @@ import { AuthService } from '../../../core/auth.service';
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
     .header-tabs button.active {
@@ -628,7 +733,6 @@ import { AuthService } from '../../../core/auth.service';
       color: #003d20;
     }
 
-    /* Simulated Chart */
     .chart-container {
       height: 240px;
       margin-top: 1rem;
@@ -646,18 +750,13 @@ import { AuthService } from '../../../core/auth.service';
     }
 
     .chart-grid-lines {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; flex-direction: column; justify-content: space-between;
       pointer-events: none;
     }
 
     .chart-grid-lines span {
-      height: 1px;
-      width: 100%;
-      background: var(--border-color);
+      height: 1px; width: 100%; background: var(--border-color);
     }
 
     /* Photo Grid */
@@ -674,12 +773,11 @@ import { AuthService } from '../../../core/auth.service';
       background-position: center;
       border: 2px solid transparent;
       transition: all 0.3s ease;
-      cursor: pointer;
     }
 
-    .showcase-img:hover {
-      border-color: var(--primary);
-      transform: scale(1.05);
+    .showcase-img.placeholder-img {
+       background: var(--glass);
+       border: 1px dashed var(--glass-border);
     }
 
     .photo-add-card {
@@ -693,178 +791,175 @@ import { AuthService } from '../../../core/auth.service';
       gap: 0.5rem;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
-    .photo-add-card:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--text-muted);
-      color: #fff;
+    .upload-loader {
+       width: 24px;
+       height: 24px;
+       border: 3px solid rgba(61, 220, 132, 0.3);
+       border-top-color: var(--primary);
+       border-radius: 50%;
+       animation: spin 1s linear infinite;
     }
 
-    /* Inquiries Section */
-    .inquiry-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Listings Styles */
+    .listings-grid {
+       display: grid;
+       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+       gap: 1.5rem;
     }
 
-    .inquiry-item {
-      padding: 1.25rem;
-      background: var(--glass);
-      border-radius: 1rem;
-      border: 1px solid var(--glass-border);
+    .listing-card {
+       padding: 0;
+       overflow: hidden;
+       position: relative;
     }
 
-    .inquiry-user {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
+    .listing-thumb {
+       width: 100%;
+       height: 200px;
+       object-fit: cover;
     }
 
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    .listing-info {
+       padding: 1.5rem;
     }
 
-    .user-info strong {
-      display: block;
-      font-size: 0.9rem;
-      color: var(--text-main);
+    .listing-info h3 { margin: 0 0 0.5rem 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .listing-info p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+    .listing-footer {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
     }
 
-    .user-info span {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+    .price { font-weight: 800; font-size: 1.25rem; color: var(--primary); }
+    .status-tag { 
+       font-size: 0.75rem; 
+       padding: 0.25rem 0.75rem; 
+       border-radius: 1rem; 
+       background: rgba(239, 68, 68, 0.1); 
+       color: #ef4444; 
+    }
+    .status-tag.available { background: rgba(61, 220, 132, 0.1); color: var(--primary); }
+
+    .listing-actions {
+       position: absolute;
+       top: 1rem; right: 1rem;
+       display: flex;
+       gap: 0.5rem;
     }
 
-    .inquiry-text {
-      font-size: 0.9rem;
-      color: var(--text-main);
-      line-height: 1.5;
-      font-style: italic;
-      margin-bottom: 1rem;
+    .listing-actions .btn-icon {
+       background: rgba(0,0,0,0.5);
+       backdrop-filter: blur(5px);
+       color: #fff;
+       width: 32px; height: 32px;
+       border-radius: 50%;
+       display: flex; align-items: center; justify-content: center;
     }
 
-    .inquiry-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
+    /* Appointments Table */
+    .data-table {
+       width: 100%;
+       border-collapse: separate;
+       border-spacing: 0 0.75rem;
     }
 
-    .btn-reply {
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      padding: 0.4rem 1rem;
-      border-radius: 1.5rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
+    .data-table th {
+       text-align: left;
+       padding: 1rem;
+       color: var(--text-muted);
+       font-weight: 600;
+       font-size: 0.9rem;
+       text-transform: uppercase;
     }
 
-    .btn-icon {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
+    .data-table tbody tr {
+       background: var(--surface-container);
+       border-radius: 1rem;
     }
 
-    .btn-full-width {
-      width: 100%;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      color: var(--text-main);
-      padding: 1rem;
-      border-radius: 1rem;
-      font-weight: 700;
-      cursor: pointer;
+    .data-table td {
+       padding: 1.25rem 1rem;
     }
 
-    /* Location Section */
-    .map-mini {
-      position: relative;
-      height: 140px;
-      border-radius: 1rem;
-      overflow: hidden;
-      margin-bottom: 1.25rem;
+    .data-table td:first-child { border-top-left-radius: 1rem; border-bottom-left-radius: 1rem; }
+    .data-table td:last-child { border-top-right-radius: 1rem; border-bottom-right-radius: 1rem; }
+
+    .user-cell { display: flex; align-items: center; gap: 0.75rem; }
+
+    .badge.pending { background: rgba(251, 191, 36, 0.1); color: #fbbf24; }
+    .badge.confirmed { background: rgba(61, 220, 132, 0.1); color: var(--primary); }
+    .badge.cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+    .action-cells { display: flex; gap: 0.5rem; }
+    .btn-icon.ok { color: var(--primary); }
+    .btn-icon.cancel { color: #ef4444; }
+
+    /* Inquiries View */
+    .inquiry-thread-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .inquiry-thread-card {
+       background: var(--surface-container);
+       border: 1px solid var(--border-color);
+       border-radius: 1.5rem;
+       padding: 2rem;
+    }
+    .inquiry-thread-card.new { border-left: 4px solid var(--primary); }
+
+    .thread-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .user-meta strong { display: block; }
+    .user-meta span { font-size: 0.8rem; color: var(--text-muted); }
+
+    .question { background: var(--glass); padding: 1rem; border-radius: 1rem; margin-bottom: 1rem; }
+    .answer { padding: 1rem; border-left: 2px solid var(--primary); color: var(--primary); }
+
+    .reply-input-box {
+       display: flex; gap: 1rem; margin-top: 1.5rem;
+    }
+    .reply-input-box input {
+       flex: 1; background: var(--glass); border: 1px solid var(--glass-border);
+       color: #fff; padding: 0.75rem 1.25rem; border-radius: 2rem;
+    }
+    .reply-input-box button {
+       background: var(--primary); color: #003d20; border: none;
+       padding: 0 1.5rem; border-radius: 2rem; font-weight: 700;
     }
 
-    .map-mini img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: saturate(0.5) brightness(0.6);
+    /* Form Styles */
+    .glass-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+    .form-group input, .form-group textarea {
+       background: var(--glass); border: 1px solid var(--glass-border);
+       color: #fff; padding: 0.85rem 1.25rem; border-radius: 1rem;
+       font-family: inherit;
     }
 
-    .map-pin {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -100%);
-      color: var(--primary);
-      text-shadow: 0 0 10px var(--primary-glow);
+    .empty-state, .empty-full-width, .empty-state-large {
+       text-align: center; color: var(--text-muted); padding: 3rem;
     }
-
-    .address {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .distance {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    .highlight { background-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
+    .empty-full-width .material-icons, .empty-state-large .material-icons { font-size: 3rem; margin-bottom: 1rem; }
 
     @media (max-width: 1280px) {
       .dashboard-grid { grid-template-columns: 1fr; }
-      .grid-col-2 { order: 1; }
-      .grid-col-1 { order: 2; }
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-layout { flex-direction: column; }
-      .dashboard-sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--glass-border); }
-      .stats-container { grid-template-columns: 1fr; }
-      .photo-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    .mini-avatar-circle {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .nav-item.logout-item:hover {
-      background: rgba(239, 68, 68, 0.1) !important;
     }
   `]
 })
 export class ShopOwnerDashboardComponent implements OnInit {
   activeTab = 'analytics';
-  recentInquiries = [
-    { 
-      name: 'Sarah Mitchell', 
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-      time: '2 hours ago',
-      message: 'Do you offer catering services for small corporate events? We are looking for cold brew setups.'
-    },
-    { 
-      name: 'David Chen', 
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-      time: '5 hours ago',
-      message: 'Is the rooftop patio open this evening for private bookings?'
-    }
-  ];
+  activeTrend: 'views' | 'interactions' = 'views';
+  isUploading = false;
+  shareBtnText = 'Share Profile';
+  
+  currentShop: ShopDto | null = null;
+  inquiries: InquiryDto[] = [];
+  appointments: AppointmentDto[] = [];
+  products: ProductDto[] = [];
 
   constructor(private apiService: ApiService) {}
   private authService = inject(AuthService);
@@ -879,10 +974,137 @@ export class ShopOwnerDashboardComponent implements OnInit {
     return name.charAt(0).toUpperCase();
   }
 
-  ngOnInit() {}
+  get newInquiriesCount(): number {
+    return this.inquiries.filter(i => i.status === 'OPEN').length;
+  }
+
+  ngOnInit() {
+    this.loadInitialData();
+  }
+
+  async loadInitialData() {
+    if (!this.currentUser?.id) return;
+    
+    this.apiService.getShopsByOwner(this.currentUser.id).subscribe(shops => {
+      if (shops.length > 0) {
+        this.currentShop = shops[0];
+        this.loadDashboardData(this.currentShop.id);
+      }
+    });
+  }
+
+  loadDashboardData(shopId: string) {
+    this.apiService.getInquiriesByShop(shopId).subscribe(data => this.inquiries = data);
+    this.apiService.getAppointmentsByShop(shopId).subscribe(data => this.appointments = data);
+    this.apiService.getProductsByShop(shopId).subscribe(data => this.products = data);
+  }
 
   setTab(tab: string) {
     this.activeTab = tab;
+  }
+
+  // --- ANALYTICS ACTIONS ---
+
+  shareProfile() {
+    if (this.currentShop) {
+      const url = `${window.location.origin}/shops/${this.currentShop.id}`;
+      if (navigator.share) {
+        navigator.share({
+          title: this.currentShop.name,
+          text: `Check out ${this.currentShop.name} on Nikat!`,
+          url: url
+        });
+      } else {
+        navigator.clipboard.writeText(url);
+        this.shareBtnText = 'Link Copied!';
+        setTimeout(() => this.shareBtnText = 'Share Profile', 2000);
+      }
+    }
+  }
+
+  async onPhotoUpload(event: any) {
+    const file = event.target.files[0];
+    if (!file || !this.currentShop) return;
+
+    this.isUploading = true;
+    try {
+      const compressedBase64 = await this.compressImage(file, 50 * 1024); // 50KB limit
+      this.apiService.uploadShopPhoto(this.currentShop.id, compressedBase64).subscribe(() => {
+        this.currentShop?.photos.push(compressedBase64);
+        this.isUploading = false;
+      });
+    } catch (err) {
+      console.error('Upload failed', err);
+      this.isUploading = false;
+    }
+  }
+
+  private compressImage(file: File, maxSize: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Initial quality
+          let quality = 0.8;
+          let base64 = '';
+          
+          const draw = () => {
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            base64 = canvas.toDataURL('image/jpeg', quality);
+            
+            // If still too large, reduce quality and resize
+            if (base64.length > maxSize * 1.33 && quality > 0.1) {
+              quality -= 0.1;
+              width *= 0.9;
+              height *= 0.9;
+              draw();
+            } else {
+              resolve(base64);
+            }
+          };
+          draw();
+        };
+      };
+      reader.onerror = reject;
+    });
+  }
+
+  replyInquiry(inquiry: any) {
+    this.activeTab = 'inquiries';
+    // Logic to scroll to OR focus on the list
+  }
+
+  submitReply(inquiryId: string, reply: string) {
+     if (!reply.trim()) return;
+     this.apiService.replyInquiry(inquiryId, reply).subscribe(updated => {
+        const idx = this.inquiries.findIndex(i => i.id === inquiryId);
+        if (idx > -1) this.inquiries[idx] = updated;
+     });
+  }
+
+  deleteInquiry(id: string) {
+     if (confirm('Delete this inquiry?')) {
+        this.apiService.deleteInquiry(id).subscribe(() => {
+           this.inquiries = this.inquiries.filter(i => i.id !== id);
+        });
+     }
+  }
+
+  updateAptStatus(id: string, status: string) {
+     this.apiService.updateAppointmentStatus(id, status).subscribe(updated => {
+        const idx = this.appointments.findIndex(a => a.id === id);
+        if (idx > -1) this.appointments[idx] = updated;
+     });
   }
 
   signOut() {

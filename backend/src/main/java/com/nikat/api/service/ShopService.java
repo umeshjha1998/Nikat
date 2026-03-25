@@ -1,7 +1,9 @@
 package com.nikat.api.service;
 
 import com.nikat.api.domain.Shop;
+import com.nikat.api.domain.ShopPhoto;
 import com.nikat.api.dto.ShopDto;
+import com.nikat.api.repository.ShopPhotoRepository;
 import com.nikat.api.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 public class ShopService {
 
     private final ShopRepository shopRepository;
+    private final ShopPhotoRepository shopPhotoRepository;
 
     public List<ShopDto> getAllShops() {
         return shopRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
@@ -41,6 +44,16 @@ public class ShopService {
         return mapToDto(shopRepository.save(shop));
     }
 
+    public void uploadShopPhoto(UUID shopId, String photoData) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new RuntimeException("Shop not found with id: " + shopId));
+        ShopPhoto photo = ShopPhoto.builder()
+                .shop(shop)
+                .photoData(photoData)
+                .build();
+        shopPhotoRepository.save(photo);
+    }
+
     private ShopDto mapToDto(Shop shop) {
         return ShopDto.builder()
                 .id(shop.getId())
@@ -55,6 +68,7 @@ public class ShopService {
                 .openingHours(shop.getOpeningHours())
                 .status(shop.getStatus())
                 .isFeatured(shop.getIsFeatured())
+                .photos(shopPhotoRepository.findByShopId(shop.getId()).stream().map(ShopPhoto::getPhotoData).collect(Collectors.toList()))
                 .build();
     }
 }
