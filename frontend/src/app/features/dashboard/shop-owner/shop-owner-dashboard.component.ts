@@ -46,6 +46,10 @@ import { AuthService } from '../../../core/auth.service';
             <span class="material-icons">settings</span>
             <span>Settings</span>
           </a>
+          <a class="nav-item" (click)="setTab('support')" [class.active]="activeTab === 'support'">
+            <span class="material-icons">help_outline</span>
+            <span>Support</span>
+          </a>
           <div class="nav-item logout-item" (click)="signOut()" style="color: #ef4444; margin-top: auto; cursor: pointer;">
             <span class="material-icons">logout</span>
             <span>Sign Out</span>
@@ -265,6 +269,31 @@ import { AuthService } from '../../../core/auth.service';
              </form>
           </div>
         </ng-container>
+
+        <!-- SUPPORT TAB -->
+        <ng-container *ngIf="activeTab === 'support'">
+          <div class="support-view">
+             <div class="support-grid">
+                <div class="content-card-dark help-article">
+                   <span class="material-icons">description</span>
+                   <h3>Getting Started</h3>
+                   <p>Learn how to optimize your storefront and attract more customers.</p>
+                   <a href="#">Read Guide</a>
+                </div>
+                <div class="content-card-dark help-article">
+                   <span class="material-icons">payments</span>
+                   <h3>Payments & Commissions</h3>
+                   <p>Understand how payouts work and manage your billing.</p>
+                   <a href="#">View Policy</a>
+                </div>
+                <div class="content-card-dark contact-card">
+                   <h3>Need Direct Help?</h3>
+                   <p>Our partner success team is available 24/7.</p>
+                   <button class="btn-outline-glass">Contact Support</button>
+                </div>
+             </div>
+          </div>
+        </ng-container>
       </main>
 
       <!-- Create Listing Modal -->
@@ -298,34 +327,6 @@ import { AuthService } from '../../../core/auth.service';
           </form>
         </div>
       </div>
-    </div>
-
-        <!-- SUPPORT TAB -->
-        <ng-container *ngIf="activeTab === 'support'">
-          <div class="support-view">
-             <div class="support-grid">
-                <div class="content-card-dark help-article">
-                   <span class="material-icons">description</span>
-                   <h3>Getting Started</h3>
-                   <p>Learn how to optimize your storefront and attract more customers.</p>
-                   <a href="#">Read Guide</a>
-                </div>
-                <div class="content-card-dark help-article">
-                   <span class="material-icons">payments</span>
-                   <h3>Payments & Commissions</h3>
-                   <p>Understand how payouts work and manage your billing.</p>
-                   <a href="#">View Policy</a>
-                </div>
-                <div class="content-card-dark contact-card">
-                   <h3>Need Direct Help?</h3>
-                   <p>Our partner success team is available 24/7.</p>
-                   <button class="btn-outline-glass">Contact Support</button>
-                </div>
-             </div>
-          </div>
-        </ng-container>
-
-      </main>
     </div>
   `,
   styles: [`
