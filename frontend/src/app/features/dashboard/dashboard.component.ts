@@ -247,14 +247,14 @@ import { FormsModule } from '@angular/forms';
               <p>Manage your appointments and service history</p>
             </div>
             <div class="tab-filters">
-              <button class="filter-chip active">Upcoming</button>
-              <button class="filter-chip">Completed</button>
-              <button class="filter-chip">Cancelled</button>
+              <button class="filter-chip" [class.active]="bookingFilter === 'upcoming'" (click)="setBookingFilter('upcoming')">Upcoming</button>
+              <button class="filter-chip" [class.active]="bookingFilter === 'completed'" (click)="setBookingFilter('completed')">Completed</button>
+              <button class="filter-chip" [class.active]="bookingFilter === 'cancelled'" (click)="setBookingFilter('cancelled')">Cancelled</button>
             </div>
           </div>
 
           <div class="booking-stack full-width">
-            <div class="booking-item-premium" *ngFor="let b of bookings">
+            <div class="booking-item-premium" *ngFor="let b of filteredBookings">
               <div class="b-date-box" [class.alt]="b.alt">
                 <span class="m">{{b.month}}</span>
                 <span class="d">{{b.day}}</span>
@@ -347,9 +347,9 @@ import { FormsModule } from '@angular/forms';
                 </div>
               </div>
               <div class="o-footer">
-                <button class="btn-text">Track Order</button>
+                <button class="btn-text" (click)="trackOrder(o)">Track Order</button>
                 <div class="dot-divider"></div>
-                <button class="btn-text">Download Invoice</button>
+                <button class="btn-text" (click)="downloadInvoice(o)">Download Invoice</button>
               </div>
             </div>
           </div>
@@ -389,7 +389,7 @@ import { FormsModule } from '@angular/forms';
                   <label>Phone Number</label>
                   <input type="text" [(ngModel)]="userProfile.phone" placeholder="+91 XXXX XXXX">
                 </div>
-                <button class="btn-prime-save">Save Changes</button>
+                <button class="btn-prime-save" (click)="saveProfile()">Save Changes</button>
               </div>
             </section>
 
@@ -411,7 +411,7 @@ import { FormsModule } from '@angular/forms';
                   <label>Confirm New Password</label>
                   <input type="password" placeholder="••••••••">
                 </div>
-                <button class="btn-outline-action">Update Password</button>
+                <button class="btn-outline-action" (click)="updatePassword()">Update Password</button>
               </div>
             </section>
 
@@ -426,14 +426,14 @@ import { FormsModule } from '@angular/forms';
                     <strong>Email Notifications</strong>
                     <p>Receive updates about your bookings via email</p>
                   </div>
-                  <div class="t-switch active"></div>
+                  <div class="t-switch" [class.active]="userProfile.emailNotifications" (click)="userProfile.emailNotifications = !userProfile.emailNotifications"></div>
                 </div>
                 <div class="toggle-group">
                   <div class="t-info">
                     <strong>SMS Alerts</strong>
                     <p>Get instant text reminders before appointments</p>
                   </div>
-                  <div class="t-switch"></div>
+                  <div class="t-switch" [class.active]="userProfile.smsAlerts" (click)="userProfile.smsAlerts = !userProfile.smsAlerts"></div>
                 </div>
               </div>
             </section>
@@ -742,6 +742,7 @@ export class DashboardComponent implements OnInit {
   activeMenuBooking: any = null;
   reschedulingBooking: any = null;
   availableSlots = ['09:30 AM', '11:15 AM', '01:45 PM', '04:00 PM', '05:30 PM'];
+  bookingFilter: 'upcoming' | 'completed' | 'cancelled' = 'upcoming';
 
   savedShops = [
     { id: '1', name: 'Urban Fade Barbershop', category: 'Barber', address: 'MG Road, Bangalore' },
@@ -758,12 +759,16 @@ export class DashboardComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
+    emailNotifications: true,
+    smsAlerts: false
   };
 
   bookings = [
-    { id: 1, service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
-    { id: 2, service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }
+    { id: 1, service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false, type: 'upcoming' },
+    { id: 2, service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true, type: 'upcoming' },
+    { id: 3, service: 'Beard Trim', shop: 'Urban Fade Barbershop', month: 'SEP', day: '15', time: '10:00 AM', status: 'completed', alt: false, type: 'completed' },
+    { id: 4, service: 'Hair Coloring', shop: 'Style Studio', month: 'OCT', day: '05', time: '4:00 PM', status: 'cancelled', alt: true, type: 'cancelled' }
   ];
 
   notifications = [
@@ -772,7 +777,7 @@ export class DashboardComponent implements OnInit {
     { text: 'Welcome to Nikat! Explore local shops around you.', time: '1 day ago', read: true }
   ];
 
-  filteredBookings = [...this.bookings];
+  filteredBookings = this.bookings.filter(b => b.type === 'upcoming');
 
   get currentUser() {
     return this.authService.currentUser;
@@ -792,7 +797,9 @@ export class DashboardComponent implements OnInit {
         firstName: this.currentUser.firstName || '',
         lastName: this.currentUser.lastName || '',
         email: this.currentUser.email || '',
-        phone: this.currentUser.phone || ''
+        phone: this.currentUser.phone || '',
+        emailNotifications: true,
+        smsAlerts: false
       };
     }
     // Close menus on outside click
@@ -829,10 +836,21 @@ export class DashboardComponent implements OnInit {
 
   onSearch(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
-    this.filteredBookings = this.bookings.filter(b => 
-      b.service.toLowerCase().includes(this.searchTerm) || 
-      b.shop.toLowerCase().includes(this.searchTerm)
-    );
+    this.applyFilters();
+  }
+
+  setBookingFilter(filter: 'upcoming' | 'completed' | 'cancelled') {
+    this.bookingFilter = filter;
+    this.applyFilters();
+  }
+
+  private applyFilters() {
+    this.filteredBookings = this.bookings.filter(b => {
+      const matchesSearch = b.service.toLowerCase().includes(this.searchTerm) || 
+                          b.shop.toLowerCase().includes(this.searchTerm);
+      const matchesType = b.type === this.bookingFilter;
+      return matchesSearch && matchesType;
+    });
   }
 
   goToBooking(booking: any) {
@@ -860,8 +878,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  viewShop(booking: any) {
-    this.router.navigate(['/browse']); // Placeholder for shop detail
+  viewShop(shop: any) {
+    if (shop.id) {
+      this.router.navigate(['/shop', shop.id]);
+    } else {
+      this.router.navigate(['/browse']);
+    }
   }
 
   messageSupport(booking: any) {
@@ -871,12 +893,34 @@ export class DashboardComponent implements OnInit {
   cancelBooking(booking: any) {
     if (confirm('Are you sure you want to cancel this booking?')) {
       this.bookings = this.bookings.filter(b => b.id !== booking.id);
-      this.filteredBookings = [...this.bookings];
+      this.applyFilters();
     }
   }
 
   unsaveShop(shop: any) {
-    this.savedShops = this.savedShops.filter(s => s.id !== shop.id);
+    if (confirm(`Are you sure you want to remove ${shop.name} from your saved shops?`)) {
+      this.savedShops = this.savedShops.filter(s => s.id !== shop.id);
+      alert('Shop removed from favorites.');
+    }
+  }
+
+  trackOrder(order: any) {
+    alert(`Tracking order ${order.id}: Current status is ${order.status}. Estimated delivery: 2-3 days.`);
+  }
+
+  downloadInvoice(order: any) {
+    alert(`Generating invoice for ${order.id}. Your download will start shortly.`);
+    console.log('Invoice downloaded for:', order.id);
+  }
+
+  saveProfile() {
+    // In a real app, this would call a service to update the backend
+    alert('Profile updated successfully!');
+    console.log('Updated Profile:', this.userProfile);
+  }
+
+  updatePassword() {
+    alert('Password updated successfully! Please use your new password next time you login.');
   }
 
   signOut() {
