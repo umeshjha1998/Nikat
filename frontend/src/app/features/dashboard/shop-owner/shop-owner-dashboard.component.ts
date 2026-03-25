@@ -227,7 +227,7 @@ import { AuthService } from '../../../core/auth.service';
                    <p>{{ product.description }}</p>
                    <div class="listing-footer">
                       <span class="price">₹{{ product.price }}</span>
-                      <span class="status-tag" [class.available]="product.available">{{ product.available ? 'In Stock' : 'Out of Stock' }}</span>
+                      <span class="status-tag" [class.available]="product.isAvailable">{{ product.isAvailable ? 'In Stock' : 'Out of Stock' }}</span>
                    </div>
                 </div>
                 <div class="listing-actions">
