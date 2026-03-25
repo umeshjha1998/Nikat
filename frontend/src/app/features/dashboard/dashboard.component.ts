@@ -90,13 +90,36 @@ import { BookingService, Booking } from '../../core/booking.service';
           </a>
         </nav>
 
-        <div class="dash-user-card">
+        <div class="dash-user-card" (click)="$event.stopPropagation()">
           <div class="avatar-circle">{{userInitial}}</div>
           <div class="u-meta">
             <h5>{{currentUser?.firstName}} {{currentUser?.lastName}}</h5>
             <span>{{currentUser?.role}}</span>
           </div>
-          <button class="btn-dots"><span class="material-icons">more_vert</span></button>
+          <button class="btn-dots" (click)="toggleProfileMenu($event)">
+            <span class="material-icons">more_vert</span>
+          </button>
+
+          <!-- Profile Quick Menu -->
+          <div class="profile-quick-menu" *ngIf="showProfileMenu" (click)="$event.stopPropagation()">
+            <div class="menu-item-premium" (click)="setTab('settings'); showProfileMenu = false">
+              <span class="material-icons">person</span>
+              <span>Edit Profile</span>
+            </div>
+            <div class="menu-item-premium" (click)="setTab('settings'); showProfileMenu = false">
+              <span class="material-icons">lock</span>
+              <span>Change Password</span>
+            </div>
+            <div class="menu-item-premium" (click)="setTab('overview'); showProfileMenu = false">
+              <span class="material-icons">help_outline</span>
+              <span>Help Center</span>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-item-premium logout" (click)="signOut()">
+              <span class="material-icons">logout</span>
+              <span>Sign Out</span>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -414,15 +437,15 @@ import { BookingService, Booking } from '../../core/booking.service';
               <div class="sc-body">
                 <div class="form-group-internal">
                   <label>Current Password</label>
-                  <input type="password" placeholder="••••••••">
+                  <input type="password" [(ngModel)]="currentPassword" placeholder="••••••••">
                 </div>
                 <div class="form-group-internal">
                   <label>New Password</label>
-                  <input type="password" placeholder="••••••••">
+                  <input type="password" [(ngModel)]="newPassword" placeholder="••••••••">
                 </div>
                 <div class="form-group-internal">
                   <label>Confirm New Password</label>
-                  <input type="password" placeholder="••••••••">
+                  <input type="password" [(ngModel)]="confirmPassword" placeholder="••••••••">
                 </div>
                 <button class="btn-outline-action" (click)="updatePassword()">Update Password</button>
               </div>
@@ -492,11 +515,19 @@ import { BookingService, Booking } from '../../core/booking.service';
     .d-nav-item.logout { margin-top: auto; color: #ef4444; }
     .nav-spacer { height: 2rem; }
 
-    .dash-user-card { background: var(--glass); border: 1px solid var(--border-color); padding: 1rem; border-radius: 1.25rem; display: flex; align-items: center; gap: 1rem; margin-top: 2rem; color: var(--text-main); }
+    .dash-user-card { position: relative; background: var(--glass); border: 1px solid var(--border-color); padding: 1rem; border-radius: 1.25rem; display: flex; align-items: center; gap: 1rem; margin-top: 2rem; color: var(--text-main); }
     .avatar-circle { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
     .u-meta h5 { font-size: 0.9rem; margin: 0; color: var(--text-main); }
     .u-meta span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
-    .btn-dots { background: transparent; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; }
+    .btn-dots { background: transparent; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; transition: 0.2s; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+    .btn-dots:hover { background: var(--glass-border); color: var(--text-main); }
+
+    .profile-quick-menu { position: absolute; bottom: calc(100% + 12px); left: 0; width: 100%; background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.25rem; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; backdrop-filter: blur(20px); }
+    .menu-item-premium { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; color: var(--text-main); font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
+    .menu-item-premium:hover { background: var(--glass); color: var(--primary); }
+    .menu-item-premium .material-icons { font-size: 1.1rem; }
+    .menu-item-premium.logout { color: #ef4444; }
+    .menu-divider { height: 1px; background: var(--border-color); margin: 0.5rem 0; opacity: 0.5; }
 
     /* Content */
     .dash-content { flex: 1; padding: 3rem 4rem; overflow-y: auto; }
@@ -756,6 +787,7 @@ export class DashboardComponent implements OnInit {
   activeTab = 'overview';
   showNotifications = false;
   showSearch = false;
+  showProfileMenu = false;
   searchTerm = '';
   activeMenuBooking: any = null;
   reschedulingBooking: any = null;
@@ -781,6 +813,10 @@ export class DashboardComponent implements OnInit {
     emailNotifications: true,
     smsAlerts: false
   };
+
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
 
   allBookings: Booking[] = [];
   bookings: Booking[] = [];
@@ -826,7 +862,15 @@ export class DashboardComponent implements OnInit {
     window.addEventListener('click', () => {
       this.activeMenuBooking = null;
       this.showNotifications = false;
+      this.showProfileMenu = false;
     });
+  }
+
+  toggleProfileMenu(event: Event) {
+    event.stopPropagation();
+    this.showProfileMenu = !this.showProfileMenu;
+    this.showNotifications = false;
+    this.activeMenuBooking = null;
   }
 
   setTab(tab: string) {
@@ -952,13 +996,43 @@ export class DashboardComponent implements OnInit {
   }
 
   saveProfile() {
-    // In a real app, this would call a service to update the backend
-    alert('Profile updated successfully!');
-    console.log('Updated Profile:', this.userProfile);
+    if (!this.currentUser) return;
+    
+    this.authService.updateProfile(this.currentUser.id, this.userProfile).subscribe({
+      next: () => {
+        alert('Profile updated successfully in the database!');
+      },
+      error: (err) => {
+        alert('Failed to update profile: ' + (err.error?.message || err.message));
+      }
+    });
   }
 
   updatePassword() {
-    alert('Password updated successfully! Please use your new password next time you login.');
+    if (!this.currentUser) return;
+    if (!this.currentPassword || !this.newPassword) {
+      alert('Please fill in both current and new passwords.');
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      alert('New passwords do not match!');
+      return;
+    }
+
+    this.authService.updatePassword(this.currentUser.id, {
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
+    }).subscribe({
+      next: () => {
+        alert('Password updated successfully in the base! Please use your new password next time.');
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+      },
+      error: (err) => {
+        alert('Failed to update password: ' + (err.error?.message || err.message));
+      }
+    });
   }
 
   signOut() {

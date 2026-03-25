@@ -4,6 +4,7 @@ import com.nikat.api.domain.User;
 import com.nikat.api.dto.UserDto;
 import com.nikat.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
@@ -40,6 +42,28 @@ public class UserService {
         user.setIsShopOwner("SHOP_OWNER".equals(role) || "DUAL".equals(role));
         user.setIsServiceProvider("SERVICE_PROVIDER".equals(role) || "DUAL".equals(role));
         return mapToDto(userRepository.save(user));
+    }
+
+    public UserDto updateProfile(UUID id, UserDto dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setPhone(dto.getPhone());
+        user.setEmail(dto.getEmail());
+        return mapToDto(userRepository.save(user));
+    }
+
+    public void updatePassword(UUID id, String currentPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Invalid current password");
+        }
+        
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public long getUserCount() {

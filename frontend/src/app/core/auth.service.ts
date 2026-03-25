@@ -86,4 +86,17 @@ export class AuthService {
     localStorage.removeItem('nikat_user');
     this.currentUser$.next(null);
   }
+
+  updateProfile(id: string, data: any): Observable<UserDto> {
+    return this.http.patch<UserDto>(`${this.apiUrl}/users/${id}/profile`, data).pipe(
+      tap(user => {
+        localStorage.setItem('nikat_user', JSON.stringify(user));
+        this.currentUser$.next(user);
+      })
+    );
+  }
+
+  updatePassword(id: string, passwords: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/users/${id}/password`, passwords);
+  }
 }

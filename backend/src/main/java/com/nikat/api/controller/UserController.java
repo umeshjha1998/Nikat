@@ -41,6 +41,17 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserRole(id, role));
     }
 
+    @PatchMapping("/users/{id}/profile")
+    public ResponseEntity<UserDto> updateProfile(@PathVariable UUID id, @RequestBody UserDto dto) {
+        return ResponseEntity.ok(userService.updateProfile(id, dto));
+    }
+
+    @PatchMapping("/users/{id}/password")
+    public ResponseEntity<Void> updatePassword(@PathVariable UUID id, @RequestBody Map<String, String> passwords) {
+        userService.updatePassword(id, passwords.get("currentPassword"), passwords.get("newPassword"));
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/admin/stats/users/count")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Long>> getUserCount() {
