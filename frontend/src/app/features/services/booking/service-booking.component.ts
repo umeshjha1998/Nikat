@@ -250,12 +250,12 @@ import { ApiService } from '../../../core/api.service';
     }
 
     :host-context(.light-theme) {
-      --bg: #f8faff;
-      --text-main: #1a1f36;
-      --text-muted: #4f566b;
+      --bg: #f3f5f9;
+      --text-main: #0f172a;
+      --text-muted: #475569;
       --card-bg: #ffffff;
-      --glass: rgba(0,0,0,0.02);
-      --glass-border: rgba(0,0,0,0.08);
+      --glass: rgba(0, 0, 0, 0.04);
+      --glass-border: rgba(0, 0, 0, 0.1);
     }
 
     .booking-premium { min-height: 100vh; background: var(--bg); color: var(--text-main); padding-top: 5rem; transition: all 0.3s ease; }
@@ -268,12 +268,12 @@ import { ApiService } from '../../../core/api.service';
       display: flex; align-items: center;
     }
     .header-inner { max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
-    .btn-close-minimal { width: 40px; height: 40px; border-radius: 50%; background: var(--glass); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: 0.2s; }
-    .btn-close-minimal:hover { background: rgba(255,255,255,0.15); transform: rotate(90deg); }
+    .btn-close-minimal { width: 40px; height: 40px; border-radius: 50%; background: var(--glass); display: flex; align-items: center; justify-content: center; color: var(--text-main); text-decoration: none; transition: 0.2s; }
+    .btn-close-minimal:hover { background: var(--glass-border); transform: rotate(90deg); }
 
     .stepper-wrap { display: flex; align-items: center; gap: 1rem; }
     .p-step { display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); opacity: 0.6; transition: 0.3s; }
-    .p-step.active { color: #fff; opacity: 1; }
+    .p-step.active { color: var(--text-main); opacity: 1; }
     .p-step.done { color: #10b981; opacity: 1; }
     .p-step .num { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; }
     .p-step .num .material-icons { font-size: 1rem; }
@@ -297,8 +297,8 @@ import { ApiService } from '../../../core/api.service';
       background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1.5rem; padding: 1.75rem 2rem;
       display: flex; align-items: center; gap: 1.5rem; cursor: pointer; transition: 0.3s;
     }
-    .menu-item-premium:hover { border-color: rgba(255,255,255,0.2); transform: translateX(8px); background: rgba(255,255,255,0.05); }
-    .menu-item-premium.selected { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
+    .menu-item-premium:hover { border-color: var(--primary); transform: translateX(8px); background: var(--glass); }
+    .menu-item-premium.selected { border-color: var(--primary); background: rgba(59, 130, 246, 0.08); }
 
     .m-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--text-muted); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
     .menu-item-premium.selected .m-check { border-color: var(--primary); }
@@ -318,7 +318,7 @@ import { ApiService } from '../../../core/api.service';
     .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     .cal-nav h3 { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem; }
     .nav-btns { display: flex; gap: 0.5rem; }
-    .nav-btns button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--glass-border); background: transparent; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .nav-btns button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--glass-border); background: transparent; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
     .date-row-premium { display: flex; justify-content: space-between; }
     .d-node {
@@ -337,7 +337,7 @@ import { ApiService } from '../../../core/api.service';
     .ts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; margin-bottom: 3rem; }
     .ts-btn {
       background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1rem;
-      color: #fff; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 0.95rem;
+      color: var(--text-main); font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 0.95rem;
     }
     .ts-btn:hover { border-color: var(--primary); color: var(--primary); }
     .ts-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 8px 20px var(--primary-glow); }
@@ -355,7 +355,7 @@ import { ApiService } from '../../../core/api.service';
 
     .policy-blurb { display: flex; gap: 1rem; align-items: flex-start; background: rgba(99, 102, 241, 0.05); padding: 1.25rem; border-radius: 1.5rem; border: 1px solid rgba(99, 102, 241, 0.1); margin-bottom: 3rem; }
     .policy-blurb .material-icons { color: #6366f1; }
-    .policy-blurb p { font-size: 0.85rem; color: #94a3b8; margin: 0; line-height: 1.5; font-weight: 600; }
+    .policy-blurb p { font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.5; font-weight: 600; }
 
     /* Sidebar */
     .booking-summary-sidebar { display: flex; flex-direction: column; gap: 2rem; }
@@ -409,10 +409,10 @@ import { ApiService } from '../../../core/api.service';
     .success-card h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
     .success-card h2 span { color: #10b981; }
     .success-card p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2.5rem; line-height: 1.6; }
-    .booking-ref { background: rgba(255,255,255,0.05); padding: 0.75rem 2rem; border-radius: 3rem; display: inline-block; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--primary); margin-bottom: 3rem; }
+    .booking-ref { background: var(--glass); padding: 0.75rem 2rem; border-radius: 3rem; display: inline-block; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--primary); border: 1px solid var(--glass-border); margin-bottom: 3rem; }
     .success-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .btn-prime { background: var(--primary); color: #fff; border: none; padding: 1.25rem; border-radius: 1.25rem; font-weight: 800; cursor: pointer; }
-    .btn-ghost { background: transparent; border: 1.5px solid var(--glass-border); color: #fff; padding: 1.25rem; border-radius: 1.25rem; font-weight: 800; cursor: pointer; }
+    .btn-ghost { background: transparent; border: 1.5px solid var(--glass-border); color: var(--text-main); padding: 1.25rem; border-radius: 1.25rem; font-weight: 800; cursor: pointer; }
 
     @media (max-width: 1000px) {
       .booking-main-grid { grid-template-columns: 1fr; gap: 3rem; }
