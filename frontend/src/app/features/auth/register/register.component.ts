@@ -143,11 +143,11 @@ import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.co
               <div class="step-area" *ngIf="currentStep === 3">
                 <div class="f-group">
                   <label>What’s the name of your business?</label>
-                  <input type="text" placeholder="e.g. Green Valley Organic">
+                  <input type="text" formControlName="businessName" placeholder="e.g. Green Valley Organic">
                 </div>
                 <div class="f-group">
                   <label>Operating Address</label>
-                  <textarea rows="3" placeholder="Street, landmark, floor..."></textarea>
+                  <textarea rows="3" formControlName="businessAddress" placeholder="Street, landmark, floor..."></textarea>
                 </div>
                 <div class="f-group">
                   <label>Identity Proof (Aadhar/GST/Trade License)</label>
@@ -291,7 +291,10 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['USER', Validators.required]
+      role: ['USER', Validators.required],
+      businessName: [''],
+      businessAddress: [''],
+      idProofUrl: ['']
     });
   }
 

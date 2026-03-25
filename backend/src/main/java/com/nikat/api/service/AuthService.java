@@ -1,10 +1,13 @@
 package com.nikat.api.service;
 
+import com.nikat.api.domain.Shop;
 import com.nikat.api.domain.User;
 import com.nikat.api.dto.AuthRequest;
 import com.nikat.api.dto.AuthResponse;
 import com.nikat.api.dto.RegisterRequest;
 import com.nikat.api.dto.UserDto;
+import com.nikat.api.repository.ServiceRepository;
+import com.nikat.api.repository.ShopRepository;
 import com.nikat.api.repository.UserRepository;
 import com.nikat.api.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final ShopRepository shopRepository;
+    private final ServiceRepository serviceRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
@@ -48,6 +53,25 @@ public class AuthService {
                 .build();
 
         user = userRepository.save(user);
+
+        // If Merchant, initialize business record
+        if ("SHOP_OWNER".equals(user.getRole())) {
+            Shop shop = Shop.builder()
+                    .owner(user)
+                    .name(request.getBusinessName() != null ? request.getBusinessName() : (user.getFirstName() + "'s Shop"))
+                    .address(request.getBusinessAddress())
+                    .status("PENDING_VERIFICATION")
+                    .build();
+            shopRepository.save(shop);
+        } else if ("SERVICE_PROVIDER".equals(user.getRole())) {
+            com.nikat.api.domain.Service nikatService = com.nikat.api.domain.Service.builder()
+                    .provider(user)
+                    .name(request.getBusinessName() != null ? request.getBusinessName() : (user.getFirstName() + "'s Service"))
+                    .serviceArea(request.getBusinessAddress())
+                    .status("PENDING_VERIFICATION")
+                    .build();
+            serviceRepository.save(nikatService);
+        }
 
         // Map to UserDto
         UserDto userDto = mapToUserDto(user);

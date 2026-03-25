@@ -268,9 +268,14 @@ import { AuthService } from '../../../core/auth.service';
              </form>
           </div>
           <ng-template #noShop>
-            <div class="empty-state-large">
-               <span class="material-icons">storefront</span>
-               <p>No shop profile found. You may need to register your shop first.</p>
+            <div class="empty-state-large" style="text-align: center; padding: 4rem;">
+               <span class="material-icons" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;">storefront</span>
+               <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">No Shop Profile Found</h3>
+               <p style="color: var(--text-muted); margin-bottom: 2rem;">Your account is registered as a Shop Owner, but your business profile isn't set up yet.</p>
+               <button class="btn-prime-glow" (click)="initializeShop()" [disabled]="isUploading">
+                 <span class="material-icons">add_business</span>
+                 {{ isUploading ? 'Initializing...' : 'Setup My Shop Profile' }}
+               </button>
             </div>
           </ng-template>
         </ng-container>
@@ -1003,10 +1008,39 @@ export class ShopOwnerDashboardComponent implements OnInit {
   async loadInitialData() {
     if (!this.currentUser?.id) return;
     
-    this.apiService.getShopsByOwner(this.currentUser.id).subscribe(shops => {
-      if (shops.length > 0) {
-        this.currentShop = shops[0];
-        this.loadDashboardData(this.currentShop.id);
+    this.apiService.getShopsByOwner(this.currentUser.id).subscribe({
+      next: (shops) => {
+        if (shops.length > 0) {
+          this.currentShop = shops[0];
+          this.loadDashboardData(this.currentShop.id);
+        }
+      },
+      error: (err) => console.error('Failed to load shop:', err)
+    });
+  }
+
+  initializeShop() {
+    if (!this.currentUser) return;
+    this.isUploading = true;
+    
+    const newShop: any = {
+      name: this.currentUser.firstName + "'s Shop",
+      userId: this.currentUser.id,
+      status: 'PENDING_VERIFICATION',
+      description: 'New Shop Profile',
+      address: 'Please update your address'
+    };
+
+    // Use specific endpoint to check if available, or update with 'id' parameter
+    this.apiService.updateShop(this.currentUser.id, newShop).subscribe({
+      next: () => {
+        alert('Shop initialized! Please update your details in Settings.');
+        this.loadInitialData();
+        this.isUploading = false;
+      },
+      error: () => {
+        alert('Failed to initialize shop. Professional setup required.');
+        this.isUploading = false;
       }
     });
   }

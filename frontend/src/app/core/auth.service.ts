@@ -27,6 +27,9 @@ export interface RegisterRequest {
   email: string;
   password: string;
   role: string;
+  businessName?: string;
+  businessAddress?: string;
+  idProofUrl?: string;
 }
 
 export interface AuthRequest {
