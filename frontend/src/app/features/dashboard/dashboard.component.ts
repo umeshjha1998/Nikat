@@ -2,8 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
-
 import { FormsModule } from '@angular/forms';
+import { BookingService, Booking } from '../../core/booking.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -175,7 +175,7 @@ import { FormsModule } from '@angular/forms';
               </div>
 
               <div class="booking-stack">
-                <div class="booking-item-premium" *ngFor="let b of bookings">
+                <div class="booking-item-premium" *ngFor="let b of (bookings | slice:0:3)">
                   <div class="b-date-box" [class.alt]="b.alt">
                     <span class="m">{{b.month}}</span>
                     <span class="d">{{b.day}}</span>
@@ -188,7 +188,7 @@ import { FormsModule } from '@angular/forms';
                       <span class="status-tag" [class]="b.status">{{b.status}}</span>
                     </div>
                   </div>
-                  <div class="b-actions">
+                  <div class="b-actions" *ngIf="b.type === 'upcoming'">
                     <button class="btn-outline" (click)="showRescheduleModal(b)">Reschedule</button>
                     <div class="opt-container">
                       <button class="btn-icon-blur" (click)="toggleMenu($event, b)"><span class="material-icons">more_horiz</span></button>
@@ -268,15 +268,28 @@ import { FormsModule } from '@angular/forms';
                 </div>
               </div>
               <div class="b-actions">
-                <button class="btn-outline" (click)="showRescheduleModal(b)">Reschedule</button>
-                <div class="opt-container">
-                  <button class="btn-icon-blur" (click)="toggleMenu($event, b)"><span class="material-icons">more_horiz</span></button>
-                  <div class="action-dropdown" *ngIf="activeMenuBooking === b" (click)="$event.stopPropagation()">
-                    <button (click)="viewShop(b)">View Shop Info</button>
-                    <button (click)="messageSupport(b)">Message Support</button>
-                    <button class="danger" (click)="cancelBooking(b)">Cancel Booking</button>
+                <!-- Upcoming Only Actions -->
+                <ng-container *ngIf="b.type === 'upcoming'">
+                  <button class="btn-outline" (click)="showRescheduleModal(b)">Reschedule</button>
+                  <div class="opt-container">
+                    <button class="btn-icon-blur" (click)="toggleMenu($event, b)"><span class="material-icons">more_horiz</span></button>
+                    <div class="action-dropdown" *ngIf="activeMenuBooking === b" (click)="$event.stopPropagation()">
+                      <button (click)="viewShop(b)">View Shop Info</button>
+                      <button (click)="messageSupport(b)">Message Support</button>
+                      <button class="danger" (click)="cancelBooking(b)">Cancel Booking</button>
+                    </div>
                   </div>
-                </div>
+                </ng-container>
+
+                <!-- Cancelled Only Actions -->
+                <button class="btn-prime-mini" *ngIf="b.type === 'cancelled'" (click)="reactivateBooking(b)">
+                  <span class="material-icons">refresh</span> Reactivate
+                </button>
+
+                <!-- Completed Only Actions -->
+                <button class="btn-outline-small" *ngIf="b.type === 'completed'" (click)="viewInvoice(b)">
+                  <span class="material-icons">receipt</span> Invoice
+                </button>
               </div>
             </div>
           </div>
@@ -598,6 +611,10 @@ import { FormsModule } from '@angular/forms';
     .slot:hover { border-color: var(--primary); background: var(--primary-glow); }
     .btn-close-modal { background: transparent; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer; }
 
+    .btn-prime-mini { background: var(--primary); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; box-shadow: 0 4px 10px var(--primary-glow); }
+    .btn-outline-small { background: transparent; border: 1.5px solid var(--border-color); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+
+
     .view-all-link { cursor: pointer; color: var(--primary); font-weight: 800; text-decoration: none; font-size: 0.9rem; }
 
     /* Internal Tab Styling */
@@ -734,6 +751,7 @@ import { FormsModule } from '@angular/forms';
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private bookingService = inject(BookingService);
   
   activeTab = 'overview';
   showNotifications = false;
@@ -764,20 +782,15 @@ export class DashboardComponent implements OnInit {
     smsAlerts: false
   };
 
-  bookings = [
-    { id: 1, service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false, type: 'upcoming' },
-    { id: 2, service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true, type: 'upcoming' },
-    { id: 3, service: 'Beard Trim', shop: 'Urban Fade Barbershop', month: 'SEP', day: '15', time: '10:00 AM', status: 'completed', alt: false, type: 'completed' },
-    { id: 4, service: 'Hair Coloring', shop: 'Style Studio', month: 'OCT', day: '05', time: '4:00 PM', status: 'cancelled', alt: true, type: 'cancelled' }
-  ];
+  allBookings: Booking[] = [];
+  bookings: Booking[] = [];
+  filteredBookings: Booking[] = [];
 
   notifications = [
     { text: 'Your haircut at Urban Fade is tomorrow at 2:30 PM.', time: '1 hour ago', read: false },
     { text: 'Reminder: Service booking for Spa session is confirmed.', time: '3 hours ago', read: true },
     { text: 'Welcome to Nikat! Explore local shops around you.', time: '1 day ago', read: true }
   ];
-
-  filteredBookings = this.bookings.filter(b => b.type === 'upcoming');
 
   get currentUser() {
     return this.authService.currentUser;
@@ -788,7 +801,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get hasUnreadNotifications(): boolean {
-    return this.notifications.some(n => !n.read);
+    return this.notifications.some((n: any) => !n.read);
   }
 
   ngOnInit() {
@@ -802,6 +815,13 @@ export class DashboardComponent implements OnInit {
         smsAlerts: false
       };
     }
+    
+    // Subscribe to bookings source of truth
+    this.bookingService.bookings$.subscribe((data: Booking[]) => {
+      this.allBookings = data;
+      this.updateBookingsList();
+    });
+
     // Close menus on outside click
     window.addEventListener('click', () => {
       this.activeMenuBooking = null;
@@ -833,9 +853,14 @@ export class DashboardComponent implements OnInit {
       }, 100);
     }
   }
-
   onSearch(event: any) {
     this.searchTerm = event.target.value.toLowerCase();
+    this.applyFilters();
+  }
+
+  private updateBookingsList() {
+    // Current "active" upcoming bookings display in overview
+    this.bookings = this.allBookings.filter(b => b.type === 'upcoming');
     this.applyFilters();
   }
 
@@ -845,7 +870,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private applyFilters() {
-    this.filteredBookings = this.bookings.filter(b => {
+    this.filteredBookings = this.allBookings.filter(b => {
       const matchesSearch = b.service.toLowerCase().includes(this.searchTerm) || 
                           b.shop.toLowerCase().includes(this.searchTerm);
       const matchesType = b.type === this.bookingFilter;
@@ -872,8 +897,8 @@ export class DashboardComponent implements OnInit {
 
   applyReschedule(slot: string) {
     if (this.reschedulingBooking) {
-      this.reschedulingBooking.time = slot;
-      alert(`Successfully rescheduled to ${slot}`);
+      this.bookingService.rescheduleBooking(this.reschedulingBooking.id, slot);
+      alert(`Successfully rescheduled to ${slot}. This update is reflected on the shop dashboard.`);
       this.reschedulingBooking = null;
     }
   }
@@ -891,10 +916,23 @@ export class DashboardComponent implements OnInit {
   }
 
   cancelBooking(booking: any) {
-    if (confirm('Are you sure you want to cancel this booking?')) {
-      this.bookings = this.bookings.filter(b => b.id !== booking.id);
-      this.applyFilters();
+    if (confirm('Are you sure you want to cancel this booking? This will immediately notify the shop.')) {
+      this.bookingService.cancelBooking(booking.id);
+      alert('Booking cancelled. Status synced with shop.');
     }
+  }
+
+  reactivateBooking(booking: any) {
+    const success = this.bookingService.reactivateBooking(booking.id);
+    if (success) {
+      alert('Booking reactivated! Service timing checked and confirmed.');
+    } else {
+      alert('Sorry, the original service timings are no longer available for reactivation.');
+    }
+  }
+
+  viewInvoice(booking: any) {
+    alert(`Showing invoice for completed service: ${booking.service}`);
   }
 
   unsaveShop(shop: any) {
