@@ -32,7 +32,7 @@ import { AuthService } from '../../core/auth.service';
       </div>
 
       <!-- Notifications Panel -->
-      <div class="notif-panel-floating" *ngIf="showNotifications">
+      <div class="notif-panel-floating" *ngIf="showNotifications" (click)="$event.stopPropagation()">
         <div class="p-header">
           <h4>Notifications</h4>
           <span class="mark-read">Mark all as read</span>
@@ -190,7 +190,7 @@ import { AuthService } from '../../core/auth.service';
                     <button class="btn-outline" (click)="showRescheduleModal(b)">Reschedule</button>
                     <div class="opt-container">
                       <button class="btn-icon-blur" (click)="toggleMenu($event, b)"><span class="material-icons">more_horiz</span></button>
-                      <div class="action-dropdown" *ngIf="activeMenuBooking === b">
+                      <div class="action-dropdown" *ngIf="activeMenuBooking === b" (click)="$event.stopPropagation()">
                         <button (click)="viewShop(b)">View Shop Info</button>
                         <button (click)="messageSupport(b)">Message Support</button>
                         <button class="danger" (click)="cancelBooking(b)">Cancel Booking</button>
@@ -411,6 +411,64 @@ import { AuthService } from '../../core/auth.service';
       .dash-main-grid { grid-template-columns: 1fr; }
       .dash-stats { grid-template-columns: repeat(2, 1fr); }
     }
+
+    @media (max-width: 768px) {
+      .dashboard-premium-layout { flex-direction: column; }
+      .dash-sidebar { 
+        width: 100%; 
+        border-right: none; 
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--surface-container);
+      }
+      .dash-brand { margin-bottom: 0; padding: 0; }
+      .brand-info { display: none; }
+      .dash-nav { 
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--surface-container);
+        border-top: 1px solid var(--border-color);
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0.5rem;
+        margin: 0;
+        z-index: 1000;
+      }
+      .d-nav-item { flex-direction: column; gap: 0.25rem; padding: 0.5rem; border-radius: 0.5rem; font-size: 0.7rem; }
+      .d-nav-item span:last-child { font-size: 0.6rem; }
+      .nav-spacer, .logout, .dash-user-card { display: none; }
+
+      .dash-content { padding: 1.5rem; padding-bottom: 5rem; }
+      .dash-header { flex-direction: column; gap: 1.5rem; align-items: flex-start; margin-bottom: 2rem; }
+      .dash-header h1 { font-size: 2rem; }
+      .dash-header p { font-size: 1rem; }
+      .h-right { width: 100%; justify-content: space-between; }
+      .btn-search-trigger { flex: 1; justify-content: center; }
+
+      .dash-stats { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2.5rem; }
+      .stat-glass-card { padding: 1.5rem; }
+      .s-body h2 { font-size: 2rem; }
+
+      .booking-item-premium { padding: 1rem; gap: 1rem; flex-direction: column; align-items: flex-start; }
+      .b-info { width: 100%; }
+      .b-actions { width: 100%; justify-content: space-between; gap: 0.5rem; }
+      .btn-outline { flex: 1; text-align: center; }
+
+      .dash-side-col { gap: 2rem; }
+      .promo-card { padding: 1.5rem; }
+
+      .notif-panel-floating { right: 1rem; left: 1rem; width: auto; top: 140px; }
+      .search-modal { width: 95%; }
+    }
   `]
 })
 export class DashboardComponent implements OnInit {
@@ -454,6 +512,7 @@ export class DashboardComponent implements OnInit {
     // Close menus on outside click
     window.addEventListener('click', () => {
       this.activeMenuBooking = null;
+      this.showNotifications = false;
     });
   }
 

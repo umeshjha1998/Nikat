@@ -18,6 +18,7 @@ export class App {
   private readonly router = inject(Router);
 
   protected readonly isDarkMode = this.themeService.isDarkMode;
+  protected readonly isMenuOpen = signal(false);
   protected readonly title = signal('frontend');
 
   get isLoggedIn(): boolean {
@@ -44,9 +45,18 @@ export class App {
     this.themeService.toggleTheme();
   }
 
+  toggleMenu() {
+    this.isMenuOpen.update(v => !v);
+  }
+
+  closeMenu() {
+    this.isMenuOpen.set(false);
+  }
+
   goToDashboard(): void {
     const user = this.authService.currentUser;
     if (!user) return;
+    this.closeMenu();
 
     if (user.role === 'ADMIN') {
       this.router.navigate(['/admin']);
@@ -61,6 +71,7 @@ export class App {
 
   logout() {
     this.authService.logout();
+    this.closeMenu();
     this.router.navigate(['/']);
   }
 }

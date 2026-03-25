@@ -1,7 +1,7 @@
 <!-- Top App Bar -->
 <header class="app-header">
   <div class="header-content">
-    <div class="logo-container" routerLink="/">
+    <div class="logo-container" routerLink="/" (click)="closeMenu()">
       <span class="material-icons logo-icon">explore</span>
       <span class="logo-text">Nikat</span>
     </div>
@@ -35,9 +35,31 @@
       </ng-container>
     </div>
     
-    <button class="mobile-menu-btn">
-      <span class="material-icons">menu</span>
-    </button>
+    <div class="mobile-actions">
+       <app-theme-toggle></app-theme-toggle>
+       <button class="mobile-menu-btn" (click)="toggleMenu()">
+         <span class="material-icons">{{ isMenuOpen() ? 'close' : 'menu' }}</span>
+       </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Dropdown -->
+  <div class="mobile-nav" [class.open]="isMenuOpen()">
+    <nav>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Discover</a>
+      <a routerLink="/browse" routerLinkActive="active" (click)="closeMenu()">Shops</a>
+      <a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">Services</a>
+      <a routerLink="/community" routerLinkActive="active" (click)="closeMenu()">Community</a>
+      <hr class="mobile-divider">
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/login" (click)="closeMenu()">Sign In</a>
+        <a routerLink="/register" (click)="closeMenu()" class="mobile-join">Join Now</a>
+      </ng-container>
+      <ng-container *ngIf="isLoggedIn">
+        <a (click)="goToDashboard()">Dashboard</a>
+        <a (click)="logout()" class="mobile-logout">Logout</a>
+      </ng-container>
+    </nav>
   </div>
 </header>
 

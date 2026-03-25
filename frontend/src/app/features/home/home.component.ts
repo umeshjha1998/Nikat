@@ -285,6 +285,34 @@ import { ApiService } from '../../core/api.service';
       .f-top { flex-direction: column; gap: 4rem; }
       .showcase-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+    @media (max-width: 768px) {
+      .hero-premium { padding: 6rem 1.25rem; }
+      .hero-title { font-size: 2.75rem; margin-bottom: 1.5rem; }
+      .hero-desc { font-size: 1.1rem; margin-bottom: 2.5rem; }
+      .search-container-premium { flex-direction: column; border-radius: 1.5rem; padding: 1rem; }
+      .s-input-group { padding: 0.5rem; border-bottom: 1px solid var(--glass-border); width: 100%; }
+      .btn-action-glow { width: 100%; }
+
+      .showcase-grid { grid-template-columns: 1fr; }
+      .experience-showcase { padding: 4rem 0; }
+      .sh-left h2 { font-size: 1.8rem; }
+      
+      .eco-grid { flex-direction: column; gap: 3rem; }
+      .eco-divider { width: 100px; height: 1px; margin: 0 auto; }
+      .eco-val { font-size: 2.75rem; }
+
+      .prop-card { flex-direction: column; padding: 3rem 1.5rem; gap: 3rem; text-align: center; }
+      .prop-content h2 { font-size: 2rem; }
+      .prop-actions { flex-direction: column; gap: 1rem; }
+      .btn-prime-glow { width: 100%; }
+      .prop-visual { transform: none; width: 120px; height: 120px; }
+
+      .footer-premium { padding: 4rem 1.5rem 2rem; }
+      .f-links-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+      .f-bottom { flex-direction: column; gap: 2rem; text-align: center; }
+      .f-utils { flex-direction: column; gap: 1rem; }
+    }
   `]
 })
 export class HomeComponent implements OnInit {

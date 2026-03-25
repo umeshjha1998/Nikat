@@ -543,11 +543,39 @@ import { ApiService, ServiceDto } from '../../core/api.service';
     .btn-load-more .material-symbols-outlined { font-size: 0.875rem; }
 
     @media (max-width: 768px) {
-      .layout-flex { flex-direction: column; }
-      .sidebar { width: 100%; }
-      .results-grid { grid-template-columns: 1fr; }
-      .result-card.featured { flex-direction: column; }
+      .main-content { padding: 1rem 0 4rem; }
+      .layout-flex { flex-direction: column; gap: 1.5rem; }
+      .sidebar { 
+        width: 100%; 
+        padding: 0 1rem;
+        gap: 1rem;
+      }
+      .sidebar-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
+      .categories-section {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        -webkit-overflow-scrolling: touch;
+      }
+      .cat-group { flex-shrink: 0; min-width: 140px; }
+      .cat-header { padding: 0.75rem; }
+      .cat-children { position: absolute; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 1rem; z-index: 50; margin-top: 0.5rem; width: 200px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+      
+      .quick-filters { padding-top: 0.5rem; }
+      .filter-options { flex-direction: row; overflow-x: auto; padding-bottom: 0.5rem; }
+      .filter-option { flex-shrink: 0; background: var(--glass); padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid var(--border-color); }
+      .filter-text { white-space: nowrap; }
+
+      .price-range-section { display: none; }
+
+      .content-area { padding: 0 1rem; }
+      .results-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .result-card.featured { flex-direction: column; padding: 1rem; }
       .card-image { width: 100%; height: 12rem; }
+      .card-body { gap: 0.75rem; }
+      .card-title { font-size: 1.1rem; }
+      .btn-book { width: 100%; text-align: center; }
     }
   `]
 

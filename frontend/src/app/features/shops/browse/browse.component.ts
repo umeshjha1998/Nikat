@@ -163,10 +163,6 @@ import { ApiService } from '../../../core/api.service';
       filter: blur(100px); border-radius: 50%;
     }
 
-    @media (min-width: 768px) {
-      .hero-title { font-size: 3.75rem; }
-    }
-
     /* Category Bar */
     .category-bar {
       max-width: 80rem; margin: 0 auto; padding: 0 1.5rem 2rem;
@@ -326,11 +322,7 @@ import { ApiService } from '../../../core/api.service';
       display: flex; flex-direction: column; align-items: center;
       gap: 2rem;
     }
-    @media (min-width: 768px) {
-      .footer-inner { flex-direction: row; justify-content: space-between; }
-    }
     .footer-brand { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-    @media (min-width: 768px) { .footer-brand { align-items: flex-start; } }
     .footer-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.125rem; font-weight: 700; color: var(--text-main); }
     .footer-copy { color: var(--text-muted); font-size: 0.875rem; margin: 0; }
     .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
@@ -346,6 +338,37 @@ import { ApiService } from '../../../core/api.service';
     .social-btn:hover { color: #fff; border-color: var(--accent); background: var(--accent); }
     .social-btn .material-symbols-outlined { font-size: 1.25rem; }
 
+    @media (min-width: 768px) {
+      .hero-title { font-size: 3.75rem; }
+      .footer-inner { flex-direction: row; justify-content: space-between; }
+      .footer-brand { align-items: flex-start; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-inner { padding: 2rem 1.5rem; }
+      .hero-title { font-size: 2.25rem; }
+      .hero-desc { font-size: 1rem; }
+      
+      .category-bar { padding: 0 0 1.5rem; top: 60px; }
+      .category-bar-inner { padding: 0.75rem 1rem; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+      .category-pills { flex-wrap: nowrap; }
+      .pill { white-space: nowrap; padding: 0.4rem 1rem; font-size: 0.8rem; }
+      .btn-filter { display: none; }
+
+      .shops-grid-section { padding: 0 1rem; }
+      .shops-grid { gap: 1.5rem; }
+      .shop-image { height: 12rem; }
+      .shop-name { font-size: 1.1rem; }
+      .btn-view { padding: 0.5rem 1rem; font-size: 0.8rem; }
+
+      .partner-card { border-width: 1px; }
+      .partner-inner { padding: 1.5rem; }
+      .partner-icon-wrap { width: 4rem; height: 4rem; }
+      .partner-icon { font-size: 2rem; }
+
+      .footer-inner { gap: 1.5rem; text-align: center; }
+      .footer-links { flex-direction: column; gap: 1rem; }
+    }
   `]
 })
 export class BrowseComponent implements OnInit {
