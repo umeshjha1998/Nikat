@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
@@ -9,7 +9,46 @@ import { AuthService } from '../../core/auth.service';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="dashboard-premium-layout">
-      <!-- Side Navigation -->
+      <!-- Search Overlay (Simple) -->
+      <div class="search-overlay" *ngIf="showSearch">
+        <div class="search-modal">
+          <div class="search-header-internal">
+            <span class="material-icons">search</span>
+            <input type="text" placeholder="Search your dashboard..." (input)="onSearch($event)" #searchInput>
+            <button class="btn-close" (click)="toggleSearch()"><span class="material-icons">close</span></button>
+          </div>
+          <div class="search-results-internal">
+            <p class="res-count" *ngIf="searchTerm">Found {{filteredBookings.length}} results for "{{searchTerm}}"</p>
+            <div class="search-item-internal" *ngFor="let b of filteredBookings" (click)="goToBooking(b)">
+              <span class="material-icons">event</span>
+              <div class="si-info">
+                <strong>{{b.service}}</strong>
+                <span>{{b.shop}} • {{b.day}} {{b.month}}</span>
+              </div>
+            </div>
+            <p class="no-results" *ngIf="searchTerm && filteredBookings.length === 0">No matches found in your history.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Panel -->
+      <div class="notif-panel-floating" *ngIf="showNotifications">
+        <div class="p-header">
+          <h4>Notifications</h4>
+          <span class="mark-read">Mark all as read</span>
+        </div>
+        <div class="notif-list-internal">
+          <div class="n-item" *ngFor="let n of notifications">
+            <div class="n-dot-active" *ngIf="!n.read"></div>
+            <div class="n-body">
+              <p>{{n.text}}</p>
+              <span>{{n.time}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
       <aside class="dash-sidebar">
         <div class="dash-brand">
           <div class="brand-hex">
@@ -67,13 +106,13 @@ import { AuthService } from '../../core/auth.service';
             <p>You have {{bookings.length}} upcoming appointments this week.</p>
           </div>
           <div class="h-right">
-            <button class="btn-search-trigger" routerLink="/browse">
+            <button class="btn-search-trigger" (click)="toggleSearch()">
               <span class="material-icons">search</span>
-              Find Services
+              Find in Dashboard
             </button>
-            <div class="notif-bell">
+            <div class="notif-bell" (click)="toggleNotifications($event)">
               <span class="material-icons">notifications</span>
-              <span class="n-dot"></span>
+              <span class="n-dot" *ngIf="hasUnreadNotifications"></span>
             </div>
           </div>
         </header>
@@ -130,7 +169,7 @@ import { AuthService } from '../../core/auth.service';
             <section class="dash-section">
               <div class="section-head">
                 <h3>Upcoming Bookings</h3>
-                <a href="#">View All</a>
+                <a class="view-all-link" (click)="setTab('bookings')">View All</a>
               </div>
 
               <div class="booking-stack">
@@ -148,8 +187,15 @@ import { AuthService } from '../../core/auth.service';
                     </div>
                   </div>
                   <div class="b-actions">
-                    <button class="btn-outline">Reschedule</button>
-                    <button class="btn-icon-blur"><span class="material-icons">more_horiz</span></button>
+                    <button class="btn-outline" (click)="showRescheduleModal(b)">Reschedule</button>
+                    <div class="opt-container">
+                      <button class="btn-icon-blur" (click)="toggleMenu($event, b)"><span class="material-icons">more_horiz</span></button>
+                      <div class="action-dropdown" *ngIf="activeMenuBooking === b">
+                        <button (click)="viewShop(b)">View Shop Info</button>
+                        <button (click)="messageSupport(b)">Message Support</button>
+                        <button class="danger" (click)="cancelBooking(b)">Cancel Booking</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -191,15 +237,27 @@ import { AuthService } from '../../core/auth.service';
           </div>
         </ng-container>
 
-        <!-- Other Tabs Placeholders -->
-        <div class="tab-content-placeholder" *ngIf="activeTab !== 'overview'">
-           <div class="placeholder-card">
-              <span class="material-icons">construction</span>
-              <h3>{{activeTab | titlecase}} Section</h3>
-              <p>This section is currently under enhancement to provide a premium experience.</p>
+        <!-- Search Results State -->
+        <div class="tab-content-placeholder" *ngIf="activeTab === 'search-results'">
+            <div class="placeholder-card">
+              <span class="material-icons">info</span>
+              <h3>Search Filter Applied</h3>
+              <p>Showing filtered results for your query. Click View All to reset.</p>
               <button class="btn-outline" (click)="setTab('overview')">Back to Overview</button>
-           </div>
-        </div>div>
+            </div>
+        </div>
+
+        <!-- Dashboard Popups -->
+        <div class="modal-backdrop" *ngIf="reschedulingBooking">
+          <div class="glass-modal">
+            <h3>Reschedule Appointment</h3>
+            <p>Select a new time for <strong>{{reschedulingBooking.service}}</strong> at {{reschedulingBooking.shop}}</p>
+            <div class="slots-grid">
+              <button class="slot" *ngFor="let slot of availableSlots" (click)="applyReschedule(slot)">{{slot}}</button>
+            </div>
+            <button class="btn-close-modal" (click)="reschedulingBooking = null">Cancel</button>
+          </div>
+        </div>
       </main>
     </div>
   `,
@@ -308,16 +366,77 @@ import { AuthService } from '../../core/auth.service';
     .btn-prime { background: var(--primary); border: none; padding: 0.75rem 1.5rem; border-radius: 1rem; color: #fff; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px var(--primary-glow); }
     .p-deco { position: absolute; font-size: 6rem; opacity: 0.05; right: -1rem; bottom: -1rem; transform: rotate(-15deg); color: var(--primary); }
 
+    /* Search Overlay */
+    .search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 2000; display: flex; justify-content: center; padding-top: 10vh; }
+    .search-modal { width: 90%; max-width: 650px; background: var(--surface-container); border: 1px solid var(--glass-border); border-radius: 2rem; overflow: hidden; height: fit-content; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .search-header-internal { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); }
+    .search-header-internal input { flex: 1; background: transparent; border: none; color: var(--text-main); font-size: 1.25rem; font-weight: 700; outline: none; }
+    .search-results-internal { padding: 1rem; max-height: 400px; overflow-y: auto; }
+    .search-item-internal { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 1rem; cursor: pointer; transition: 0.2s; }
+    .search-item-internal:hover { background: var(--glass); }
+    .si-info strong { display: block; font-size: 1rem; }
+    .si-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Notifications Panel */
+    .notif-panel-floating { position: absolute; top: 80px; right: 4rem; width: 350px; background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.5rem; box-shadow: 0 15px 40px rgba(0,0,0,0.4); z-index: 1000; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .p-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+    .p-header h4 { margin: 0; font-size: 1.1rem; }
+    .mark-read { font-size: 0.75rem; color: var(--primary); cursor: pointer; font-weight: 700; }
+    .notif-list-internal { padding: 0.75rem; max-height: 350px; overflow-y: auto; }
+    .n-item { display: flex; gap: 1rem; padding: 1rem; border-radius: 1rem; transition: 0.2s; position: relative; }
+    .n-item:hover { background: var(--glass); }
+    .n-dot-active { position: absolute; left: 8px; top: 1.2rem; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; }
+    .n-body p { font-size: 0.85rem; margin: 0 0 4px; line-height: 1.4; }
+    .n-body span { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Action Dropdown */
+    .opt-container { position: relative; }
+    .action-dropdown { position: absolute; right: 0; top: 100%; margin-top: 0.5rem; width: 180px; background: var(--bg); border: 1px solid var(--border-color); border-radius: 1rem; padding: 0.5rem; z-index: 10; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .action-dropdown button { width: 100%; text-align: left; padding: 0.7rem 1rem; background: transparent; border: none; color: var(--text-main); font-size: 0.85rem; font-weight: 600; cursor: pointer; border-radius: 0.6rem; transition: 0.2s; }
+    .action-dropdown button:hover { background: var(--glass); }
+    .action-dropdown button.danger { color: #ef4444; }
+
+    /* Modals */
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 3000; display: flex; items-center: center; justify-content: center; align-items: center; }
+    .glass-modal { background: var(--surface-container); border: 1px solid var(--primary); border-radius: 2rem; padding: 2.5rem; width: 450px; text-align: center; }
+    .slots-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem 0; }
+    .slot { padding: 1rem; border: 1px solid var(--border-color); background: var(--glass); border-radius: 1rem; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .slot:hover { border-color: var(--primary); background: var(--primary-glow); }
+    .btn-close-modal { background: transparent; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer; }
+
+    .view-all-link { cursor: pointer; color: var(--primary); font-weight: 800; text-decoration: none; font-size: 0.9rem; }
+
     @media (max-width: 1200px) {
       .dash-main-grid { grid-template-columns: 1fr; }
       .dash-stats { grid-template-columns: repeat(2, 1fr); }
     }
   `]
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  
   activeTab = 'overview';
+  showNotifications = false;
+  showSearch = false;
+  searchTerm = '';
+  activeMenuBooking: any = null;
+  reschedulingBooking: any = null;
+  availableSlots = ['09:30 AM', '11:15 AM', '01:45 PM', '04:00 PM', '05:30 PM'];
+
+  bookings = [
+    { id: 1, service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
+    { id: 2, service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }
+  ];
+
+  notifications = [
+    { text: 'Your haircut at Urban Fade is tomorrow at 2:30 PM.', time: '1 hour ago', read: false },
+    { text: 'Reminder: Service booking for Spa session is confirmed.', time: '3 hours ago', read: true },
+    { text: 'Welcome to Nikat! Explore local shops around you.', time: '1 day ago', read: true }
+  ];
+
+  filteredBookings = [...this.bookings];
 
   get currentUser() {
     return this.authService.currentUser;
@@ -327,13 +446,88 @@ export class DashboardComponent {
     return this.currentUser?.firstName?.charAt(0).toUpperCase() || 'U';
   }
 
-  bookings = [
-    { service: 'Classic Fade Haircut', shop: 'Urban Fade Barbershop', month: 'OCT', day: '28', time: '2:30 PM', status: 'confirmed', alt: false },
-    { service: 'Deep Tissue Massage', shop: 'Serenity Spa Hub', month: 'NOV', day: '02', time: '11:00 AM', status: 'confirmed', alt: true }
-  ];
+  get hasUnreadNotifications(): boolean {
+    return this.notifications.some(n => !n.read);
+  }
+
+  ngOnInit() {
+    // Close menus on outside click
+    window.addEventListener('click', () => {
+      this.activeMenuBooking = null;
+    });
+  }
 
   setTab(tab: string) {
     this.activeTab = tab;
+    this.showNotifications = false;
+    this.showSearch = false;
+  }
+
+  toggleNotifications(event: Event) {
+    event.stopPropagation();
+    this.showNotifications = !this.showNotifications;
+    this.showSearch = false;
+    this.activeMenuBooking = null;
+  }
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
+    this.showNotifications = false;
+    this.activeMenuBooking = null;
+    if (this.showSearch) {
+      setTimeout(() => {
+        const input = document.querySelector('.search-header-internal input') as HTMLInputElement;
+        input?.focus();
+      }, 100);
+    }
+  }
+
+  onSearch(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
+    this.filteredBookings = this.bookings.filter(b => 
+      b.service.toLowerCase().includes(this.searchTerm) || 
+      b.shop.toLowerCase().includes(this.searchTerm)
+    );
+  }
+
+  goToBooking(booking: any) {
+    this.showSearch = false;
+    this.setTab('bookings');
+    console.log('Navigating to booking:', booking.id);
+  }
+
+  toggleMenu(event: Event, booking: any) {
+    event.stopPropagation();
+    this.activeMenuBooking = this.activeMenuBooking === booking ? null : booking;
+    this.showNotifications = false;
+  }
+
+  showRescheduleModal(booking: any) {
+    this.reschedulingBooking = booking;
+    this.activeMenuBooking = null;
+  }
+
+  applyReschedule(slot: string) {
+    if (this.reschedulingBooking) {
+      this.reschedulingBooking.time = slot;
+      alert(`Successfully rescheduled to ${slot}`);
+      this.reschedulingBooking = null;
+    }
+  }
+
+  viewShop(booking: any) {
+    this.router.navigate(['/browse']); // Placeholder for shop detail
+  }
+
+  messageSupport(booking: any) {
+    alert('Support ticket created for ' + booking.service);
+  }
+
+  cancelBooking(booking: any) {
+    if (confirm('Are you sure you want to cancel this booking?')) {
+      this.bookings = this.bookings.filter(b => b.id !== booking.id);
+      this.filteredBookings = [...this.bookings];
+    }
   }
 
   signOut() {
