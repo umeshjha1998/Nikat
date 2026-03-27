@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
+@org.springframework.transaction.annotation.Transactional
 public class ServiceProviderService {
 
     private final ServiceRepository serviceRepository;
