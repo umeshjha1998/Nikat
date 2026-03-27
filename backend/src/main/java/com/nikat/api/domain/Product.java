@@ -35,7 +35,7 @@ public class Product {
     @Column(name = "is_available")
     private Boolean isAvailable;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
     @Column(name = "created_at", updatable = false)

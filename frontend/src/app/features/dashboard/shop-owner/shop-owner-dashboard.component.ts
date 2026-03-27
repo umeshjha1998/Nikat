@@ -352,24 +352,48 @@ import { AuthService } from '../../../core/auth.service';
           </div>
           <form class="glass-form" (submit)="createNewListing(); $event.preventDefault()">
             <div class="form-group">
+              <label>Product Image</label>
+              <div class="product-upload-container">
+                <div class="product-preview-box" *ngIf="newProduct.imageUrl" [style.backgroundImage]="'url(' + newProduct.imageUrl + ')'">
+                   <button type="button" class="remove-img" (click)="newProduct.imageUrl = ''">
+                     <span class="material-icons">close</span>
+                   </button>
+                </div>
+                <div class="product-upload-placeholder" *ngIf="!newProduct.imageUrl" (click)="prodFileInput.click()">
+                   <span class="material-icons" *ngIf="!isProductImageUploading">add_a_photo</span>
+                   <span class="upload-loader" *ngIf="isProductImageUploading"></span>
+                   <span>{{ isProductImageUploading ? 'Processing...' : 'Upload Product Photo' }}</span>
+                </div>
+                <input type="file" #prodFileInput style="display: none" (change)="onProductImageUpload($event)" accept="image/*">
+                <p class="upload-hint">Max size: 50KB. Compressed automatically.</p>
+              </div>
+            </div>
+            <div class="form-group">
               <label>Product Name</label>
               <input type="text" [(ngModel)]="newProduct.name" name="pname" required placeholder="e.g. Classic Hair Cut">
             </div>
-            <div class="form-group">
-              <label>Price (₹)</label>
-              <input type="number" [(ngModel)]="newProduct.price" name="pprice" required>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Price (₹)</label>
+                <input type="number" [(ngModel)]="newProduct.price" name="pprice" required>
+              </div>
+              <div class="form-group">
+                 <label>Availability</label>
+                 <select [(ngModel)]="newProduct.isAvailable" name="pavail" class="glass-select">
+                    <option [ngValue]="true">In Stock</option>
+                    <option [ngValue]="false">Out of Stock</option>
+                 </select>
+              </div>
             </div>
             <div class="form-group">
-              <label>Description</label>
+              <label>Description (Optional)</label>
               <textarea rows="3" [(ngModel)]="newProduct.description" name="pdesc" placeholder="Brief details about the product/service"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Image URL (Optional)</label>
-              <input type="text" [(ngModel)]="newProduct.imageUrl" name="pimg" placeholder="https://...">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn-outline-glass" (click)="showListingModal = false">Cancel</button>
-              <button type="submit" class="btn-primary-glow">Create Listing</button>
+              <button type="submit" class="btn-primary-glow" [disabled]="isProductImageUploading">
+                {{ isProductImageUploading ? 'Processing...' : 'Create Listing' }}
+              </button>
             </div>
           </form>
         </div>
@@ -1096,6 +1120,75 @@ import { AuthService } from '../../../core/auth.service';
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .product-upload-container {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .product-preview-box {
+      width: 100%;
+      height: 160px;
+      border-radius: 1rem;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border: 1px solid var(--glass-border);
+    }
+
+    .remove-img {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: #fff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .product-upload-placeholder {
+      width: 100%;
+      height: 120px;
+      border: 2px dashed var(--glass-border);
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .product-upload-placeholder:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.05);
+    }
+
+    .upload-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .glass-select {
+       background: var(--glass);
+       border: 1px solid var(--glass-border);
+       color: var(--text-main);
+       padding: 0.85rem 1.25rem;
+       border-radius: 1rem;
+       width: 100%;
+       outline: none;
+    }
   `]
 })
 export class ShopOwnerDashboardComponent implements OnInit {
@@ -1111,6 +1204,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   // Modal states
   showListingModal = false;
+  isProductImageUploading = false;
   newProduct: Partial<ProductDto> = {
     name: '',
     description: '',
@@ -1262,6 +1356,23 @@ export class ShopOwnerDashboardComponent implements OnInit {
     } catch (err) {
       console.error('Compression failed', err);
       this.isUploading = false;
+    }
+  }
+
+  async onProductImageUpload(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.isProductImageUploading = true;
+    try {
+      // Compress to 50KB (51200 bytes)
+      const compressedBase64 = await this.compressImage(file, 50 * 1024);
+      this.newProduct.imageUrl = compressedBase64;
+      this.isProductImageUploading = false;
+    } catch (err) {
+      console.error('Product image compression failed', err);
+      this.isProductImageUploading = false;
+      alert('Failed to process image. Please try another one.');
     }
   }
 
