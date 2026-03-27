@@ -22,6 +22,16 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
+    @GetMapping("/public/reviews/shop/{shopId}")
+    public ResponseEntity<List<ReviewDto>> getReviewsByShop(@PathVariable UUID shopId) {
+        return ResponseEntity.ok(reviewService.getReviewsByShop(shopId));
+    }
+
+    @PostMapping("/reviews")
+    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto) {
+        return ResponseEntity.ok(reviewService.createReview(reviewDto));
+    }
+
     @GetMapping("/public/reviews/{id}")
     public ResponseEntity<ReviewDto> getReviewById(@PathVariable UUID id) {
         return ResponseEntity.ok(reviewService.getReviewById(id));

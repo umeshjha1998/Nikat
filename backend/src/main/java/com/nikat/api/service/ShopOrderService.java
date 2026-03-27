@@ -59,9 +59,21 @@ public class ShopOrderService {
                 .stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public List<OrderDto> getShopOrders(Shop shop) {
-        return orderRepository.findByShopOrderByCreatedAtDesc(shop)
+    public List<OrderDto> getShopOrders(Shop shop, String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return orderRepository.findByShopOrderByCreatedAtDesc(shop)
+                    .stream().map(this::mapToDto).collect(Collectors.toList());
+        }
+        return orderRepository.searchByShop(shop, query)
                 .stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public OrderDto updateStatus(UUID orderId, String status) {
+        ShopOrder order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        return mapToDto(order);
     }
 
     private OrderDto mapToDto(ShopOrder order) {

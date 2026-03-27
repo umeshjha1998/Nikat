@@ -37,7 +37,9 @@ public class OrderController {
 
     @GetMapping("/received")
     @PreAuthorize("hasRole('SHOP_OWNER')")
-    public ResponseEntity<List<OrderDto>> getReceivedOrders(@RequestParam UUID shopId) {
+    public ResponseEntity<List<OrderDto>> getReceivedOrders(
+            @RequestParam UUID shopId, 
+            @RequestParam(required = false) String query) {
         User currentUser = authService.getCurrentUser();
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new RuntimeException("Shop not found"));
@@ -47,6 +49,14 @@ public class OrderController {
             throw new RuntimeException("Unauthorized access to shop orders");
         }
         
-        return ResponseEntity.ok(orderService.getShopOrders(shop));
+        return ResponseEntity.ok(orderService.getShopOrders(shop, query));
+    }
+
+    @PatchMapping("/{orderId}/status")
+    @PreAuthorize("hasRole('SHOP_OWNER')")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable UUID orderId, @RequestBody String status) {
+        // Remove quotes if present from raw string body
+        status = status.replace("\"", "");
+        return ResponseEntity.ok(orderService.updateStatus(orderId, status));
     }
 }

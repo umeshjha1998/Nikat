@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/api.service';
 
@@ -50,7 +50,8 @@ import { ApiService } from '../../core/api.service';
               <!-- Business Name -->
               <div class="form-group">
                 <label>Business Name</label>
-                <input type="text" placeholder="Search for a shop or service..." [(ngModel)]="newReview.businessName" class="form-input">
+                <input type="text" [placeholder]="newReview.shopId ? '' : 'Search for a shop or service...'" [(ngModel)]="newReview.businessName" class="form-input" [disabled]="!!newReview.shopId">
+                <p class="prefill-hint" *ngIf="newReview.shopId">Prefilled from your last order.</p>
               </div>
 
               <!-- Star Rating -->
@@ -331,6 +332,9 @@ import { ApiService } from '../../core/api.service';
     .btn-load-more:hover { color: var(--accent); border-color: var(--accent); }
     .btn-load-more .material-symbols-outlined { font-size: 0.875rem; }
 
+    .prefill-hint { font-size: 0.7rem; color: var(--accent); margin-top: 0.25rem; font-weight: 600; }
+    .form-input[disabled] { background: var(--surface-container); cursor: not-allowed; opacity: 0.8; border-color: var(--accent); }
+
     @media (max-width: 900px) {
       .main-layout { flex-direction: column; }
       .submit-section { width: 100%; position: static; }
@@ -342,9 +346,10 @@ export class ReviewsComponent implements OnInit {
   availableTags = ['Clean', 'Friendly', 'Quick', 'Value', 'Professional', 'Authentic'];
 
   newReview = {
+    shopId: '',
     businessName: '',
-    rating: 0,
-    comment: '',
+    rating: 5,
+    comment: 'Good',
     tags: [] as string[]
   };
 
@@ -356,26 +361,40 @@ export class ReviewsComponent implements OnInit {
     { name: 'Meera D.', initials: 'MD', rating: 5, date: '3 days ago', businessName: 'Green Basket', category: 'Grocery', comment: 'Finally found a reliable source for organic vegetables! Everything is fresh and the prices are fair. Their home delivery is super quick too. Love this service!', tags: ['Clean', 'Value', 'Quick'], avatarColor: '#ff8c42', likes: 31, liked: false }
   ];
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['shopId']) {
+        this.newReview.shopId = params['shopId'];
+        this.newReview.businessName = params['shopName'];
+      }
+    });
+
+    this.loadReviews();
+  }
+
+  loadReviews() {
     this.apiService.getReviews().subscribe({
       next: (data: any[]) => {
         if (data && data.length > 0) {
           const apiReviews = data.map(r => ({
-            name: r.userName || 'Anonymous',
-            initials: (r.userName || 'A').substring(0, 2).toUpperCase(),
+            name: r.reviewerName || 'Anonymous',
+            initials: (r.reviewerName || 'A').substring(0, 2).toUpperCase(),
             rating: r.rating || 4,
-            date: r.createdAt || 'Recently',
-            businessName: r.shopName || r.serviceName || '',
-            category: r.category || '',
+            date: r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recently',
+            businessName: r.shopName || '',
+            category: 'Verified Shop',
             comment: r.comment || '',
             tags: [],
             avatarColor: '#5eb4ff',
-            likes: r.likes || 0,
+            likes: 0,
             liked: false
           }));
-          this.reviews = [...apiReviews, ...this.reviews];
+          this.reviews = [...apiReviews];
         }
       }
     });
@@ -392,21 +411,35 @@ export class ReviewsComponent implements OnInit {
 
   submitReview() {
     if (!this.newReview.businessName || !this.newReview.rating || !this.newReview.comment) return;
-    const review = {
-      name: 'You',
-      initials: 'YO',
+    
+    const reviewData = {
+      shopId: this.newReview.shopId,
       rating: this.newReview.rating,
-      date: 'Just now',
-      businessName: this.newReview.businessName,
-      category: '',
-      comment: this.newReview.comment,
-      tags: [...this.newReview.tags],
-      avatarColor: '#5eb4ff',
-      likes: 0,
-      liked: false
+      comment: this.newReview.comment
     };
-    this.reviews.unshift(review);
-    this.newReview = { businessName: '', rating: 0, comment: '', tags: [] };
+
+    this.apiService.createReview(reviewData).subscribe({
+      next: (res) => {
+        const review = {
+          name: 'You',
+          initials: 'YO',
+          rating: res.rating,
+          date: 'Just now',
+          businessName: this.newReview.businessName,
+          category: 'Verified Experience',
+          comment: res.comment,
+          tags: [...this.newReview.tags],
+          avatarColor: '#5eb4ff',
+          likes: 0,
+          liked: false
+        };
+        this.reviews.unshift(review);
+        this.newReview = { shopId: '', businessName: '', rating: 5, comment: 'Good', tags: [] };
+      },
+      error: (err) => {
+        alert("Failed to post review. Please try again.");
+      }
+    });
   }
 
   getStars(n: number): number[] { return Array(Math.floor(n)).fill(0); }

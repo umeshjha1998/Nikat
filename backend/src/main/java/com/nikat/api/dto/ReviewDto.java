@@ -13,6 +13,7 @@ public class ReviewDto {
     private UUID reviewerId;
     private String reviewerName;
     private UUID shopId;
+    private String shopName;
     private UUID serviceId;
     private Integer rating;
     private String comment;

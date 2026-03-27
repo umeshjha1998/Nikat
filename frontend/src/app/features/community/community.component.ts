@@ -116,6 +116,18 @@ import { AuthService } from '../../core/auth.service';
               <button class="btn-glass-full" (click)="joinEvent()">Join Event</button>
             </section>
 
+            <section class="side-widget-glass reviews-promo clickable" [routerLink]="['/reviews']">
+              <div class="w-head">
+                <span class="material-symbols-outlined">star_rate</span>
+                <h4>Community Reviews</h4>
+              </div>
+              <p>See what others are saying about local shops and services in your area.</p>
+              <div class="p-link">
+                <span>Browse All Reviews</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </div>
+            </section>
+
             <section class="member-preview">
               <h3>Active Neighbors</h3>
               <div class="m-grid">
@@ -260,6 +272,13 @@ import { AuthService } from '../../core/auth.service';
       box-shadow: 0 4px 12px var(--accent-glow);
     }
     .btn-glass-full:hover { box-shadow: 0 8px 24px var(--accent-glow); transform: translateY(-1px); }
+
+    .reviews-promo.clickable { cursor: pointer; transition: all 0.3s ease; }
+    .reviews-promo.clickable:hover { border-color: var(--accent); transform: translateY(-4px); background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), var(--card-bg)); }
+    .reviews-promo .material-symbols-outlined { color: #fbbf24; }
+    .p-link { display: flex; align-items: center; gap: 0.5rem; color: var(--accent); font-weight: 700; font-size: 0.85rem; margin-top: 1rem; }
+    .p-link .material-symbols-outlined { font-size: 1.1rem; color: var(--accent); transition: transform 0.2s; }
+    .reviews-promo.clickable:hover .p-link .material-symbols-outlined { transform: translateX(4px); }
 
     .member-preview h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; margin: 0 0 1.25rem; color: var(--text-main); }
     .m-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }

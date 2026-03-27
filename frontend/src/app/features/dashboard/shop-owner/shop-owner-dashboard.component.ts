@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto, CategoryDto } from '../../../core/api.service';
+import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto, CategoryDto, OrderDto } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
@@ -40,6 +40,14 @@ import { AuthService } from '../../../core/auth.service';
             <span class="material-icons">chat_bubble_outline</span>
             <span>Inquiries</span>
             <span class="badge" *ngIf="newInquiriesCount > 0">{{ newInquiriesCount }}</span>
+          </a>
+          <a class="nav-item" (click)="setTab('orders')" [class.active]="activeTab === 'orders'">
+            <span class="material-icons">shopping_bag</span>
+            <span>Orders</span>
+          </a>
+          <a class="nav-item" (click)="setTab('reviews')" [class.active]="activeTab === 'reviews'">
+            <span class="material-icons">rate_review</span>
+            <span>Reviews</span>
           </a>
           <div class="nav-divider"></div>
           <a class="nav-item" (click)="setTab('settings')" [class.active]="activeTab === 'settings'">
@@ -251,6 +259,39 @@ import { AuthService } from '../../../core/auth.service';
           </div>
         </ng-container>
 
+        <!-- REVIEWS TAB -->
+        <ng-container *ngIf="activeTab === 'reviews'">
+          <div class="reviews-view">
+             <div class="content-card-dark" *ngFor="let rev of shopReviews" style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                   <div>
+                      <h4 style="margin: 0; font-size: 1.1rem;">{{ rev.reviewerName }}</h4>
+                      <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">{{ rev.createdAt | date:'mediumDate' }}</p>
+                   </div>
+                   <div style="display: flex; color: #fbbf24;">
+                      <span class="material-icons" *ngFor="let s of getStars(rev.rating)">star</span>
+                   </div>
+                </div>
+                <p style="margin: 0; line-height: 1.6;">"{{ rev.comment }}"</p>
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem;" *ngIf="rev.status !== 'ACTIVE'">
+                   <span class="badge" [class]="rev.status.toLowerCase()">{{ rev.status }}</span>
+                </div>
+             </div>
+             <div *ngIf="shopReviews.length === 0" class="empty-state-large">
+                <span class="material-icons">sentiment_dissatisfied</span>
+                <p>No reviews yet. Keep providing great service!</p>
+             </div>
+          </div>
+        </ng-container>
+
+        <!-- ORDERS TAB -->
+        <ng-container *ngIf="activeTab === 'orders'">
+          <div class="orders-view">
+            <p>Orders content will go here.</p>
+          </div>
+        </ng-container>
+
+        <!-- SETTINGS TAB -->
         <ng-container *ngIf="activeTab === 'settings'">
           <div class="settings-form content-card-dark" *ngIf="currentShop; else noShop">
              <h2>Shop Profile Settings</h2>
@@ -1009,6 +1050,93 @@ import { AuthService } from '../../../core/auth.service';
     .btn-icon.ok { color: var(--primary); }
     .btn-icon.cancel { color: #ef4444; }
 
+    /* Orders View */
+    .orders-view {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .search-bar-glass {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 600px;
+    }
+
+    .search-bar-glass input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .order-id {
+      font-family: 'Monaco', 'Consolas', monospace;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .customer-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .customer-info small {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .order-item-chip {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      margin: 0.1rem;
+      border: 1px solid var(--glass-border);
+    }
+
+    .order-item-chip .qty {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .amount {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .status-select {
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .status-select.pending { border-left: 3px solid #fbbf24; }
+    .status-select.confirmed { border-left: 3px solid var(--primary); }
+    .status-select.shipped { border-left: 3px solid #6366f1; }
+    .status-select.delivered { border-left: 3px solid #10b981; }
+    .status-select.cancelled { border-left: 3px solid #ef4444; }
+
+    .date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
     /* Inquiries View */
     .inquiry-thread-list { display: flex; flex-direction: column; gap: 1.5rem; }
     .inquiry-thread-card {
@@ -1292,7 +1420,10 @@ export class ShopOwnerDashboardComponent implements OnInit {
   inquiries: InquiryDto[] = [];
   appointments: AppointmentDto[] = [];
   products: ProductDto[] = [];
+  shopReviews: any[] = [];
   categories: CategoryDto[] = [];
+  orders: OrderDto[] = [];
+  orderSearchQuery = '';
 
   // Modal states
   showListingModal = false;
@@ -1362,7 +1493,10 @@ export class ShopOwnerDashboardComponent implements OnInit {
         if (shops.length > 0) {
           this.currentShop = shops[0];
           this.workerNamesList = (this.currentShop.workerNames || '').split(',').map(n => n.trim());
-          this.loadDashboardData(this.currentShop.id);
+          this.loadProducts();
+          this.loadAppointments();
+          this.loadInquiries();
+          this.loadReviews();
         } else {
           this.currentShop = null;
         }
@@ -1399,16 +1533,71 @@ export class ShopOwnerDashboardComponent implements OnInit {
   }
 
   loadDashboardData(shopId: string) {
+    // This method is now deprecated as individual load methods are called directly after currentShop is set.
+    // Keeping it for now, but its calls are redundant.
     this.apiService.getInquiriesByShop(shopId).subscribe(data => this.inquiries = data);
     this.apiService.getAppointmentsByShop(shopId).subscribe(data => this.appointments = data);
     this.apiService.getProductsByShop(shopId).subscribe(data => this.products = data);
   }
 
+  loadInquiries() {
+    if (!this.currentShop?.id) return;
+    this.apiService.getInquiriesByShop(this.currentShop.id).subscribe(data => this.inquiries = data);
+  }
+
+  loadReviews() {
+    if (!this.currentShop?.id) return;
+    this.apiService.getReviewsByShop(this.currentShop.id).subscribe(data => this.shopReviews = data);
+  }
+
+  loadProducts() {
+    if (!this.currentShop?.id) return;
+    this.apiService.getProductsByShop(this.currentShop.id).subscribe(data => this.products = data);
+  }
+
+  loadAppointments() {
+    if (!this.currentShop?.id) return;
+    this.apiService.getAppointmentsByShop(this.currentShop.id).subscribe(data => this.appointments = data);
+  }
+
   setTab(tab: string) {
     this.activeTab = tab;
+    if (tab === 'orders') {
+      this.loadOrders();
+    }
+  }
+
+  loadOrders() {
+    if (!this.currentShop?.id) return;
+    this.apiService.getReceivedOrders(this.currentShop.id, this.orderSearchQuery).subscribe({
+      next: (data) => this.orders = data,
+      error: (err) => console.error('Failed to load orders:', err)
+    });
+  }
+
+  onOrderSearch() {
+    this.loadOrders();
+  }
+
+  onStatusChange(orderId: string, newStatus: string) {
+    this.apiService.updateOrderStatus(orderId, newStatus).subscribe({
+      next: (updated) => {
+        const idx = this.orders.findIndex(o => o.id === orderId);
+        if (idx > -1) {
+          this.orders[idx] = updated;
+        }
+        alert(`Order status updated to ${newStatus}`);
+      },
+      error: (err) => {
+        console.error('Failed to update status:', err);
+        alert('Failed to update order status.');
+      }
+    });
   }
 
   // --- ANALYTICS ACTIONS ---
+
+  getStars(n: number) { return Array(n).fill(0); }
 
   shareProfile() {
     if (this.currentShop) {

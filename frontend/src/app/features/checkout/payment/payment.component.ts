@@ -347,7 +347,9 @@ import { CartService, CartItem } from '../../../core/cart.service';
 export class PaymentComponent {
   selectedMethod = 'card';
   orderPlaced = false;
-  orderId = Math.floor(1000 + Math.random() * 9000);
+  orderId = '';
+  shopIdToReview = '';
+  shopNameToReview = '';
 
   constructor(
     private router: Router,
@@ -371,10 +373,18 @@ export class PaymentComponent {
     const addressStr = `${shipping.firstName} ${shipping.lastName}, ${shipping.address}, ${shipping.city} - ${shipping.pin}`;
     const phone = shipping.phone;
 
+    // Capture first shop info for review suggestion
+    if (this.cartService.items.length > 0) {
+      this.shopIdToReview = this.cartService.items[0].shopId;
+      this.shopNameToReview = this.cartService.items[0].shopName;
+    }
+
     this.cartService.checkout(this.selectedMethod, addressStr, phone).subscribe({
       next: (results) => {
         if (results && results.length > 0) {
           this.orderId = results[0].id.substring(0, 8).toUpperCase();
+        } else {
+          this.orderId = Math.floor(1000 + Math.random() * 9000).toString();
         }
         this.orderPlaced = true;
       },
@@ -386,7 +396,11 @@ export class PaymentComponent {
   }
 
   goToReviews() {
-    // Navigate to reviews page, optionally passing shop info if needed
-    this.router.navigate(['/reviews']);
+    this.router.navigate(['/reviews'], { 
+      queryParams: { 
+        shopId: this.shopIdToReview, 
+        shopName: this.shopNameToReview 
+      } 
+    });
   }
 }

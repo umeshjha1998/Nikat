@@ -220,20 +220,38 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/public/reviews`);
   }
 
+  getReviewsByShop(shopId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/public/reviews/shop/${shopId}`);
+  }
+
+  createReview(review: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/reviews`, review);
+  }
+
   // Orders
   createOrder(order: OrderDto): Observable<OrderDto> {
     return this.http.post<OrderDto>(`${this.apiUrl}/orders`, order);
   }
 
   getOrdersByCurrentUser(): Observable<OrderDto[]> {
-    return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/my`);
+    return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/my-orders`);
   }
 
   getMyOrders(): Observable<OrderDto[]> {
     return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/my-orders`);
   }
 
-  getReceivedOrders(shopId: string): Observable<OrderDto[]> {
-    return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/received?shopId=${shopId}`);
+  getReceivedOrders(shopId: string, query?: string): Observable<OrderDto[]> {
+    let url = `${this.apiUrl}/orders/received?shopId=${shopId}`;
+    if (query) {
+      url += `&query=${encodeURIComponent(query)}`;
+    }
+    return this.http.get<OrderDto[]>(url);
+  }
+
+  updateOrderStatus(orderId: string, status: string): Observable<OrderDto> {
+    return this.http.patch<OrderDto>(`${this.apiUrl}/orders/${orderId}/status`, JSON.stringify(status), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
