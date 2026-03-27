@@ -34,21 +34,79 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
       <!-- Category Pills -->
       <section class="category-bar">
         <div class="category-bar-inner">
-          <div class="category-pills">
+          <div class="category-pills" [class.expanded]="isCategoriesExpanded">
             <button class="pill" [class.active]="activeCategory === 'all'" (click)="filterByCategory('all')">All Shops</button>
             <button class="pill" 
-                    *ngFor="let cat of categories" 
+                    *ngFor="let cat of getVisibleCategories()" 
                     [class.active]="activeCategory === cat.id" 
                     (click)="filterByCategory(cat.id)">
               {{cat.name}}
             </button>
+            <button class="pill toggle-btn" (click)="isCategoriesExpanded = !isCategoriesExpanded" *ngIf="categories.length > 10">
+              <span class="material-symbols-outlined">{{isCategoriesExpanded ? 'expand_less' : 'expand_more'}}</span>
+              {{isCategoriesExpanded ? 'Show Less' : '+' + (categories.length - 10) + ' More'}}
+            </button>
           </div>
-          <button class="btn-filter">
+          <button class="btn-filter" (click)="toggleFilters()">
             <span class="material-symbols-outlined">tune</span>
             <span class="filter-label">Filters</span>
           </button>
         </div>
       </section>
+
+      <!-- Filter Sidebar Overlay -->
+      <div class="filter-overlay" [class.active]="showFilters" (click)="toggleFilters()">
+        <div class="filter-sidebar" (click)="$event.stopPropagation()">
+          <div class="sidebar-header">
+            <h2>Filters</h2>
+            <button class="close-btn" (click)="toggleFilters()">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          
+          <div class="sidebar-content">
+            <div class="filter-group">
+              <label class="group-label">Status</label>
+              <div class="check-options">
+                <label class="check-item">
+                  <input type="checkbox" [(ngModel)]="filters.openNow" (change)="filterShops()">
+                  <span>Open Now</span>
+                </label>
+                <label class="check-item">
+                  <input type="checkbox" [(ngModel)]="filters.verifiedOnly" (change)="filterShops()">
+                  <span>Verified Only</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label class="group-label">Minimum Rating</label>
+              <div class="rating-options">
+                <button class="rating-btn" 
+                        *ngFor="let r of [4, 3, 2]" 
+                        [class.active]="filters.minRating === r"
+                        (click)="filters.minRating = r; filterShops()">
+                  {{r}}+ <span class="material-symbols-outlined">star</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label class="group-label">Sort By</label>
+              <select class="filter-select" [(ngModel)]="filters.sortBy" (change)="filterShops()">
+                <option value="popularity">Popularity</option>
+                <option value="rating">Top Rated</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="sidebar-footer">
+            <button class="btn-clear" (click)="resetFilters()">Reset All</button>
+            <button class="btn-apply" (click)="toggleFilters()">Apply Filters</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Shop Cards Grid -->
       <section class="shops-grid-section">
@@ -188,12 +246,68 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
     }
     .pill:hover { color: var(--text-main); border-color: var(--accent); }
     .pill.active { background: var(--primary); color: #fff; font-weight: 700; border-color: var(--primary); }
+
+    .category-pills.expanded { max-height: none; overflow: visible; }
+    .toggle-btn { 
+      background: var(--glass); color: var(--accent); border-style: dashed;
+      display: flex; align-items: center; gap: 0.25rem;
+    }
+    .toggle-btn .material-symbols-outlined { font-size: 1.1rem; }
+    
     .btn-filter {
       display: flex; align-items: center; gap: 0.5rem;
-      background: none; border: none; color: var(--accent);
-      font-weight: 600; cursor: pointer;
+      background: var(--card-bg); border: 1px solid var(--border-color); color: var(--accent);
+      padding: 0.5rem 1rem; border-radius: 0.75rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
     }
+    .btn-filter:hover { border-color: var(--accent); background: var(--glass); }
     .filter-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; }
+
+    /* Filter Sidebar */
+    .filter-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      z-index: 1000; opacity: 0; pointer-events: none; transition: all 0.3s ease;
+    }
+    .filter-overlay.active { opacity: 1; pointer-events: auto; }
+    
+    .filter-sidebar {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 320px;
+      background: var(--bg); border-left: 1px solid var(--glass-border);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+      transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column;
+    }
+    .filter-overlay.active .filter-sidebar { transform: translateX(0); }
+
+    .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .sidebar-header h2 { margin: 0; font-size: 1.25rem; }
+    .close-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; }
+
+    .sidebar-content { padding: 1.5rem; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2rem; }
+    .group-label { display: block; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--accent); margin-bottom: 1rem; }
+    
+    .check-options { display: flex; flex-direction: column; gap: 0.75rem; }
+    .check-item { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-size: 0.9rem; }
+    .check-item input { width: 1.1rem; height: 1.1rem; accent-color: var(--primary); }
+
+    .rating-options { display: flex; gap: 0.5rem; }
+    .rating-btn { 
+      flex: 1; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color);
+      background: var(--card-bg); color: var(--text-main); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 0.25rem; font-weight: 600;
+    }
+    .rating-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .rating-btn .material-symbols-outlined { font-size: 1rem; font-variation-settings: 'FILL' 1; }
+
+    .filter-select {
+      width: 100%; padding: 0.75rem; border-radius: 0.75rem;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      color: var(--text-main); font-family: inherit; font-weight: 600;
+    }
+
+    .sidebar-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 1rem; }
+    .btn-clear { flex: 1; padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--border-color); background: none; color: var(--text-muted); cursor: pointer; }
+    .btn-apply { flex: 2; padding: 0.75rem; border-radius: 0.75rem; border: none; background: var(--primary); color: #fff; font-weight: 700; cursor: pointer; }
 
     /* Grid */
     .shops-grid-section { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
@@ -378,6 +492,16 @@ export class BrowseComponent implements OnInit {
   shops: any[] = [];
   displayShops: any[] = [];
   categories: CategoryDto[] = [];
+  
+  // New UI state
+  isCategoriesExpanded = false;
+  showFilters = false;
+  filters = {
+    openNow: false,
+    verifiedOnly: false,
+    minRating: 0,
+    sortBy: 'popularity'
+  };
 
   constructor(private apiService: ApiService) {}
 
@@ -389,6 +513,7 @@ export class BrowseComponent implements OnInit {
   loadCategories() {
     this.apiService.getCategories().subscribe({
       next: (cats) => {
+        // Only show categories that have shops
         this.categories = cats.filter(c => c.isShopCategory);
       },
       error: (err) => console.error('Failed to load categories:', err)
@@ -406,8 +531,10 @@ export class BrowseComponent implements OnInit {
             category: s.categoryName || 'Local Business',
             description: s.description || 'Premium local shop offering exceptional quality.',
             image: s.photos && s.photos.length > 0 ? s.photos[0] : 'https://images.unsplash.com/photo-1517248135467-4c7ed9d42177?auto=format&fit=crop&q=80',
-            rating: (4.0 + Math.random()).toFixed(1), 
-            isOpen: s.isOpen,
+            rating: parseFloat((4.0 + Math.random()).toFixed(1)), 
+            isOpen: s.isOpen === undefined ? true : s.isOpen, // Default to true if not provided
+            isVerified: s.status === 'VERIFIED',
+            createdDate: new Date(s.createdAt || Date.now()).getTime(),
             tagColor: 'primary',
             footerLabel: 'Starting from',
             footerValue: s.startingPrice ? '₹' + s.startingPrice : 'No products yet'
@@ -424,11 +551,61 @@ export class BrowseComponent implements OnInit {
     this.filterShops();
   }
 
-  filterShops() {
-    if (this.activeCategory === 'all') {
-      this.displayShops = this.shops;
-    } else {
-      this.displayShops = this.shops.filter(s => s.categoryId === this.activeCategory);
+  getVisibleCategories() {
+    if (this.isCategoriesExpanded) return this.categories;
+    const initial = this.categories.slice(0, 10);
+    const current = this.categories.find(c => c.id === this.activeCategory);
+    // If the selected category is not in the first 10, add it but ensure no duplicates
+    if (current && !initial.find(i => i.id === current.id)) {
+      initial.push(current);
     }
+    return initial;
+  }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
+  resetFilters() {
+    this.filters = {
+      openNow: false,
+      verifiedOnly: false,
+      minRating: 0,
+      sortBy: 'popularity'
+    };
+    this.filterShops();
+  }
+
+  filterShops() {
+    let filtered = [...this.shops];
+
+    // Filter by Category
+    if (this.activeCategory !== 'all') {
+      filtered = filtered.filter(s => s.categoryId === this.activeCategory);
+    }
+
+    // Filter by Open Now
+    if (this.filters.openNow) {
+      filtered = filtered.filter(s => s.isOpen);
+    }
+
+    // Filter by Verified
+    if (this.filters.verifiedOnly) {
+      filtered = filtered.filter(s => s.isVerified);
+    }
+
+    // Filter by Rating
+    if (this.filters.minRating > 0) {
+      filtered = filtered.filter(s => s.rating >= this.filters.minRating);
+    }
+
+    // Sort
+    if (this.filters.sortBy === 'rating') {
+      filtered.sort((a, b) => b.rating - a.rating);
+    } else if (this.filters.sortBy === 'newest') {
+      filtered.sort((a, b) => b.createdDate - a.createdDate);
+    }
+
+    this.displayShops = filtered;
   }
 }
