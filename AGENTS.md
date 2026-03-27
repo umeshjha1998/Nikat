@@ -9,7 +9,7 @@ This repository adheres to an **agentic workflow standard**, requiring autonomou
 | Aspect | Detail |
 |--------|--------|
 | **Frontend** | Angular 20, Standalone Components, Vanilla CSS (Deep Sea / Glassmorphism), deployed on Vercel |
-| **Backend** | Spring Boot 3.4, Java 21, Spring Security 6 (JWT), Spring Data JPA, deployed on Render.com (Docker) |
+| **Backend** | Spring Boot 4.0, Java 25, Spring Security 6 (JWT), Spring Data JPA, deployed on Render.com (Docker) |
 | **Database** | PostgreSQL (Neon.tech, AWS Singapore), Flyway migrations, JPA `validate` mode |
 | **API Pattern** | RESTful JSON over `/api/v1/`, stateless JWT authentication |
 | **Roles** | Customer (USER), Shop Owner, Service Provider, Admin |

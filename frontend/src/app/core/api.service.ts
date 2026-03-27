@@ -69,6 +69,7 @@ export interface AppointmentDto {
   status: string;
   notes: string;
   assignedWorker: string;
+  createdAt: string;
 }
 
 export interface ProductDto {

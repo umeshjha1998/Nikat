@@ -10,15 +10,15 @@ Nikat follows a strictly decoupled client-server architecture consisting of a st
 | Component | Technology | Region / Notes |
 |-----------|-----------|----------------|
 | **Frontend Hosting** | Vercel (Static/SPA) | Auto-deploy on push, SPA rewrite via `vercel.json` |
-| **Backend Hosting** | Render.com (Docker) | Multi-stage Dockerfile, `eclipse-temurin:21-jre-alpine` |
+| **Backend Hosting** | Render.com (Docker) | Multi-stage Dockerfile, `eclipse-temurin:25-jre-alpine` |
 | **Database** | Neon.tech (PostgreSQL Serverless) | `ap-southeast-1` (AWS Singapore), SSL required |
 | **Email Service** | Resend API | Transactional emails (appointment confirmations, etc.) |
 | **API Documentation** | SpringDoc OpenAPI 2.7.0 | Swagger UI at `/swagger-ui.html` |
 
 ### Docker Configuration
 ```dockerfile
-# Build: maven:3.9.6-eclipse-temurin-21
-# Run:   eclipse-temurin:21-jre-alpine
+# Build: maven:3.9.6-eclipse-temurin-25
+# Run:   eclipse-temurin:25-jre-alpine
 # Heap:  -Xms128m -Xmx256m
 # Port:  8080
 ```
@@ -92,8 +92,8 @@ Nikat follows a strictly decoupled client-server architecture consisting of a st
 ### Core Versions
 | Dependency | Version |
 |------------|---------|
-| Spring Boot | `3.4.0` |
-| Java | `21` |
+| Spring Boot | `4.0.4` |
+| Java | `25` |
 | Lombok | `1.18.34` |
 | MapStruct | `1.5.5.Final` |
 | JJWT | `0.11.5` |

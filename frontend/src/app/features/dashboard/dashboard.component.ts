@@ -133,11 +133,14 @@ import { BookingService, Booking } from '../../core/booking.service';
           <div class="h-right">
             <button class="btn-search-trigger" (click)="toggleSearch()">
               <span class="material-icons">search</span>
-              Find in Dashboard
+              <span class="desktop-only">Find in Dashboard</span>
             </button>
             <div class="notif-bell" (click)="toggleNotifications($event)">
               <span class="material-icons">notifications</span>
               <span class="n-dot" *ngIf="hasUnreadNotifications"></span>
+            </div>
+            <div class="mobile-only avatar-circle" (click)="setTab('settings')">
+              {{userInitial}}
             </div>
           </div>
         </header>
@@ -715,67 +718,102 @@ import { BookingService, Booking } from '../../core/booking.service';
     .t-switch.active::after { left: 24px; }
 
 
-    @media (max-width: 1200px) {
-      .dash-main-grid { grid-template-columns: 1fr; }
-      .dash-stats { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 1024px) {
+      .dash-sidebar { width: 80px; padding: 1.5rem 0.5rem; align-items: center; }
+      .brand-info, .d-nav-item span:last-child, .u-meta, .btn-dots { display: none; }
+      .dash-brand { justify-content: center; padding: 0; }
+      .d-nav-item { justify-content: center; padding: 1rem; }
+      .dash-header h1 { font-size: 2rem; }
     }
 
     @media (max-width: 768px) {
       .dashboard-premium-layout { flex-direction: column; }
+      
+      /* Mobile Top Bar */
       .dash-sidebar { 
-        width: 100%; 
-        border-right: none; 
-        border-bottom: 1px solid var(--border-color);
-        padding: 1rem;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: var(--surface-container);
-      }
-      .dash-brand { margin-bottom: 0; padding: 0; }
-      .brand-info { display: none; }
-      .dash-nav { 
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100%;
-        background: var(--surface-container);
-        border-top: 1px solid var(--border-color);
+        height: 70px;
         flex-direction: row;
-        justify-content: space-around;
-        padding: 0.5rem;
-        margin: 0;
+        padding: 0;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        background: var(--surface-container);
         z-index: 1000;
+        justify-content: space-around;
       }
-      .d-nav-item { flex-direction: column; gap: 0.25rem; padding: 0.5rem; border-radius: 0.5rem; font-size: 0.7rem; }
-      .d-nav-item span:last-child { font-size: 0.6rem; }
-      .nav-spacer, .logout, .dash-user-card { display: none; }
 
-      .dash-content { padding: 1.5rem; padding-bottom: 5rem; }
-      .dash-header { flex-direction: column; gap: 1.5rem; align-items: flex-start; margin-bottom: 2rem; }
-      .dash-header h1 { font-size: 2rem; }
-      .dash-header p { font-size: 1rem; }
+      .dash-brand, .dash-user-card, .nav-spacer { display: none; }
+
+      .dash-nav {
+         flex-direction: row;
+         width: 100%;
+         height: 100%;
+         gap: 0;
+         padding: 0;
+      }
+
+      .d-nav-item {
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        padding: 0.5rem;
+        border-radius: 0;
+        font-size: 0.65rem;
+        height: 100%;
+      }
+      
+      .d-nav-item .material-icons { font-size: 1.4rem; }
+      .d-nav-item span:last-child { display: block; font-size: 0.6rem; }
+      .d-nav-item.active::after { display: none; }
+
+      /* Mobile Content Adjustments */
+      .dash-content { padding: 1rem 1rem 100px; }
+      .dash-header { flex-direction: column; gap: 1rem; align-items: flex-start; margin-bottom: 2rem; }
+      .dash-header h1 { font-size: 1.75rem; }
       .h-right { width: 100%; justify-content: space-between; }
-      .btn-search-trigger { flex: 1; justify-content: center; }
-
+      
       .dash-stats { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2.5rem; }
-      .stat-glass-card { padding: 1.5rem; }
-      .s-body h2 { font-size: 2rem; }
-
-      .booking-item-premium { padding: 1rem; gap: 1rem; flex-direction: column; align-items: flex-start; }
-      .b-info { width: 100%; }
+      .stat-glass-card { padding: 1.5rem; border-radius: 1.5rem; }
+      
+      .dash-main-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .section-head h3 { font-size: 1.25rem; }
+      
+      .booking-item-premium { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.25rem; }
+      .b-date-box { width: 100%; height: 40px; flex-direction: row; gap: 0.5rem; }
+      .b-date-box .m, .b-date-box .d { font-size: 1rem; }
       .b-actions { width: 100%; justify-content: space-between; gap: 0.5rem; }
-      .btn-outline { flex: 1; text-align: center; }
+      .btn-outline { flex: 1; padding: 0.75rem; }
 
-      .dash-side-col { gap: 2rem; }
-      .promo-card { padding: 1.5rem; }
+      .tab-header-internal { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .tab-filters { overflow-x: auto; width: 100%; padding-bottom: 0.5rem; }
+      .filter-chip { white-space: nowrap; }
 
-      .notif-panel-floating { right: 1rem; left: 1rem; width: auto; top: 140px; }
-      .search-modal { width: 95%; }
+      .shops-grid-premium { grid-template-columns: 1fr; }
+      .orders-list-premium { gap: 1rem; }
+      .o-details { grid-template-columns: 1fr 1fr; }
+      .settings-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .settings-card-premium.notify { grid-column: auto; }
+      
+      .notif-panel-floating { right: 1rem; left: 1rem; width: auto; top: 180px; }
+      .search-modal { width: 95%; margin: 1rem auto; }
+      
+      /* Show Profile Menu properly on mobile */
+      .dash-sidebar .dash-user-card.mobile-profile {
+         display: flex;
+         position: fixed;
+         top: 1rem;
+         right: 1rem;
+         margin: 0;
+         z-index: 1001;
+         padding: 0.5rem;
+         width: auto;
+         background: var(--surface-container);
+      }
     }
   `]
 })

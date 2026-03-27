@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>4.0.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nikat</groupId>
@@ -14,9 +14,10 @@
 	<name>Nikat Backend</name>
 	<description>Backend for Nikat Platform</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>25</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<lombok.version>1.18.34</lombok.version>
+		<lombok.version>1.18.40</lombok.version>
+		<testcontainers.version>1.21.4</testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -107,11 +108,13 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
+			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
+			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

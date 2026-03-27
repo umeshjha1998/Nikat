@@ -20,7 +20,7 @@ public class AppointmentService {
     private final com.nikat.api.repository.ShopRepository shopRepository;
 
     public List<AppointmentDto> getAppointmentsByShop(UUID shopId) {
-        return appointmentRepository.findByShopId(shopId).stream().map(this::mapToDto).collect(Collectors.toList());
+        return appointmentRepository.findByShopIdOrderByAppointmentTimeAsc(shopId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     public AppointmentDto updateStatus(UUID appointmentId, String status, String workerName) {
@@ -64,6 +64,7 @@ public class AppointmentService {
                 .status(appointment.getStatus())
                 .notes(appointment.getNotes())
                 .assignedWorker(appointment.getAssignedWorker())
+                .createdAt(appointment.getCreatedAt())
                 .build();
     }
 }

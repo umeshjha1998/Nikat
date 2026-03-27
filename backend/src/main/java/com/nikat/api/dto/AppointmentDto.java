@@ -19,4 +19,5 @@ public class AppointmentDto {
     private String status;
     private String notes;
     private String assignedWorker;
+    private LocalDateTime createdAt;
 }

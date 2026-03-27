@@ -192,7 +192,8 @@ import { AuthService } from '../../../core/auth.service';
                 <thead>
                    <tr>
                       <th>Customer</th>
-                      <th>Time</th>
+                      <th>Booking Time</th>
+                       <th>Scheduled Slot</th>
                       <th>Service</th>
                       <th>Status</th>
                       <th>Actions</th>
@@ -202,9 +203,10 @@ import { AuthService } from '../../../core/auth.service';
                     <tr *ngFor="let apt of appointments">
                        <td>
                           {{ apt.userName }}<br>
-                          <small *ngIf="apt.assignedWorker" style="color: var(--primary); font-weight: 600;">Assigned: {{ apt.assignedWorker }}</small>
+                          <small *ngIf="apt.assignedWorker" class="assigned-worker-badge">Assigned: {{ apt.assignedWorker }}</small>
                        </td>
-                       <td>{{ apt.appointmentTime | date:'medium' }}</td>
+                       <td>{{ apt.createdAt | date:'short' }}</td>
+                        <td>{{ apt.appointmentTime | date:'medium' }}</td>
                        <td>{{ apt.serviceType }}</td>
                        <td><span class="badge" [class]="apt.status.toLowerCase()">{{ apt.status }}</span></td>
                        <td class="action-cells">
@@ -268,7 +270,7 @@ import { AuthService } from '../../../core/auth.service';
                                      [(ngModel)]="workerNamesList[i]" 
                                      [name]="'worker' + i" 
                                      [placeholder]="'Staff Member ' + (i + 1)"
-                                     style="width: 100%; border-radius: 0.8rem; background: rgba(255,255,255,0.06); color: white; border: 1px solid var(--glass-border); padding: 0.8rem 1.2rem;">
+                                     class="worker-input">
                            </div>
                         </div>
                      </div>
@@ -378,9 +380,31 @@ import { AuthService } from '../../../core/auth.service';
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
     :host {
-      --primary: #3ddc84;
-      --primary-glow: rgba(61, 220, 132, 0.3);
       font-family: 'Manrope', sans-serif;
+    }
+
+    .assigned-worker-badge {
+      color: var(--primary);
+      font-weight: 700;
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+    }
+
+    .worker-input {
+      width: 100%;
+      border-radius: 0.8rem;
+      background: var(--glass);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+      padding: 0.8rem 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .worker-input:focus {
+      border-color: var(--primary);
+      background: rgba(var(--primary-rgb, 59, 130, 246), 0.05);
+      outline: none;
     }
 
     .dashboard-layout {
@@ -979,6 +1003,81 @@ import { AuthService } from '../../../core/auth.service';
       animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
+    @media (max-width: 1024px) {
+      .dashboard-sidebar { width: 80px; padding: 1.5rem 0.5rem; align-items: center; }
+      .brand-text, .nav-item span, .user-details, .badge { display: none; }
+      .business-brand { justify-content: center; padding: 0 0 1.5rem; }
+      .nav-item { justify-content: center; padding: 1rem; }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-layout { flex-direction: column; }
+      
+      .dashboard-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        flex-direction: row;
+        padding: 0;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        background: var(--surface-container);
+        z-index: 1000;
+        justify-content: space-around;
+      }
+
+      .business-brand, .user-profile-mini, .nav-divider { display: none; }
+
+      .sidebar-nav {
+         margin-top: 0;
+         flex-direction: row;
+         width: 100%;
+         height: 100%;
+         gap: 0;
+         padding: 0;
+      }
+
+      .nav-item {
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        padding: 0.5rem;
+        border-radius: 0;
+        font-size: 0.65rem;
+        height: 100%;
+      }
+      
+      .nav-item .material-icons { font-size: 1.4rem; }
+      .nav-item span { display: block; font-size: 0.6rem; }
+      .nav-item.active::before { display: none; }
+
+      .dashboard-main { padding: 1.5rem 1rem 100px; }
+      .dashboard-header { flex-direction: column; gap: 1.5rem; align-items: flex-start; margin-bottom: 2rem; }
+      .header-titles h1 { font-size: 2rem; }
+      
+      .analytics-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .card-premium-glass { padding: 1.5rem; border-radius: 1.5rem; }
+      
+      .content-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .orders-summary { margin-top: 1.5rem; }
+
+      .products-grid { grid-template-columns: 1fr; }
+      .product-card { padding: 1.25rem; }
+
+      .inquiry-thread-card { padding: 1.25rem; }
+      
+      .data-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .data-table { min-width: 600px; }
+
+      .form-row { grid-template-columns: 1fr !important; }
+
+      .modal-card { width: 95%; padding: 1.5rem; }
+    }
+
     .modal-header {
       display: flex;
       align-items: center;
@@ -1286,7 +1385,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
   }
 
   confirmWithWorker(apt: AppointmentDto) {
-    if (!this.currentShop?.workerNames) {
+    if (!this.currentShop?.workerNames || this.currentShop.workerNames.trim() === '') {
       this.updateAptStatus(apt.id, 'CONFIRMED');
       return;
     }
@@ -1299,7 +1398,11 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
     const worker = prompt(`Select a worker to assign (Available: ${workers.join(', ')})`, workers[0]);
     if (worker) {
-      this.updateAptStatus(apt.id, 'CONFIRMED', worker);
+      this.updateAptStatus(apt.id, 'CONFIRMED', worker.trim());
+    } else if (worker === '') {
+      // If they leave it blank but press OK, confirm without assignment or use default?
+      // Better to assign first one or cancel.
+      this.updateAptStatus(apt.id, 'CONFIRMED');
     }
   }
 
