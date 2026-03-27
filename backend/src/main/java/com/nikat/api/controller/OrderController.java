@@ -1,9 +1,7 @@
 package com.nikat.api.controller;
 
-import com.nikat.api.domain.Shop;
 import com.nikat.api.domain.User;
 import com.nikat.api.dto.OrderDto;
-import com.nikat.api.repository.ShopRepository;
 import com.nikat.api.service.AuthService;
 import com.nikat.api.service.ShopOrderService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ public class OrderController {
 
     private final ShopOrderService orderService;
     private final AuthService authService;
-    private final ShopRepository shopRepository;
 
     @PostMapping
     public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
@@ -41,15 +38,7 @@ public class OrderController {
             @RequestParam UUID shopId, 
             @RequestParam(required = false) String query) {
         User currentUser = authService.getCurrentUser();
-        Shop shop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new RuntimeException("Shop not found"));
-        
-        // Verify ownership
-        if (!shop.getOwner().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("Unauthorized access to shop orders");
-        }
-        
-        return ResponseEntity.ok(orderService.getShopOrders(shop, query));
+        return ResponseEntity.ok(orderService.getShopOrders(shopId, currentUser, query));
     }
 
     @PatchMapping("/{orderId}/status")

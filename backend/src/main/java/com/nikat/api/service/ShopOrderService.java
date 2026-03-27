@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ShopOrderService {
 
     private final ShopOrderRepository orderRepository;
@@ -60,7 +61,15 @@ public class ShopOrderService {
                 .stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public List<OrderDto> getShopOrders(Shop shop, String query) {
+    public List<OrderDto> getShopOrders(UUID shopId, User owner, String query) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new RuntimeException("Shop not found"));
+        
+        // Security check
+        if (!shop.getOwner().getId().equals(owner.getId())) {
+             throw new RuntimeException("Unauthorized: You do not own this shop");
+        }
+
         if (query == null || query.trim().isEmpty()) {
             return orderRepository.findByShopOrderByCreatedAtDesc(shop)
                     .stream().map(this::mapToDto).collect(Collectors.toList());
