@@ -25,10 +25,10 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
 
             <!-- Categories Accordion -->
             <div class="categories-section">
-              <span class="section-label">Categories</span>
+              <span class="section-label">Service Categories</span>
 
-              <div class="cat-group" (click)="selectCategory('all')">
-                <button class="cat-header" [class.active]="activeCategory === 'all'">
+              <div class="cat-group-item">
+                <button class="cat-header-main" [class.active]="activeCategory === 'all'" (click)="selectCategory('all')">
                   <div class="cat-header-left">
                     <span class="material-symbols-outlined cat-icon">grid_view</span>
                     <span class="cat-name">All Services</span>
@@ -36,13 +36,26 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
                 </button>
               </div>
 
-              <div class="cat-group" *ngFor="let cat of categories" (click)="selectCategory(cat.id)">
-                <button class="cat-header" [class.active]="activeCategory === cat.id">
+              <!-- Nested Accordion Groups -->
+              <div class="cat-accordion" *ngFor="let group of groupedCategories">
+                <div class="cat-group-header" (click)="toggleGroup(group.name)">
                   <div class="cat-header-left">
-                    <span class="material-symbols-outlined cat-icon">category</span>
-                    <span class="cat-name">{{cat.name}}</span>
+                    <span class="material-symbols-outlined cat-icon-main">{{ group.icon }}</span>
+                    <span class="group-name">{{ group.name }}</span>
                   </div>
-                </button>
+                  <span class="material-symbols-outlined accordion-chevron" [class.rotated]="expandedGroups.has(group.name)">
+                    expand_more
+                  </span>
+                </div>
+                
+                <div class="group-content" [class.expanded]="expandedGroups.has(group.name)">
+                  <button class="sub-cat-item" 
+                          *ngFor="let cat of group.categories" 
+                          [class.active]="activeCategory === cat.id"
+                          (click)="selectCategory(cat.id)">
+                    {{ cat.name }}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -322,50 +335,89 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
       margin-bottom: 0.5rem;
     }
 
-    /* Categories */
-    .categories-section { display: flex; flex-direction: column; gap: 0.5rem; }
-
-    .cat-group {
+    .categories-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 0.75rem;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      border-radius: 1rem;
+      padding: 1rem;
+      max-height: 500px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-glow) transparent;
     }
-    .cat-header {
+    .categories-section::-webkit-scrollbar { width: 4px; }
+    .categories-section::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 4px; }
+
+    .cat-group-item { margin-bottom: 0.25rem; }
+    .cat-header-main {
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
+      padding: 0.75rem;
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
       color: var(--text-main);
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
     }
-    .cat-header:hover { background: var(--glass-border); }
-    .cat-header-left { display: flex; align-items: center; gap: 0.75rem; }
-    .cat-icon { color: var(--accent); font-size: 1.25rem; }
-    .cat-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.875rem; }
-    .cat-chevron { color: var(--text-muted); font-size: 1.25rem; transition: transform 0.3s; }
-    .cat-chevron.rotated { transform: rotate(90deg); color: var(--accent); }
+    .cat-header-main:hover { background: var(--glass-border); }
+    .cat-header-main.active { background: var(--primary); color: white; }
+    .cat-header-main.active .cat-icon { color: white; }
 
-    .cat-children {
-      padding: 0 1rem 1rem 2.75rem;
+    .cat-accordion {
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
     }
-    .cat-child {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .cat-child:hover, .cat-child.active { color: var(--accent); font-weight: 700; }
+    .cat-accordion:last-child { border-bottom: none; }
 
+    .cat-group-header {
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-radius: 0.75rem;
+      transition: background 0.2s;
+    }
+    .cat-group-header:hover { background: var(--glass-border); }
+
+    .cat-icon-main { color: var(--accent); font-size: 1.25rem; }
+    .group-name { font-weight: 700; font-size: 0.9rem; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .accordion-chevron { font-size: 1.25rem; color: var(--text-muted); transition: transform 0.3s; }
+    .accordion-chevron.rotated { transform: rotate(180deg); color: var(--accent); }
+
+    .group-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .group-content.expanded {
+      max-height: 500px; /* arbitrary large value */
+      padding: 0.5rem 0.5rem 0.75rem 2.85rem;
+    }
+
+    .sub-cat-item {
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-cat-item:hover { color: var(--accent); background: var(--glass-border); }
+    .sub-cat-item.active { color: var(--accent); font-weight: 800; background: var(--accent-glow); }
     /* Quick Filters */
     .quick-filters { border-top: 1px solid var(--border-color); padding-top: 1rem; }
     .filter-options { display: flex; flex-direction: column; gap: 1rem; padding: 0 0.5rem; }
@@ -589,6 +641,135 @@ export class ServicesComponent implements OnInit {
   activeCategory = 'all';
   filters = { openNow: true, topRated: false, nearby: true };
   categories: CategoryDto[] = [];
+  groupedCategories: any[] = [];
+  expandedGroups: Set<string> = new Set(['Home Maintenance']); // Default open
+
+  private categoryMappings: {[key: string]: string} = {
+    // Home Maintenance
+    'Electrician': 'Home Maintenance',
+    'Plumber': 'Home Maintenance',
+    'Painter': 'Home Maintenance',
+    'Mason': 'Home Maintenance',
+    'Carpenter': 'Home Maintenance',
+    'Ironsmith': 'Home Maintenance',
+    'Welding': 'Home Maintenance',
+    'Zipper Repair': 'Home Maintenance',
+    'Chain Repair': 'Home Maintenance',
+    'Sewing Machine Repair': 'Home Maintenance',
+    'Gas Stove Repair': 'Home Maintenance',
+    'RO Repair': 'Home Maintenance',
+    'Water Purifier': 'Home Maintenance',
+    'Watch Repair': 'Home Maintenance',
+    'Clock Repair': 'Home Maintenance',
+    'Shoe Repair': 'Home Maintenance',
+    'Slipper Repair': 'Home Maintenance',
+    'Mirror Installation': 'Home Maintenance',
+    'Glass Installation': 'Home Maintenance',
+    'AC Repair': 'Home Maintenance',
+    'Fridge Repair': 'Home Maintenance',
+    'Geyser Repair': 'Home Maintenance',
+    'Electrical Equipment Repair': 'Home Maintenance',
+
+    // Daily Essentials
+    'Grocery Shop': 'Daily Essentials',
+    'Milk Delivery': 'Daily Essentials',
+    'Dairy Shop': 'Daily Essentials',
+    'Bakery': 'Daily Essentials',
+    'Sweets Shop': 'Daily Essentials',
+    'Snack Shop': 'Daily Essentials',
+    'Ice Cream Shop': 'Daily Essentials',
+    'Juice Seller': 'Daily Essentials',
+    'Panwadi': 'Daily Essentials',
+    'Paan Shop': 'Daily Essentials',
+    'Chicken Shop': 'Daily Essentials',
+    'Meat Shop': 'Daily Essentials',
+    'Fish Shop': 'Daily Essentials',
+    'Newspaper Distributor': 'Daily Essentials',
+    'Flower Distributor': 'Daily Essentials',
+    'Garbage Collector': 'Daily Essentials',
+
+    // Personal Care & Fitness
+    'Barber Shop': 'Personal Care',
+    'Beautician': 'Personal Care',
+    'Beauty Parlour': 'Personal Care',
+    'Salon': 'Personal Care',
+    'Spa': 'Personal Care',
+    'Massage': 'Personal Care',
+    'Gym': 'Personal Care',
+    'Fitness Center': 'Personal Care',
+    'Yoga Trainer': 'Personal Care',
+
+    // Health & Medical
+    'Doctor': 'Health & Medical',
+    'Clinic': 'Health & Medical',
+    'Chemist': 'Health & Medical',
+    'Pharmacy': 'Health & Medical',
+    'Dentist': 'Health & Medical',
+    'Diagnostic Lab': 'Health & Medical',
+    'Physiotherapy': 'Health & Medical',
+    'Nurse': 'Health & Medical',
+    'Ayurvedic': 'Health & Medical',
+    'Patanjali': 'Health & Medical',
+
+    // Tech & Digital
+    'Wi-Fi': 'Tech & Digital',
+    'Mobile Shop': 'Tech & Digital',
+    'Mobile Repair': 'Tech & Digital',
+    'TV Repair': 'Tech & Digital',
+    'Laptop Repair': 'Tech & Digital',
+    'Computer Repair': 'Tech & Digital',
+    'Gaming Console': 'Tech & Digital',
+    'Cyber Cafe': 'Tech & Digital',
+    'Photocopy': 'Tech & Digital',
+    'Lamination': 'Tech & Digital',
+    'Printout': 'Tech & Digital',
+    'Electronics Shop': 'Tech & Digital',
+
+    // Professional & Education
+    'School': 'Professional & Education',
+    'Tuition': 'Professional & Education',
+    'Educational Service': 'Professional & Education',
+    'Property Dealer': 'Professional & Education',
+    'Real Estate': 'Professional & Education',
+    'Photographer': 'Professional & Education',
+    'Photo Studio': 'Professional & Education',
+    'Packers and Movers': 'Professional & Education',
+
+    // Neighborhood & Domestic
+    'Househelp': 'Neighborhood & Domestic',
+    'House maid': 'Neighborhood & Domestic',
+    'Nanny': 'Neighborhood & Domestic',
+    'Cook': 'Neighborhood & Domestic',
+    'Sewage Repair': 'Neighborhood & Domestic',
+
+    // Fashion & Lifestyle
+    'Tailor': 'Fashion & Lifestyle',
+    'Ladies Tailor': 'Fashion & Lifestyle',
+    'Gents Tailor': 'Fashion & Lifestyle',
+    'Saree Shop': 'Fashion & Lifestyle',
+    'Raw Cloth': 'Fashion & Lifestyle',
+    'Ladies Wear': 'Fashion & Lifestyle',
+    'Gents Wear': 'Fashion & Lifestyle',
+    'Kids Wear': 'Fashion & Lifestyle',
+    'Religious Items': 'Fashion & Lifestyle',
+    'Sports Shop': 'Fashion & Lifestyle',
+    'Stationery': 'Fashion & Lifestyle',
+    'Party Decoration': 'Fashion & Lifestyle',
+    'Jewellery Shop': 'Fashion & Lifestyle',
+    'Gardener': 'Fashion & Lifestyle'
+  };
+
+  private groupIcons: {[key: string]: string} = {
+    'Home Maintenance': 'build_circle',
+    'Daily Essentials': 'shopping_basket',
+    'Personal Care': 'face',
+    'Health & Medical': 'medical_services',
+    'Tech & Digital': 'devices',
+    'Professional & Education': 'school',
+    'Neighborhood & Domestic': 'diversity_3',
+    'Fashion & Lifestyle': 'checkroom',
+    'Others': 'more_horiz'
+  };
 
   constructor(private apiService: ApiService) {}
 
@@ -601,9 +782,44 @@ export class ServicesComponent implements OnInit {
     this.apiService.getCategories().subscribe({
       next: (cats) => {
         this.categories = cats.filter(c => c.isServiceProviderCategory);
+        this.groupCategories();
       },
       error: (err) => console.error('Failed to load categories:', err)
     });
+  }
+
+  groupCategories() {
+    const groups: {[key: string]: CategoryDto[]} = {};
+    
+    // Normalize mappings for case-insensitive lookup
+    const normalizedMappings: {[key: string]: string} = {};
+    Object.keys(this.categoryMappings).forEach(key => {
+      normalizedMappings[key.toLowerCase()] = this.categoryMappings[key];
+    });
+
+    this.categories.forEach(cat => {
+      const groupName = normalizedMappings[cat.name?.trim().toLowerCase()] || 'Others';
+      if (!groups[groupName]) groups[groupName] = [];
+      groups[groupName].push(cat);
+    });
+
+    this.groupedCategories = Object.keys(groups).map(name => ({
+      name,
+      icon: this.groupIcons[name] || 'category',
+      categories: groups[name]
+    })).sort((a, b) => {
+      if (a.name === 'Others') return 1;
+      if (b.name === 'Others') return -1;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  toggleGroup(groupName: string) {
+    if (this.expandedGroups.has(groupName)) {
+      this.expandedGroups.delete(groupName);
+    } else {
+      this.expandedGroups.add(groupName);
+    }
   }
 
   loadServices() {
