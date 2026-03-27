@@ -17,7 +17,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryDto> getAllCategories() {
-        return categoryRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
+        return categoryRepository.findAllByOrderByNameAsc().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     public CategoryDto getCategoryById(UUID id) {

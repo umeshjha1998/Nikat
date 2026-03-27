@@ -63,7 +63,7 @@ import { AuthService } from '../../../core/auth.service';
               <span class="material-symbols-outlined">edit</span>
             </button>
           </h1>
-          <p class="shop-tagline">{{shop.tagline}}</p>
+          <p class="shop-tagline">{{shop.description}}</p>
           <div class="meta-row">
             <div class="meta-item rating-item">
               <span class="material-symbols-outlined star-filled">star</span>
@@ -720,7 +720,6 @@ export class ShopDetailComponent implements OnInit {
   shop: any = {
     name: 'The Golden Crust',
     category: 'Artisan Bakery',
-    tagline: 'Where tradition meets taste. Hand-crafted artisan breads and pastries baked fresh daily with locally sourced ingredients.',
     rating: 4.8,
     reviewCount: 128,
     address: '42 Baker Street, Downtown Core',
@@ -797,6 +796,7 @@ export class ShopDetailComponent implements OnInit {
               latitude: s.latitude,
               longitude: s.longitude
             };
+            this.checkOwnership();
           }
         }
       });
@@ -809,7 +809,6 @@ export class ShopDetailComponent implements OnInit {
             image: p.imageUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
             chips: ['Verified', 'Local']
           }));
-          this.checkOwnership();
         }
       });
     }
@@ -933,7 +932,8 @@ export class ShopDetailComponent implements OnInit {
   initHoursEditor() {
     const current = this.displayBusinessHours;
     this.editHoursData = current.map((h: any) => {
-       const [open, close] = h.time ? h.time.split(' - ') : ['09:00', '21:00'];
+       const timeRange = (h.time && h.time.includes(' - ')) ? h.time : '09:00 AM - 09:00 PM';
+       const [open, close] = timeRange.split(' - ');
        return { 
           day: h.day, 
           open: this.to24h(open) || '09:00', 
@@ -944,12 +944,15 @@ export class ShopDetailComponent implements OnInit {
   }
 
   private to24h(timeStr: string) {
-    if (!timeStr) return null;
-    const [time, modifier] = timeStr.split(' ');
+    if (!timeStr || timeStr === 'Closed') return null;
+    const parts = timeStr.split(' ');
+    if (parts.length < 2) return timeStr; // Already in 24h or malformed
+    const time = parts[0];
+    const modifier = parts[1];
     let [hours, minutes] = time.split(':');
     if (hours === '12') hours = '00';
     if (modifier === 'PM' && hours !== '12') hours = (parseInt(hours, 10) + 12).toString();
-    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    return `${hours.padStart(2, '0')}:${minutes || '00'}`;
   }
 
   private to12h(time24: string) {
@@ -975,19 +978,53 @@ export class ShopDetailComponent implements OnInit {
     this.editShopData.amenities = ids.join(',');
   }
 
+  private getShopPayload(): any {
+    return {
+      id: this.shop.id,
+      ownerId: this.shop.ownerId,
+      name: this.shop.name,
+      categoryId: this.shop.categoryId,
+      workerCount: this.shop.workerCount,
+      workerNames: this.shop.workerNames,
+      description: this.shop.description,
+      address: this.shop.address,
+      openingHours: this.shop.openingHours,
+      openingTime: this.shop.openingTime,
+      closingTime: this.shop.closingTime,
+      phoneNumber: this.shop.phoneNumber,
+      latitude: this.shop.latitude,
+      longitude: this.shop.longitude,
+      ourStory: this.shop.ourStory,
+      amenities: this.shop.amenities,
+      dailyHours: this.shop.dailyHours
+    };
+  }
+
   saveShopAbout() {
     this.shop.ourStory = this.editShopData.ourStory;
-    this.apiService.updateShop(this.shop.id, this.shop).subscribe(() => {
+    this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
+      next: () => {
         this.isEditingAbout = false;
-        alert('Description updated!');
+        alert('Our story updated successfully!');
+      },
+      error: (err) => {
+        console.error('Failed to update our story', err);
+        alert('Failed to update our story. Please try again.');
+      }
     });
   }
 
   saveShopAmenities() {
     this.shop.amenities = this.editShopData.amenities;
-    this.apiService.updateShop(this.shop.id, this.shop).subscribe(() => {
+    this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
+      next: () => {
         this.isEditingAmenities = false;
-        alert('Amenities updated!');
+        alert('Amenities updated successfully!');
+      },
+      error: (err) => {
+        console.error('Failed to update amenities', err);
+        alert('Failed to update amenities. Please try again.');
+      }
     });
   }
 
@@ -998,9 +1035,15 @@ export class ShopDetailComponent implements OnInit {
        closed: h.closed
     }));
     this.shop.dailyHours = JSON.stringify(finalHours);
-    this.apiService.updateShop(this.shop.id, this.shop).subscribe(() => {
+    this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
+      next: () => {
         this.isEditingHours = false;
-        alert('Business hours updated!');
+        alert('Business hours updated successfully!');
+      },
+      error: (err) => {
+        console.error('Failed to update business hours', err);
+        alert('Failed to update business hours. Please try again.');
+      }
     });
   }
 
@@ -1070,11 +1113,14 @@ export class ShopDetailComponent implements OnInit {
 
   editBasicInfo() {
      const name = prompt('Enter Business Name', this.shop.name);
-     const tag = prompt('Enter Business Tagline', this.shop.tagline);
+     const desc = prompt('Enter Business Description', this.shop.description);
      if (name) {
         this.shop.name = name;
-        this.shop.tagline = tag;
-        this.apiService.updateShop(this.shop.id, this.shop).subscribe();
+        this.shop.description = desc;
+        this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
+           next: () => alert('Quick info updated!'),
+           error: () => alert('Failed to update quick info.')
+        });
      }
   }
 }

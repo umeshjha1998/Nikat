@@ -284,12 +284,14 @@ import { AuthService } from '../../../core/auth.service';
                    <label>Business Description</label>
                    <textarea rows="4" [(ngModel)]="currentShop.description" name="desc"></textarea>
                 </div>
-                <div class="form-group">
-                   <label>Business Category</label>
-                   <select [(ngModel)]="currentShop.categoryId" name="cat" style="background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.85rem 1.25rem; border-radius: 1rem;">
-                      <option [value]="null">Select Category</option>
-                      <option *ngFor="let c of categories" [value]="c.id">{{c.name}}</option>
-                   </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Business Category</label>
+                        <select [(ngModel)]="currentShop.categoryId" name="cat" class="glass-select">
+                            <option [value]="null" disabled selected>Select a category</option>
+                            <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-row">
                    <div class="form-group">
