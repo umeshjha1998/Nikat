@@ -527,6 +527,6 @@ export class ServiceBookingComponent implements OnInit {
   }
 
   goToDashboard() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate([this.authService.getHomeDashboardRoute()]);
   }
 }

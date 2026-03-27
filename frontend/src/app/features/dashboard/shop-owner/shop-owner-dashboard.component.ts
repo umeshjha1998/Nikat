@@ -199,16 +199,23 @@ import { AuthService } from '../../../core/auth.service';
                    </tr>
                 </thead>
                 <tbody>
-                   <tr *ngFor="let apt of appointments">
-                      <td>{{ apt.userName }}</td>
-                      <td>{{ apt.appointmentTime | date:'medium' }}</td>
-                      <td>{{ apt.serviceType }}</td>
-                      <td><span class="badge" [class]="apt.status.toLowerCase()">{{ apt.status }}</span></td>
-                      <td class="action-cells">
-                         <button class="btn-icon ok" (click)="updateAptStatus(apt.id, 'CONFIRMED')" *ngIf="apt.status === 'PENDING'"><span class="material-icons">check_circle</span></button>
-                         <button class="btn-icon cancel" (click)="updateAptStatus(apt.id, 'CANCELLED')" *ngIf="apt.status !== 'CANCELLED'"><span class="material-icons">cancel</span></button>
-                      </td>
-                   </tr>
+                    <tr *ngFor="let apt of appointments">
+                       <td>
+                          {{ apt.userName }}<br>
+                          <small *ngIf="apt.assignedWorker" style="color: var(--primary); font-weight: 600;">Assigned: {{ apt.assignedWorker }}</small>
+                       </td>
+                       <td>{{ apt.appointmentTime | date:'medium' }}</td>
+                       <td>{{ apt.serviceType }}</td>
+                       <td><span class="badge" [class]="apt.status.toLowerCase()">{{ apt.status }}</span></td>
+                       <td class="action-cells">
+                          <button class="btn-icon ok" (click)="confirmWithWorker(apt)" *ngIf="apt.status === 'PENDING' || apt.status === 'CANCELLED'" title="Confirm Appointment">
+                             <span class="material-icons">assignment_ind</span>
+                          </button>
+                          <button class="btn-icon cancel" (click)="updateAptStatus(apt.id, 'CANCELLED')" *ngIf="apt.status === 'PENDING' || apt.status === 'CONFIRMED'" title="Cancel Appointment">
+                             <span class="material-icons">cancel</span>
+                          </button>
+                       </td>
+                    </tr>
                 </tbody>
              </table>
              <div *ngIf="appointments.length === 0" class="empty-state-large">
@@ -247,9 +254,24 @@ import { AuthService } from '../../../core/auth.service';
                       <label>Shop Name</label>
                       <input type="text" [(ngModel)]="currentShop.name" name="name" required>
                    </div>
-                   <div class="form-group">
-                      <label>Workers Count</label>
-                      <input type="number" [(ngModel)]="currentShop.workerCount" name="workers">
+                   <div class="form-row">
+                     <div class="form-group">
+                        <label>Workers Count</label>
+                        <input type="number" [(ngModel)]="currentShop.workerCount" name="workers">
+                     </div>
+                     <div class="form-group">
+                        <label>Worker Names (Comma separated)</label>
+                        <input type="text" [(ngModel)]="currentShop.workerNames" name="workerNames" style="display: none;">
+                        <div style="display: grid; gap: 0.8rem; margin-top: 0.8rem;">
+                           <div *ngFor="let i of workerRange; trackBy: trackByFn">
+                              <input type="text" 
+                                     [(ngModel)]="workerNamesList[i]" 
+                                     [name]="'worker' + i" 
+                                     [placeholder]="'Staff Member ' + (i + 1)"
+                                     style="width: 100%; border-radius: 0.8rem; background: rgba(255,255,255,0.06); color: white; border: 1px solid var(--glass-border); padding: 0.8rem 1.2rem;">
+                           </div>
+                        </div>
+                     </div>
                    </div>
                 </div>
                 <div class="form-group">
@@ -997,6 +1019,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
     isAvailable: true,
     imageUrl: ''
   };
+  workerNamesList: string[] = [];
 
   constructor(private apiService: ApiService) {}
   private authService = inject(AuthService);
@@ -1013,6 +1036,14 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   get newInquiriesCount(): number {
     return this.inquiries.filter((i: InquiryDto) => i.status === 'OPEN').length;
+  }
+
+  get workerRange() {
+    return Array.from({ length: this.currentShop?.workerCount || 0 }, (_, i) => i);
+  }
+
+  trackByFn(index: any, item: any) {
+    return index;
   }
 
   ngOnInit() {
@@ -1039,6 +1070,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
       next: (shops) => {
         if (shops.length > 0) {
           this.currentShop = shops[0];
+          this.workerNamesList = (this.currentShop.workerNames || '').split(',').map(n => n.trim());
           this.loadDashboardData(this.currentShop.id);
         } else {
           this.currentShop = null;
@@ -1214,6 +1246,12 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   saveSettings() {
     if (!this.currentShop) return;
+
+    // Sync array back to comma string
+    this.currentShop.workerNames = this.workerNamesList
+      .filter(n => n && n.trim())
+      .join(',');
+
     this.apiService.updateShop(this.currentShop.id, this.currentShop).subscribe({
       next: (updatedShop) => {
         this.currentShop = updatedShop;
@@ -1247,8 +1285,29 @@ export class ShopOwnerDashboardComponent implements OnInit {
      }
   }
 
-  updateAptStatus(id: string, status: string) {
-     this.apiService.updateAppointmentStatus(id, status).subscribe(updated => {
+  confirmWithWorker(apt: AppointmentDto) {
+    if (!this.currentShop?.workerNames) {
+      this.updateAptStatus(apt.id, 'CONFIRMED');
+      return;
+    }
+
+    const workers = this.currentShop.workerNames.split(',').map(w => w.trim()).filter(w => w);
+    if (workers.length === 0) {
+      this.updateAptStatus(apt.id, 'CONFIRMED');
+      return;
+    }
+
+    const worker = prompt(`Select a worker to assign (Available: ${workers.join(', ')})`, workers[0]);
+    if (worker) {
+      this.updateAptStatus(apt.id, 'CONFIRMED', worker);
+    }
+  }
+
+  updateAptStatus(id: string, status: string, workerName?: string) {
+     const msg = status === 'CONFIRMED' ? 'Are you sure you want to approve this appointment?' : 'Are you sure you want to cancel this appointment?';
+     if (!confirm(msg)) return;
+ 
+     this.apiService.updateAppointmentStatus(id, status, workerName).subscribe(updated => {
         const idx = this.appointments.findIndex(a => a.id === id);
         if (idx > -1) this.appointments[idx] = updated;
      });

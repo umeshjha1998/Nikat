@@ -21,8 +21,11 @@ public class AppointmentController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<AppointmentDto> updateStatus(@PathVariable UUID id, @RequestParam String status) {
-        return ResponseEntity.ok(appointmentService.updateStatus(id, status));
+    public ResponseEntity<AppointmentDto> updateStatus(
+            @PathVariable UUID id, 
+            @RequestParam String status,
+            @RequestParam(required = false) String workerName) {
+        return ResponseEntity.ok(appointmentService.updateStatus(id, status, workerName));
     }
 
     @PostMapping

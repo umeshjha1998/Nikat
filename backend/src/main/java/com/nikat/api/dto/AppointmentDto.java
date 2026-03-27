@@ -18,4 +18,5 @@ public class AppointmentDto {
     private String serviceType;
     private String status;
     private String notes;
+    private String assignedWorker;
 }

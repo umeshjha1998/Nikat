@@ -15,6 +15,7 @@ public class ShopDto {
     private String categoryName;
     private UUID categoryId;
     private Integer workerCount;
+    private String workerNames;
     private String description;
     private String address;
     private String openingHours;

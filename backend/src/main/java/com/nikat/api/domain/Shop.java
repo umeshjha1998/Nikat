@@ -32,6 +32,9 @@ public class Shop {
     @Column(name = "worker_count")
     private Integer workerCount;
 
+    @Column(name = "worker_names", columnDefinition = "TEXT")
+    private String workerNames;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 

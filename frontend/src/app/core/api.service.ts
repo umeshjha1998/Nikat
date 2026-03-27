@@ -11,6 +11,7 @@ export interface ShopDto {
   categoryName: string;
   categoryId: string;
   workerCount: number;
+  workerNames: string;
   description: string;
   address: string;
   openingHours: string;
@@ -67,6 +68,7 @@ export interface AppointmentDto {
   serviceType: string;
   status: string;
   notes: string;
+  assignedWorker: string;
 }
 
 export interface ProductDto {
@@ -127,8 +129,12 @@ export class ApiService {
     return this.http.get<AppointmentDto[]>(`${this.apiUrl}/appointments/shop/${shopId}`);
   }
 
-  updateAppointmentStatus(appointmentId: string, status: string): Observable<AppointmentDto> {
-    return this.http.patch<AppointmentDto>(`${this.apiUrl}/appointments/${appointmentId}/status?status=${status}`, {});
+  updateAppointmentStatus(appointmentId: string, status: string, workerName?: string): Observable<AppointmentDto> {
+    let url = `${this.apiUrl}/appointments/${appointmentId}/status?status=${status}`;
+    if (workerName) {
+      url += `&workerName=${encodeURIComponent(workerName)}`;
+    }
+    return this.http.patch<AppointmentDto>(url, {});
   }
 
   createAppointment(appointment: Partial<AppointmentDto>): Observable<AppointmentDto> {

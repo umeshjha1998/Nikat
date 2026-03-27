@@ -102,4 +102,13 @@ export class AuthService {
   updatePassword(id: string, passwords: any): Observable<any> {
     return this.http.patch(`${this.apiUrl}/users/${id}/password`, passwords);
   }
+
+  getHomeDashboardRoute(): string {
+    const user = this.currentUser;
+    if (!user) return '/login';
+    if (user.role === 'ADMIN') return '/admin';
+    if (user.isShopOwner) return '/shop-dashboard';
+    if (user.isServiceProvider) return '/provider-dashboard';
+    return '/dashboard';
+  }
 }

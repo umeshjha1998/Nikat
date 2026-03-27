@@ -38,6 +38,9 @@ public class Appointment {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
+    @Column(name = "assigned_worker", length = 200)
+    private String assignedWorker;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

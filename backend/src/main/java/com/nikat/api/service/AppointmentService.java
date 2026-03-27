@@ -23,10 +23,13 @@ public class AppointmentService {
         return appointmentRepository.findByShopId(shopId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public AppointmentDto updateStatus(UUID appointmentId, String status) {
+    public AppointmentDto updateStatus(UUID appointmentId, String status, String workerName) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
         appointment.setStatus(status);
+        if (workerName != null) {
+            appointment.setAssignedWorker(workerName);
+        }
         return mapToDto(appointmentRepository.save(appointment));
     }
 
@@ -60,6 +63,7 @@ public class AppointmentService {
                 .serviceType(appointment.getServiceType())
                 .status(appointment.getStatus())
                 .notes(appointment.getNotes())
+                .assignedWorker(appointment.getAssignedWorker())
                 .build();
     }
 }

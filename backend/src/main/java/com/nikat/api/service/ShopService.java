@@ -79,7 +79,18 @@ public class ShopService {
                 .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
         
         shop.setName(dto.getName());
+        
+        // Validation: number of names depends on worker count
+        if (dto.getWorkerNames() != null && !dto.getWorkerNames().trim().isEmpty()) {
+            String[] namesArr = dto.getWorkerNames().split(",");
+            int count = (int) java.util.Arrays.stream(namesArr).filter(n -> !n.trim().isEmpty()).count();
+            if (count > dto.getWorkerCount()) {
+                throw new RuntimeException("You cannot provide more than " + dto.getWorkerCount() + " worker names.");
+            }
+        }
+
         shop.setWorkerCount(dto.getWorkerCount());
+        shop.setWorkerNames(dto.getWorkerNames());
         shop.setDescription(dto.getDescription());
         shop.setAddress(dto.getAddress());
         shop.setOpeningHours(dto.getOpeningHours());
@@ -105,6 +116,7 @@ public class ShopService {
                 .categoryName(shop.getCategory() != null ? shop.getCategory().getName() : null)
                 .categoryId(shop.getCategory() != null ? shop.getCategory().getId() : null)
                 .workerCount(shop.getWorkerCount())
+                .workerNames(shop.getWorkerNames())
                 .description(shop.getDescription())
                 .address(shop.getAddress())
                 .openingHours(shop.getOpeningHours())
