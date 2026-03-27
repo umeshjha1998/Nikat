@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../../core/api.service';
+import { ApiService, CategoryDto } from '../../../core/api.service';
 
 @Component({
   selector: 'app-browse',
@@ -35,11 +35,13 @@ import { ApiService } from '../../../core/api.service';
       <section class="category-bar">
         <div class="category-bar-inner">
           <div class="category-pills">
-            <button class="pill" [class.active]="activeCategory === 'all'" (click)="activeCategory = 'all'">All Shops</button>
-            <button class="pill" [class.active]="activeCategory === 'food'" (click)="activeCategory = 'food'">Food & Beverage</button>
-            <button class="pill" [class.active]="activeCategory === 'retail'" (click)="activeCategory = 'retail'">Retail</button>
-            <button class="pill" [class.active]="activeCategory === 'electronics'" (click)="activeCategory = 'electronics'">Electronics</button>
-            <button class="pill" [class.active]="activeCategory === 'home'" (click)="activeCategory = 'home'">Home Essentials</button>
+            <button class="pill" [class.active]="activeCategory === 'all'" (click)="filterByCategory('all')">All Shops</button>
+            <button class="pill" 
+                    *ngFor="let cat of categories" 
+                    [class.active]="activeCategory === cat.id" 
+                    (click)="filterByCategory(cat.id)">
+              {{cat.name}}
+            </button>
           </div>
           <button class="btn-filter">
             <span class="material-symbols-outlined">tune</span>
@@ -373,36 +375,60 @@ import { ApiService } from '../../../core/api.service';
 })
 export class BrowseComponent implements OnInit {
   activeCategory = 'all';
-
-  displayShops = [
-    { id: 1, name: 'The Golden Crust', category: 'Bakery', description: 'Local bakery: pastries, cakes, donuts, and patties. Freshly baked artisanal sourdough and custom celebration cakes available daily.', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm', rating: '4.8', isOpen: true, tagColor: 'tertiary', footerLabel: 'Starting from', footerValue: '₹120' },
-    { id: 2, name: 'TechFix Pro', category: 'Electronics', description: 'Local mobile repair: screen replacement, battery upgrades, and software fixes. Certified technicians for all major smartphone brands.', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB9nlhIe_9RaJYg5ng7qEzeNCEE3Dk0Hua6396lvQ-cjUU3isjKJKwE8sGOyCiNN7pYy3nFij0cenz9z7L63BX7CogPPg6ehhbqNbrECo5kXVjJuetvMwZWzQKuTTwStPFNUam9I5jt1R9v3fX6G9yM9hPLFokFnFU7xgNVdIT3efNlW1wheSUlHvIGvVE5PxW7UGLszNYG_FhNUSrspfuVe2gC3okSs3nXLX0Ja1TnE4xhE05s6ibnPVxY0w7Iu9Hfv0bvJP-4GOTR', rating: '4.5', isOpen: true, tagColor: 'primary', footerLabel: 'Starting from', footerValue: '₹499' },
-    { id: 3, name: 'Nikat Mart', category: 'Grocery', description: 'Local grocery: fresh organic vegetables, daily essentials, and imported gourmet snacks. Quick neighborhood delivery available.', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTiKWCoRD3P5rPIAu0YXAH2NFEYx7yPloOczlD00hPHZvmK2bjIRF55FWkvaePzQAG2BA6NMNMDyskyC2cjrtzumcDq-63tdoc2tYbNetYmj8hADYFo2eWIEG-x4rlcibqwiVST7UPEVpd3Ynt7_uodDhOL5ZAn5fG_zRsMY6RyaygI5hgFhPEiYKPaUZfKomKZEcxzvoICTdmrmcsAIcfBmc8Pc3cYcwe17WX2k1IA37CGzZ3zMs7SKkB4-uFp1J39bxnpHkFkJAa', rating: '4.2', isOpen: false, tagColor: 'secondary', footerLabel: 'Free Delivery', footerValue: 'Min ₹200' },
-    { id: 4, name: 'Sweet Delights', category: 'Sweets Shop', description: 'Local sweets shop: traditional mithai, handcrafted laddoos, and modern fusion desserts. Pure ghee preparations only.', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUsuAfvwhrFfOLDeqIh9jssV5dDYr4128gK4R1OjZxeSCTrgLiXW_sLN_0I2baZ3EsypaWtPfiUNvYRrGdPWD5WlkT7vuYJN2CX9cnA4SnBsHmZuJCFnUQBUdJWH3qOJyab8dFMnxIme0I7QjwsZGFMGiDvzCLKaJN1mHfCzXtGlwKkDtFgLmN_yFEKvQ9ndJUTlB6YqTUiTEoYKmRFphZC2NuYu6euyu4xT0bEdwcLhuSL16lOZr82Mh8KRsn9plMdkPyt7NvYRx6', rating: '4.9', isOpen: true, tagColor: 'tertiary', footerLabel: 'Bestseller', footerValue: 'Milk Cake' },
-    { id: 5, name: 'The Urban Attic', category: 'Retail', description: 'Local retail shop: sustainable fashion, artisanal home decor, and handcrafted lifestyle accessories for modern living.', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDFV6aXv3PNZWzm9CIFv4wrVFW0N2vnrMUxPwvakN_FBV45W1KktpOlkH7cY76QSsLtsghU7md5Xojkcy0yBm-bBAFctX01za4DXaP07FceWA83JcFW6pRLi1giczaMXAdAjEgoMR-WfATzVIF-7d2Cam97NQKxMOlizm9UvbzhWhPgUvBs_Ia4w0H5R-EU_k0K-MgRK-WtCTwnJshIRQuZF1KhxpNJ7RVOVPcpot3efHu7njCaotQHSRWnaVX1Uij-uqd8PTSG-d_S', rating: '4.6', isOpen: true, tagColor: 'primary', footerLabel: 'New Arrival', footerValue: 'Linen Set' }
-  ];
+  shops: any[] = [];
+  displayShops: any[] = [];
+  categories: CategoryDto[] = [];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
+    this.loadCategories();
+    this.loadShops();
+  }
+
+  loadCategories() {
+    this.apiService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats.filter(c => c.isShopCategory);
+      },
+      error: (err) => console.error('Failed to load categories:', err)
+    });
+  }
+
+  loadShops() {
     this.apiService.getShops().subscribe({
       next: (shops: any[]) => {
         if (shops && shops.length > 0) {
           const apiShops = shops.map((s: any) => ({
             id: s.id,
             name: s.name,
+            categoryId: s.categoryId,
             category: s.categoryName || 'Local Business',
             description: s.description || 'Premium local shop offering exceptional quality.',
             image: s.photos && s.photos.length > 0 ? s.photos[0] : 'https://images.unsplash.com/photo-1517248135467-4c7ed9d42177?auto=format&fit=crop&q=80',
-            rating: (4.0 + Math.random()).toFixed(1), // TODO: Real ratings from backend
+            rating: (4.0 + Math.random()).toFixed(1), 
             isOpen: s.isOpen,
             tagColor: 'primary',
             footerLabel: 'Starting from',
             footerValue: s.startingPrice ? '₹' + s.startingPrice : 'No products yet'
           }));
-          this.displayShops = apiShops;
+          this.shops = apiShops;
+          this.filterShops();
         }
       }
     });
+  }
+
+  filterByCategory(categoryId: string) {
+    this.activeCategory = categoryId;
+    this.filterShops();
+  }
+
+  filterShops() {
+    if (this.activeCategory === 'all') {
+      this.displayShops = this.shops;
+    } else {
+      this.displayShops = this.shops.filter(s => s.categoryId === this.activeCategory);
+    }
   }
 }

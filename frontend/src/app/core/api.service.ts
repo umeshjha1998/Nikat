@@ -50,7 +50,7 @@ export interface CategoryDto {
   id: string;
   name: string;
   description: string;
-  isServiceCategory: boolean;
+  isServiceProviderCategory: boolean;
   isShopCategory: boolean;
 }
 

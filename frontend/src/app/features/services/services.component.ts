@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, ServiceDto } from '../../core/api.service';
+import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
 
 @Component({
   selector: 'app-services',
@@ -27,19 +27,22 @@ import { ApiService, ServiceDto } from '../../core/api.service';
             <div class="categories-section">
               <span class="section-label">Categories</span>
 
-              <div class="cat-group" *ngFor="let cat of categories" (click)="toggleCategory(cat)">
-                <button class="cat-header" [class.expanded]="cat.expanded">
+              <div class="cat-group" (click)="selectCategory('all')">
+                <button class="cat-header" [class.active]="activeCategory === 'all'">
                   <div class="cat-header-left">
-                    <span class="material-symbols-outlined cat-icon">{{cat.icon}}</span>
+                    <span class="material-symbols-outlined cat-icon">grid_view</span>
+                    <span class="cat-name">All Services</span>
+                  </div>
+                </button>
+              </div>
+
+              <div class="cat-group" *ngFor="let cat of categories" (click)="selectCategory(cat.id)">
+                <button class="cat-header" [class.active]="activeCategory === cat.id">
+                  <div class="cat-header-left">
+                    <span class="material-symbols-outlined cat-icon">category</span>
                     <span class="cat-name">{{cat.name}}</span>
                   </div>
-                  <span class="material-symbols-outlined cat-chevron" [class.rotated]="cat.expanded">chevron_right</span>
                 </button>
-                <div class="cat-children" *ngIf="cat.expanded">
-                  <a href="#" class="cat-child" *ngFor="let child of cat.children"
-                     [class.active]="child === activeSubCategory"
-                     (click)="selectSubCategory(child, $event)">{{child}}</a>
-                </div>
               </div>
             </div>
 
@@ -88,8 +91,8 @@ import { ApiService, ServiceDto } from '../../core/api.service';
             <!-- Active Vibe Chips -->
             <div class="active-chips">
               <div class="vibe-chip accent" *ngIf="activeSubCategory">
-                {{activeSubCategory}}
-                <span class="material-symbols-outlined chip-close" (click)="activeSubCategory = ''">close</span>
+                {{activeCategory === 'all' ? 'All Services' : 'Selected Category'}}
+                <span class="material-symbols-outlined chip-close" (click)="selectCategory('all')">close</span>
               </div>
               <div class="vibe-chip" *ngIf="filters.nearby">
                 Within 5km
@@ -99,9 +102,9 @@ import { ApiService, ServiceDto } from '../../core/api.service';
             </div>
 
             <!-- Bento Grid Results -->
-            <div class="results-grid" *ngIf="services.length > 0; else noServices">
+            <div class="results-grid" *ngIf="displayServices.length > 0; else noServices">
               <!-- Featured Card -->
-              <div class="result-card featured" *ngIf="services[0]">
+              <div class="result-card featured" *ngIf="displayServices[0]">
                 <div class="card-glow"></div>
                 <div class="card-image">
                   <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM1Qnj0VQEg70OrDBJmRJJWTVNTT3y_Grqv_5MwrPY-hnO0pioqbHD1hKnuzVR3X4IaexULI2Nvz0mVCi30BxotDpzU8NIXlO1gzdlKqgHfMbIRTytX2fdcqdLLjgRT6PB7mF_Bh_zjCbpL99ST2_s6zss2t5CZvMa9xLms2AwjtVb0PPqpMrsgwGEyH7qbNFNkjzRoczmWMM77uDuHuNgSyVu-B-SuFjC6899oWRM26K35PbnNI1ClKn79xDjVuUQEWlRBfj9Q2PH" alt="Service">
@@ -110,30 +113,30 @@ import { ApiService, ServiceDto } from '../../core/api.service';
                   <div class="card-top">
                     <div>
                       <span class="recommended-badge">Recommended</span>
-                      <h3 class="card-title">{{services[0].name}}</h3>
+                      <h3 class="card-title">{{displayServices[0].name}}</h3>
                     </div>
                     <div class="rating-badge">
                       <span class="material-symbols-outlined star-filled">star</span>
                       <span class="rating-value">4.9</span>
                     </div>
                   </div>
-                  <p class="card-desc">{{services[0].description || 'Expert service with premium quality. Specializing in high-quality repair and maintenance.'}}</p>
+                  <p class="card-desc">{{displayServices[0].description || 'Expert service with premium quality. Specializing in high-quality repair and maintenance.'}}</p>
                   <div class="card-meta">
                     <div class="meta-item">
                       <span class="material-symbols-outlined">location_on</span>
-                      {{services[0].serviceArea || '1.2 km away'}}
+                      {{displayServices[0].serviceArea || '1.2 km away'}}
                     </div>
                     <div class="meta-item">
                       <span class="material-symbols-outlined">schedule</span>
-                      {{services[0].startTime || '9:00 AM'}} - {{services[0].endTime || '8:00 PM'}}
+                      {{displayServices[0].startTime || '9:00 AM'}} - {{displayServices[0].endTime || '8:00 PM'}}
                     </div>
                   </div>
-                  <a [routerLink]="['/book-service', services[0].id]" class="btn-book">Book Appointment</a>
+                  <a [routerLink]="['/book-service', displayServices[0].id]" class="btn-book">Book Appointment</a>
                 </div>
               </div>
 
               <!-- Regular Cards -->
-              <div class="result-card" *ngFor="let svc of services.slice(1)">
+              <div class="result-card" *ngFor="let svc of displayServices.slice(1)">
                 <div class="card-image-sm">
                   <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHm1MF-n2-jOIYf2c5h10oW8wgwDoSXbtWuGKf_4x5Y-H-QDAqC0EyuMnuS5K_Qrqhayp8TSe-5oxfTW0spenuamMV918Gl3V_g0BzqSRl4vQJx4iaRUQ8QTvGGHxwAt4IWh29S7eP9USO_sZp0vvgH0b10mSCWG4ovv-lr0CdgvKF5SRr8ZAbIFvkfrW6Y7CyGKpWSF8ULURxFXQOLbjfFRwVwE_svSWwPx6HnDD0a4QqseFkS6ux7P-6Zg8_-UDeyivCcKZIRoSJ" alt="Service">
                   <div class="open-badge">
@@ -582,36 +585,58 @@ import { ApiService, ServiceDto } from '../../core/api.service';
 })
 export class ServicesComponent implements OnInit {
   services: ServiceDto[] = [];
-  activeSubCategory = '';
+  displayServices: ServiceDto[] = [];
+  activeCategory = 'all';
   filters = { openNow: true, topRated: false, nearby: true };
-
-  categories = [
-    { name: 'Home Maintenance', icon: 'home_repair_service', expanded: false, children: ['Plumber', 'Electrician', 'Painter'] },
-    { name: 'Personal Care', icon: 'content_cut', expanded: false, children: ['Barber', 'Beautician', 'Spa & Wellness'] },
-    { name: 'Food & Beverage', icon: 'restaurant', expanded: false, children: ['Bakery', 'Snacks', 'Café'] },
-    { name: 'Electronics', icon: 'devices', expanded: true, children: ['Mobile Repair', 'Laptop Repair', 'Home Appliances'] }
-  ];
+  categories: CategoryDto[] = [];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
+    this.loadCategories();
+    this.loadServices();
+  }
+
+  loadCategories() {
+    this.apiService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats.filter(c => c.isServiceProviderCategory);
+      },
+      error: (err) => console.error('Failed to load categories:', err)
+    });
+  }
+
+  loadServices() {
     this.apiService.getServices().subscribe({
-      next: (data) => this.services = data,
+      next: (data) => {
+        this.services = data;
+        this.filterServices();
+      },
       error: () => this.services = []
     });
   }
 
-  toggleCategory(cat: any) {
-    cat.expanded = !cat.expanded;
+  selectCategory(categoryId: string, event?: Event) {
+    if (event) event.stopPropagation();
+    this.activeCategory = categoryId;
+    this.filterServices();
   }
 
-  selectSubCategory(child: string, event: Event) {
-    event.stopPropagation();
-    this.activeSubCategory = child;
+  filterServices() {
+    if (this.activeCategory === 'all') {
+      this.displayServices = this.services;
+    } else {
+      this.displayServices = this.services.filter(s => s.categoryId === this.activeCategory);
+    }
   }
 
   clearFilters() {
-    this.activeSubCategory = '';
+    this.activeCategory = 'all';
     this.filters = { openNow: false, topRated: false, nearby: false };
+    this.filterServices();
+  }
+
+  toggleCategory(cat: any) {
+    cat.expanded = !cat.expanded;
   }
 }
