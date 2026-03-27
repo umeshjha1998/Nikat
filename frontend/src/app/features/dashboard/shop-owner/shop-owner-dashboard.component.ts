@@ -429,6 +429,31 @@ import { AuthService } from '../../../core/auth.service';
                </form>
         </div>
       </div>
+
+      <!-- Assign Worker Modal -->
+      <div class="modal-overlay" *ngIf="showWorkerModal">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h2>Assign Worker</h2>
+            <button class="btn-icon" (click)="showWorkerModal = false"><span class="material-icons">close</span></button>
+          </div>
+          <div class="modal-body" style="margin-top: 1rem;">
+             <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Please select a staff member to handle this appointment:</p>
+             <div class="form-group">
+                <label>Select Staff Member</label>
+                <select class="glass-select" [(ngModel)]="selectedWorker">
+                   <option *ngFor="let w of availableWorkers" [value]="w">{{w}}</option>
+                </select>
+             </div>
+          </div>
+          <div class="modal-footer" style="margin-top: 2rem;">
+            <button type="button" class="btn-link" (click)="showWorkerModal = false">Cancel</button>
+            <button type="button" class="btn-primary-glow" (click)="submitConfirmWithWorker()">
+               Confirm & Assign
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -1280,6 +1305,12 @@ export class ShopOwnerDashboardComponent implements OnInit {
     imageUrl: ''
   };
   workerNamesList: string[] = [];
+  
+  // Appointment confirmation modal
+  showWorkerModal = false;
+  selectedWorker = '';
+  currentAptToConfirm: AppointmentDto | null = null;
+  availableWorkers: string[] = [];
 
   constructor(private apiService: ApiService) {}
   private authService = inject(AuthService);
@@ -1637,13 +1668,24 @@ export class ShopOwnerDashboardComponent implements OnInit {
       return;
     }
 
-    const worker = prompt(`Select a worker to assign (Available: ${workers.join(', ')})`, workers[0]);
-    if (worker) {
-      this.updateAptStatus(apt.id, 'CONFIRMED', worker.trim());
-    } else if (worker === '') {
-      // If they leave it blank but press OK, confirm without assignment or use default?
-      // Better to assign first one or cancel.
-      this.updateAptStatus(apt.id, 'CONFIRMED');
+    this.availableWorkers = workers;
+    this.selectedWorker = workers[0];
+    this.currentAptToConfirm = apt;
+    this.showWorkerModal = true;
+  }
+
+  submitConfirmWithWorker() {
+    if (this.currentAptToConfirm) {
+      this.apiService.updateAppointmentStatus(this.currentAptToConfirm.id, 'CONFIRMED', this.selectedWorker).subscribe({
+        next: (updated) => {
+          const idx = this.appointments.findIndex(a => a.id === this.currentAptToConfirm!.id);
+          if (idx > -1) this.appointments[idx] = updated;
+          this.showWorkerModal = false;
+          this.currentAptToConfirm = null;
+          alert('Appointment confirmed!');
+        },
+        error: () => alert('Failed to confirm appointment.')
+      });
     }
   }
 
