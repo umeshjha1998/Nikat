@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-shop-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="shop-view-page">
       <!-- Top Bar -->
@@ -56,7 +57,12 @@ import { AuthService } from '../../../core/auth.service';
             <span class="chip-dot"></span>
             {{shop.category}}
           </div>
-          <h1 class="shop-title">{{shop.name}}</h1>
+          <h1 class="shop-title">
+            {{shop.name}}
+            <button class="btn-icon-mng" *ngIf="isOwner" (click)="editBasicInfo()" title="Edit Name & Tagline">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+          </h1>
           <p class="shop-tagline">{{shop.tagline}}</p>
           <div class="meta-row">
             <div class="meta-item rating-item">
@@ -122,10 +128,26 @@ import { AuthService } from '../../../core/auth.service';
         <div class="tab-content">
           <!-- Products Tab -->
           <div *ngIf="activeTab === 'products'" class="products-panel">
+            <!-- Add Product Card for Owner -->
+            <div class="product-card add-new-card" *ngIf="isOwner" (click)="openProductModal()">
+               <div class="add-icon-box">
+                  <span class="material-symbols-outlined">add_circle</span>
+                  <p>Add New Product/Service</p>
+               </div>
+            </div>
+
             <div class="product-card" *ngFor="let p of products">
               <div class="product-image">
                 <img [src]="p.image" [alt]="p.name">
                 <div class="product-price-badge">{{p.price}}</div>
+                <div class="owner-actions" *ngIf="isOwner">
+                  <button class="btn-mng-p" (click)="editProduct(p)" title="Edit Product">
+                    <span class="material-symbols-outlined">edit</span>
+                  </button>
+                  <button class="btn-mng-p delete" (click)="deleteProduct(p.id)" title="Delete Product">
+                    <span class="material-symbols-outlined">delete_outline</span>
+                  </button>
+                </div>
               </div>
               <div class="product-info">
                 <h3 class="product-name">{{p.name}}</h3>
@@ -138,7 +160,7 @@ import { AuthService } from '../../../core/auth.service';
                     <span class="material-symbols-outlined">schedule</span>
                     {{p.time}}
                   </span>
-                  <button class="btn-add" (click)="addProduct(p)">
+                  <button class="btn-add" (click)="addProduct(p)" *ngIf="!isOwner">
                     <span class="material-symbols-outlined">add</span>
                     Add
                   </button>
@@ -149,26 +171,71 @@ import { AuthService } from '../../../core/auth.service';
 
           <!-- About Tab -->
           <div *ngIf="activeTab === 'about'" class="about-panel">
-            <div class="about-card">
-              <h3>Our Story</h3>
-              <p>{{shop.description}}</p>
+            <div class="about-card" [class.editing]="isEditingAbout">
+              <div class="card-header-row">
+                <h3>Our Story</h3>
+                <button class="btn-icon-mng" *ngIf="isOwner" (click)="isEditingAbout = !isEditingAbout">
+                  <span class="material-symbols-outlined">{{isEditingAbout ? 'close' : 'edit'}}</span>
+                </button>
+              </div>
+              <p *ngIf="!isEditingAbout">{{shop.ourStory || 'Tell your customers about your journey and what makes your business special.'}}</p>
+              <div class="edit-area" *ngIf="isEditingAbout">
+                <textarea class="glass-textarea" [(ngModel)]="editShopData.ourStory" placeholder="Write your shop's story here..."></textarea>
+                <button class="btn-primary-glow" (click)="saveShopAbout()">Save Our Story</button>
+              </div>
             </div>
-            <div class="amenities-card">
-              <h3>Amenities</h3>
-              <div class="amenities-grid">
-                <div class="amenity" *ngFor="let a of amenities">
+
+            <div class="amenities-card" [class.editing]="isEditingAmenities">
+              <div class="card-header-row">
+                <h3>Amenities</h3>
+                <button class="btn-icon-mng" *ngIf="isOwner" (click)="isEditingAmenities = !isEditingAmenities">
+                  <span class="material-symbols-outlined">{{isEditingAmenities ? 'close' : 'edit'}}</span>
+                </button>
+              </div>
+              <div class="amenities-grid" *ngIf="!isEditingAmenities">
+                <div class="amenity" *ngFor="let a of displayAmenities">
                   <span class="material-symbols-outlined">{{a.icon}}</span>
                   <span>{{a.label}}</span>
                 </div>
+                <p *ngIf="displayAmenities.length === 0" class="muted-text">No amenities listed yet.</p>
+              </div>
+              <div class="amenities-editor" *ngIf="isEditingAmenities">
+                <div class="amenity-toggle" *ngFor="let am of AMENITY_LIST" 
+                  [class.active]="isAmenitySelected(am.id)" 
+                  (click)="toggleAmenityId(am.id)">
+                  <span class="material-symbols-outlined">{{am.icon}}</span>
+                  <span>{{am.label}}</span>
+                </div>
+                <button class="btn-primary-glow" (click)="saveShopAmenities()">Save Amenities</button>
               </div>
             </div>
-            <div class="hours-card">
-              <h3>Business Hours</h3>
-              <div class="hours-list">
-                <div class="hours-row" *ngFor="let h of businessHours">
+
+            <div class="hours-card" [class.editing]="isEditingHours">
+              <div class="card-header-row">
+                <h3>Business Hours</h3>
+                <button class="btn-icon-mng" *ngIf="isOwner" (click)="isEditingHours = !isEditingHours">
+                  <span class="material-symbols-outlined">{{isEditingHours ? 'close' : 'edit'}}</span>
+                </button>
+              </div>
+              <div class="hours-list" *ngIf="!isEditingHours">
+                <div class="hours-row" *ngFor="let h of displayBusinessHours">
                   <span class="day">{{h.day}}</span>
                   <span class="time" [class.closed]="h.closed">{{h.closed ? 'Closed' : h.time}}</span>
                 </div>
+              </div>
+              <div class="hours-editor" *ngIf="isEditingHours">
+                <div class="day-row" *ngFor="let h of editHoursData; let i = index">
+                  <span class="day-label">{{h.day}}</span>
+                  <div class="time-inputs" *ngIf="!h.closed">
+                    <input type="time" [(ngModel)]="h.open">
+                    <span>to</span>
+                    <input type="time" [(ngModel)]="h.close">
+                  </div>
+                  <label class="closed-toggle">
+                    <input type="checkbox" [(ngModel)]="h.closed"> Closed
+                  </label>
+                </div>
+                <button class="btn-primary-glow" (click)="saveShopHours()" style="margin-top: 1.5rem;">Save Hours</button>
               </div>
             </div>
           </div>
@@ -205,27 +272,55 @@ import { AuthService } from '../../../core/auth.service';
         </div>
       </div>
 
-      <!-- Footer -->
-      <footer class="page-footer">
-        <div class="footer-inner">
-          <div class="footer-brand">
-            <span class="footer-logo">Nikat</span>
-            <p class="footer-copy">© 2024 Nikat Digital. Local Discovery Redefined.</p>
-          </div>
-          <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Partner with Us</a>
-            <a href="#">Help Center</a>
-            <a routerLink="/admin-login">Admin Login</a>
-          </div>
-          <div class="footer-social">
-            <button class="social-btn"><span class="material-symbols-outlined">public</span></button>
-            <button class="social-btn"><span class="material-symbols-outlined">share</span></button>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <!-- Product Management Modal -->
+      <div class="modal-overlay" *ngIf="showProductModal">
+         <div class="modal-card">
+            <div class="modal-header">
+               <h2>{{ editingProduct?.id ? 'Edit' : 'Add New' }} Product/Service</h2>
+               <button class="btn-icon" (click)="showProductModal = false"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <form (submit)="saveProduct(); $event.preventDefault()" class="glass-form">
+               <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" [(ngModel)]="newProduct.name" name="pname" required>
+               </div>
+               <div class="form-row">
+                  <div class="form-group">
+                     <label>Price (₹)</label>
+                     <input type="number" [(ngModel)]="newProduct.price" name="pprice" required>
+                  </div>
+                  <div class="form-group">
+                     <label>Availability</label>
+                     <select [(ngModel)]="newProduct.isAvailable" name="pavail" class="glass-select">
+                        <option [ngValue]="true">In Stock</option>
+                        <option [ngValue]="false">Out of Stock</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label>Description (Optional)</label>
+                  <textarea rows="3" [(ngModel)]="newProduct.description" name="pdesc" placeholder="Brief details about the product/service"></textarea>
+               </div>
+               <div class="form-group">
+                  <label>Image URL (Optional)</label>
+                  <div class="image-upload-box" (click)="photoInput.click()">
+                    <img *ngIf="newProduct.imageUrl" [src]="newProduct.imageUrl" class="preview-img">
+                    <div *ngIf="!newProduct.imageUrl" class="upload-placeholder">
+                      <span class="material-symbols-outlined">add_a_photo</span>
+                      <p>Click to add listing image</p>
+                    </div>
+                  </div>
+                  <input type="file" #photoInput style="display: none;" (change)="onListingPhotoSelected($event)">
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn-link" (click)="showProductModal = false">Cancel</button>
+                  <button type="submit" class="btn-primary-glow" [disabled]="isUploading">
+                     {{ isUploading ? 'Saving...' : (editingProduct?.id ? 'Update Listing' : 'Create Listing') }}
+                  </button>
+               </div>
+            </form>
+         </div>
+      </div>
   `,
   styles: [`
     :host { display: block; font-family: 'Manrope', sans-serif; }
@@ -494,6 +589,109 @@ import { AuthService } from '../../../core/auth.service';
     .social-btn:hover { color: #fff; border-color: var(--primary); background: var(--primary); }
     .social-btn .material-symbols-outlined { font-size: 1.25rem; }
 
+    .social-btn .material-symbols-outlined { font-size: 1.25rem; }
+
+    /* Management UI */
+    .btn-icon-mng {
+       background: rgba(94, 180, 255, 0.1); border: 1px solid var(--glass-border);
+       color: var(--primary); width: 32px; height: 32px; border-radius: 50%;
+       display: flex; align-items: center; justify-content: center;
+       cursor: pointer; transition: all 0.2s;
+       vertical-align: middle; margin-left: 0.5rem;
+    }
+    .btn-icon-mng:hover { background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary-glow); }
+    .btn-icon-mng .material-symbols-outlined { font-size: 1.1rem; }
+
+    .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .card-header-row h3 { margin: 0 !important; }
+
+    .add-new-card {
+       border: 2px dashed var(--glass-border) !important;
+       background: transparent !important;
+       display: flex; align-items: center; justify-content: center;
+       cursor: pointer; min-height: 20rem;
+    }
+    .add-new-card:hover { border-color: var(--primary) !important; background: rgba(94, 180, 255, 0.05) !important; }
+    .add-icon-box { text-align: center; color: var(--text-muted); transition: all 0.3s; }
+    .add-new-card:hover .add-icon-box { color: var(--primary); transform: scale(1.05); }
+    .add-icon-box span { font-size: 3rem; margin-bottom: 1rem; }
+
+    .owner-actions {
+       position: absolute; top: 0.75rem; left: 0.75rem;
+       display: flex; gap: 0.5rem; opacity: 0; transition: opacity 0.3s;
+    }
+    .product-card:hover .owner-actions { opacity: 1; }
+    .btn-mng-p {
+       background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+       border: 1px solid rgba(255,255,255,0.1); color: #fff;
+       width: 32px; height: 32px; border-radius: 0.5rem;
+       display: flex; align-items: center; justify-content: center;
+       cursor: pointer;
+    }
+    .btn-mng-p:hover { background: var(--primary); color: #000; }
+    .btn-mng-p.delete:hover { background: #ef4444; color: #fff; }
+
+    /* Modal & Forms */
+    .modal-overlay {
+       position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+       display: flex; align-items: center; justify-content: center; z-index: 2000;
+       padding: 1.5rem;
+    }
+    .modal-card {
+       background: var(--surface-container); border: 1px solid var(--border-color);
+       border-radius: 1.5rem; width: 100%; max-width: 32rem; padding: 2rem;
+       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .modal-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0; }
+    
+    .glass-form { display: grid; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+    .form-group input, .form-group textarea {
+       background: var(--glass); border: 1px solid var(--glass-border);
+       border-radius: 1rem; padding: 0.85rem 1.25rem; font-family: inherit;
+       font-size: 0.95rem; color: var(--text-main);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .glass-select { background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 1rem; padding: 0.85rem; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+    .btn-link { background: transparent; border: none; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+    .btn-primary-glow {
+       background: linear-gradient(135deg, var(--primary), #2aa7ff);
+       color: #000; border: none; border-radius: 1rem; padding: 0.85rem 2rem;
+       font-weight: 800; cursor: pointer; transition: all 0.3s;
+       box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .image-upload-box {
+       height: 10rem; border: 2px dashed var(--glass-border); border-radius: 1rem;
+       display: flex; align-items: center; justify-content: center; cursor: pointer;
+       position: relative; overflow: hidden;
+    }
+    .image-upload-box img { width: 100%; height: 100%; object-fit: cover; }
+    .upload-placeholder { text-align: center; color: var(--text-muted); }
+    .upload-placeholder span { font-size: 2rem; margin-bottom: 0.5rem; }
+
+    /* About Editors */
+    .glass-textarea { width: 100%; min-height: 12rem; margin-bottom: 2rem; resize: vertical; }
+    .amenities-editor { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+    .amenity-toggle {
+       background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-muted);
+       padding: 0.75rem 1.25rem; border-radius: 1rem; cursor: pointer;
+       display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;
+       font-weight: 600; font-size: 0.875rem;
+    }
+    .amenity-toggle.active { background: var(--primary); color: #000; border-color: var(--primary); }
+    .amenity-toggle span { line-height: 1; }
+
+    .hours-editor { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .day-row { display: grid; grid-template-columns: 6rem 1fr 6rem; align-items: center; gap: 1rem; background: var(--glass); padding: 0.75rem 1.25rem; border-radius: 1rem; }
+    .day-label { font-weight: 700; font-size: 0.875rem; }
+    .time-inputs { display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.8rem; }
+    .time-inputs input { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: #fff; padding: 0.4rem; border-radius: 0.5rem; }
+    .closed-toggle { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: #ef4444; }
+
     @media (max-width: 768px) {
       .bento-gallery {
         grid-template-columns: 1fr;
@@ -601,6 +799,7 @@ export class ShopDetailComponent implements OnInit {
             image: p.imageUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
             chips: ['Verified', 'Local']
           }));
+          this.checkOwnership();
         }
       });
     }
@@ -632,4 +831,207 @@ export class ShopDetailComponent implements OnInit {
   }
 
   getStars(n: number): number[] { return Array(Math.floor(n)).fill(0); }
+
+  // MANAGEMENT LOGIC
+  isOwner = false;
+  isEditingAbout = false;
+  isEditingAmenities = false;
+  isEditingHours = false;
+  showProductModal = false;
+  isUploading = false;
+
+  editingProduct: any = null;
+  newProduct: any = { name: '', price: 0, description: '', isAvailable: true, imageUrl: '' };
+  
+  editShopData: any = { ourStory: '', amenities: '', dailyHours: '' };
+  editHoursData: any[] = [];
+
+  AMENITY_LIST = [
+    { id: 'wifi', icon: 'wifi', label: 'Free Wi-Fi' },
+    { id: 'parking', icon: 'local_parking', label: 'Parking' },
+    { id: 'ac', icon: 'ac_unit', label: 'Air Conditioned' },
+    { id: 'payment', icon: 'credit_card', label: 'Digital Payment' },
+    { id: 'kids', icon: 'child_care', label: 'Kid Friendly' },
+    { id: 'accessible', icon: 'accessible', label: 'Wheelchair Access' },
+    { id: 'seating', icon: 'event_seat', label: 'Outdoor Seating' },
+    { id: 'delivery', icon: 'delivery_dining', label: 'Home Delivery' }
+  ];
+
+  DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  get displayAmenities() {
+    if (!this.shop?.amenities) return [];
+    const ids = this.shop.amenities.split(',').map((s: string) => s.trim());
+    return this.AMENITY_LIST.filter(a => ids.includes(a.id));
+  }
+
+  get displayBusinessHours() {
+     if (!this.shop?.dailyHours) return this.businessHours; // default
+     try {
+        return JSON.parse(this.shop.dailyHours);
+     } catch(e) {
+        return this.businessHours;
+     }
+  }
+
+  checkOwnership() {
+    const user = this.authService.currentUser;
+    if (user && this.shop && (user.id === this.shop.ownerId)) {
+      this.isOwner = true;
+      this.editShopData = {
+        ourStory: this.shop.ourStory || '',
+        amenities: this.shop.amenities || '',
+        dailyHours: this.shop.dailyHours || ''
+      };
+      this.initHoursEditor();
+    }
+  }
+
+  initHoursEditor() {
+    const current = this.displayBusinessHours;
+    this.editHoursData = current.map((h: any) => {
+       const [open, close] = h.time ? h.time.split(' - ') : ['09:00', '21:00'];
+       return { 
+          day: h.day, 
+          open: this.to24h(open) || '09:00', 
+          close: this.to24h(close) || '21:00', 
+          closed: h.closed 
+       };
+    });
+  }
+
+  private to24h(timeStr: string) {
+    if (!timeStr) return null;
+    const [time, modifier] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') hours = '00';
+    if (modifier === 'PM' && hours !== '12') hours = (parseInt(hours, 10) + 12).toString();
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+  }
+
+  private to12h(time24: string) {
+    if (!time24) return '';
+    const [h, m] = time24.split(':');
+    const hours = parseInt(h, 10);
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    const h12 = ((hours + 11) % 12 + 1);
+    return `${h12}:${m} ${suffix}`;
+  }
+
+  isAmenitySelected(id: string) {
+    return this.editShopData.amenities?.split(',').includes(id);
+  }
+
+  toggleAmenityId(id: string) {
+    let ids = this.editShopData.amenities ? this.editShopData.amenities.split(',').map((s: string) => s.trim()).filter((s: string) => s) : [];
+    if (ids.includes(id)) {
+      ids = ids.filter((i: string) => i !== id);
+    } else {
+      ids.push(id);
+    }
+    this.editShopData.amenities = ids.join(',');
+  }
+
+  saveShopAbout() {
+    this.shop.ourStory = this.editShopData.ourStory;
+    this.apiService.updateShop(this.shop.id, this.shop).subscribe(() => {
+        this.isEditingAbout = false;
+        alert('Description updated!');
+    });
+  }
+
+  saveShopAmenities() {
+    this.shop.amenities = this.editShopData.amenities;
+    this.apiService.updateShop(this.shop.id, this.shop).subscribe(() => {
+        this.isEditingAmenities = false;
+        alert('Amenities updated!');
+    });
+  }
+
+  saveShopHours() {
+    const finalHours = this.editHoursData.map(h => ({
+       day: h.day,
+       time: h.closed ? 'Closed' : `${this.to12h(h.open)} - ${this.to12h(h.close)}`,
+       closed: h.closed
+    }));
+    this.shop.dailyHours = JSON.stringify(finalHours);
+    this.apiService.updateShop(this.shop.id, this.shop).subscribe(() => {
+        this.isEditingHours = false;
+        alert('Business hours updated!');
+    });
+  }
+
+  // Product CRUD
+  openProductModal() {
+    this.editingProduct = null;
+    this.newProduct = { name: '', price: 0, description: '', isAvailable: true, imageUrl: '' };
+    this.showProductModal = true;
+  }
+
+  editProduct(p: any) {
+    this.editingProduct = p;
+    this.newProduct = { ...p, price: parseFloat(p.price.toString().replace('₹', '')) };
+    this.showProductModal = true;
+  }
+
+  onListingPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isUploading = true;
+      this.apiService.uploadFile(file).subscribe({
+        next: (url) => {
+          this.newProduct.imageUrl = url;
+          this.isUploading = false;
+        },
+        error: () => this.isUploading = false
+      });
+    }
+  }
+
+  saveProduct() {
+     if (!this.shop.id) return;
+     this.isUploading = true;
+     const payload = { ...this.newProduct, shopId: this.shop.id };
+     
+     if (this.editingProduct?.id) {
+        this.apiService.updateProduct(this.editingProduct.id, payload).subscribe({
+           next: () => this.refreshProducts(),
+           error: () => this.isUploading = false
+        });
+     } else {
+        this.apiService.createProduct(payload).subscribe({
+           next: () => this.refreshProducts(),
+           error: () => this.isUploading = false
+        });
+     }
+  }
+
+  deleteProduct(id: string) {
+    if (confirm('Are you sure you want to delete this listing?')) {
+       this.apiService.deleteProduct(id).subscribe(() => this.refreshProducts());
+    }
+  }
+
+  refreshProducts() {
+     this.showProductModal = false;
+     this.isUploading = false;
+     this.apiService.getProductsByShop(this.shopId!).subscribe(data => {
+        this.products = data.map(p => ({
+           ...p,
+           price: '₹' + p.price,
+           image: p.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7ed9d42177?auto=format&fit=crop&q=80',
+           chips: ['Verified', 'Local']
+        }));
+     });
+  }
+
+  editBasicInfo() {
+     const name = prompt('Enter Business Name', this.shop.name);
+     const tag = prompt('Enter Business Tagline', this.shop.tagline);
+     if (name) {
+        this.shop.name = name;
+        this.shop.tagline = tag;
+        this.apiService.updateShop(this.shop.id, this.shop).subscribe();
+     }
+  }
 }

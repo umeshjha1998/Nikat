@@ -289,7 +289,15 @@ import { AuthService } from '../../../core/auth.service';
                 </div>
                 <div class="form-group">
                    <label>Business Address</label>
-                   <input type="text" [(ngModel)]="currentShop.address" name="address">
+                   <div class="address-input-wrapper">
+                      <input type="text" [(ngModel)]="currentShop.address" name="address" placeholder="e.g. 123 Street Name, Landmark">
+                      <button type="button" class="gps-btn" (click)="fetchGPSLocation()" [disabled]="isFetchingLocation">
+                         <span class="material-icons" *ngIf="!isFetchingLocation">my_location</span>
+                         <span class="upload-loader" *ngIf="isFetchingLocation" style="width: 14px; height: 14px; border-width: 2px;"></span>
+                         {{ isFetchingLocation ? 'Locating...' : 'GPS' }}
+                      </button>
+                   </div>
+                   <p class="form-hint" *ngIf="currentShop.address">Location fetched! You can add building/shop number or landmark if missing.</p>
                 </div>
                 <div class="form-row">
                    <div class="form-group">
@@ -1189,6 +1197,42 @@ import { AuthService } from '../../../core/auth.service';
        width: 100%;
        outline: none;
     }
+
+    .address-input-wrapper {
+       display: flex;
+       gap: 0.5rem;
+    }
+
+    .address-input-wrapper input {
+       flex: 1;
+    }
+
+    .gps-btn {
+       background: rgba(var(--primary-rgb), 0.1);
+       border: 1px solid var(--glass-border);
+       color: var(--primary);
+       border-radius: 1rem;
+       padding: 0 1rem;
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+       cursor: pointer;
+       font-weight: 600;
+       transition: all 0.3s ease;
+       white-space: nowrap;
+    }
+
+    .gps-btn:hover:not(:disabled) {
+       background: var(--primary);
+       color: #000;
+       box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .form-hint {
+       font-size: 0.75rem;
+       color: var(--primary);
+       margin-top: 0.4rem;
+    }
   `]
 })
 export class ShopOwnerDashboardComponent implements OnInit {
@@ -1452,6 +1496,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
     }
   }
 
+  isFetchingLocation = false;
   // --- SETTINGS ACTIONS ---
 
   saveSettings() {
@@ -1472,6 +1517,45 @@ export class ShopOwnerDashboardComponent implements OnInit {
         alert('Failed to save settings. Please try again.');
       }
     });
+  }
+
+  fetchGPSLocation() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    this.isFetchingLocation = true;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        
+        // Reverse geocoding using Nominatim (OSM)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+          .then(res => res.json())
+          .then(data => {
+            if (this.currentShop && data.display_name) {
+              this.currentShop.address = data.display_name;
+              alert('Location fetched! You can now refine your address.');
+            }
+            this.isFetchingLocation = false;
+          })
+          .catch(err => {
+            console.error('Reverse Geocode Error:', err);
+            if (this.currentShop) {
+               this.currentShop.address = `Lat: ${lat}, Lon: ${lon} (Refine address manually)`;
+            }
+            this.isFetchingLocation = false;
+          });
+      },
+      (error) => {
+        console.error('Geolocation Error:', error);
+        alert('Unable to retrieve your location. Check GPS permissions.');
+        this.isFetchingLocation = false;
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
   }
 
   replyInquiry(inquiry: any) {

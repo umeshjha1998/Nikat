@@ -40,6 +40,17 @@ public class ProductService {
         return mapToDto(productRepository.save(product));
     }
 
+    public ProductDto updateProduct(UUID id, ProductDto dto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + id));
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setIsAvailable(dto.getIsAvailable());
+        product.setImageUrl(dto.getImageUrl());
+        return mapToDto(productRepository.save(product));
+    }
+
     public void deleteProduct(UUID id) {
         productRepository.deleteById(id);
     }

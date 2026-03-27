@@ -20,6 +20,9 @@ export interface ShopDto {
   status: string;
   isFeatured: boolean;
   photos: string[];
+  ourStory: string;
+  amenities: string;
+  dailyHours: string;
 }
 
 export interface ServiceDto {
@@ -153,6 +156,16 @@ export class ApiService {
 
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/products/${id}`);
+  }
+
+  updateProduct(id: string, product: Partial<ProductDto>): Observable<ProductDto> {
+    return this.http.put<ProductDto>(`${this.apiUrl}/products/${id}`, product);
+  }
+
+  uploadFile(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/public/upload`, formData, { responseType: 'text' });
   }
 
   // Services

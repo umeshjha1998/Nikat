@@ -104,6 +104,10 @@ public class ShopService {
             shop.setCategory(null);
         }
 
+        shop.setOurStory(dto.getOurStory());
+        shop.setAmenities(dto.getAmenities());
+        shop.setDailyHours(dto.getDailyHours());
+
         return mapToDto(shopRepository.save(shop));
     }
 
@@ -125,6 +129,9 @@ public class ShopService {
                 .status(shop.getStatus())
                 .isFeatured(shop.getIsFeatured())
                 .photos(shopPhotoRepository.findByShopId(shop.getId()).stream().map(ShopPhoto::getPhotoData).collect(Collectors.toList()))
+                .ourStory(shop.getOurStory())
+                .amenities(shop.getAmenities())
+                .dailyHours(shop.getDailyHours())
                 .build();
     }
 }

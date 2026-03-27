@@ -1,0 +1,4 @@
+-- V2__Add_Shop_About_Fields.sql
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS our_story TEXT;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS amenities TEXT;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS daily_hours TEXT;

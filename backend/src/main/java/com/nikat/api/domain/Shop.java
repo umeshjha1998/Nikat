@@ -56,6 +56,15 @@ public class Shop {
     @Column(name = "is_featured")
     private Boolean isFeatured;
 
+    @Column(name = "our_story", columnDefinition = "TEXT")
+    private String ourStory;
+
+    @Column(name = "amenities", columnDefinition = "TEXT")
+    private String amenities;
+
+    @Column(name = "daily_hours", columnDefinition = "TEXT")
+    private String dailyHours;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
