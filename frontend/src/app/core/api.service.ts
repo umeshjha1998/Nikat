@@ -131,6 +131,10 @@ export class ApiService {
     return this.http.patch<AppointmentDto>(`${this.apiUrl}/appointments/${appointmentId}/status?status=${status}`, {});
   }
 
+  createAppointment(appointment: Partial<AppointmentDto>): Observable<AppointmentDto> {
+    return this.http.post<AppointmentDto>(`${this.apiUrl}/appointments`, appointment);
+  }
+
   // Related data
   getProductsByShop(shopId: string): Observable<ProductDto[]> {
     return this.http.get<ProductDto[]>(`${this.apiUrl}/public/products/shop/${shopId}`);

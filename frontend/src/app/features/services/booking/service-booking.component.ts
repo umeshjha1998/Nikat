@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { ApiService } from '../../../core/api.service';
+import { ApiService, AppointmentDto } from '../../../core/api.service';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-service-booking',
@@ -453,13 +454,14 @@ export class ServiceBookingComponent implements OnInit {
   ];
 
   timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'];
-
-  constructor(private route: ActivatedRoute, private router: Router, private apiService: ApiService) {}
+  shopId: string | null = null;
+  
+  constructor(private route: ActivatedRoute, private router: Router, private apiService: ApiService, private authService: AuthService) {}
 
   ngOnInit() {
-    const shopId = this.route.snapshot.paramMap.get('id');
-    if (shopId) {
-      this.apiService.getShopById(shopId).subscribe({
+    this.shopId = this.route.snapshot.paramMap.get('id');
+    if (this.shopId) {
+      this.apiService.getShopById(this.shopId).subscribe({
         next: (shop) => {
           if (shop) {
             this.service = {
@@ -497,7 +499,31 @@ export class ServiceBookingComponent implements OnInit {
   }
 
   confirmBooking() {
-    this.bookingConfirmed = true;
+    const user = this.authService.currentUser;
+    if (!user || !this.shopId || !this.selectedServiceId) return;
+
+    // Construct a LocalDateTime string or use a Date object. 
+    // For simplicity, let's assume the backend handles ISO strings and we just pick a mock time for now 
+    // since the current UI doesn't have a real date-time picker that maps to LocalDateTime.
+    const appointmentDate = new Date(); // In a real app, combine selectedDate and selectedTime
+    
+    const appointment: Partial<AppointmentDto> = {
+      userId: user.id,
+      shopId: this.shopId,
+      appointmentTime: appointmentDate.toISOString(),
+      serviceType: this.getSelectedName(),
+      notes: "Booked via shop detail page"
+    };
+
+    this.apiService.createAppointment(appointment).subscribe({
+      next: (res) => {
+        this.bookingConfirmed = true;
+      },
+      error: (err) => {
+        console.error('Booking failed', err);
+        alert('Failed to confirm booking. Please try again.');
+      }
+    });
   }
 
   goToDashboard() {

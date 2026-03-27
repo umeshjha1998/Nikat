@@ -66,6 +66,12 @@ import { AuthService } from '../../../core/auth.service';
             </div>
             <div class="meta-divider"></div>
             <div class="meta-item">
+              <span class="material-symbols-outlined">groups</span>
+              <strong>{{shop.workerCount || 0}}</strong>
+              <span class="meta-muted">Workers</span>
+            </div>
+            <div class="meta-divider"></div>
+            <div class="meta-item">
               <span class="material-symbols-outlined">location_on</span>
               {{shop.address}}
             </div>
@@ -517,10 +523,9 @@ export class ShopDetailComponent implements OnInit {
     isOpen: true,
     description: 'Founded in 2019, The Golden Crust is a neighborhood bakery that believes in the art of slow-fermented bread. We source our wheat from organic farms and every loaf is given 24 hours of fermentation for that perfect crust and tang. Our pastry chef trained in Paris and brings a fusion of French technique with local Indian flavors.',
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDt5Jyfc8T2q_H_cOv2GbLu4JlJaXx--NL_i4FjuEiNDxaNPUKgGvH1N1wCsJcLXMHq8BfOtheFfFaB2lxC53fqH64cVOLDuPIR2hIxEYYzrSgHdfKH8YCNEwq_fAVkidHllvZopbHxFScIqJ5dVHPWnHt9xxcLT0yz-wlCGBN_3xBBD8bU-f9qdAaLy6dlYZw7fhdZWCgVZkWJ3RK2NLAExSGDYPGqpN1zn-TwONPG3w3cjkZTrQ5qWZHYPnkJB547Nm7AvT3IPLB',
       'https://lh3.googleusercontent.com/aida-public/AB6AXuCUsuAfvwhrFfOLDeqIh9jssV5dDYr4128gK4R1OjZxeSCTrgLiXW_sLN_0I2baZ3EsypaWtPfiUNvYRrGdPWD5WlkT7vuYJN2CX9cnA4SnBsHmZuJCFnUQBUdJWH3qOJyab8dFMnxIme0I7QjwsZGFMGiDvzCLKaJN1mHfCzXtGlwKkDtFgLmN_yFEKvQ9ndJUTlB6YqTUiTEoYKmRFphZC2NuYu6euyu4xT0bEdwcLhuSL16lOZr82Mh8KRsn9plMdkPyt7NvYRx6'
-    ]
+    ],
+    workerCount: 0
   };
 
   products: any[] = [];
@@ -573,11 +578,16 @@ export class ShopDetailComponent implements OnInit {
             this.shop = {
               ...this.shop,
               ...s,
-              images: [s.imageUrl || this.shop.images[0], ...this.shop.images.slice(1)],
+              name: s.name,
+              description: s.description || this.shop.description,
+              address: s.address || this.shop.address,
+              images: (s.photos && s.photos.length > 0) ? s.photos : this.shop.images,
               category: s.categoryName || this.shop.category,
               isOpen: s.status === 'APPROVED',
+              hours: (s.openingTime && s.closingTime) ? `${s.openingTime} - ${s.closingTime}` : this.shop.hours,
               reviewCount: s.reviewCount || this.shop.reviewCount,
-              rating: s.averageRating?.toFixed(1) || this.shop.rating
+              rating: s.averageRating?.toFixed(1) || this.shop.rating,
+              workerCount: s.workerCount
             };
           }
         }

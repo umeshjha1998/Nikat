@@ -24,4 +24,9 @@ public class AppointmentController {
     public ResponseEntity<AppointmentDto> updateStatus(@PathVariable UUID id, @RequestParam String status) {
         return ResponseEntity.ok(appointmentService.updateStatus(id, status));
     }
+
+    @PostMapping
+    public ResponseEntity<AppointmentDto> createAppointment(@RequestBody AppointmentDto dto) {
+        return ResponseEntity.ok(appointmentService.createAppointment(dto));
+    }
 }
