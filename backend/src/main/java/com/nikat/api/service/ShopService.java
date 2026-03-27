@@ -7,6 +7,7 @@ import com.nikat.api.repository.ShopPhotoRepository;
 import com.nikat.api.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ShopService {
 
     private final ShopRepository shopRepository;
@@ -87,6 +89,8 @@ public class ShopService {
         if (dto.getCategoryId() != null) {
             shop.setCategory(categoryRepository.findById(dto.getCategoryId())
                     .orElse(null));
+        } else {
+            shop.setCategory(null);
         }
 
         return mapToDto(shopRepository.save(shop));
