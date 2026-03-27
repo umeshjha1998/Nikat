@@ -1,7 +1,0 @@
--- V2__Add_Shop_Contact_Details.sql
-ALTER TABLE shops ADD COLUMN phone_number VARCHAR(20);
-ALTER TABLE shops ADD COLUMN latitude DOUBLE PRECISION;
-ALTER TABLE shops ADD COLUMN longitude DOUBLE PRECISION;
-ALTER TABLE shops ADD COLUMN our_story TEXT;
-ALTER TABLE shops ADD COLUMN amenities TEXT;
-ALTER TABLE shops ADD COLUMN daily_hours TEXT;
