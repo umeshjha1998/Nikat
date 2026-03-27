@@ -35,6 +35,7 @@ public class ProductService {
                 .price(dto.getPrice())
                 .isAvailable(dto.getIsAvailable())
                 .imageUrl(dto.getImageUrl())
+                .quantity(dto.getQuantity() != null ? dto.getQuantity() : 0L)
                 .build();
         
         return mapToDto(productRepository.save(product));
@@ -48,6 +49,7 @@ public class ProductService {
         product.setPrice(dto.getPrice());
         product.setIsAvailable(dto.getIsAvailable());
         product.setImageUrl(dto.getImageUrl());
+        product.setQuantity(dto.getQuantity() != null ? dto.getQuantity() : product.getQuantity());
         return mapToDto(productRepository.save(product));
     }
 
@@ -64,6 +66,7 @@ public class ProductService {
                 .price(product.getPrice())
                 .isAvailable(product.getIsAvailable())
                 .imageUrl(product.getImageUrl())
+                .quantity(product.getQuantity())
                 .build();
     }
 }

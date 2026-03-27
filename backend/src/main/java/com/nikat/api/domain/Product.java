@@ -38,6 +38,10 @@ public class Product {
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Long quantity = 0L;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

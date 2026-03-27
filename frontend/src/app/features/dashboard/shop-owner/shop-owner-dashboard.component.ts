@@ -178,7 +178,16 @@ import { AuthService } from '../../../core/auth.service';
                    <p>{{ product.description }}</p>
                    <div class="listing-footer">
                       <span class="price">₹{{ product.price }}</span>
-                      <span class="status-tag" [class.available]="product.isAvailable">{{ product.isAvailable ? 'In Stock' : 'Out of Stock' }}</span>
+                      <div class="stock-control">
+                        <span class="status-tag" [class.available]="product.isAvailable && (product.quantity || 0) > 0">
+                           {{ product.isAvailable && (product.quantity || 0) > 0 ? 'In Stock' : 'Out of Stock' }}
+                        </span>
+                        <div class="qty-adjust">
+                           <button class="qty-btn" (click)="updateQty(product, -1)">-</button>
+                           <span class="qty-val">{{ product.quantity || 0 }}</span>
+                           <button class="qty-btn" (click)="updateQty(product, 1)">+</button>
+                        </div>
+                      </div>
                    </div>
                 </div>
                     <div class="listing-actions">
@@ -287,7 +296,73 @@ import { AuthService } from '../../../core/auth.service';
         <!-- ORDERS TAB -->
         <ng-container *ngIf="activeTab === 'orders'">
           <div class="orders-view">
-            <p>Orders content will go here.</p>
+             <div class="search-bar-glass" style="margin-bottom: 2rem;">
+                <span class="material-icons">search</span>
+                <input type="text" [(ngModel)]="orderSearchQuery" (input)="onOrderSearch()" placeholder="Search by order ID, product or customer name...">
+             </div>
+
+             <div class="data-table-wrapper">
+                <table class="data-table">
+                   <thead>
+                      <tr>
+                         <th>Order ID</th>
+                         <th>Customer</th>
+                         <th>Date</th>
+                         <th>Items</th>
+                         <th>Total</th>
+                         <th>Status</th>
+                         <th>Actions</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                      <tr *ngFor="let order of orders">
+                         <td class="order-id">#{{ order.id?.substring(0,8) }}</td>
+                         <td>
+                            <div class="customer-info">
+                               <strong>{{ order.customerName }}</strong>
+                               <small>{{ order.contactPhone }}</small>
+                            </div>
+                         </td>
+                         <td class="date">{{ order.createdAt | date:'mediumDate' }}</td>
+                         <td>
+                            <div class="order-items-list">
+                               <div *ngFor="let item of order.items" class="order-item-chip">
+                                  <span class="qty">{{ item.quantity }}x</span> {{ item.productName }}
+                               </div>
+                            </div>
+                         </td>
+                         <td class="amount">₹{{ order.totalAmount }}</td>
+                         <td>
+                            <div class="order-action-group" *ngIf="order.status === 'PENDING'">
+                               <button class="btn-action accept" (click)="onStatusChange(order.id!, 'ACCEPTED')">
+                                  <span class="material-icons">check_circle</span> Accept
+                               </button>
+                               <button class="btn-action cancel" (click)="onStatusChange(order.id!, 'CANCELLED')">
+                                  <span class="material-icons">cancel</span> Cancel
+                               </button>
+                            </div>
+                            <select *ngIf="order.status !== 'PENDING' && order.status !== 'CANCELLED'" 
+                                    [ngModel]="order.status" (ngModelChange)="onStatusChange(order.id!, $event)" 
+                                    class="status-select" [class]="order.status?.toLowerCase()">
+                               <option value="ACCEPTED" disabled>Accepted</option>
+                               <option value="SHIPPED">Shipped</option>
+                               <option value="DELIVERED">Delivered</option>
+                            </select>
+                            <span class="status-badge cancelled" *ngIf="order.status === 'CANCELLED'">Cancelled</span>
+                         </td>
+                         <td>
+                            <button class="btn-icon" title="View details" style="color: var(--primary);">
+                               <span class="material-icons">visibility</span>
+                            </button>
+                         </td>
+                      </tr>
+                   </tbody>
+                </table>
+             </div>
+             <div *ngIf="orders.length === 0" class="empty-state-large">
+                <span class="material-icons">shopping_basket</span>
+                <p>No orders found yet for your shop.</p>
+             </div>
           </div>
         </ng-container>
 
@@ -433,10 +508,16 @@ import { AuthService } from '../../../core/auth.service';
                        <input type="number" [(ngModel)]="newProduct.price" name="price" required>
                     </div>
                     <div class="form-group">
-                       <label>Status</label>
+                       <label>Stock Quantity</label>
+                       <input type="number" [(ngModel)]="newProduct.quantity" name="qty" min="0">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                       <label>Availability</label>
                        <select class="glass-select" [(ngModel)]="newProduct.isAvailable" name="avail">
-                          <option [ngValue]="true">Available</option>
-                          <option [ngValue]="false">Out of Stock</option>
+                          <option [ngValue]="true">Active</option>
+                          <option [ngValue]="false">Hidden / Out of Stock</option>
                        </select>
                     </div>
                   </div>
@@ -1050,6 +1131,52 @@ import { AuthService } from '../../../core/auth.service';
     .btn-icon.ok { color: var(--primary); }
     .btn-icon.cancel { color: #ef4444; }
 
+    /* Stock Control */
+    .stock-control {
+       display: flex;
+       flex-direction: column;
+       gap: 0.5rem;
+       align-items: flex-end;
+    }
+
+    .qty-adjust {
+       display: flex;
+       align-items: center;
+       gap: 0.75rem;
+       background: rgba(255, 255, 255, 0.05);
+       border: 1px solid var(--glass-border);
+       border-radius: 0.75rem;
+       padding: 0.25rem;
+    }
+
+    .qty-btn {
+       background: rgba(var(--primary-rgb), 0.1);
+       border: none;
+       color: var(--primary);
+       width: 24px;
+       height: 24px;
+       border-radius: 0.5rem;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       cursor: pointer;
+       font-weight: 700;
+       transition: all 0.3s ease;
+    }
+
+    .qty-btn:hover {
+       background: var(--primary);
+       color: #000;
+    }
+
+    .qty-val {
+       font-size: 0.9rem;
+       font-weight: 700;
+       color: var(--text-main);
+       min-width: 1.5rem;
+       text-align: center;
+    }
+
     /* Orders View */
     .orders-view {
       display: flex;
@@ -1409,6 +1536,72 @@ import { AuthService } from '../../../core/auth.service';
        color: var(--primary);
        margin-top: 0.4rem;
     }
+
+    /* Order Actions Refinement */
+    .order-action-group {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+    }
+
+    .btn-action span {
+      font-size: 1.1rem;
+    }
+
+    .btn-action.accept {
+      background: rgba(var(--primary-rgb, 59, 130, 246), 0.1);
+      color: var(--primary);
+    }
+
+    .btn-action.accept:hover {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 12px var(--primary-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-action.cancel {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .btn-action.cancel:hover {
+      background: #ef4444;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .status-badge {
+      padding: 0.4rem 0.9rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid transparent;
+    }
+
+    .status-badge.cancelled {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.2);
+    }
   `]
 })
 export class ShopOwnerDashboardComponent implements OnInit {
@@ -1433,7 +1626,8 @@ export class ShopOwnerDashboardComponent implements OnInit {
     description: '',
     price: 0,
     isAvailable: true,
-    imageUrl: ''
+    imageUrl: '',
+    quantity: 0
   };
   workerNamesList: string[] = [];
   
@@ -1586,11 +1780,18 @@ export class ShopOwnerDashboardComponent implements OnInit {
         if (idx > -1) {
           this.orders[idx] = updated;
         }
+        
+        // If accepted, we need to refresh products to reflect stock changes
+        if (newStatus === 'ACCEPTED') {
+          this.loadProducts();
+        }
+
         alert(`Order status updated to ${newStatus}`);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to update status:', err);
-        alert('Failed to update order status.');
+        const errorMsg = err.error?.message || 'Failed to update order status.';
+        alert(errorMsg);
       }
     });
   }
@@ -1710,7 +1911,8 @@ export class ShopOwnerDashboardComponent implements OnInit {
          description: '',
          price: 0,
          isAvailable: true,
-         imageUrl: ''
+         imageUrl: '',
+         quantity: 0
        };
     }
     this.showListingModal = true;
@@ -1754,6 +1956,18 @@ export class ShopOwnerDashboardComponent implements OnInit {
         this.products = this.products.filter(p => p.id !== id);
       });
     }
+  }
+
+  updateQty(product: ProductDto, delta: number) {
+    const newQty = (product.quantity || 0) + delta;
+    if (newQty < 0) return;
+    
+    this.apiService.updateProduct(product.id, { ...product, quantity: newQty }).subscribe({
+      next: (updated) => {
+        product.quantity = updated.quantity;
+      },
+      error: (err) => console.error('Failed to update quantity:', err)
+    });
   }
 
   isFetchingLocation = false;

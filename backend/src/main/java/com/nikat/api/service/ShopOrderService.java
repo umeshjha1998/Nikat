@@ -40,6 +40,7 @@ public class ShopOrderService {
         List<OrderItem> items = orderDto.getItems().stream().map(itemDto -> {
             Product product = productRepository.findById(itemDto.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
+            
             return OrderItem.builder()
                     .order(order)
                     .product(product)
@@ -72,6 +73,34 @@ public class ShopOrderService {
     public OrderDto updateStatus(UUID orderId, String status) {
         ShopOrder order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        String oldStatus = order.getStatus();
+        
+        // Prevent random status changes if not accepted
+        if (!status.equals("ACCEPTED") && !status.equals("CANCELLED") && oldStatus.equals("PENDING")) {
+             throw new RuntimeException("Order must be ACCEPTED first.");
+        }
+
+        // Logic for reducing stock upon acceptance
+        if (status.equals("ACCEPTED") && !oldStatus.equals("ACCEPTED")) {
+            for (OrderItem item : order.getItems()) {
+                Product product = item.getProduct();
+                if (product.getQuantity() != null) {
+                    if (product.getQuantity() < item.getQuantity()) {
+                        throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                    }
+                    product.setQuantity(product.getQuantity() - item.getQuantity());
+                    
+                    // Automatically mark as out of stock if quantity reaches 0
+                    if (product.getQuantity() <= 0) {
+                        product.setIsAvailable(false);
+                    }
+                    
+                    productRepository.save(product);
+                }
+            }
+        }
+
         order.setStatus(status);
         return mapToDto(order);
     }

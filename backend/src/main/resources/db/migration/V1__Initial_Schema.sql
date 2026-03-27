@@ -78,6 +78,7 @@ CREATE TABLE products (
     description TEXT,
     price DECIMAL(10, 2),
     is_available BOOLEAN DEFAULT TRUE,
+    quantity BIGINT DEFAULT 0,
     image_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

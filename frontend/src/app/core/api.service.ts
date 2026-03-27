@@ -88,6 +88,7 @@ export interface ProductDto {
   price: number;
   isAvailable: boolean;
   imageUrl: string;
+  quantity?: number;
 }
 
 export interface OrderDto {

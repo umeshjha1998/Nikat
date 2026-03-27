@@ -165,14 +165,21 @@ import { CartService } from '../../../core/cart.service';
                   <span class="glass-chip" *ngFor="let chip of p.chips">{{chip}}</span>
                 </div>
                 <div class="product-footer">
-                  <span class="product-time" *ngIf="p.time">
-                    <span class="material-symbols-outlined">schedule</span>
-                    {{p.time}}
-                  </span>
-                  <button class="btn-add" (click)="addProduct(p)" *ngIf="!isOwner">
+                  <div class="stock-info">
+                    <span class="qty-tag" [class.out]="(p.quantity || 0) <= 0" [class.low]="(p.quantity || 0) > 0 && (p.quantity || 0) < 5">
+                      {{ (p.quantity || 0) > 0 ? (p.quantity + ' in stock') : 'Out of stock' }}
+                    </span>
+                  </div>
+                  <div class="owner-qty-ctrl" *ngIf="isOwner">
+                    <button class="qty-btn-mini" (click)="updateQty(p, -1); $event.stopPropagation()">-</button>
+                    <span class="qty-count">{{ p.quantity || 0 }}</span>
+                    <button class="qty-btn-mini" (click)="updateQty(p, 1); $event.stopPropagation()">+</button>
+                  </div>
+                  <button class="btn-add" (click)="addProduct(p)" *ngIf="!isOwner && (p.quantity || 0) > 0">
                     <span class="material-symbols-outlined">add</span>
                     Add
                   </button>
+                  <span class="out-of-stock-text" *ngIf="!isOwner && (p.quantity || 0) <= 0">Unavailable</span>
                 </div>
               </div>
             </div>
@@ -303,10 +310,16 @@ import { CartService } from '../../../core/cart.service';
                      <input type="number" [(ngModel)]="newProduct.price" name="pprice" required>
                   </div>
                   <div class="form-group">
+                     <label>Quantity</label>
+                     <input type="number" [(ngModel)]="newProduct.quantity" name="pqty" min="0">
+                  </div>
+               </div>
+               <div class="form-row">
+                  <div class="form-group">
                      <label>Availability</label>
                      <select [(ngModel)]="newProduct.isAvailable" name="pavail" class="glass-select">
-                        <option [ngValue]="true">In Stock</option>
-                        <option [ngValue]="false">Out of Stock</option>
+                        <option [ngValue]="true">Active / Visible</option>
+                        <option [ngValue]="false">Hidden / Out of Stock</option>
                      </select>
                   </div>
                </div>
@@ -726,6 +739,42 @@ import { CartService } from '../../../core/cart.service';
       .action-cards { grid-template-columns: 1fr; }
       .products-panel { grid-template-columns: 1fr; }
     }
+
+    .qty-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6bfe9c;
+      background: rgba(107, 254, 156, 0.1);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+    }
+    .qty-tag.low { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+    .qty-tag.out { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+    .owner-qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--glass-border);
+    }
+    .qty-btn-mini {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .qty-count { font-size: 0.8rem; font-weight: 800; min-width: 1.2rem; text-align: center; }
+    .out-of-stock-text { color: #ef4444; font-size: 0.8rem; font-weight: 700; }
   `]
 })
 export class ShopDetailComponent implements OnInit {
@@ -876,7 +925,7 @@ export class ShopDetailComponent implements OnInit {
   isUploading = false;
 
   editingProduct: any = null;
-  newProduct: any = { name: '', price: 0, description: '', isAvailable: true, imageUrl: '' };
+  newProduct: any = { name: '', price: 0, description: '', isAvailable: true, imageUrl: '', quantity: 0 };
   
   editShopData: any = { ourStory: '', amenities: '', dailyHours: '' };
   editHoursData: any[] = [];
@@ -1117,6 +1166,29 @@ export class ShopDetailComponent implements OnInit {
     if (confirm('Are you sure you want to delete this listing?')) {
        this.apiService.deleteProduct(id).subscribe(() => this.refreshProducts());
     }
+  }
+
+  updateQty(product: any, delta: number) {
+    const currentQty = product.quantity || 0;
+    const newQty = Math.max(0, currentQty + delta);
+    
+    // Convert string price back to number if needed
+    const priceNum = typeof product.price === 'string' 
+      ? parseFloat(product.price.replace('₹', '')) 
+      : product.price;
+
+    const payload = { 
+      ...product, 
+      price: priceNum,
+      quantity: newQty 
+    };
+    
+    this.apiService.updateProduct(product.id, payload).subscribe({
+      next: (updated) => {
+        product.quantity = updated.quantity;
+      },
+      error: (err) => console.error('Failed to update quantity:', err)
+    });
   }
 
   refreshProducts() {
