@@ -11,7 +11,7 @@ import { ApiService, ShopDto } from '../../../core/api.service';
     <div class="cards-grid">
       <div class="shop-mgmt-card" *ngFor="let s of shops">
         <div class="card-img" [style.backgroundImage]="'url(' + (s.photos && s.photos[0] ? s.photos[0] : 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80') + ')'">
-          <span class="card-status" [class]="s.status?.toLowerCase()">{{s.status}}</span>
+          <span class="card-status" [class]="s.status.toLowerCase()">{{s.status}}</span>
         </div>
         <div class="card-body">
           <h3>{{s.name}}</h3>

@@ -16,8 +16,8 @@ import { ApiService, ServiceDto } from '../../../core/api.service';
             <td class="name-cell">{{s.name}}</td>
             <td>{{s.serviceArea || 'N/A'}}</td>
             <td>{{s.categoryName || 'No Category'}}</td>
-            <td class="price-cell">₹{{s.basePrice}}</td>
-            <td><span class="status-badge" [class.available]="s.isAvailable">{{s.isAvailable ? 'Available' : 'Busy'}}</span></td>
+            <td class="price-cell">₹{{s.baseCharge}}</td>
+            <td><span class="card-status" [class]="s.status.toLowerCase()">{{s.status}}</span></td>
             <td><button class="icon-btn"><span class="material-icons">more_vert</span></button></td>
           </tr>
         </tbody>

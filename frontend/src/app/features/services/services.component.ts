@@ -90,8 +90,8 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
           <section class="content-area">
             <!-- Active Vibe Chips -->
             <div class="active-chips">
-              <div class="vibe-chip accent" *ngIf="activeSubCategory">
-                {{activeCategory === 'all' ? 'All Services' : 'Selected Category'}}
+              <div class="vibe-chip accent" *ngIf="activeCategory !== 'all'">
+                Selected Category
                 <span class="material-symbols-outlined chip-close" (click)="selectCategory('all')">close</span>
               </div>
               <div class="vibe-chip" *ngIf="filters.nearby">
