@@ -8,8 +8,14 @@ import com.nikat.api.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -22,6 +28,7 @@ public class ShopService {
     private final ShopPhotoRepository shopPhotoRepository;
     private final com.nikat.api.repository.UserRepository userRepository;
     private final com.nikat.api.repository.CategoryRepository categoryRepository;
+    private final ObjectMapper objectMapper;
 
     public List<ShopDto> getAllShops() {
         return shopRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
@@ -111,7 +118,15 @@ public class ShopService {
         return mapToDto(shopRepository.save(shop));
     }
 
+    public boolean isShopOwner(UUID shopId, String email) {
+        return shopRepository.findById(shopId)
+                .map(shop -> shop.getOwner().getEmail().equals(email))
+                .orElse(false);
+    }
+
     private ShopDto mapToDto(Shop shop) {
+        boolean isOpen = calculateIsShopOpen(shop.getDailyHours());
+        
         return ShopDto.builder()
                 .id(shop.getId())
                 .ownerId(shop.getOwner().getId())
@@ -132,6 +147,60 @@ public class ShopService {
                 .ourStory(shop.getOurStory())
                 .amenities(shop.getAmenities())
                 .dailyHours(shop.getDailyHours())
+                .isOpen(isOpen)
                 .build();
+    }
+
+    private boolean calculateIsShopOpen(String dailyHoursJson) {
+        if (dailyHoursJson == null || dailyHoursJson.isEmpty()) {
+            return false;
+        }
+
+        try {
+            List<DailyHour> hours = objectMapper.readValue(dailyHoursJson, new TypeReference<List<DailyHour>>() {});
+            LocalDateTime now = LocalDateTime.now();
+            String currentDay = now.getDayOfWeek().name(); // MONDAY, TUESDAY, etc.
+            
+            for (DailyHour h : hours) {
+                if (h.getDay().equalsIgnoreCase(currentDay)) {
+                    if (h.isClosed()) return false;
+                    
+                    String timeRange = h.getTime();
+                    if (timeRange == null || !timeRange.contains(" - ")) return false;
+                    
+                    String[] parts = timeRange.split(" - ");
+                    LocalTime openTime = parseTime(parts[0]);
+                    LocalTime closeTime = parseTime(parts[1]);
+                    LocalTime currentTime = now.toLocalTime();
+                    
+                    return !currentTime.isBefore(openTime) && !currentTime.isAfter(closeTime);
+                }
+            }
+        } catch (Exception e) {
+            // Log error or ignore
+        }
+        return false;
+    }
+
+    private LocalTime parseTime(String timeStr) {
+        try {
+            // Expecting "6:00 AM" or "06:00 AM"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH);
+            return LocalTime.parse(timeStr.toUpperCase(), formatter);
+        } catch (Exception e) {
+            try {
+                // Fallback for HH:mm format if any
+                return LocalTime.parse(timeStr);
+            } catch (Exception e2) {
+                return LocalTime.MIDNIGHT;
+            }
+        }
+    }
+
+    @lombok.Data
+    public static class DailyHour {
+        private String day;
+        private String time;
+        private boolean closed;
     }
 }

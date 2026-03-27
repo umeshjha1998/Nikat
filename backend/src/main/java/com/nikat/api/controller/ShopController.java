@@ -43,6 +43,7 @@ public class ShopController {
     }
 
     @PutMapping("/shops/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @shopService.isShopOwner(#id, authentication.name)")
     public ResponseEntity<ShopDto> updateShop(@PathVariable UUID id, @RequestBody ShopDto shopDto) {
         return ResponseEntity.ok(shopService.updateShop(id, shopDto));
     }

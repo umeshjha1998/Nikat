@@ -27,4 +27,5 @@ public class ShopDto {
     private String ourStory;
     private String amenities;
     private String dailyHours;
+    private Boolean isOpen;
 }

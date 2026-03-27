@@ -206,7 +206,10 @@ import { AuthService } from '../../../core/auth.service';
                           <small *ngIf="apt.assignedWorker" class="assigned-worker-badge">Assigned: {{ apt.assignedWorker }}</small>
                        </td>
                        <td>{{ apt.createdAt | date:'short' }}</td>
-                        <td>{{ apt.appointmentTime | date:'medium' }}</td>
+                        <td>
+                           <div class="slot-date" style="font-weight: 700; color: var(--text-main);">{{ apt.appointmentTime | date:'dd MMM, yyyy' }}</div>
+                           <div class="slot-time" style="font-size: 0.8rem; color: var(--primary);">{{ apt.appointmentTime | date:'h:mm a' }}</div>
+                        </td>
                        <td>{{ apt.serviceType }}</td>
                        <td><span class="badge" [class]="apt.status.toLowerCase()">{{ apt.status }}</span></td>
                        <td class="action-cells">

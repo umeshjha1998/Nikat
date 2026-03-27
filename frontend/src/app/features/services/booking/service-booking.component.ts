@@ -87,7 +87,7 @@ import { AuthService } from '../../../core/auth.service';
 
             <div class="calendar-mini">
               <div class="cal-nav">
-                <h3>March 2024</h3>
+                <h3>{{getCurrentMonthYear()}}</h3>
                 <div class="nav-btns">
                   <button><span class="material-icons">chevron_left</span></button>
                   <button><span class="material-icons">chevron_right</span></button>
@@ -97,7 +97,7 @@ import { AuthService } from '../../../core/auth.service';
                 <div class="d-node" 
                      *ngFor="let d of dates" 
                      [class.active]="selectedDate === d.val"
-                     (click)="selectedDate = d.val">
+                     (click)="onDateSelect(d)">
                   <span class="d-label">{{d.day}}</span>
                   <span class="d-num">{{d.num}}</span>
                   <div class="d-dot" *ngIf="d.available"></div>
@@ -111,6 +111,7 @@ import { AuthService } from '../../../core/auth.service';
                 <button class="ts-btn" 
                         *ngFor="let t of timeSlots" 
                         [class.active]="selectedTime === t"
+                        [disabled]="isPastTime(t)"
                         (click)="selectedTime = t">
                   {{t}}
                 </button>
@@ -340,8 +341,9 @@ import { AuthService } from '../../../core/auth.service';
       background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1rem;
       color: var(--text-main); font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 0.95rem;
     }
-    .ts-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .ts-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
     .ts-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 8px 20px var(--primary-glow); }
+    .ts-btn:disabled { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; filter: grayscale(1); }
 
     /* Review Card */
     .review-invoice-premium { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 2rem; padding: 2.5rem; margin-bottom: 2rem; }
@@ -443,23 +445,17 @@ export class ServiceBookingComponent implements OnInit {
     { id: 3, name: 'Exclusive Package', duration: '1 hour', price: '₹1,200', level: 'Master' }
   ];
 
-  dates = [
-    { day: 'Mon', num: '24', val: 'Mar 24', available: true },
-    { day: 'Tue', num: '25', val: 'Mar 25', available: true },
-    { day: 'Wed', num: '26', val: 'Mar 26', available: true },
-    { day: 'Thu', num: '27', val: 'Mar 27', available: false },
-    { day: 'Fri', num: '28', val: 'Mar 28', available: true },
-    { day: 'Sat', num: '29', val: 'Mar 29', available: true },
-    { day: 'Sun', num: '30', val: 'Mar 30', available: false }
-  ];
+  dates: any[] = [];
 
   timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'];
   shopId: string | null = null;
+  selectedDateObj: Date = new Date();
   
   constructor(private route: ActivatedRoute, private router: Router, private apiService: ApiService, private authService: AuthService) {}
 
   ngOnInit() {
     this.shopId = this.route.snapshot.paramMap.get('id');
+    this.generateDates();
     if (this.shopId) {
       this.apiService.getShopById(this.shopId).subscribe({
         next: (shop) => {
@@ -468,11 +464,8 @@ export class ServiceBookingComponent implements OnInit {
               name: shop.name,
               category: shop.categoryName || 'Local Business',
               provider: shop.ownerName || 'Verified Partner',
-              // Use a placeholder if no image
               image: (shop as any).imageUrl || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
             };
-            
-            // Generate some dynamic service options based on shop type
             if (shop.categoryName === 'Bakery') {
               this.serviceOptions = [
                 { id: 1, name: 'Custom Cake Consultation', duration: '15 min', price: 'Free', level: 'Standard' },
@@ -483,6 +476,53 @@ export class ServiceBookingComponent implements OnInit {
         }
       });
     }
+  }
+
+  generateDates() {
+    const today = new Date();
+    this.dates = [];
+    for(let i=0; i<7; i++) {
+       const d = new Date(today);
+       d.setDate(today.getDate() + i);
+       this.dates.push({
+          day: d.toLocaleDateString('en-US', { weekday: 'short' }),
+          num: d.getDate().toString(),
+          val: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          fullDate: d,
+          available: true
+       });
+    }
+    this.selectedDate = this.dates[0].val;
+    this.selectedDateObj = this.dates[0].fullDate;
+  }
+
+  onDateSelect(d: any) {
+    this.selectedDate = d.val;
+    this.selectedDateObj = d.fullDate;
+    this.selectedTime = ''; // reset time on date change
+  }
+
+  isPastTime(slot: string): boolean {
+    const today = new Date();
+    if (this.selectedDateObj.toDateString() !== today.toDateString()) return false;
+    
+    // Parse slot "9:00 AM"
+    const match = slot.match(/(\d+):(\d+)\s(AM|PM)/);
+    if (!match) return false;
+    
+    let hr = parseInt(match[1]);
+    const min = parseInt(match[2]);
+    const mod = match[3];
+    if (mod === 'PM' && hr !== 12) hr += 12;
+    if (mod === 'AM' && hr === 12) hr = 0;
+    
+    const slotDate = new Date(today);
+    slotDate.setHours(hr, min, 0, 0);
+    return slotDate < today;
+  }
+
+  getCurrentMonthYear() {
+    return new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   }
 
   nextStep() { if (this.step < 3) this.step++; }
@@ -500,17 +540,29 @@ export class ServiceBookingComponent implements OnInit {
 
   confirmBooking() {
     const user = this.authService.currentUser;
-    if (!user || !this.shopId || !this.selectedServiceId) return;
+    if (!user || !this.shopId || !this.selectedServiceId || !this.selectedTime) return;
 
-    // Construct a LocalDateTime string or use a Date object. 
-    // For simplicity, let's assume the backend handles ISO strings and we just pick a mock time for now 
-    // since the current UI doesn't have a real date-time picker that maps to LocalDateTime.
-    const appointmentDate = new Date(); // In a real app, combine selectedDate and selectedTime
-    
+    // Correctly combine Date and Time for Jackson LocalDateTime format
+    const [hrStr, minStr, mod] = this.selectedTime.match(/(\d+):(\d+)\s(AM|PM)/)!.slice(1);
+    let hr = parseInt(hrStr);
+    if (mod === 'PM' && hr !== 12) hr += 12;
+    if (mod === 'AM' && hr === 12) hr = 0;
+
+    const bookingDate = new Date(this.selectedDateObj);
+    bookingDate.setHours(hr, parseInt(minStr), 0, 0);
+
+    // Backend expects LocalDateTime. Simple way is ISO string but ensure it doesn't have offset issues?
+    // Actually, Jackson handles '2023-10-27T10:00:00' format well.
+    const isoStr = bookingDate.getFullYear() + '-' + 
+                   (bookingDate.getMonth()+1).toString().padStart(2, '0') + '-' + 
+                   bookingDate.getDate().toString().padStart(2, '0') + 'T' + 
+                   bookingDate.getHours().toString().padStart(2, '0') + ':' + 
+                   bookingDate.getMinutes().toString().padStart(2, '0') + ':00';
+
     const appointment: Partial<AppointmentDto> = {
       userId: user.id,
       shopId: this.shopId,
-      appointmentTime: appointmentDate.toISOString(),
+      appointmentTime: isoStr as any,
       serviceType: this.getSelectedName(),
       notes: "Booked via shop detail page"
     };

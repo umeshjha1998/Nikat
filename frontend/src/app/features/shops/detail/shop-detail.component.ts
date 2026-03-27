@@ -84,7 +84,7 @@ import { AuthService } from '../../../core/auth.service';
             <div class="meta-divider"></div>
             <div class="meta-item">
               <span class="status-dot" [class.open]="shop.isOpen"></span>
-              {{shop.isOpen ? 'Open Now' : 'Closed'}} · {{shop.hours}}
+              {{shop.isOpen ? 'Open Now' : (isClosedToday ? 'Closed Today' : 'Closed Now')}} · {{todayHours}}
             </div>
           </div>
         </div>
@@ -781,7 +781,7 @@ export class ShopDetailComponent implements OnInit {
               address: s.address || this.shop.address,
               images: (s.photos && s.photos.length > 0) ? s.photos : this.shop.images,
               category: s.categoryName || this.shop.category,
-              isOpen: s.status === 'APPROVED',
+              isOpen: s.isOpen,
               hours: (s.openingTime && s.closingTime) ? `${s.openingTime} - ${s.closingTime}` : this.shop.hours,
               reviewCount: s.reviewCount || this.shop.reviewCount,
               rating: s.averageRating?.toFixed(1) || this.shop.rating,
@@ -872,6 +872,18 @@ export class ShopDetailComponent implements OnInit {
      } catch(e) {
         return this.businessHours;
      }
+  }
+
+  get todayHours(): string {
+     const day = new Date().toLocaleString('en-US', { weekday: 'long' });
+     const h = this.displayBusinessHours.find((x: any) => x.day === day);
+     return h ? (h.closed ? 'Closed' : h.time) : 'N/A';
+  }
+
+  get isClosedToday(): boolean {
+     const day = new Date().toLocaleString('en-US', { weekday: 'long' });
+     const h = this.displayBusinessHours.find((x: any) => x.day === day);
+     return h ? h.closed : false;
   }
 
   checkOwnership() {

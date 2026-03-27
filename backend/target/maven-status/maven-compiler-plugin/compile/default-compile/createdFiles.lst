@@ -19,6 +19,7 @@ com\nikat\api\domain\Product.class
 com\nikat\api\repository\CommunityPostRepository.class
 com\nikat\api\dto\AppointmentDto$AppointmentDtoBuilder.class
 com\nikat\api\controller\InquiryController.class
+com\nikat\api\service\ShopService$DailyHour.class
 com\nikat\api\domain\CommunityPost$CommunityPostBuilder.class
 com\nikat\api\controller\AppointmentController.class
 com\nikat\api\repository\ShopPhotoRepository.class
@@ -37,6 +38,7 @@ com\nikat\api\dto\ProductDto$ProductDtoBuilder.class
 com\nikat\api\controller\AuthController.class
 com\nikat\api\controller\ShopController.class
 com\nikat\api\domain\Service.class
+com\nikat\api\service\ShopService$1.class
 com\nikat\api\controller\UserController.class
 com\nikat\api\repository\ProductRepository.class
 com\nikat\api\domain\CommunityPost.class
