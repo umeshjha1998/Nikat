@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CartService, CartItem } from '../../../core/cart.service';
 
 @Component({
   selector: 'app-payment',
@@ -124,7 +125,7 @@ import { FormsModule } from '@angular/forms';
                   Back to Delivery
                 </a>
                 <button class="btn-prime-glow" (click)="placeOrder()">
-                  Securely Pay ₹1,449
+                  Securely Pay ₹{{total}}
                   <span class="material-icons">lock</span>
                 </button>
               </div>
@@ -136,33 +137,26 @@ import { FormsModule } from '@angular/forms';
             <div class="summary-card-premium">
               <h3>Order Summary</h3>
               <div class="mini-item-list">
-                <div class="mini-item">
-                  <div class="mi-thumb" style="background-image: url('https://images.unsplash.com/photo-1585478259715-876acc5be8eb?w=100&q=80')"></div>
+                <div class="mini-item" *ngFor="let item of cartService.items">
+                  <div class="mi-thumb" [style.backgroundImage]="'url(' + item.image + ')'"></div>
                   <div class="mi-info">
-                    <h4>Sourdough Loaf</h4>
-                    <p>Qty: 2 • ₹700</p>
-                  </div>
-                </div>
-                <div class="mini-item">
-                  <div class="mi-thumb" style="background-image: url('https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=100&q=80')"></div>
-                  <div class="mi-info">
-                    <h4>Espresso Beans</h4>
-                    <p>Qty: 1 • ₹680</p>
+                    <h4>{{item.name}}</h4>
+                    <p>Qty: {{item.qty}} • ₹{{item.price * item.qty}}</p>
                   </div>
                 </div>
               </div>
 
               <div class="mini-divider"></div>
               <div class="mini-calc">
-                <div class="m-row"><span>Subtotal</span><span>₹1,380</span></div>
+                <div class="m-row"><span>Subtotal</span><span>₹{{subtotal}}</span></div>
                 <div class="m-row"><span>Delivery</span><span class="free">FREE</span></div>
-                <div class="m-row"><span>Est. Tax</span><span>₹69</span></div>
+                <div class="m-row"><span>Est. Tax</span><span>₹{{tax}}</span></div>
                 <div class="m-row" *ngIf="selectedMethod === 'cod'"><span>COD Fee</span><span>₹20</span></div>
               </div>
               <div class="mini-divider"></div>
               <div class="m-row total">
                 <span>Total</span>
-                <span>₹{{selectedMethod === 'cod' ? 1469 : 1449}}</span>
+                <span>₹{{total}}</span>
               </div>
             </div>
           </aside>
@@ -196,7 +190,11 @@ import { FormsModule } from '@angular/forms';
               Track Order
               <span class="material-icons">map</span>
             </button>
-            <button class="btn-ghost-premium" routerLink="/">
+            <button class="btn-ghost-premium" (click)="goToReviews()">
+              Rate Experience
+              <span class="material-icons">star</span>
+            </button>
+            <button class="btn-ghost-premium" routerLink="/" style="grid-column: span 2">
               Return Home
             </button>
           </div>
@@ -351,12 +349,44 @@ export class PaymentComponent {
   orderPlaced = false;
   orderId = Math.floor(1000 + Math.random() * 9000);
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    protected cartService: CartService
+  ) {}
+
+  get subtotal() { 
+    return this.cartService.items.reduce((s: number, i: CartItem) => s + i.price * i.qty, 0); 
+  }
+  
+  get tax() { return Math.round(this.subtotal * 0.05); }
+  
+  get total() { 
+    let t = this.subtotal + this.tax;
+    if (this.selectedMethod === 'cod') t += 20;
+    return t;
+  }
 
   placeOrder() { 
-    // Simulate payment processing
-    setTimeout(() => {
-      this.orderPlaced = true;
-    }, 1000);
+    const shipping = this.cartService.shippingInfo;
+    const addressStr = `${shipping.firstName} ${shipping.lastName}, ${shipping.address}, ${shipping.city} - ${shipping.pin}`;
+    const phone = shipping.phone;
+
+    this.cartService.checkout(this.selectedMethod, addressStr, phone).subscribe({
+      next: (results) => {
+        if (results && results.length > 0) {
+          this.orderId = results[0].id.substring(0, 8).toUpperCase();
+        }
+        this.orderPlaced = true;
+      },
+      error: (err) => {
+        alert("Failed to place order. Please try again.");
+        console.error(err);
+      }
+    });
+  }
+
+  goToReviews() {
+    // Navigate to reviews page, optionally passing shop info if needed
+    this.router.navigate(['/reviews']);
   }
 }

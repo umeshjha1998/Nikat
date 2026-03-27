@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { CartService, CartItem } from '../../../core/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -35,17 +36,17 @@ import { RouterModule } from '@angular/router';
               <span class="material-icons">west</span>
               Keep Browsing
             </a>
-            <h1>Bag <span>({{cartItems.length}})</span></h1>
+            <h1>Bag <span>({{cartService.count}})</span></h1>
           </div>
-          <div class="hero-right" *ngIf="cartItems.length > 0">
-             <button class="btn-ghost-danger" (click)="clearCart()">Clear All</button>
+          <div class="hero-right" *ngIf="cartService.items.length > 0">
+             <button class="btn-ghost-danger" (click)="cartService.clearCart()">Clear All</button>
           </div>
         </header>
 
-        <div class="cart-grid" *ngIf="cartItems.length > 0; else emptyCart">
+        <div class="cart-grid" *ngIf="cartService.items.length > 0; else emptyCart">
           <!-- Items Column -->
           <div class="items-col">
-            <div class="cart-card-premium" *ngFor="let item of cartItems; let i = index">
+            <div class="cart-card-premium" *ngFor="let item of cartService.items; let i = index">
               <div class="i-img" [style.backgroundImage]="'url(' + item.image + ')'">
                 <div class="i-tag" *ngIf="item.qty > 5">Hot 🔥</div>
               </div>
@@ -55,7 +56,7 @@ import { RouterModule } from '@angular/router';
                     <h3>{{item.name}}</h3>
                     <p>Sold by <span>{{item.shopName}}</span></p>
                   </div>
-                  <button class="i-remove" (click)="removeItem(i)">
+                  <button class="i-remove" (click)="cartService.removeFromCart(i)">
                     <span class="material-icons">delete_outline</span>
                   </button>
                 </div>
@@ -66,11 +67,11 @@ import { RouterModule } from '@angular/router';
                     <span class="price-total">₹{{item.price * item.qty}}</span>
                   </div>
                   <div class="i-controls">
-                    <button class="ctrl-btn" (click)="decrementQty(item)">
+                    <button class="ctrl-btn" (click)="cartService.updateQty(i, item.qty - 1)">
                       <span class="material-icons">remove</span>
                     </button>
                     <span class="qty-val">{{item.qty}}</span>
-                    <button class="ctrl-btn" (click)="item.qty = item.qty + 1">
+                    <button class="ctrl-btn" (click)="cartService.updateQty(i, item.qty + 1)">
                       <span class="material-icons">add</span>
                     </button>
                   </div>
@@ -248,19 +249,14 @@ import { RouterModule } from '@angular/router';
   `]
 })
 export class CartComponent {
-  cartItems = [
-    { name: 'Sourdough Loaf', shopName: 'The Golden Crust', price: 350, qty: 2, image: 'https://images.unsplash.com/photo-1585478259715-876acc5be8eb?w=400&q=80' },
-    { name: 'Cinnamon Rolls (4pc)', shopName: 'The Golden Crust', price: 425, qty: 1, image: 'https://images.unsplash.com/photo-1509365390695-33aee754301f?w=400&q=80' },
-    { name: 'Premium Espresso Beans', shopName: 'Bean & Brew', price: 680, qty: 1, image: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=400&q=80' }
-  ];
-
   discount = 0;
 
-  get subtotal() { return this.cartItems.reduce((s, i) => s + i.price * i.qty, 0); }
+  constructor(protected cartService: CartService) {}
+
+  get subtotal() { 
+    return this.cartService.items.reduce((s: number, i: CartItem) => s + i.price * i.qty, 0); 
+  }
+  
   get tax() { return Math.round(this.subtotal * 0.05); }
   get total() { return this.subtotal + this.tax - this.discount; }
-
-  removeItem(i: number) { this.cartItems.splice(i, 1); }
-  decrementQty(item: any) { if (item.qty > 1) item.qty--; }
-  clearCart() { this.cartItems = []; }
 }

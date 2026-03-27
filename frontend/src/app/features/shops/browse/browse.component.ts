@@ -469,7 +469,7 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
       .category-bar-inner { padding: 0.75rem 1rem; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
       .category-pills { flex-wrap: nowrap; }
       .pill { white-space: nowrap; padding: 0.4rem 1rem; font-size: 0.8rem; }
-      .btn-filter { display: none; }
+      .btn-filter { display: flex; }
 
       .shops-grid-section { padding: 0 1rem; }
       .shops-grid { gap: 1.5rem; }

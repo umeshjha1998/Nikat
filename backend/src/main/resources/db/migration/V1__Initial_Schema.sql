@@ -225,3 +225,24 @@ INSERT INTO categories (id, name, description, is_service_category, is_shop_cate
 (gen_random_uuid(), 'Wi-Fi & Internet', 'Broadband plans, routers, and OTT services', TRUE, FALSE),
 (gen_random_uuid(), 'Yoga Classes', 'Fitness and meditation training', TRUE, FALSE),
 (gen_random_uuid(), 'Zipper/Chain Repair', 'Repair for jackets, pants, bags, etc.', TRUE, FALSE);
+
+CREATE TABLE shop_orders (
+    id UUID PRIMARY KEY,
+    customer_id UUID NOT NULL REFERENCES users(id),
+    shop_id UUID NOT NULL REFERENCES shops(id),
+    total_amount DECIMAL(12, 2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    payment_method VARCHAR(50),
+    shipping_address TEXT,
+    contact_phone VARCHAR(20),
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL REFERENCES shop_orders(id),
+    product_id UUID NOT NULL REFERENCES products(id),
+    quantity INTEGER NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_price DECIMAL(12, 2) NOT NULL
+);

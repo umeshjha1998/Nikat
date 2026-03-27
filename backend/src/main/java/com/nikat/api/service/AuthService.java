@@ -106,6 +106,16 @@ public class AuthService {
                 .build();
     }
 
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new RuntimeException("User not authenticated");
+        }
+        return userRepository.findByEmail(authentication.getName())
+                .orElseGet(() -> userRepository.findByPhone(authentication.getName())
+                        .orElseThrow(() -> new RuntimeException("User not found")));
+    }
+
     private UserDto mapToUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())

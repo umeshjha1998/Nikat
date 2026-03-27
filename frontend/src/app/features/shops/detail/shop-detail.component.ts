@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
+import { CartService } from '../../../core/cart.service';
 
 @Component({
   selector: 'app-shop-detail',
@@ -21,8 +22,9 @@ import { AuthService } from '../../../core/auth.service';
           <button class="btn-icon-glass" (click)="toggleFavorite()">
             <span class="material-symbols-outlined" [class.filled]="isFavorited">{{isFavorited ? 'favorite' : 'favorite_border'}}</span>
           </button>
-          <button class="btn-icon-glass">
-            <span class="material-symbols-outlined">share</span>
+          <button class="btn-icon-glass" routerLink="/checkout/cart" class="btn-icon-glass cart-btn-glass">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            <span class="cart-badge" *ngIf="cartService.count > 0">{{cartService.count}}</span>
           </button>
         </div>
       </div>
@@ -600,7 +602,14 @@ import { AuthService } from '../../../core/auth.service';
     .social-btn:hover { color: #fff; border-color: var(--primary); background: var(--primary); }
     .social-btn .material-symbols-outlined { font-size: 1.25rem; }
 
-    .social-btn .material-symbols-outlined { font-size: 1.25rem; }
+    .cart-btn-glass { position: relative; }
+    .cart-badge {
+       position: absolute; top: -5px; right: -5px;
+       background: #ef4444; color: #fff; font-size: 0.65rem;
+       font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
+       display: flex; align-items: center; justify-content: center;
+       border: 1.5px solid var(--card-bg);
+    }
 
     /* Management UI */
     .btn-icon-mng {
@@ -777,6 +786,7 @@ export class ShopDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private apiService: ApiService,
     private authService: AuthService,
+    protected cartService: CartService,
     private router: Router
   ) {}
 
@@ -846,7 +856,8 @@ export class ShopDetailComponent implements OnInit {
 
   addProduct(product: any): void {
     if (!this.requireLogin()) return;
-    // TODO: Add product to cart logic
+    this.cartService.addToCart(product, this.shop.id, this.shop.name);
+    // Optional: show a success feedback (e.g. snackbar or animation)
   }
 
   toggleFavorite(): void {

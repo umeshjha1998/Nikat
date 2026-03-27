@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CartService, CartItem } from '../../../core/cart.service';
 
 @Component({
   selector: 'app-shipping',
@@ -124,18 +125,11 @@ import { FormsModule } from '@angular/forms';
             <div class="summary-card-premium">
               <h3>Order Summary</h3>
               <div class="mini-item-list">
-                <div class="mini-item">
-                  <div class="mi-thumb" style="background-image: url('https://images.unsplash.com/photo-1585478259715-876acc5be8eb?w=100&q=80')"></div>
+                <div class="mini-item" *ngFor="let item of cartService.items">
+                  <div class="mi-thumb" [style.backgroundImage]="'url(' + item.image + ')'"></div>
                   <div class="mi-info">
-                    <h4>Sourdough Loaf</h4>
-                    <p>Qty: 2 • ₹700</p>
-                  </div>
-                </div>
-                <div class="mini-item">
-                  <div class="mi-thumb" style="background-image: url('https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=100&q=80')"></div>
-                  <div class="mi-info">
-                    <h4>Espresso Beans</h4>
-                    <p>Qty: 1 • ₹680</p>
+                    <h4>{{item.name}}</h4>
+                    <p>Qty: {{item.qty}} • ₹{{item.price * item.qty}}</p>
                   </div>
                 </div>
               </div>
@@ -143,16 +137,16 @@ import { FormsModule } from '@angular/forms';
               <div class="mini-divider"></div>
 
               <div class="mini-calc">
-                <div class="m-row"><span>Subtotal</span><span>₹1,380</span></div>
+                <div class="m-row"><span>Subtotal</span><span>₹{{subtotal}}</span></div>
                 <div class="m-row"><span>Delivery</span><span class="free">FREE</span></div>
-                <div class="m-row"><span>Est. Tax</span><span>₹69</span></div>
+                <div class="m-row"><span>Est. Tax</span><span>₹{{tax}}</span></div>
               </div>
 
               <div class="mini-divider"></div>
               
               <div class="m-row total">
                 <span>Total</span>
-                <span>₹1,449</span>
+                <span>₹{{total}}</span>
               </div>
             </div>
             
@@ -274,10 +268,21 @@ export class ShippingComponent {
   selectedDelivery = 'standard';
   form = { firstName: '', lastName: '', phone: '', address: '', city: '', pin: '' };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    protected cartService: CartService
+  ) {}
+
+  get subtotal() { 
+    return this.cartService.items.reduce((s: number, i: CartItem) => s + i.price * i.qty, 0); 
+  }
+  
+  get tax() { return Math.round(this.subtotal * 0.05); }
+  get total() { return this.subtotal + this.tax; }
 
   onSubmit(e: Event) { 
     e.preventDefault(); 
+    this.cartService.setShippingInfo(this.form);
     this.router.navigate(['/checkout/payment']);
   }
 }

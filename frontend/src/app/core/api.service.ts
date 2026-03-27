@@ -76,7 +76,6 @@ export interface AppointmentDto {
   serviceType: string;
   status: string;
   notes: string;
-  assignedWorker: string;
   createdAt: string;
 }
 
@@ -88,6 +87,29 @@ export interface ProductDto {
   price: number;
   isAvailable: boolean;
   imageUrl: string;
+}
+
+export interface OrderDto {
+  id?: string;
+  customerId?: string;
+  customerName?: string;
+  shopId: string;
+  shopName?: string;
+  totalAmount: number;
+  status?: string;
+  paymentMethod: string;
+  shippingAddress: string;
+  contactPhone: string;
+  createdAt?: string;
+  items: OrderItemDto[];
+}
+
+export interface OrderItemDto {
+  productId: string;
+  productName?: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -195,5 +217,22 @@ export class ApiService {
   // Reviews
   getReviews(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/public/reviews`);
+  }
+
+  // Orders
+  createOrder(order: OrderDto): Observable<OrderDto> {
+    return this.http.post<OrderDto>(`${this.apiUrl}/orders`, order);
+  }
+
+  getOrdersByCurrentUser(): Observable<OrderDto[]> {
+    return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/my`);
+  }
+
+  getMyOrders(): Observable<OrderDto[]> {
+    return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/my-orders`);
+  }
+
+  getReceivedOrders(shopId: string): Observable<OrderDto[]> {
+    return this.http.get<OrderDto[]>(`${this.apiUrl}/orders/received?shopId=${shopId}`);
   }
 }

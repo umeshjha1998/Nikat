@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { FormsModule } from '@angular/forms';
 import { BookingService, Booking } from '../../core/booking.service';
+import { ApiService, OrderDto } from '../../core/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -367,22 +368,22 @@ import { BookingService, Booking } from '../../core/booking.service';
               <div class="o-head">
                 <div class="o-main">
                   <span class="o-id">{{o.id}}</span>
-                  <h4>{{o.shop}}</h4>
+                  <h4>{{o.shopName}}</h4>
                 </div>
-                <span class="status-tag" [class]="o.status.toLowerCase().replace(' ', '-')">{{o.status}}</span>
+                <span class="status-tag" [class]="o.status?.toLowerCase() || 'pending'">{{o.status || 'Pending'}}</span>
               </div>
               <div class="o-details">
                 <div class="o-detail-item">
-                  <label>Date</label>
-                  <span>{{o.date}}</span>
+                  <label>Order Date</label>
+                  <span>{{o.createdAt | date:'mediumDate'}}</span>
                 </div>
                 <div class="o-detail-item">
                   <label>Items</label>
-                  <span>{{o.items}}</span>
+                  <span>{{getOrderItemsText(o)}}</span>
                 </div>
                 <div class="o-detail-item">
                   <label>Total</label>
-                  <span class="price-highlight">{{o.total}}</span>
+                  <span class="price-highlight">₹{{o.totalAmount}}</span>
                 </div>
               </div>
               <div class="o-footer">
@@ -390,6 +391,10 @@ import { BookingService, Booking } from '../../core/booking.service';
                 <div class="dot-divider"></div>
                 <button class="btn-text" (click)="downloadInvoice(o)">Download Invoice</button>
               </div>
+            </div>
+            <div class="no-orders" *ngIf="orders.length === 0">
+               <p>You haven't placed any orders yet.</p>
+               <button class="btn-prime-mini" routerLink="/shops">Browse Shops</button>
             </div>
           </div>
         </ng-container>
@@ -821,6 +826,7 @@ export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private bookingService = inject(BookingService);
+  private apiService = inject(ApiService);
   
   activeTab = 'overview';
   showNotifications = false;
@@ -838,10 +844,7 @@ export class DashboardComponent implements OnInit {
     { id: '3', name: 'Auto Clinic', category: 'Mechanic', address: 'Koramangala, Bangalore' }
   ];
 
-  orders = [
-    { id: 'ORD-8821', shop: 'Urban Fade', items: 'Fiber Wax, Sea Salt Spray', total: '₹1,200', date: 'Oct 24, 2026', status: 'Delivered' },
-    { id: 'ORD-7754', shop: 'Serenity Spa', items: 'Essential Oils (Set of 3)', total: '₹850', date: 'Oct 15, 2026', status: 'In Transit' }
-  ];
+  orders: OrderDto[] = [];
 
   userProfile = {
     firstName: '',
@@ -902,6 +905,23 @@ export class DashboardComponent implements OnInit {
       this.showNotifications = false;
       this.showProfileMenu = false;
     });
+
+    this.loadOrders();
+  }
+
+  loadOrders() {
+    this.apiService.getOrdersByCurrentUser().subscribe({
+      next: (data) => {
+        this.orders = data;
+      },
+      error: (err) => {
+        console.error('Failed to load orders', err);
+      }
+    });
+  }
+
+  getOrderItemsText(order: OrderDto): string {
+    return order.items.map(i => i.productName || 'Product').join(', ');
   }
 
   toggleProfileMenu(event: Event) {
