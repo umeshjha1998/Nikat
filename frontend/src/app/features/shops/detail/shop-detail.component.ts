@@ -89,33 +89,40 @@ import { AuthService } from '../../../core/auth.service';
           </div>
         </div>
       </section>
+       <!-- Action Hub -->
+       <section class="action-hub">
+         <div class="action-cards">
+           <div class="action-card primary-action" (click)="bookAppointment()">
+             <span class="material-symbols-outlined action-icon">calendar_today</span>
+             <div>
+               <h4>Book Appointment</h4>
+               <p>{{ isOwner ? 'View pending requests' : 'Reserve your slot instantly' }}</p>
+             </div>
+           </div>
+           <a [href]="'tel:' + shop.phoneNumber" class="action-card" style="text-decoration: none;" *ngIf="shop.phoneNumber">
+             <span class="material-symbols-outlined action-icon">call</span>
+             <div>
+               <h4>Call Shop</h4>
+               <p>{{ shop.phoneNumber }}</p>
+             </div>
+           </a>
+           <div class="action-card" *ngIf="!shop.phoneNumber" (click)="bookAppointment()">
+             <span class="material-symbols-outlined action-icon">call</span>
+             <div>
+               <h4>Inquire Now</h4>
+               <p>Send a message to owner</p>
+             </div>
+           </div>
+           <div class="action-card" (click)="getDirections()">
+             <span class="material-symbols-outlined action-icon">near_me</span>
+             <div>
+               <h4>Get Directions</h4>
+               <p>Navigate via Google Maps</p>
+             </div>
+           </div>
+         </div>
+       </section>
 
-      <!-- Action Hub -->
-      <section class="action-hub">
-        <div class="action-cards">
-          <div class="action-card primary-action" (click)="bookAppointment()">
-            <span class="material-symbols-outlined action-icon">calendar_today</span>
-            <div>
-              <h4>Book Appointment</h4>
-              <p>Reserve your slot instantly</p>
-            </div>
-          </div>
-          <div class="action-card">
-            <span class="material-symbols-outlined action-icon">call</span>
-            <div>
-              <h4>Call Shop</h4>
-              <p>Speak to the owner directly</p>
-            </div>
-          </div>
-          <div class="action-card">
-            <span class="material-symbols-outlined action-icon">near_me</span>
-            <div>
-              <h4>Get Directions</h4>
-              <p>Navigate via Google Maps</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- Content Tabs -->
       <div class="content-wrapper">
@@ -782,10 +789,13 @@ export class ShopDetailComponent implements OnInit {
               images: (s.photos && s.photos.length > 0) ? s.photos : this.shop.images,
               category: s.categoryName || this.shop.category,
               isOpen: s.isOpen,
-              hours: (s.openingTime && s.closingTime) ? `${s.openingTime} - ${s.closingTime}` : this.shop.hours,
+              hours: (s.openingTime && s.closingTime) ? `${this.to12h(s.openingTime)} - ${this.to12h(s.closingTime)}` : this.shop.hours,
               reviewCount: s.reviewCount || this.shop.reviewCount,
               rating: s.averageRating?.toFixed(1) || this.shop.rating,
-              workerCount: s.workerCount
+              workerCount: s.workerCount,
+              phoneNumber: s.phoneNumber,
+              latitude: s.latitude,
+              longitude: s.longitude
             };
           }
         }
@@ -802,6 +812,14 @@ export class ShopDetailComponent implements OnInit {
           this.checkOwnership();
         }
       });
+    }
+  }
+
+  getDirections(): void {
+    if (this.shop.latitude && this.shop.longitude) {
+      window.open(`https://www.google.com/maps?q=${this.shop.latitude},${this.shop.longitude}`, '_blank');
+    } else {
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(this.shop.address)}`, '_blank');
     }
   }
 
@@ -866,12 +884,25 @@ export class ShopDetailComponent implements OnInit {
   }
 
   get displayBusinessHours() {
-     if (!this.shop?.dailyHours) return this.businessHours; // default
-     try {
-        return JSON.parse(this.shop.dailyHours);
-     } catch(e) {
-        return this.businessHours;
+     if (this.shop?.dailyHours) {
+        try {
+           return JSON.parse(this.shop.dailyHours);
+        } catch(e) {
+           console.error('Failed to parse dailyHours', e);
+        }
      }
+     
+     // Fallback to openingTime and closingTime if available
+     if (this.shop?.openingTime && this.shop?.closingTime) {
+        const timeStr = `${this.to12h(this.shop.openingTime)} - ${this.to12h(this.shop.closingTime)}`;
+        return this.DAYS.map(day => ({
+           day,
+           time: timeStr,
+           closed: false
+        }));
+     }
+
+     return this.businessHours; // static default
   }
 
   get todayHours(): string {

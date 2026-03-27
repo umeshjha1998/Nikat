@@ -28,4 +28,8 @@ public class ShopDto {
     private String amenities;
     private String dailyHours;
     private Boolean isOpen;
+    private java.math.BigDecimal startingPrice;
+    private String phoneNumber;
+    private Double latitude;
+    private Double longitude;
 }

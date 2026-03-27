@@ -28,6 +28,7 @@ public class ShopService {
     private final ShopPhotoRepository shopPhotoRepository;
     private final com.nikat.api.repository.UserRepository userRepository;
     private final com.nikat.api.repository.CategoryRepository categoryRepository;
+    private final com.nikat.api.repository.ProductRepository productRepository;
     private final ObjectMapper objectMapper;
 
     public List<ShopDto> getAllShops() {
@@ -114,6 +115,9 @@ public class ShopService {
         shop.setOurStory(dto.getOurStory());
         shop.setAmenities(dto.getAmenities());
         shop.setDailyHours(dto.getDailyHours());
+        shop.setPhoneNumber(dto.getPhoneNumber());
+        shop.setLatitude(dto.getLatitude());
+        shop.setLongitude(dto.getLongitude());
 
         return mapToDto(shopRepository.save(shop));
     }
@@ -127,6 +131,13 @@ public class ShopService {
     private ShopDto mapToDto(Shop shop) {
         boolean isOpen = calculateIsShopOpen(shop.getDailyHours());
         
+        java.math.BigDecimal startPrice = productRepository.findByShopIdAndIsAvailableTrue(shop.getId())
+                .stream()
+                .map(com.nikat.api.domain.Product::getPrice)
+                .filter(java.util.Objects::nonNull)
+                .min(java.math.BigDecimal::compareTo)
+                .orElse(null);
+
         return ShopDto.builder()
                 .id(shop.getId())
                 .ownerId(shop.getOwner().getId())
@@ -148,6 +159,10 @@ public class ShopService {
                 .amenities(shop.getAmenities())
                 .dailyHours(shop.getDailyHours())
                 .isOpen(isOpen)
+                .startingPrice(startPrice)
+                .phoneNumber(shop.getPhoneNumber())
+                .latitude(shop.getLatitude())
+                .longitude(shop.getLongitude())
                 .build();
     }
 

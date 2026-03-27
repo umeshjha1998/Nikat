@@ -23,6 +23,11 @@ export interface ShopDto {
   ourStory: string;
   amenities: string;
   dailyHours: string;
+  isOpen: boolean;
+  startingPrice: number;
+  phoneNumber?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface ServiceDto {

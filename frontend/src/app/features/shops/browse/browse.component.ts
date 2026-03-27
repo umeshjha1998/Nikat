@@ -393,12 +393,12 @@ export class BrowseComponent implements OnInit {
             name: s.name,
             category: s.categoryName || 'Local Business',
             description: s.description || 'Premium local shop offering exceptional quality.',
-            image: s.imageUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
-            rating: s.averageRating?.toFixed(1) || (4.0 + Math.random()).toFixed(1),
-            isOpen: s.status === 'APPROVED',
+            image: s.photos && s.photos.length > 0 ? s.photos[0] : 'https://images.unsplash.com/photo-1517248135467-4c7ed9d42177?auto=format&fit=crop&q=80',
+            rating: (4.0 + Math.random()).toFixed(1), // TODO: Real ratings from backend
+            isOpen: s.isOpen,
             tagColor: 'primary',
             footerLabel: 'Starting from',
-            footerValue: '₹' + (s.startingPrice || Math.floor(100 + Math.random() * 500))
+            footerValue: s.startingPrice ? '₹' + s.startingPrice : 'No products yet'
           }));
           this.displayShops = apiShops;
         }

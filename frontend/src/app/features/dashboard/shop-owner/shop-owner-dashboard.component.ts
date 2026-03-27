@@ -173,9 +173,10 @@ import { AuthService } from '../../../core/auth.service';
                       <span class="status-tag" [class.available]="product.isAvailable">{{ product.isAvailable ? 'In Stock' : 'Out of Stock' }}</span>
                    </div>
                 </div>
-                <div class="listing-actions">
-                   <button class="btn-icon" (click)="deleteListing(product.id)"><span class="material-icons">delete</span></button>
-                </div>
+                    <div class="listing-actions">
+                       <button class="btn-icon" (click)="openListingModal(product)"><span class="material-icons">edit</span></button>
+                       <button class="btn-icon" (click)="deleteListing(product.id)"><span class="material-icons">delete</span></button>
+                    </div>
              </div>
              <div *ngIf="products.length === 0" class="empty-full-width">
                 <span class="material-icons">inventory_2</span>
@@ -290,6 +291,12 @@ import { AuthService } from '../../../core/auth.service';
                       <option *ngFor="let c of categories" [value]="c.id">{{c.name}}</option>
                    </select>
                 </div>
+                <div class="form-row">
+                   <div class="form-group">
+                      <label>Shop Contact Number</label>
+                      <input type="tel" [(ngModel)]="currentShop.phoneNumber" name="phone" placeholder="e.g. +91 98765 43210">
+                   </div>
+                </div>
                 <div class="form-group">
                    <label>Business Address</label>
                    <div class="address-input-wrapper">
@@ -300,7 +307,18 @@ import { AuthService } from '../../../core/auth.service';
                          {{ isFetchingLocation ? 'Locating...' : 'GPS' }}
                       </button>
                    </div>
-                   <p class="form-hint" *ngIf="currentShop.address">Location fetched! You can add building/shop number or landmark if missing.</p>
+                   <div class="form-row" style="margin-top: 0.8rem;" *ngIf="currentShop.latitude">
+                      <div class="form-group">
+                         <label>Latitude</label>
+                         <input type="text" [value]="currentShop.latitude" readonly style="opacity: 0.7;">
+                      </div>
+                      <div class="form-group">
+                         <label>Longitude</label>
+                         <input type="text" [value]="currentShop.longitude" readonly style="opacity: 0.7;">
+                      </div>
+                   </div>
+                   <p class="form-hint" *ngIf="currentShop.latitude">GPS Coordinates captured! This will be used for Google Maps directions.</p>
+                   <p class="form-hint" *ngIf="currentShop.address && !currentShop.latitude">Location fetched! You can add building/shop number or landmark if missing.</p>
                 </div>
                 <div class="form-row">
                    <div class="form-group">
@@ -358,55 +376,55 @@ import { AuthService } from '../../../core/auth.service';
       <div class="modal-overlay" *ngIf="showListingModal">
         <div class="modal-card">
           <div class="modal-header">
-            <h2>Add New Listing</h2>
+            <h2>{{ newProduct.id ? 'Edit' : 'Add New' }} Listing</h2>
             <button class="btn-icon" (click)="showListingModal = false"><span class="material-icons">close</span></button>
           </div>
-          <form class="glass-form" (submit)="createNewListing(); $event.preventDefault()">
-            <div class="form-group">
-              <label>Product Image</label>
-              <div class="product-upload-container">
-                <div class="product-preview-box" *ngIf="newProduct.imageUrl" [style.backgroundImage]="'url(' + newProduct.imageUrl + ')'">
-                   <button type="button" class="remove-img" (click)="newProduct.imageUrl = ''">
-                     <span class="material-icons">close</span>
-                   </button>
-                </div>
-                <div class="product-upload-placeholder" *ngIf="!newProduct.imageUrl" (click)="prodFileInput.click()">
-                   <span class="material-icons" *ngIf="!isProductImageUploading">add_a_photo</span>
-                   <span class="upload-loader" *ngIf="isProductImageUploading"></span>
-                   <span>{{ isProductImageUploading ? 'Processing...' : 'Upload Product Photo' }}</span>
-                </div>
-                <input type="file" #prodFileInput style="display: none" (change)="onProductImageUpload($event)" accept="image/*">
-                <p class="upload-hint">Max size: 50KB. Compressed automatically.</p>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Product Name</label>
-              <input type="text" [(ngModel)]="newProduct.name" name="pname" required placeholder="e.g. Classic Hair Cut">
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Price (₹)</label>
-                <input type="number" [(ngModel)]="newProduct.price" name="pprice" required>
-              </div>
-              <div class="form-group">
-                 <label>Availability</label>
-                 <select [(ngModel)]="newProduct.isAvailable" name="pavail" class="glass-select">
-                    <option [ngValue]="true">In Stock</option>
-                    <option [ngValue]="false">Out of Stock</option>
-                 </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Description (Optional)</label>
-              <textarea rows="3" [(ngModel)]="newProduct.description" name="pdesc" placeholder="Brief details about the product/service"></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn-outline-glass" (click)="showListingModal = false">Cancel</button>
-              <button type="submit" class="btn-primary-glow" [disabled]="isProductImageUploading">
-                {{ isProductImageUploading ? 'Processing...' : 'Create Listing' }}
-              </button>
-            </div>
-          </form>
+               <form (submit)="saveListing(); $event.preventDefault()" class="glass-form">
+                  <div class="form-group">
+                    <label>Listing Title</label>
+                    <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="e.g. Haircut & Shampoo" required>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                       <label>Price (₹)</label>
+                       <input type="number" [(ngModel)]="newProduct.price" name="price" required>
+                    </div>
+                    <div class="form-group">
+                       <label>Status</label>
+                       <select class="glass-select" [(ngModel)]="newProduct.isAvailable" name="avail">
+                          <option [ngValue]="true">Available</option>
+                          <option [ngValue]="false">Out of Stock</option>
+                       </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Description</label>
+                    <textarea [(ngModel)]="newProduct.description" name="desc" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Listing Image</label>
+                    <div class="product-upload-container">
+                       <div *ngIf="newProduct.imageUrl" class="product-preview-box" [style.backgroundImage]="'url(' + newProduct.imageUrl + ')'">
+                          <button class="remove-img" (click)="newProduct.imageUrl = ''"><span class="material-icons">close</span></button>
+                       </div>
+                       <div *ngIf="!newProduct.imageUrl" class="product-upload-placeholder" (click)="productImg.click()">
+                          <div *ngIf="!isProductImageUploading">
+                             <span class="material-icons">add_a_photo</span>
+                             <p>Create with photo</p>
+                          </div>
+                          <div *ngIf="isProductImageUploading" class="upload-loader"></div>
+                       </div>
+                    </div>
+                    <input type="file" #productImg hidden (change)="onProductImageUpload($event)">
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn-link" (click)="showListingModal = false">Cancel</button>
+                    <button type="submit" class="btn-primary-glow" [disabled]="isProductImageUploading">
+                       {{ newProduct.id ? 'Update Listing' : 'Publish Listing' }}
+                    </button>
+                  </div>
+               </form>
         </div>
       </div>
     </div>
@@ -1460,35 +1478,52 @@ export class ShopOwnerDashboardComponent implements OnInit {
 
   // --- LISTINGS ACTIONS ---
 
-  openListingModal() {
-    this.newProduct = {
-      shopId: this.currentShop?.id,
-      name: '',
-      description: '',
-      price: 0,
-      isAvailable: true,
-      imageUrl: ''
-    };
+  openListingModal(product?: ProductDto) {
+    if (product) {
+       this.newProduct = { ...product };
+    } else {
+       this.newProduct = {
+         shopId: this.currentShop?.id,
+         name: '',
+         description: '',
+         price: 0,
+         isAvailable: true,
+         imageUrl: ''
+       };
+    }
     this.showListingModal = true;
   }
 
-  createNewListing() {
+  saveListing() {
     if (!this.newProduct.name || !this.newProduct.price) return;
     if (!this.newProduct.shopId) {
        alert('Shop profile not loaded. Cannot create listing.');
        return;
     }
-    this.apiService.createProduct(this.newProduct).subscribe({
-      next: (product) => {
-        this.products.unshift(product);
-        this.showListingModal = false;
-        alert('Listing created successfully!');
-      },
-      error: (err) => {
-        console.error('Create listing failed', err);
-        alert('Failed to create listing. Is your backend running?');
-      }
-    });
+
+    if (this.newProduct.id) {
+       this.apiService.updateProduct(this.newProduct.id, this.newProduct).subscribe({
+          next: () => {
+             const idx = this.products.findIndex(p => p.id === this.newProduct.id);
+             if (idx > -1) this.products[idx] = { ...this.newProduct } as ProductDto;
+             this.showListingModal = false;
+             alert('Listing updated!');
+          },
+          error: (err) => alert('Failed to update listing.')
+       });
+    } else {
+       this.apiService.createProduct(this.newProduct).subscribe({
+         next: (product) => {
+           this.products.unshift(product);
+           this.showListingModal = false;
+           alert('Listing created successfully!');
+         },
+         error: (err) => {
+           console.error('Create listing failed', err);
+           alert('Failed to create listing. Is your backend running?');
+         }
+       });
+    }
   }
 
   deleteListing(id: string) {
@@ -1505,8 +1540,9 @@ export class ShopOwnerDashboardComponent implements OnInit {
   saveSettings() {
     if (!this.currentShop) return;
 
-    // Sync array back to comma string
+    // Sync array back to comma string - only include names up to workerCount
     this.currentShop.workerNames = this.workerNamesList
+      .slice(0, this.currentShop.workerCount)
       .filter(n => n && n.trim())
       .join(',');
 
@@ -1534,6 +1570,11 @@ export class ShopOwnerDashboardComponent implements OnInit {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
         
+        if (this.currentShop) {
+          this.currentShop.latitude = lat;
+          this.currentShop.longitude = lon;
+        }
+
         // Reverse geocoding using Nominatim (OSM)
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
           .then(res => res.json())

@@ -56,6 +56,15 @@ public class Shop {
     @Column(name = "is_featured")
     private Boolean isFeatured;
 
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @Column(name = "our_story", columnDefinition = "TEXT")
     private String ourStory;
 
