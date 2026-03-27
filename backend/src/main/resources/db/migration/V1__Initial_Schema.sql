@@ -38,10 +38,13 @@ CREATE TABLE shops (
     name VARCHAR(200) NOT NULL,
     category_id UUID REFERENCES categories(id),
     worker_count INT,
+    worker_names TEXT,
     description TEXT,
     address TEXT,
     location_coordinates POINT,
     opening_hours VARCHAR(255),
+    opening_time VARCHAR(10),
+    closing_time VARCHAR(10),
     status VARCHAR(50) DEFAULT 'PENDING_VERIFICATION',
     is_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -71,7 +74,7 @@ CREATE TABLE products (
     description TEXT,
     price DECIMAL(10, 2),
     is_available BOOLEAN DEFAULT TRUE,
-    image_url VARCHAR(255),
+    image_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -105,4 +108,36 @@ CREATE TABLE advertisements (
     display_order INT,
     status VARCHAR(50) DEFAULT 'ACTIVE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE shop_photos (
+    id UUID PRIMARY KEY,
+    shop_id UUID NOT NULL REFERENCES shops(id),
+    photo_data TEXT NOT NULL, 
+    is_main BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE inquiries (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id),
+    shop_id UUID REFERENCES shops(id),
+    message TEXT NOT NULL,
+    reply TEXT,
+    status VARCHAR(50) DEFAULT 'OPEN', 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE appointments (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id),
+    shop_id UUID NOT NULL REFERENCES shops(id),
+    appointment_time TIMESTAMP NOT NULL,
+    service_type VARCHAR(150),
+    status VARCHAR(50) DEFAULT 'PENDING', 
+    notes TEXT,
+    assigned_worker VARCHAR(200),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
