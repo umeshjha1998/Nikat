@@ -76,6 +76,7 @@ export interface AppointmentDto {
   serviceType: string;
   status: string;
   notes: string;
+  assignedWorker: string;
   createdAt: string;
 }
 
