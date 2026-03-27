@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService, CartItem } from '../../../core/cart.service';
+import { AuthService } from '../../../core/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-shipping',
@@ -40,10 +42,14 @@ import { CartService, CartItem } from '../../../core/cart.service';
           <!-- Form Column -->
           <div class="form-col">
             <section class="checkout-section-premium">
-              <div class="section-head">
-                <span class="material-icons">location_on</span>
-                <h2>Shipping Address</h2>
-              </div>
+                <div class="section-head">
+                  <span class="material-icons">location_on</span>
+                  <h2>Shipping Address</h2>
+                  <button type="button" class="btn-gps" (click)="useGPS()">
+                    <span class="material-icons">my_location</span>
+                    <span>Use GPS</span>
+                  </button>
+                </div>
 
               <form (submit)="onSubmit($event)" class="premium-checkout-form">
                 <div class="f-row">
@@ -257,6 +263,15 @@ import { CartService, CartItem } from '../../../core/cart.service';
     .safety-badge .material-icons { color: #10b981; }
     .safety-badge p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin: 0; font-weight: 600; }
 
+    .btn-gps {
+      margin-left: auto; background: var(--surface-container-high); color: var(--primary);
+      border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 1rem;
+      font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; transition: 0.2s;
+    }
+    .btn-gps:hover { background: var(--primary); color: #fff; }
+    .btn-gps .material-icons { font-size: 1.1rem; }
+
     @media (max-width: 1000px) {
       .checkout-grid { grid-template-columns: 1fr; }
       .summary-col { order: -1; }
@@ -264,14 +279,24 @@ import { CartService, CartItem } from '../../../core/cart.service';
     }
   `]
 })
-export class ShippingComponent {
+export class ShippingComponent implements OnInit {
+  private authService = inject(AuthService);
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  protected cartService = inject(CartService);
+
   selectedDelivery = 'standard';
   form = { firstName: '', lastName: '', phone: '', address: '', city: '', pin: '' };
+  isLocating = false;
 
-  constructor(
-    private router: Router,
-    protected cartService: CartService
-  ) {}
+  ngOnInit() {
+    const user = this.authService.currentUser;
+    if (user) {
+      this.form.firstName = user.firstName || '';
+      this.form.lastName = user.lastName || '';
+      this.form.phone = user.phone || '';
+    }
+  }
 
   get subtotal() { 
     return this.cartService.items.reduce((s: number, i: CartItem) => s + i.price * i.qty, 0); 
@@ -279,6 +304,39 @@ export class ShippingComponent {
   
   get tax() { return Math.round(this.subtotal * 0.05); }
   get total() { return this.subtotal + this.tax; }
+
+  useGPS() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    this.isLocating = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        // Simple Reverse Geocoding via OSM Nominatim (Rate limited, for demo)
+        this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`)
+          .subscribe({
+            next: (data) => {
+              this.form.address = data.display_name || `Lat: ${latitude}, Lon: ${longitude}`;
+              this.form.city = data.address.city || data.address.town || data.address.suburb || '';
+              this.form.pin = data.address.postcode || '';
+              this.isLocating = false;
+            },
+            error: () => {
+              this.form.address = `Coordinates: ${latitude}, ${longitude}`;
+              this.isLocating = false;
+            }
+          });
+      },
+      (err) => {
+        console.error(err);
+        alert('Could not get your location. Please type manually.');
+        this.isLocating = false;
+      }
+    );
+  }
 
   onSubmit(e: Event) { 
     e.preventDefault(); 
