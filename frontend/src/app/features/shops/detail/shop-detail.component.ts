@@ -207,13 +207,17 @@ import { AuthService } from '../../../core/auth.service';
                 <p *ngIf="displayAmenities.length === 0" class="muted-text">No amenities listed yet.</p>
               </div>
               <div class="amenities-editor" *ngIf="isEditingAmenities">
-                <div class="amenity-toggle" *ngFor="let am of AMENITY_LIST" 
-                  [class.active]="isAmenitySelected(am.id)" 
-                  (click)="toggleAmenityId(am.id)">
-                  <span class="material-symbols-outlined">{{am.icon}}</span>
-                  <span>{{am.label}}</span>
+                <div class="amenities-selection-grid">
+                  <div class="amenity-toggle" *ngFor="let am of AMENITY_LIST" 
+                    [class.active]="isAmenitySelected(am.id)" 
+                    (click)="toggleAmenityId(am.id)">
+                    <span class="material-symbols-outlined">{{am.icon}}</span>
+                    <span>{{am.label}}</span>
+                  </div>
                 </div>
-                <button class="btn-primary-glow" (click)="saveShopAmenities()">Save Amenities</button>
+                <div class="editor-actions">
+                  <button class="btn-primary-glow" (click)="saveShopAmenities()">Save Amenities</button>
+                </div>
               </div>
             </div>
 
@@ -682,7 +686,7 @@ import { AuthService } from '../../../core/auth.service';
 
     /* About Editors */
     .glass-textarea { width: 100%; min-height: 12rem; margin-bottom: 2rem; resize: vertical; }
-    .amenities-editor { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+    .amenities-editor { display: flex; flex-direction: column; margin-bottom: 2rem; }
     .amenity-toggle {
        background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-muted);
        padding: 0.75rem 1.25rem; border-radius: 1rem; cursor: pointer;
@@ -691,6 +695,9 @@ import { AuthService } from '../../../core/auth.service';
     }
     .amenity-toggle.active { background: var(--primary); color: #000; border-color: var(--primary); }
     .amenity-toggle span { line-height: 1; }
+
+    .amenities-selection-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .editor-actions { width: 100%; display: flex; justify-content: flex-start; }
 
     .hours-editor { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
     .day-row { display: grid; grid-template-columns: 6rem 1fr 6rem; align-items: center; gap: 1rem; background: var(--glass); padding: 0.75rem 1.25rem; border-radius: 1rem; }
@@ -1003,7 +1010,8 @@ export class ShopDetailComponent implements OnInit {
   saveShopAbout() {
     this.shop.ourStory = this.editShopData.ourStory;
     this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
-      next: () => {
+      next: (updatedShop) => {
+        this.shop = { ...this.shop, ...updatedShop };
         this.isEditingAbout = false;
         alert('Our story updated successfully!');
       },
@@ -1017,7 +1025,8 @@ export class ShopDetailComponent implements OnInit {
   saveShopAmenities() {
     this.shop.amenities = this.editShopData.amenities;
     this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
-      next: () => {
+      next: (updatedShop) => {
+        this.shop = { ...this.shop, ...updatedShop };
         this.isEditingAmenities = false;
         alert('Amenities updated successfully!');
       },
@@ -1036,7 +1045,8 @@ export class ShopDetailComponent implements OnInit {
     }));
     this.shop.dailyHours = JSON.stringify(finalHours);
     this.apiService.updateShop(this.shop.id, this.getShopPayload()).subscribe({
-      next: () => {
+      next: (updatedShop) => {
+        this.shop = { ...this.shop, ...updatedShop };
         this.isEditingHours = false;
         alert('Business hours updated successfully!');
       },

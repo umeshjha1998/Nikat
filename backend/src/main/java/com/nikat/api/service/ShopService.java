@@ -174,25 +174,33 @@ public class ShopService {
         try {
             List<DailyHour> hours = objectMapper.readValue(dailyHoursJson, new TypeReference<List<DailyHour>>() {});
             LocalDateTime now = LocalDateTime.now();
-            String currentDay = now.getDayOfWeek().name(); // MONDAY, TUESDAY, etc.
+            String currentDay = now.getDayOfWeek().name();
+            String yesterdayDay = now.minusDays(1).getDayOfWeek().name();
+            LocalTime currentTime = now.toLocalTime();
             
+            // Check today's shift and yesterday's overnight shift
             for (DailyHour h : hours) {
+                if (h.isClosed() || h.getTime() == null || !h.getTime().contains(" - ")) continue;
+                
+                String[] parts = h.getTime().split(" - ");
+                LocalTime openTime = parseTime(parts[0]);
+                LocalTime closeTime = parseTime(parts[1]);
+
                 if (h.getDay().equalsIgnoreCase(currentDay)) {
-                    if (h.isClosed()) return false;
-                    
-                    String timeRange = h.getTime();
-                    if (timeRange == null || !timeRange.contains(" - ")) return false;
-                    
-                    String[] parts = timeRange.split(" - ");
-                    LocalTime openTime = parseTime(parts[0]);
-                    LocalTime closeTime = parseTime(parts[1]);
-                    LocalTime currentTime = now.toLocalTime();
-                    
-                    return !currentTime.isBefore(openTime) && !currentTime.isAfter(closeTime);
+                    // Normal shift or today's late-night portion
+                    if (openTime.isBefore(closeTime)) {
+                        if (!currentTime.isBefore(openTime) && !currentTime.isAfter(closeTime)) return true;
+                    } else {
+                        // Overnight: Open until midnight OR already after open time
+                        if (!currentTime.isBefore(openTime) || currentTime.isBefore(closeTime)) return true;
+                    }
+                } else if (h.getDay().equalsIgnoreCase(yesterdayDay)) {
+                    // Check if yesterday's shift was overnight and we are currently in its morning portion
+                    if (openTime.isAfter(closeTime) && currentTime.isBefore(closeTime)) return true;
                 }
             }
         } catch (Exception e) {
-            // Log error or ignore
+            // Ignore parse errors
         }
         return false;
     }
