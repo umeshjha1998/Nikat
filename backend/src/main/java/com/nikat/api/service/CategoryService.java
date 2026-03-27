@@ -31,7 +31,7 @@ public class CategoryService {
                 .id(category.getId())
                 .name(category.getName())
                 .description(category.getDescription())
-                .isServiceCategory(category.getIsServiceCategory())
+                .isServiceProviderCategory(category.getIsServiceProviderCategory())
                 .isShopCategory(category.getIsShopCategory())
                 .build();
     }

@@ -25,7 +25,7 @@ public class Category {
     private String description;
 
     @Column(name = "is_service_category")
-    private Boolean isServiceCategory;
+    private Boolean isServiceProviderCategory;
 
     @Column(name = "is_shop_category")
     private Boolean isShopCategory;
@@ -36,7 +36,7 @@ public class Category {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        if (isServiceCategory == null) isServiceCategory = false;
+        if (isServiceProviderCategory == null) isServiceProviderCategory = false;
         if (isShopCategory == null) isShopCategory = false;
     }
 }
