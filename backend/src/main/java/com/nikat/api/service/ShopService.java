@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import com.nikat.api.security.IdGenerator;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,12 +31,13 @@ public class ShopService {
     private final com.nikat.api.repository.CategoryRepository categoryRepository;
     private final com.nikat.api.repository.ProductRepository productRepository;
     private final ObjectMapper objectMapper;
+    private final IdGenerator idGenerator;
 
     public List<ShopDto> getAllShops() {
         return shopRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public ShopDto getShopById(UUID id) {
+    public ShopDto getShopById(String id) {
         Shop shop = shopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
         return mapToDto(shop);
@@ -53,7 +55,14 @@ public class ShopService {
         com.nikat.api.domain.User owner = userRepository.findById(dto.getOwnerId())
                 .orElseThrow(() -> new RuntimeException("User not found: " + dto.getOwnerId()));
         
+        // Generate custom ID: YEAR-MONTH-count
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime monthStart = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
+        long count = shopRepository.countByCreatedAtAfter(monthStart);
+        String customId = idGenerator.generateShopOrServiceId(count);
+
         Shop shop = Shop.builder()
+                .id(customId)
                 .name(dto.getName())
                 .owner(owner)
                 .description(dto.getDescription())
@@ -65,14 +74,14 @@ public class ShopService {
         return mapToDto(shopRepository.save(shop));
     }
 
-    public ShopDto updateShopStatus(UUID id, String status) {
+    public ShopDto updateShopStatus(String id, String status) {
         Shop shop = shopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
         shop.setStatus(status);
         return mapToDto(shopRepository.save(shop));
     }
 
-    public void uploadShopPhoto(UUID shopId, String photoData) {
+    public void uploadShopPhoto(String shopId, String photoData) {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new RuntimeException("Shop not found with id: " + shopId));
         ShopPhoto photo = ShopPhoto.builder()
@@ -82,7 +91,7 @@ public class ShopService {
         shopPhotoRepository.save(photo);
     }
 
-    public ShopDto updateShop(UUID id, ShopDto dto) {
+    public ShopDto updateShop(String id, ShopDto dto) {
         Shop shop = shopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
         
@@ -122,7 +131,7 @@ public class ShopService {
         return mapToDto(shopRepository.save(shop));
     }
 
-    public boolean isShopOwner(UUID shopId, String email) {
+    public boolean isShopOwner(String shopId, String email) {
         return shopRepository.findById(shopId)
                 .map(shop -> shop.getOwner().getEmail().equals(email))
                 .orElse(false);

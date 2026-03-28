@@ -16,7 +16,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/public/products/shop/{shopId}")
-    public ResponseEntity<List<ProductDto>> getProductsByShop(@PathVariable UUID shopId) {
+    public ResponseEntity<List<ProductDto>> getProductsByShop(@PathVariable String shopId) {
         return ResponseEntity.ok(productService.getProductsByShop(shopId));
     }
 

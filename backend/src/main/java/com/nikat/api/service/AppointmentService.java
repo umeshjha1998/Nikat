@@ -19,7 +19,7 @@ public class AppointmentService {
     private final com.nikat.api.repository.UserRepository userRepository;
     private final com.nikat.api.repository.ShopRepository shopRepository;
 
-    public List<AppointmentDto> getAppointmentsByShop(UUID shopId) {
+    public List<AppointmentDto> getAppointmentsByShop(String shopId) {
         return appointmentRepository.findByShopIdOrderByAppointmentTimeAsc(shopId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 

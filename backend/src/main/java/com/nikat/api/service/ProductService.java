@@ -20,7 +20,7 @@ public class ProductService {
 
     private final ShopRepository shopRepository;
 
-    public List<ProductDto> getProductsByShop(UUID shopId) {
+    public List<ProductDto> getProductsByShop(String shopId) {
         return productRepository.findByShopId(shopId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 

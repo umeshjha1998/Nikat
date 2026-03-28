@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -35,7 +34,7 @@ public class OrderController {
     @GetMapping("/received")
     @PreAuthorize("hasRole('SHOP_OWNER')")
     public ResponseEntity<List<OrderDto>> getReceivedOrders(
-            @RequestParam UUID shopId, 
+            @RequestParam String shopId, 
             @RequestParam(required = false) String query) {
         User currentUser = authService.getCurrentUser();
         return ResponseEntity.ok(orderService.getShopOrders(shopId, currentUser, query));
@@ -43,7 +42,7 @@ public class OrderController {
 
     @PatchMapping("/{orderId}/status")
     @PreAuthorize("hasRole('SHOP_OWNER')")
-    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable UUID orderId, @RequestBody String status) {
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable String orderId, @RequestBody String status) {
         // Remove quotes if present from raw string body
         status = status.replace("\"", "");
         return ResponseEntity.ok(orderService.updateStatus(orderId, status));

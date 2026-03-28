@@ -23,7 +23,7 @@ public class ShopController {
     }
 
     @GetMapping("/public/shops/{id}")
-    public ResponseEntity<ShopDto> getShopById(@PathVariable UUID id) {
+    public ResponseEntity<ShopDto> getShopById(@PathVariable String id) {
         return ResponseEntity.ok(shopService.getShopById(id));
     }
 
@@ -38,18 +38,18 @@ public class ShopController {
 
     @PatchMapping("/admin/shops/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ShopDto> updateShopStatus(@PathVariable UUID id, @RequestParam String status) {
+    public ResponseEntity<ShopDto> updateShopStatus(@PathVariable String id, @RequestParam String status) {
         return ResponseEntity.ok(shopService.updateShopStatus(id, status));
     }
 
     @PutMapping("/shops/{id}")
     @PreAuthorize("hasRole('ADMIN') or @shopService.isShopOwner(#id, authentication.name)")
-    public ResponseEntity<ShopDto> updateShop(@PathVariable UUID id, @RequestBody ShopDto shopDto) {
+    public ResponseEntity<ShopDto> updateShop(@PathVariable String id, @RequestBody ShopDto shopDto) {
         return ResponseEntity.ok(shopService.updateShop(id, shopDto));
     }
 
     @PostMapping("/shops/{id}/photos")
-    public ResponseEntity<Void> uploadPhoto(@PathVariable UUID id, @RequestBody String photoData) {
+    public ResponseEntity<Void> uploadPhoto(@PathVariable String id, @RequestBody String photoData) {
         shopService.uploadShopPhoto(id, photoData);
         return ResponseEntity.ok().build();
     }

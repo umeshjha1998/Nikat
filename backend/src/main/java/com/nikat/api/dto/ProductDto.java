@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductDto {
     private UUID id;
-    private UUID shopId;
+    private String shopId;
     private String shopName;
     private String name;
     private String description;

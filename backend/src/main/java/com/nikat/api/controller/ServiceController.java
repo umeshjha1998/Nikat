@@ -23,7 +23,7 @@ public class ServiceController {
     }
 
     @GetMapping("/public/services/{id}")
-    public ResponseEntity<ServiceDto> getServiceById(@PathVariable UUID id) {
+    public ResponseEntity<ServiceDto> getServiceById(@PathVariable String id) {
         return ResponseEntity.ok(serviceProviderService.getServiceById(id));
     }
 
@@ -34,7 +34,7 @@ public class ServiceController {
 
     @PatchMapping("/admin/services/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ServiceDto> updateServiceStatus(@PathVariable UUID id, @RequestParam String status) {
+    public ResponseEntity<ServiceDto> updateServiceStatus(@PathVariable String id, @RequestParam String status) {
         return ResponseEntity.ok(serviceProviderService.updateServiceStatus(id, status));
     }
 }

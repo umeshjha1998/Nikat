@@ -10,8 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import com.nikat.api.security.IdGenerator;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,13 +23,21 @@ public class ShopOrderService {
     private final ShopOrderRepository orderRepository;
     private final ShopRepository shopRepository;
     private final ProductRepository productRepository;
+    private final IdGenerator idGenerator;
 
     @Transactional
     public OrderDto createOrder(User customer, OrderDto orderDto) {
         Shop shop = shopRepository.findById(orderDto.getShopId())
                 .orElseThrow(() -> new RuntimeException("Shop not found"));
 
+        // Generate custom ID: YYYY-MM-DD-increment
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();
+        long count = orderRepository.countByCreatedAtAfter(startOfDay);
+        String customId = idGenerator.generateOrderId(count);
+
         ShopOrder order = ShopOrder.builder()
+                .id(customId)
                 .customer(customer)
                 .shop(shop)
                 .totalAmount(orderDto.getTotalAmount())
@@ -61,7 +70,7 @@ public class ShopOrderService {
                 .stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public List<OrderDto> getShopOrders(UUID shopId, User owner, String query) {
+    public List<OrderDto> getShopOrders(String shopId, User owner, String query) {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new RuntimeException("Shop not found"));
         
@@ -79,7 +88,7 @@ public class ShopOrderService {
     }
 
     @Transactional
-    public OrderDto updateStatus(UUID orderId, String status) {
+    public OrderDto updateStatus(String orderId, String status) {
         ShopOrder order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         

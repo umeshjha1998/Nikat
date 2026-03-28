@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, UUID> {
-    List<Inquiry> findByShopId(UUID shopId);
+    List<Inquiry> findByShopId(String shopId);
     List<Inquiry> findByUserId(UUID userId);
 }

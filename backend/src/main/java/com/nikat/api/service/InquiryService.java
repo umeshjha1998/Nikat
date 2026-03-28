@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class InquiryService {
     private final InquiryRepository inquiryRepository;
 
-    public List<InquiryDto> getInquiriesByShop(UUID shopId) {
+    public List<InquiryDto> getInquiriesByShop(String shopId) {
         return inquiryRepository.findByShopId(shopId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 

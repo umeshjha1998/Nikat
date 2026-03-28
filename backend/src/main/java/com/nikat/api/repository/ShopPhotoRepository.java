@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface ShopPhotoRepository extends JpaRepository<ShopPhoto, UUID> {
-    List<ShopPhoto> findByShopId(UUID shopId);
+    List<ShopPhoto> findByShopId(String shopId);
 }

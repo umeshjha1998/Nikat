@@ -1,4 +1,5 @@
 -- V1__Initial_Schema.sql
+-- Merged with custom ID formats for Shops, Services, and Orders
 
 CREATE TABLE users (
     id UUID PRIMARY KEY,
@@ -32,7 +33,7 @@ CREATE TABLE categories (
 );
 
 CREATE TABLE shops (
-    id UUID PRIMARY KEY,
+    id VARCHAR(50) PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id),
     name VARCHAR(200) NOT NULL,
     category_id UUID REFERENCES categories(id),
@@ -56,7 +57,7 @@ CREATE TABLE shops (
 );
 
 CREATE TABLE services (
-    id UUID PRIMARY KEY,
+    id VARCHAR(50) PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id),
     name VARCHAR(200) NOT NULL,
     category_id UUID REFERENCES categories(id),
@@ -73,7 +74,7 @@ CREATE TABLE services (
 
 CREATE TABLE products (
     id UUID PRIMARY KEY,
-    shop_id UUID NOT NULL REFERENCES shops(id),
+    shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
     name VARCHAR(200) NOT NULL,
     description TEXT,
     price DECIMAL(10, 2),
@@ -86,8 +87,8 @@ CREATE TABLE products (
 CREATE TABLE reviews (
     id UUID PRIMARY KEY,
     reviewer_id UUID NOT NULL REFERENCES users(id),
-    shop_id UUID REFERENCES shops(id),
-    service_id UUID REFERENCES services(id),
+    shop_id VARCHAR(50) REFERENCES shops(id),
+    service_id VARCHAR(50) REFERENCES services(id),
     rating INT CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     status VARCHAR(50) DEFAULT 'ACTIVE',
@@ -117,7 +118,7 @@ CREATE TABLE advertisements (
 
 CREATE TABLE shop_photos (
     id UUID PRIMARY KEY,
-    shop_id UUID NOT NULL REFERENCES shops(id),
+    shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
     photo_data TEXT NOT NULL, 
     is_main BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -126,7 +127,7 @@ CREATE TABLE shop_photos (
 CREATE TABLE inquiries (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id),
-    shop_id UUID REFERENCES shops(id),
+    shop_id VARCHAR(50) REFERENCES shops(id),
     message TEXT NOT NULL,
     reply TEXT,
     status VARCHAR(50) DEFAULT 'OPEN', 
@@ -137,7 +138,7 @@ CREATE TABLE inquiries (
 CREATE TABLE appointments (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id),
-    shop_id UUID NOT NULL REFERENCES shops(id),
+    shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
     appointment_time TIMESTAMP NOT NULL,
     service_type VARCHAR(150),
     status VARCHAR(50) DEFAULT 'PENDING', 
@@ -147,6 +148,28 @@ CREATE TABLE appointments (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE shop_orders (
+    id VARCHAR(50) PRIMARY KEY,
+    customer_id UUID NOT NULL REFERENCES users(id),
+    shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
+    total_amount DECIMAL(12, 2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    payment_method VARCHAR(50),
+    shipping_address TEXT,
+    contact_phone VARCHAR(20),
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+    id UUID PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL REFERENCES shop_orders(id),
+    product_id UUID NOT NULL REFERENCES products(id),
+    quantity INTEGER NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_price DECIMAL(12, 2) NOT NULL
+);
+
+-- Seed Categories
 INSERT INTO categories (id, name, description, is_service_category, is_shop_category) VALUES
 (gen_random_uuid(), 'AC/Fridge/Geyser Repair', 'Repair for AC, fridge, and geysers', TRUE, FALSE),
 (gen_random_uuid(), 'Appliance Repair', 'Repair for AC, fridge, and geysers', TRUE, FALSE),
@@ -226,24 +249,3 @@ INSERT INTO categories (id, name, description, is_service_category, is_shop_cate
 (gen_random_uuid(), 'Wi-Fi & Internet', 'Broadband plans, routers, and OTT services', TRUE, FALSE),
 (gen_random_uuid(), 'Yoga Classes', 'Fitness and meditation training', TRUE, FALSE),
 (gen_random_uuid(), 'Zipper/Chain Repair', 'Repair for jackets, pants, bags, etc.', TRUE, FALSE);
-
-CREATE TABLE shop_orders (
-    id UUID PRIMARY KEY,
-    customer_id UUID NOT NULL REFERENCES users(id),
-    shop_id UUID NOT NULL REFERENCES shops(id),
-    total_amount DECIMAL(12, 2) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    payment_method VARCHAR(50),
-    shipping_address TEXT,
-    contact_phone VARCHAR(20),
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE order_items (
-    id UUID PRIMARY KEY,
-    order_id UUID NOT NULL REFERENCES shop_orders(id),
-    product_id UUID NOT NULL REFERENCES products(id),
-    quantity INTEGER NOT NULL,
-    unit_price DECIMAL(10, 2) NOT NULL,
-    total_price DECIMAL(12, 2) NOT NULL
-);

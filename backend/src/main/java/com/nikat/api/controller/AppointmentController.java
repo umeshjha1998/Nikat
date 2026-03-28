@@ -16,7 +16,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @GetMapping("/shop/{shopId}")
-    public ResponseEntity<List<AppointmentDto>> getAppointmentsByShop(@PathVariable UUID shopId) {
+    public ResponseEntity<List<AppointmentDto>> getAppointmentsByShop(@PathVariable String shopId) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByShop(shopId));
     }
 

@@ -12,7 +12,7 @@ public class AppointmentDto {
     private UUID id;
     private UUID userId;
     private String userName;
-    private UUID shopId;
+    private String shopId;
     private String shopName;
     private LocalDateTime appointmentTime;
     private String serviceType;

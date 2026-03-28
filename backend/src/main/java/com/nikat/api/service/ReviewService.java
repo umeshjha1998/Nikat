@@ -32,7 +32,7 @@ public class ReviewService {
         return reviewRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public List<ReviewDto> getReviewsByShop(UUID shopId) {
+    public List<ReviewDto> getReviewsByShop(String shopId) {
         return reviewRepository.findByShopIdAndStatus(shopId, "ACTIVE").stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());

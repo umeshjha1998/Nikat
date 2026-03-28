@@ -8,7 +8,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopDto {
-    private UUID id;
+    private String id;
     private UUID ownerId;
     private String ownerName;
     private String name;

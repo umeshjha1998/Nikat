@@ -23,7 +23,7 @@ public class ReviewController {
     }
 
     @GetMapping("/public/reviews/shop/{shopId}")
-    public ResponseEntity<List<ReviewDto>> getReviewsByShop(@PathVariable UUID shopId) {
+    public ResponseEntity<List<ReviewDto>> getReviewsByShop(@PathVariable String shopId) {
         return ResponseEntity.ok(reviewService.getReviewsByShop(shopId));
     }
 

@@ -19,7 +19,7 @@ public class ServiceProviderService {
         return serviceRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public ServiceDto getServiceById(UUID id) {
+    public ServiceDto getServiceById(String id) {
         com.nikat.api.domain.Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
         return mapToDto(service);
@@ -33,7 +33,7 @@ public class ServiceProviderService {
         return serviceRepository.findByStatus(status).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public ServiceDto updateServiceStatus(UUID id, String status) {
+    public ServiceDto updateServiceStatus(String id, String status) {
         com.nikat.api.domain.Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
         service.setStatus(status);

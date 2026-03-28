@@ -16,7 +16,7 @@ public class InquiryController {
     private final InquiryService inquiryService;
 
     @GetMapping("/shop/{shopId}")
-    public ResponseEntity<List<InquiryDto>> getInquiriesByShop(@PathVariable UUID shopId) {
+    public ResponseEntity<List<InquiryDto>> getInquiriesByShop(@PathVariable String shopId) {
         return ResponseEntity.ok(inquiryService.getInquiriesByShop(shopId));
     }
 

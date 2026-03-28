@@ -13,7 +13,7 @@ public class InquiryDto {
     private UUID userId;
     private String userName;
     private String userAvatar;
-    private UUID shopId;
+    private String shopId;
     private String message;
     private String reply;
     private String status;

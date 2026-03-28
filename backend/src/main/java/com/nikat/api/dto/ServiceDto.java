@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceDto {
-    private UUID id;
+    private String id;
     private UUID providerId;
     private String providerName;
     private String name;

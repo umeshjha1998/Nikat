@@ -15,10 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
-    private UUID id;
+    private String id;
     private UUID customerId;
     private String customerName;
-    private UUID shopId;
+    private String shopId;
     private String shopName;
     private BigDecimal totalAmount;
     private String status;

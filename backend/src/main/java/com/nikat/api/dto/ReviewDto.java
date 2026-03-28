@@ -12,9 +12,9 @@ public class ReviewDto {
     private UUID id;
     private UUID reviewerId;
     private String reviewerName;
-    private UUID shopId;
+    private String shopId;
     private String shopName;
-    private UUID serviceId;
+    private String serviceId;
     private Integer rating;
     private String comment;
     private String status;
