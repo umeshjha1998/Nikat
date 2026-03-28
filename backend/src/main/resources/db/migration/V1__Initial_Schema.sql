@@ -2,7 +2,7 @@
 -- Merged with custom ID formats for Shops, Services, and Orders
 
 CREATE TABLE users (
-    id UUID PRIMARY KEY,
+    id VARCHAR(50) PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100),
     phone VARCHAR(20) NOT NULL UNIQUE,
@@ -34,7 +34,7 @@ CREATE TABLE categories (
 
 CREATE TABLE shops (
     id VARCHAR(50) PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users(id),
+    user_id VARCHAR(50) NOT NULL REFERENCES users(id),
     name VARCHAR(200) NOT NULL,
     category_id UUID REFERENCES categories(id),
     worker_count INT,
@@ -58,7 +58,7 @@ CREATE TABLE shops (
 
 CREATE TABLE services (
     id VARCHAR(50) PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users(id),
+    user_id VARCHAR(50) NOT NULL REFERENCES users(id),
     name VARCHAR(200) NOT NULL,
     category_id UUID REFERENCES categories(id),
     description TEXT,
@@ -86,7 +86,7 @@ CREATE TABLE products (
 
 CREATE TABLE reviews (
     id UUID PRIMARY KEY,
-    reviewer_id UUID NOT NULL REFERENCES users(id),
+    reviewer_id VARCHAR(50) NOT NULL REFERENCES users(id),
     shop_id VARCHAR(50) REFERENCES shops(id),
     service_id VARCHAR(50) REFERENCES services(id),
     rating INT CHECK (rating >= 1 AND rating <= 5),
@@ -97,7 +97,7 @@ CREATE TABLE reviews (
 
 CREATE TABLE community_posts (
     id UUID PRIMARY KEY,
-    author_id UUID NOT NULL REFERENCES users(id),
+    author_id VARCHAR(50) NOT NULL REFERENCES users(id),
     post_type VARCHAR(50) NOT NULL,
     title VARCHAR(255) NOT NULL,
     content TEXT,
@@ -126,7 +126,7 @@ CREATE TABLE shop_photos (
 
 CREATE TABLE inquiries (
     id UUID PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users(id),
+    user_id VARCHAR(50) NOT NULL REFERENCES users(id),
     shop_id VARCHAR(50) REFERENCES shops(id),
     message TEXT NOT NULL,
     reply TEXT,
@@ -137,7 +137,7 @@ CREATE TABLE inquiries (
 
 CREATE TABLE appointments (
     id UUID PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users(id),
+    user_id VARCHAR(50) NOT NULL REFERENCES users(id),
     shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
     appointment_time TIMESTAMP NOT NULL,
     service_type VARCHAR(150),
@@ -150,7 +150,7 @@ CREATE TABLE appointments (
 
 CREATE TABLE shop_orders (
     id VARCHAR(50) PRIMARY KEY,
-    customer_id UUID NOT NULL REFERENCES users(id),
+    customer_id VARCHAR(50) NOT NULL REFERENCES users(id),
     shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
     total_amount DECIMAL(12, 2) NOT NULL,
     status VARCHAR(50) NOT NULL,

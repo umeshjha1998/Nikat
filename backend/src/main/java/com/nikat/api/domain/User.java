@@ -76,11 +76,16 @@ public class User {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        if (role == null) role = "USER";
-        if (status == null) status = "PENDING_VERIFICATION";
-        if (isShopOwner == null) isShopOwner = false;
-        if (isServiceProvider == null) isServiceProvider = false;
-        if (emailVerified == null) emailVerified = false;
+        if (role == null)
+            role = "USER";
+        if (status == null)
+            status = "PENDING_VERIFICATION";
+        if (isShopOwner == null)
+            isShopOwner = false;
+        if (isServiceProvider == null)
+            isServiceProvider = false;
+        if (emailVerified == null)
+            emailVerified = false;
     }
 
     @PreUpdate

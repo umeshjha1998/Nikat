@@ -16,7 +16,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 import com.nikat.api.security.IdGenerator;
 import java.util.stream.Collectors;
 

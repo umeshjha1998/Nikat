@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, UUID> {
     List<Inquiry> findByShopId(String shopId);
-    List<Inquiry> findByUserId(UUID userId);
+    List<Inquiry> findByUserId(String userId);
 }

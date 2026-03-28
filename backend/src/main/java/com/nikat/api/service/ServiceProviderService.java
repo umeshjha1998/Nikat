@@ -5,7 +5,6 @@ import com.nikat.api.repository.ServiceRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service

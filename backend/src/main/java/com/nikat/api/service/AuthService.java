@@ -66,7 +66,8 @@ public class AuthService {
         if ("SHOP_OWNER".equals(user.getRole())) {
             Shop shop = Shop.builder()
                     .owner(user)
-                    .name(request.getBusinessName() != null ? request.getBusinessName() : (user.getFirstName() + "'s Shop"))
+                    .name(request.getBusinessName() != null ? request.getBusinessName()
+                            : (user.getFirstName() + "'s Shop"))
                     .address(request.getBusinessAddress())
                     .status("PENDING_VERIFICATION")
                     .build();
@@ -74,7 +75,8 @@ public class AuthService {
         } else if ("SERVICE_PROVIDER".equals(user.getRole())) {
             com.nikat.api.domain.Service nikatService = com.nikat.api.domain.Service.builder()
                     .provider(user)
-                    .name(request.getBusinessName() != null ? request.getBusinessName() : (user.getFirstName() + "'s Service"))
+                    .name(request.getBusinessName() != null ? request.getBusinessName()
+                            : (user.getFirstName() + "'s Service"))
                     .serviceArea(request.getBusinessAddress())
                     .status("PENDING_VERIFICATION")
                     .build();
@@ -83,7 +85,7 @@ public class AuthService {
 
         // Map to UserDto
         UserDto userDto = mapToUserDto(user);
-        
+
         // Return without token for now, require OTP or login
         return AuthResponse.builder()
                 .token(null) // Token generated on login
@@ -93,8 +95,7 @@ public class AuthService {
 
     public AuthResponse login(AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmailOrPhone(), request.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(request.getEmailOrPhone(), request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -116,7 +117,8 @@ public class AuthService {
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
             throw new RuntimeException("User not authenticated");
         }
         return userRepository.findByEmail(authentication.getName())
