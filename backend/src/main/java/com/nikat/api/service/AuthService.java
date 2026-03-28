@@ -29,6 +29,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final com.nikat.api.security.IdGenerator idGenerator;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
@@ -39,7 +40,14 @@ public class AuthService {
             throw new RuntimeException("Phone is already in use.");
         }
 
+        // Generate custom ID: YEAR-MONTH-count
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        java.time.LocalDateTime monthStart = java.time.LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
+        long count = userRepository.countByCreatedAtAfter(monthStart);
+        String customId = idGenerator.generateUserId(count);
+
         User user = User.builder()
+                .id(customId)
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())

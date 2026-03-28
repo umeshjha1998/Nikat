@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CommunityPostDto {
     private UUID id;
-    private UUID authorId;
+    private String authorId;
     private String authorName;
     private String postType;
     private String title;

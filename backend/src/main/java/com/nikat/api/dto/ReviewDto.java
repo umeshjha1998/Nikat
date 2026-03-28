@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ReviewDto {
     private UUID id;
-    private UUID reviewerId;
+    private String reviewerId;
     private String reviewerName;
     private String shopId;
     private String shopName;

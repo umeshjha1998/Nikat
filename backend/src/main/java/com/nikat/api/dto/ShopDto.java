@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ShopDto {
     private String id;
-    private UUID ownerId;
+    private String ownerId;
     private String ownerName;
     private String name;
     private String categoryName;

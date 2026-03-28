@@ -25,7 +25,7 @@ public class ServiceProviderService {
         return mapToDto(service);
     }
 
-    public List<ServiceDto> getServicesByProvider(UUID providerId) {
+    public List<ServiceDto> getServicesByProvider(String providerId) {
         return serviceRepository.findByProviderId(providerId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 

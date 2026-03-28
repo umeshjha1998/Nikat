@@ -28,7 +28,7 @@ public class ServiceController {
     }
 
     @GetMapping("/services/provider/{providerId}")
-    public ResponseEntity<List<ServiceDto>> getServicesByProvider(@PathVariable UUID providerId) {
+    public ResponseEntity<List<ServiceDto>> getServicesByProvider(@PathVariable String providerId) {
         return ResponseEntity.ok(serviceProviderService.getServicesByProvider(providerId));
     }
 

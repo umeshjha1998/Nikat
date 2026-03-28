@@ -24,4 +24,10 @@ public class IdGenerator {
         String monthPart = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
         return monthPart + "-" + (currentCountForMonth + 1);
     }
+
+    public synchronized String generateUserId(long currentCountForMonth) {
+        LocalDateTime now = LocalDateTime.now();
+        String monthPart = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        return monthPart + "-" + (currentCountForMonth + 1);
+    }
 }

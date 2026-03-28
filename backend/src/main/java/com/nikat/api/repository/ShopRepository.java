@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, String> {
     long countByCreatedAtAfter(LocalDateTime date);
-    List<Shop> findByOwnerIdOrderByUpdatedAtDesc(UUID ownerId);
+    List<Shop> findByOwnerIdOrderByUpdatedAtDesc(String ownerId);
     List<Shop> findByStatus(String status);
 }

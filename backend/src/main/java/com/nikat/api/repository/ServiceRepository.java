@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ServiceRepository extends JpaRepository<Service, String> {
     long countByCreatedAtAfter(LocalDateTime date);
-    List<Service> findByProviderId(UUID providerId);
+    List<Service> findByProviderId(String providerId);
     List<Service> findByStatus(String status);
 }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -16,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderDto {
     private String id;
-    private UUID customerId;
+    private String customerId;
     private String customerName;
     private String shopId;
     private String shopName;

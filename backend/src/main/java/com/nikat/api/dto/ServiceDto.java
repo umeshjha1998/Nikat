@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ServiceDto {
     private String id;
-    private UUID providerId;
+    private String providerId;
     private String providerName;
     private String name;
     private String categoryName;

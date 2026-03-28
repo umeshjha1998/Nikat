@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class InquiryDto {
     private UUID id;
-    private UUID userId;
+    private String userId;
     private String userName;
     private String userAvatar;
     private String shopId;

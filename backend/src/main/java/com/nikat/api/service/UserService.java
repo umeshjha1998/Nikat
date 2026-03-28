@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,20 +21,20 @@ public class UserService {
         return userRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public UserDto getUserById(UUID id) {
+    public UserDto getUserById(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         return mapToDto(user);
     }
 
-    public UserDto updateUserStatus(UUID id, String status) {
+    public UserDto updateUserStatus(String id, String status) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         user.setStatus(status);
         return mapToDto(userRepository.save(user));
     }
 
-    public UserDto updateUserRole(UUID id, String role) {
+    public UserDto updateUserRole(String id, String role) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         user.setRole(role);
@@ -44,7 +43,7 @@ public class UserService {
         return mapToDto(userRepository.save(user));
     }
 
-    public UserDto updateProfile(UUID id, UserDto dto) {
+    public UserDto updateProfile(String id, UserDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         user.setFirstName(dto.getFirstName());
@@ -54,7 +53,7 @@ public class UserService {
         return mapToDto(userRepository.save(user));
     }
 
-    public void updatePassword(UUID id, String currentPassword, String newPassword) {
+    public void updatePassword(String id, String currentPassword, String newPassword) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         

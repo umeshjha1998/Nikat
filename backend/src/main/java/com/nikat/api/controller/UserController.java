@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,29 +24,29 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PatchMapping("/admin/users/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> updateUserStatus(@PathVariable UUID id, @RequestParam String status) {
+    public ResponseEntity<UserDto> updateUserStatus(@PathVariable String id, @RequestParam String status) {
         return ResponseEntity.ok(userService.updateUserStatus(id, status));
     }
 
     @PatchMapping("/admin/users/{id}/role")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> updateUserRole(@PathVariable UUID id, @RequestParam String role) {
+    public ResponseEntity<UserDto> updateUserRole(@PathVariable String id, @RequestParam String role) {
         return ResponseEntity.ok(userService.updateUserRole(id, role));
     }
 
     @PatchMapping("/users/{id}/profile")
-    public ResponseEntity<UserDto> updateProfile(@PathVariable UUID id, @RequestBody UserDto dto) {
+    public ResponseEntity<UserDto> updateProfile(@PathVariable String id, @RequestBody UserDto dto) {
         return ResponseEntity.ok(userService.updateProfile(id, dto));
     }
 
     @PatchMapping("/users/{id}/password")
-    public ResponseEntity<Void> updatePassword(@PathVariable UUID id, @RequestBody Map<String, String> passwords) {
+    public ResponseEntity<Void> updatePassword(@PathVariable String id, @RequestBody Map<String, String> passwords) {
         userService.updatePassword(id, passwords.get("currentPassword"), passwords.get("newPassword"));
         return ResponseEntity.ok().build();
     }

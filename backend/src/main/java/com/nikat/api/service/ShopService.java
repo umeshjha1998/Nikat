@@ -43,7 +43,7 @@ public class ShopService {
         return mapToDto(shop);
     }
 
-    public List<ShopDto> getShopsByOwner(UUID ownerId) {
+    public List<ShopDto> getShopsByOwner(String ownerId) {
         return shopRepository.findByOwnerIdOrderByUpdatedAtDesc(ownerId).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 

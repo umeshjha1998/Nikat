@@ -28,7 +28,7 @@ public class ShopController {
     }
 
     @GetMapping("/shops/owner/{ownerId}")
-    public ResponseEntity<List<ShopDto>> getShopsByOwner(@PathVariable UUID ownerId) {
+    public ResponseEntity<List<ShopDto>> getShopsByOwner(@PathVariable String ownerId) {
         return ResponseEntity.ok(shopService.getShopsByOwner(ownerId));
     }
     @PostMapping("/shops")

@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AppointmentDto {
     private UUID id;
-    private UUID userId;
+    private String userId;
     private String userName;
     private String shopId;
     private String shopName;
