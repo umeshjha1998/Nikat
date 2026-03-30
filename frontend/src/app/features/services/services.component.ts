@@ -771,7 +771,7 @@ export class ServicesComponent implements OnInit {
   loadCategories() {
     this.apiService.getCategories().subscribe({
       next: (cats) => {
-        this.categories = cats.filter(c => c.isServiceProviderCategory);
+        this.categories = cats.filter(c => c.isServiceCategory);
         this.groupCategories();
       },
       error: (err) => console.error('Failed to load categories:', err)

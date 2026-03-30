@@ -489,7 +489,7 @@ export class RegisterComponent implements OnInit {
     if (role === 'SHOP_OWNER') {
       this.filteredCategories = this.allCategories.filter(c => c.isShopCategory);
     } else if (role === 'SERVICE_PROVIDER') {
-      this.filteredCategories = this.allCategories.filter(c => c.isServiceProviderCategory);
+      this.filteredCategories = this.allCategories.filter(c => c.isServiceCategory);
     } else {
       this.filteredCategories = [];
     }
@@ -500,7 +500,7 @@ export class RegisterComponent implements OnInit {
     const role = this.registerForm.get('role')?.value;
     const base = role === 'SHOP_OWNER' 
       ? this.allCategories.filter(c => c.isShopCategory)
-      : this.allCategories.filter(c => c.isServiceProviderCategory);
+      : this.allCategories.filter(c => c.isServiceCategory);
     
     this.filteredCategories = base.filter(c => c.name.toLowerCase().includes(query));
   }
