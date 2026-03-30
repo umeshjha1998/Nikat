@@ -105,7 +105,7 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
             <!-- Active Vibe Chips -->
             <div class="active-chips">
               <div class="vibe-chip accent" *ngIf="activeCategory !== 'all'">
-                Selected Category
+                {{ activeCategoryName }}
                 <span class="material-symbols-outlined chip-close" (click)="selectCategory('all')">close</span>
               </div>
               <div class="vibe-chip" *ngIf="filters.nearby">
@@ -657,6 +657,7 @@ export class ServicesComponent implements OnInit {
   categories: CategoryDto[] = [];
   groupedCategories: any[] = [];
   expandedGroups: Set<string> = new Set(['Home Maintenance', 'Neighborhood & Domestic', 'Tech & Digital']); // Open some by default
+  private searchTimeout: any;
 
   private categoryMappings: {[key: string]: string} = {
     // Home Maintenance
@@ -839,16 +840,44 @@ export class ServicesComponent implements OnInit {
     return catName.toLowerCase().includes(this.searchQuery.toLowerCase());
   }
 
+  get activeCategoryName(): string {
+    const cat = this.categories.find(c => c.id === this.activeCategory);
+    return cat ? cat.name : 'Unknown';
+  }
+
   onSearchChange() {
     this.filterServices();
-    // Auto expand groups containing highlights
+    
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+
     if (this.searchQuery.length > 1) {
-      this.groupedCategories.forEach(group => {
-        const hasMatch = group.categories.some((c: any) => 
-          c.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-        if (hasMatch) this.expandedGroups.add(group.name);
-      });
+      this.searchTimeout = setTimeout(() => {
+        // Expand matching groups
+        let firstMatchGroup: string | null = null;
+        
+        this.groupedCategories.forEach(group => {
+          const hasMatch = group.categories.some((c: any) => 
+            c.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+          if (hasMatch) {
+            this.expandedGroups.add(group.name);
+            if (!firstMatchGroup) firstMatchGroup = group.name;
+          }
+        });
+
+        // Auto-scroll to first highlight
+        if (firstMatchGroup) {
+          setTimeout(() => {
+            const container = document.querySelector('.categories-section');
+            const highlighted = document.querySelector('.sub-cat-item.highlighted');
+            if (container && highlighted) {
+              highlighted.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 100); // Small delay to allow expansion animation
+        }
+      }, 2000); // 2 second delay
     }
   }
 
