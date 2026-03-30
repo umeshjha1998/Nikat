@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../../core/api.service';
+import { ApiService, ServiceOfferingDto } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 import { CartService } from '../../../core/cart.service';
 
@@ -94,7 +94,7 @@ import { CartService } from '../../../core/cart.service';
        <!-- Action Hub -->
        <section class="action-hub">
          <div class="action-cards">
-           <div class="action-card primary-action" (click)="bookAppointment()">
+           <div class="action-card primary-action" (click)="bookAppointment()" *ngIf="services.length > 0 || isOwner">
              <span class="material-symbols-outlined action-icon">calendar_today</span>
              <div>
                <h4>Book Appointment</h4>
@@ -130,6 +130,7 @@ import { CartService } from '../../../core/cart.service';
       <div class="content-wrapper">
         <nav class="tab-bar">
           <button [class.active]="activeTab === 'products'" (click)="activeTab = 'products'">Products</button>
+          <button [class.active]="activeTab === 'services'" (click)="activeTab = 'services'">Services</button>
           <button [class.active]="activeTab === 'about'" (click)="activeTab = 'about'">About</button>
           <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Reviews</button>
         </nav>
@@ -182,6 +183,31 @@ import { CartService } from '../../../core/cart.service';
                   <span class="out-of-stock-text" *ngIf="!isOwner && (p.quantity || 0) <= 0">Unavailable</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Services Tab -->
+          <div *ngIf="activeTab === 'services'" class="products-panel">
+            <div class="product-card" *ngFor="let srv of services">
+              <div class="product-info" style="padding-top: 1.5rem;">
+                <h3 class="product-name">{{srv.name}}</h3>
+                <p class="product-desc">{{srv.description}}</p>
+                <div class="product-chips">
+                  <span class="glass-chip"><span class="material-symbols-outlined" style="font-size: 0.8rem; vertical-align: middle;">schedule</span> {{srv.durationMinutes}} mins</span>
+                </div>
+                <div class="product-footer" style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                  <span class="product-price-badge" style="position: static; font-size: 1.1rem;">₹{{srv.price}}</span>
+                  <button class="btn-primary-glow" style="padding: 0.5rem 1rem; border-radius: 0.75rem;" (click)="bookAppointment(srv.id)">
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="services.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted); background: var(--card-bg); border-radius: 1rem; border: 1px dashed var(--glass-border);">
+               <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">home_repair_service</span>
+               <h3>No Services Available</h3>
+               <p>This shop hasn't listed any services for booking yet.</p>
             </div>
           </div>
 
@@ -779,7 +805,7 @@ import { CartService } from '../../../core/cart.service';
   `]
 })
 export class ShopDetailComponent implements OnInit {
-  activeTab: 'products' | 'about' | 'reviews' = 'products';
+  activeTab: 'products' | 'services' | 'about' | 'reviews' = 'products';
   isFavorited = false;
   shopId: string | null = null;
 
@@ -799,6 +825,7 @@ export class ShopDetailComponent implements OnInit {
   };
 
   products: any[] = [];
+  services: ServiceOfferingDto[] = [];
 
   galleryImages = [
     'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
@@ -902,6 +929,12 @@ export class ShopDetailComponent implements OnInit {
           }
         }
       });
+      
+      this.apiService.getOfferingsByShop(this.shopId).subscribe({
+        next: (data) => {
+           this.services = data;
+        }
+      });
     }
   }
 
@@ -922,9 +955,13 @@ export class ShopDetailComponent implements OnInit {
     return true;
   }
 
-  bookAppointment(): void {
+  bookAppointment(serviceId?: string): void {
     if (this.requireLogin()) {
-      this.router.navigate(['/book-service', this.shopId]);
+      let url = `/book-service/${this.shopId}?type=shop`;
+      if (serviceId) {
+         url += `&serviceOfferingId=${serviceId}`;
+      }
+      this.router.navigateByUrl(url);
     }
   }
 

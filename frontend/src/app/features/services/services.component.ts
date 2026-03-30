@@ -159,7 +159,7 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
                       {{displayServices[0].startTime || '9:00 AM'}} - {{displayServices[0].endTime || '8:00 PM'}}
                     </div>
                   </div>
-                  <a [routerLink]="['/book-service', displayServices[0].id]" class="btn-book">Book Appointment</a>
+                  <a [routerLink]="['/book-service', displayServices[0].id]" [queryParams]="{type: 'provider'}" class="btn-book">Book Appointment</a>
                 </div>
               </div>
 

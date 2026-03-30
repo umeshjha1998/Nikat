@@ -11,6 +11,7 @@ import java.util.UUID;
 public class ServiceOfferingDto {
     private UUID id;
     private String serviceId;
+    private String shopId;
     private String name;
     private String description;
     private BigDecimal price;

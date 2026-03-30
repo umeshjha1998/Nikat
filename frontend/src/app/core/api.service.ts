@@ -98,7 +98,8 @@ export interface ProductDto {
 
 export interface ServiceOfferingDto {
   id?: string;
-  serviceId: string;
+  serviceId?: string;
+  shopId?: string;
   name: string;
   description?: string;
   price: number;
@@ -287,9 +288,12 @@ export class ApiService {
     });
   }
 
-  // Service Offerings
   getOfferingsByService(serviceId: string): Observable<ServiceOfferingDto[]> {
     return this.http.get<ServiceOfferingDto[]>(`${this.apiUrl}/service-offerings/service/${serviceId}`);
+  }
+
+  getOfferingsByShop(shopId: string): Observable<ServiceOfferingDto[]> {
+    return this.http.get<ServiceOfferingDto[]>(`${this.apiUrl}/service-offerings/shop/${shopId}`);
   }
 
   createOffering(offering: ServiceOfferingDto): Observable<ServiceOfferingDto> {

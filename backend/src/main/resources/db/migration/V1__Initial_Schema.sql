@@ -142,7 +142,7 @@ CREATE TABLE inquiries (
 CREATE TABLE appointments (
     id UUID PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL REFERENCES users(id),
-    shop_id VARCHAR(50) NOT NULL REFERENCES shops(id),
+    shop_id VARCHAR(50) REFERENCES shops(id),
     appointment_time TIMESTAMP NOT NULL,
     service_type VARCHAR(150),
     status VARCHAR(50) DEFAULT 'PENDING', 
@@ -255,12 +255,14 @@ INSERT INTO categories (id, name, description, is_service_category, is_shop_cate
 
 CREATE TABLE service_offerings (
     id UUID PRIMARY KEY,
-    service_id VARCHAR(50) NOT NULL,
+    service_id VARCHAR(50),
+    shop_id VARCHAR(50),
     name VARCHAR(200) NOT NULL,
     description TEXT,
     price DECIMAL(10, 2),
     duration_minutes INT DEFAULT 30,
     status VARCHAR(50) DEFAULT 'ACTIVE',
     created_at TIMESTAMP NOT NULL,
-    CONSTRAINT fk_service_offerings_service FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+    CONSTRAINT fk_service_offerings_service FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
+    CONSTRAINT fk_service_offerings_shop FOREIGN KEY (shop_id) REFERENCES shops(id) ON DELETE CASCADE
 );

@@ -20,6 +20,11 @@ public class ServiceOfferingController {
         return ResponseEntity.ok(offeringService.getOfferingsByService(serviceId));
     }
 
+    @GetMapping("/shop/{shopId}")
+    public ResponseEntity<List<ServiceOfferingDto>> getByShop(@PathVariable String shopId) {
+        return ResponseEntity.ok(offeringService.getOfferingsByShop(shopId));
+    }
+
     @PostMapping
     public ResponseEntity<ServiceOfferingDto> create(@RequestBody ServiceOfferingDto dto) {
         return ResponseEntity.ok(offeringService.createOffering(dto));

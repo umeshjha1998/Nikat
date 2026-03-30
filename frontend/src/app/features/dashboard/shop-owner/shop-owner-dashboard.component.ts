@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto, CategoryDto, OrderDto } from '../../../core/api.service';
+import { ApiService, ShopDto, InquiryDto, AppointmentDto, ProductDto, CategoryDto, OrderDto, ServiceOfferingDto } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
@@ -30,7 +30,11 @@ import { AuthService } from '../../../core/auth.service';
           </a>
           <a class="nav-item" (click)="setTab('listings')" [class.active]="activeTab === 'listings'">
             <span class="material-icons">storefront</span>
-            <span>Listings</span>
+            <span>Products</span>
+          </a>
+          <a class="nav-item" (click)="setTab('services')" [class.active]="activeTab === 'services'">
+            <span class="material-icons">home_repair_service</span>
+            <span>Services</span>
           </a>
           <a class="nav-item" (click)="setTab('appointments')" [class.active]="activeTab === 'appointments'">
             <span class="material-icons">event_available</span>
@@ -88,7 +92,11 @@ import { AuthService } from '../../../core/auth.service';
             </button>
             <button class="btn-primary-glow" *ngIf="activeTab === 'listings'" (click)="openListingModal()">
               <span class="material-icons">add</span>
-              New Listing
+              New Product
+            </button>
+            <button class="btn-primary-glow" *ngIf="activeTab === 'services'" (click)="openOfferingModal()">
+              <span class="material-icons">add</span>
+              New Service
             </button>
           </div>
         </header>
@@ -168,7 +176,7 @@ import { AuthService } from '../../../core/auth.service';
           </div>
         </ng-container>
 
-        <!-- LISTINGS TAB -->
+         <!-- PRODUCTS TAB -->
         <ng-container *ngIf="activeTab === 'listings'">
           <div class="listings-grid">
              <div class="content-card-dark listing-card" *ngFor="let product of products">
@@ -197,8 +205,37 @@ import { AuthService } from '../../../core/auth.service';
              </div>
              <div *ngIf="products.length === 0" class="empty-full-width">
                 <span class="material-icons">inventory_2</span>
-                <p>No listings yet. Start showcasing your products!</p>
-                <button class="btn-primary-glow" (click)="openListingModal()">Create First Listing</button>
+                <p>No products yet. Start showcasing your inventory!</p>
+                <button class="btn-primary-glow" (click)="openListingModal()">Add First Product</button>
+             </div>
+          </div>
+        </ng-container>
+
+        <!-- SERVICES TAB -->
+        <ng-container *ngIf="activeTab === 'services'">
+          <div class="listings-grid">
+             <div class="content-card-dark listing-card" *ngFor="let off of offerings">
+                <div class="listing-info" style="width: 100%; padding: 1.5rem;">
+                   <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                       <h3>{{ off.name }}</h3>
+                       <div class="listing-actions" style="margin: 0; box-shadow: none; background: transparent;">
+                          <button class="btn-icon" (click)="openOfferingModal(off)"><span class="material-icons">edit</span></button>
+                          <button class="btn-icon" (click)="deleteOffering(off.id)"><span class="material-icons">delete</span></button>
+                       </div>
+                   </div>
+                   <p>{{ off.description }}</p>
+                   <div class="listing-footer" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                      <span class="price" style="color: var(--primary);">₹{{ off.price }}</span>
+                      <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                         <span class="material-icons" style="font-size: 1rem;">schedule</span> {{ off.durationMinutes }}m
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <div *ngIf="offerings.length === 0" class="empty-full-width">
+                <span class="material-icons">home_repair_service</span>
+                <p>No services added yet. Add services to enable appointment booking.</p>
+                <button class="btn-primary-glow" (click)="openOfferingModal()">Add First Service</button>
              </div>
           </div>
         </ng-container>
@@ -540,13 +577,13 @@ import { AuthService } from '../../../core/auth.service';
       <div class="modal-overlay" *ngIf="showListingModal">
         <div class="modal-card">
           <div class="modal-header">
-            <h2>{{ newProduct.id ? 'Edit' : 'Add New' }} Listing</h2>
+            <h2>{{ newProduct.id ? 'Edit' : 'Add New' }} Product</h2>
             <button class="btn-icon" (click)="showListingModal = false"><span class="material-icons">close</span></button>
           </div>
                <form (submit)="saveListing(); $event.preventDefault()" class="glass-form">
                   <div class="form-group">
-                    <label>Listing Title</label>
-                    <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="e.g. Haircut & Shampoo" required>
+                    <label>Product Name</label>
+                    <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="e.g. Concrete Mix" required>
                   </div>
                   <div class="form-row">
                     <div class="form-group">
@@ -572,7 +609,7 @@ import { AuthService } from '../../../core/auth.service';
                     <textarea [(ngModel)]="newProduct.description" name="desc" rows="3"></textarea>
                   </div>
                   <div class="form-group">
-                    <label>Listing Image</label>
+                    <label>Product Image</label>
                     <div class="product-upload-container">
                        <div *ngIf="newProduct.imageUrl" class="product-preview-box" [style.backgroundImage]="'url(' + newProduct.imageUrl + ')'">
                           <button class="remove-img" (click)="newProduct.imageUrl = ''"><span class="material-icons">close</span></button>
@@ -591,11 +628,47 @@ import { AuthService } from '../../../core/auth.service';
                   <div class="modal-footer">
                     <button type="button" class="btn-link" (click)="showListingModal = false">Cancel</button>
                     <button type="submit" class="btn-primary-glow" [disabled]="isProductImageUploading">
-                       {{ newProduct.id ? 'Update Listing' : 'Publish Listing' }}
+                       {{ newProduct.id ? 'Update Product' : 'Publish Product' }}
                     </button>
                   </div>
                </form>
         </div>
+      </div>
+
+      <!-- Add/Edit Offering Modal -->
+      <div class="modal-overlay" *ngIf="showOfferingModal" (click)="closeOfferingModal()">
+         <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+               <h2>{{ editingOffering ? 'Edit' : 'Add New' }} Service</h2>
+               <button class="btn-icon" (click)="closeOfferingModal()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="glass-form" style="margin-top: 1rem;">
+               <div class="form-group full-width">
+                  <label>Service Name</label>
+                  <input type="text" [(ngModel)]="offeringForm.name" placeholder="e.g., Premium Haircut">
+               </div>
+               <div class="form-group full-width">
+                  <label>Description</label>
+                  <textarea [(ngModel)]="offeringForm.description" rows="3" placeholder="What does this service include?"></textarea>
+               </div>
+               <div class="form-row">
+                 <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" [(ngModel)]="offeringForm.price">
+                 </div>
+                 <div class="form-group">
+                    <label>Duration (Minutes)</label>
+                    <input type="number" [(ngModel)]="offeringForm.durationMinutes">
+                 </div>
+               </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 2rem;">
+               <button type="button" class="btn-link" (click)="closeOfferingModal()">Cancel</button>
+               <button type="button" class="btn-primary-glow" (click)="saveOffering()" [disabled]="isSavingOffering">
+                  {{ isSavingOffering ? 'Saving...' : 'Save Service' }}
+               </button>
+            </div>
+         </div>
       </div>
 
       <!-- Assign Worker Modal -->
@@ -1683,6 +1756,15 @@ export class ShopOwnerDashboardComponent implements OnInit {
   };
   workerNamesList: string[] = [];
   
+  // Offerings (Services) State
+  offerings: ServiceOfferingDto[] = [];
+  showOfferingModal = false;
+  editingOffering = false;
+  isSavingOffering = false;
+  offeringForm: Partial<ServiceOfferingDto> = {
+    name: '', description: '', price: 0, durationMinutes: 30, status: 'ACTIVE'
+  };
+  
   // Appointment confirmation modal
   showWorkerModal = false;
   selectedWorker = '';
@@ -1751,6 +1833,7 @@ export class ShopOwnerDashboardComponent implements OnInit {
           }
 
           this.loadProducts();
+          this.loadOfferings();
           this.loadAppointments();
           this.loadInquiries();
           this.loadReviews();
@@ -1815,6 +1898,14 @@ export class ShopOwnerDashboardComponent implements OnInit {
   loadAppointments() {
     if (!this.currentShop?.id) return;
     this.apiService.getAppointmentsByShop(this.currentShop.id).subscribe(data => this.appointments = data);
+  }
+
+  loadOfferings() {
+    if (!this.currentShop?.id) return;
+    this.apiService.getOfferingsByShop(this.currentShop.id).subscribe({
+      next: (data) => this.offerings = data,
+      error: (err) => console.error('Failed to load offerings:', err)
+    });
   }
 
   setTab(tab: string) {
@@ -2019,6 +2110,67 @@ export class ShopOwnerDashboardComponent implements OnInit {
         this.products = this.products.filter(p => p.id !== id);
       });
     }
+  }
+
+  // --- SERVICE OFFERINGS ACTIONS ---
+
+  openOfferingModal(off?: ServiceOfferingDto) {
+    if (off) {
+      this.editingOffering = true;
+      this.offeringForm = { ...off };
+    } else {
+      this.editingOffering = false;
+      this.offeringForm = { name: '', description: '', price: 0, durationMinutes: 30, status: 'ACTIVE' };
+    }
+    this.showOfferingModal = true;
+  }
+
+  closeOfferingModal() {
+    this.showOfferingModal = false;
+    this.offeringForm = { name: '', description: '', price: 0, durationMinutes: 30, status: 'ACTIVE' };
+  }
+
+  saveOffering() {
+    if (!this.currentShop) return;
+    this.isSavingOffering = true;
+
+    this.offeringForm.shopId = this.currentShop.id;
+
+    if (this.editingOffering && this.offeringForm.id) {
+      this.apiService.updateOffering(this.offeringForm.id, this.offeringForm as ServiceOfferingDto).subscribe({
+        next: () => {
+          this.loadOfferings();
+          this.closeOfferingModal();
+          this.isSavingOffering = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.isSavingOffering = false;
+          alert('Failed to update service.');
+        }
+      });
+    } else {
+      this.apiService.createOffering(this.offeringForm as ServiceOfferingDto).subscribe({
+        next: () => {
+          this.loadOfferings();
+          this.closeOfferingModal();
+          this.isSavingOffering = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.isSavingOffering = false;
+          alert('Failed to add service.');
+        }
+      });
+    }
+  }
+
+  deleteOffering(id?: string) {
+    if (!id || !confirm('Are you sure you want to delete this service?')) return;
+    this.apiService.deleteOffering(id).subscribe({
+      next: () => this.loadOfferings(),
+      error: (err) => console.error(err)
+    });
   }
 
   updateQty(product: ProductDto, delta: number) {

@@ -426,7 +426,7 @@ import { AuthService } from '../../../core/auth.service';
 })
 export class ServiceBookingComponent implements OnInit {
   step = 1;
-  selectedServiceId: number | null = null;
+  selectedServiceId: string | null = null;
   selectedDate = 'Mar 25';
   selectedTime = '';
   bookingConfirmed = false;
@@ -439,11 +439,7 @@ export class ServiceBookingComponent implements OnInit {
     image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
   };
 
-  serviceOptions = [
-    { id: 1, name: 'Standard Service', duration: '30 min', price: '₹450', level: 'Junior' },
-    { id: 2, name: 'Premium Service', duration: '45 min', price: '₹650', level: 'Senior' },
-    { id: 3, name: 'Exclusive Package', duration: '1 hour', price: '₹1,200', level: 'Master' }
-  ];
+  serviceOptions: any[] = [];
 
   dates: any[] = [];
 
@@ -456,32 +452,86 @@ export class ServiceBookingComponent implements OnInit {
   ngOnInit() {
     this.shopId = this.route.snapshot.paramMap.get('id');
     this.generateDates();
-    if (this.shopId) {
-      this.apiService.getShopById(this.shopId).subscribe({
-        next: (shop) => {
-          if (shop) {
-            this.service = {
-              name: shop.name,
-              category: shop.categoryName || 'Local Business',
-              provider: shop.ownerName || 'Verified Partner',
-              image: (shop as any).imageUrl || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
-            };
-            if (shop.categoryName === 'Bakery') {
-              this.serviceOptions = [
-                { id: 1, name: 'Custom Cake Consultation', duration: '15 min', price: 'Free', level: 'Standard' },
-                { id: 2, name: 'Bulk Order Pickup', duration: '10 min', price: 'Varied', level: 'Express' }
-              ];
-            }
-          }
+    
+    // Read query params for dynamic routing
+    this.route.queryParams.subscribe(params => {
+      const type = params['type'] || 'shop';
+      const preselectOfferingId = params['serviceOfferingId'];
+      
+      if (this.shopId) {
+        if (type === 'shop') {
+          this.loadShopDetails(this.shopId, preselectOfferingId);
+        } else if (type === 'provider') {
+          this.loadServiceDetails(this.shopId, preselectOfferingId);
         }
-      });
-    }
+      }
+    });
+  }
+
+  loadShopDetails(shopId: string, preselectId?: string) {
+    this.apiService.getShopById(shopId).subscribe({
+      next: (shop) => {
+        if (shop) {
+          this.service = {
+            name: shop.name,
+            category: shop.categoryName || 'Local Business',
+            provider: shop.ownerName || 'Verified Partner',
+            image: (shop as any).photos?.[0] || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
+          };
+          
+          this.apiService.getOfferingsByShop(shopId).subscribe({
+             next: (offerings) => {
+                this.serviceOptions = offerings.map(o => ({
+                   id: o.id,
+                   name: o.name,
+                   duration: o.durationMinutes + ' min',
+                   price: '₹' + o.price,
+                   level: 'Standard'
+                }));
+                if (preselectId && this.serviceOptions.find(o => o.id === preselectId)) {
+                   this.selectedServiceId = preselectId;
+                }
+             }
+          });
+        }
+      }
+    });
+  }
+
+  loadServiceDetails(serviceId: string, preselectId?: string) {
+    this.apiService.getServiceById(serviceId).subscribe({
+      next: (svc) => {
+        if (svc) {
+          this.service = {
+            name: svc.name,
+            category: svc.categoryName || 'Service Provider',
+            provider: svc.providerName || 'Verified Partner',
+            image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80'
+          };
+          
+          this.apiService.getOfferingsByService(serviceId).subscribe({
+             next: (offerings) => {
+                this.serviceOptions = offerings.map(o => ({
+                   id: o.id,
+                   name: o.name,
+                   duration: o.durationMinutes + ' min',
+                   price: '₹' + o.price,
+                   level: 'Expert'
+                }));
+                if (preselectId && this.serviceOptions.find(o => o.id === preselectId)) {
+                   this.selectedServiceId = preselectId;
+                }
+             }
+          });
+        }
+      }
+    });
   }
 
   generateDates() {
     const today = new Date();
     this.dates = [];
-    for(let i=0; i<7; i++) {
+    for(let i=0; i<30; i++) { // show 30 days
        const d = new Date(today);
        d.setDate(today.getDate() + i);
        this.dates.push({
