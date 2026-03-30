@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
       <!-- Sidebar Navigation -->
       <nav class="sidebar glassmorphic">
         <div class="brand">
-          <span class="logo-icon">bolt</span>
+          <span class="material-icons logo-icon">bolt</span>
           <h2>Nikat</h2>
         </div>
 
