@@ -51,6 +51,9 @@ public class Service {
     @Column(name = "is_featured")
     private Boolean isFeatured;
 
+    @Column(name = "phone_number", length = 20, nullable = false)
+    private String phoneNumber;
+
     @Column(name = "latitude")
     private Double latitude;
 

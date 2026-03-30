@@ -68,6 +68,7 @@ CREATE TABLE services (
     start_time TIME,
     end_time TIME,
     base_charge DECIMAL(10, 2),
+    phone_number VARCHAR(20) NOT NULL,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     status VARCHAR(50) DEFAULT 'PENDING_VERIFICATION',

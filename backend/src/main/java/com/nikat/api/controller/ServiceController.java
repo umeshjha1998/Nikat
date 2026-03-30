@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -36,5 +35,15 @@ public class ServiceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ServiceDto> updateServiceStatus(@PathVariable String id, @RequestParam String status) {
         return ResponseEntity.ok(serviceProviderService.updateServiceStatus(id, status));
+    }
+
+    @PostMapping("/services")
+    public ResponseEntity<ServiceDto> createService(@RequestBody ServiceDto dto) {
+        return ResponseEntity.ok(serviceProviderService.createService(dto));
+    }
+
+    @PutMapping("/services/{id}")
+    public ResponseEntity<ServiceDto> updateService(@PathVariable String id, @RequestBody ServiceDto dto) {
+        return ResponseEntity.ok(serviceProviderService.updateService(id, dto));
     }
 }

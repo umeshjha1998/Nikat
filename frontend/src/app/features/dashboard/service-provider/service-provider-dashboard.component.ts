@@ -1,410 +1,453 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ApiService, ServiceDto } from '../../../core/api.service';
+import { ApiService } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-service-provider-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   template: `
-    <div class="dashboard-layout">
-      <!-- Sidebar -->
-      <aside class="dashboard-sidebar">
-        <div class="business-brand">
-          <div class="brand-hexagon provider">
-            <span class="material-icons">architecture</span>
-          </div>
-          <div class="brand-text">
-            <h3>Pro Studio</h3>
-            <p>Nikat for Experts</p>
-          </div>
+    <div class="provider-dashboard-container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar glassmorphic">
+        <div class="brand">
+          <span class="logo-icon">bolt</span>
+          <h2>Nikat</h2>
         </div>
 
-        <nav class="sidebar-nav">
-          <a class="nav-item" (click)="setTab('performance')" [class.active]="activeTab === 'performance'">
-            <span class="material-icons">auto_graph</span>
-            <span>Performance</span>
-          </a>
-          <a class="nav-item" (click)="setTab('schedule')" [class.active]="activeTab === 'schedule'">
-            <span class="material-icons">calendar_month</span>
+        <div class="nav-links">
+          <div class="nav-item" [class.active]="activeTab === 'performance'" (click)="setTab('performance')">
+            <span class="material-icons">analytics</span>
+            <span>Analytics</span>
+          </div>
+          <div class="nav-item" [class.active]="activeTab === 'schedule'" (click)="setTab('schedule')">
+            <span class="material-icons">event_available</span>
             <span>Schedule</span>
-          </a>
-          <a class="nav-item" (click)="setTab('services')" [class.active]="activeTab === 'services'">
-            <span class="material-icons">design_services</span>
+          </div>
+          <div class="nav-item" [class.active]="activeTab === 'services'" (click)="setTab('services')">
+            <span class="material-icons">category</span>
             <span>Services</span>
-          </a>
-          <a class="nav-item" (click)="setTab('clients')" [class.active]="activeTab === 'clients'">
-            <span class="material-icons">group</span>
+          </div>
+          <div class="nav-item" [class.active]="activeTab === 'clients'" (click)="setTab('clients')">
+            <span class="material-icons">people</span>
             <span>Clients</span>
-          </a>
-          <div class="nav-divider"></div>
-          <a class="nav-item" (click)="setTab('reviews')" [class.active]="activeTab === 'reviews'">
-            <span class="material-icons">star_outline</span>
-            <span>Reviews</span>
-          </a>
-          <a class="nav-item" (click)="setTab('settings')" [class.active]="activeTab === 'settings'">
+          </div>
+          <div class="nav-item" [class.active]="activeTab === 'settings'" (click)="setTab('settings')">
             <span class="material-icons">settings</span>
             <span>Settings</span>
-          </a>
-          <a class="nav-item logout-item" (click)="signOut()" style="color: #ef4444; margin-top: auto;">
+          </div>
+        </div>
+
+        <div class="nav-footer">
+          <div class="nav-item logout-item" (click)="signOut()">
             <span class="material-icons">logout</span>
             <span>Sign Out</span>
-          </a>
-        </nav>
-
-        <div class="user-profile-mini">
-          <div class="avatar-circle-mini">{{userInitial}}</div>
-          <div class="user-details">
-            <span class="name">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
-            <span class="role">{{currentUser?.role}}</span>
           </div>
-          <span class="material-icons">expand_more</span>
         </div>
-      </aside>
+      </nav>
 
-      <!-- Main Content -->
-      <main class="dashboard-main">
-        <header class="dashboard-header">
-          <div class="header-titles">
-            <h1>Service Dashboard</h1>
-            <p class="subtitle">Efficiently managing your time, clients, and professional growth.</p>
+      <!-- Main Content Area -->
+      <main class="content-area">
+        <!-- Top Header -->
+        <header class="content-header glassmorphic">
+          <div class="header-left">
+            <h1>{{ activeTab | titlecase }}</h1>
+            <p>Welcome back, {{ currentUser?.firstName }}!</p>
           </div>
-          <div class="header-actions">
-            <button class="btn-primary-glow">
-              <span class="material-icons">add</span>
-              Add Service
-            </button>
+          <div class="header-right">
+            <div class="notification-badge">
+              <span class="material-icons">notifications</span>
+              <span class="badge">3</span>
+            </div>
+            <div class="user-pill glassmorphic">
+              <div class="avatar">{{ userInitial }}</div>
+              <span>{{ currentUser?.firstName }}</span>
+            </div>
           </div>
         </header>
 
-        <ng-container *ngIf="activeTab === 'performance'">
-          <!-- Stats Overview -->
-          <div class="stats-container">
-            <div class="stat-card-glass">
-              <div class="stat-header">
-                <span class="stat-label">Today's Appointments</span>
-              </div>
-              <div class="stat-main">
-                <span class="stat-value">5</span>
-                <span class="stat-sub">Next: 2:30 PM</span>
-              </div>
-            </div>
-
-            <div class="stat-card-glass">
-              <div class="stat-header">
-                <span class="stat-label">Monthly Earnings</span>
-                <span class="trend positive">+15.3%</span>
-              </div>
-              <div class="stat-main">
-                <span class="stat-value">₹32,400</span>
-                <div class="earnings-bar"></div>
-              </div>
-            </div>
-
-            <div class="stat-card-glass">
-              <div class="stat-header">
-                <span class="stat-label">Clients</span>
-                <span class="trend positive">+4 new</span>
-              </div>
-              <div class="stat-main">
-                <span class="stat-value">67</span>
-                <div class="client-avatars">
-                  <img src="https://i.pravatar.cc/150?u=1" alt="c">
-                  <img src="https://i.pravatar.cc/150?u=2" alt="c">
-                  <img src="https://i.pravatar.cc/150?u=3" alt="c">
-                  <span class="more">+64</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="stat-card-glass">
-              <div class="stat-header">
-                <span class="stat-label">Avg Rating</span>
-                <span class="material-icons rating-icon">star</span>
-              </div>
-              <div class="stat-main">
-                <span class="stat-value">4.8</span>
-                <span class="stat-sub">56 Reviews</span>
-              </div>
+        <!-- Current Service Status Banner (Only if exists) -->
+        <div class="status-banner glassmorphic" *ngIf="currentService">
+          <div class="status-info">
+            <span class="material-icons pulse">verified</span>
+            <div>
+              <h3>{{ currentService.name }}</h3>
+              <p>{{ currentService.status }} • {{ currentService.categoryName || 'General' }}</p>
             </div>
           </div>
-
-          <div class="dashboard-grid">
-            <!-- Left Column: Schedule -->
-            <div class="grid-col-2">
-              <section class="content-card-dark">
-                <div class="card-header">
-                  <h2>Today's Schedule</h2>
-                  <a class="link-btn">Full Calendar</a>
-                </div>
-                <div class="schedule-timeline">
-                  <div class="schedule-item" *ngFor="let apt of todayAppointments" [class.current]="apt.current">
-                    <div class="time-slot">
-                      <span class="time">{{apt.time}}</span>
-                      <span class="duration">{{apt.duration}}</span>
-                    </div>
-                    <div class="timeline-dot" [class.active]="apt.current"></div>
-                    <div class="appointment-card">
-                      <div class="apt-header">
-                        <h3>{{apt.service}}</h3>
-                        <span class="apt-status" [class]="apt.status">{{apt.status}}</span>
-                      </div>
-                      <p class="apt-meta">
-                        <span class="material-icons">person</span> {{apt.client}}
-                        <span class="divider">|</span>
-                        <span class="material-icons">location_on</span> {{apt.location}}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <!-- Right Column: Active Services -->
-            <div class="grid-col-1">
-              <section class="content-card-dark">
-                <div class="card-header">
-                  <h2>Active Services</h2>
-                </div>
-                <div class="services-mini-list">
-                  <div class="service-mini-card" *ngFor="let svc of activeServices">
-                    <div class="svc-icon-box">
-                      <span class="material-icons">{{svc.icon}}</span>
-                    </div>
-                    <div class="svc-details">
-                      <h4>{{svc.name}}</h4>
-                      <div class="svc-stats">
-                        <span class="price">₹{{svc.price}}</span>
-                        <span class="bookings">{{svc.bookings}} bookings</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button class="btn-full-width">Manage all Services</button>
-              </section>
-
-              <section class="content-card-dark upgrade-panel">
-                <span class="material-icons-outlined crown">workspace_premium</span>
-                <h3>Nikat Premium</h3>
-                <p>Unlock advanced analytics and client automated reminders.</p>
-                <button class="btn-premium">Upgrade Now</button>
-              </section>
+          <div class="status-stats">
+            <div class="stat">
+              <span class="label">Balance</span>
+              <span class="value">₹0.00</span>
             </div>
           </div>
-        </ng-container>
+        </div>
 
-        <!-- SETTINGS TAB -->
-        <ng-container *ngIf="activeTab === 'settings'">
-          <div class="settings-view">
-             <div class="content-card-dark settings-form" *ngIf="currentService; else noService">
-                <div class="card-header">
-                    <h2>Pro Studio Settings</h2>
-                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Configure your professional visibility and GPS location.</p>
-                 </div>
-
-                 <!-- Personal Profile Section -->
-                 <div class="personal-verification-section" style="margin-top: 2.5rem; margin-bottom: 2.5rem; padding: 2rem; background: rgba(255,255,255,0.03); border-radius: 1.5rem; border: 1px solid var(--glass-border);">
-                    <h3 style="margin-bottom: 1.5rem; color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
-                      <span class="material-icons">verified_user</span> Personal Account & Verification
-                    </h3>
-                    
-                    <div class="user-photo-upload" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem;">
-                      <div class="photo-preview-large" [style.backgroundImage]="'url(' + (userProfile.photoData || 'assets/default-avatar.png') + ')'" 
-                           style="width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow);">
-                      </div>
-                      <div class="photo-upload-controls">
-                        <label class="btn-outline-glass" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 1rem; border: 1px solid var(--glass-border); background: var(--glass);">
-                          <span class="material-icons">camera_alt</span>
-                          Change Profile Photo
-                          <input type="file" (change)="onUserPhotoSelected($event)" accept="image/*" hidden>
-                        </label>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Photo auto-compressed to 25KB Max</p>
-                      </div>
-                    </div>
-
-                    <div class="glass-form">
-                       <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                          <div class="form-group">
-                             <label>Aadhar ID Number</label>
-                             <input type="text" [(ngModel)]="userProfile.aadharNumber" name="aadhar" placeholder="12-digit UID" style="width: 100%; padding: 0.8rem; border-radius: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);">
-                          </div>
-                          <div class="form-group">
-                             <label>PAN Card Number</label>
-                             <input type="text" [(ngModel)]="userProfile.panNumber" name="pan" placeholder="ABCDE1234F" style="text-transform: uppercase; width: 100%; padding: 0.8rem; border-radius: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);">
-                          </div>
-                       </div>
-                       <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
-                          <div class="form-group">
-                             <label>Passport Number (Optional)</label>
-                             <input type="text" [(ngModel)]="userProfile.passportNumber" name="passport" placeholder="Passport Number" style="width: 100%; padding: 0.8rem; border-radius: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);">
-                          </div>
-                          <div class="form-group" style="display: flex; align-items: flex-end;">
-                             <button type="button" class="btn-primary-glow" (click)="saveUserProfile()" style="width: 100%; height: 45px; justify-content: center;">
-                               Update Personal Profile
-                             </button>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-
-                 <div style="margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                       <span class="material-icons">business</span> Professional Details
-                    </h3>
-                 </div>
-                
-                <form class="glass-form" (submit)="saveSettings(); $event.preventDefault()" style="margin-top: 2rem;">
-                   <div class="form-row">
-                      <div class="form-group">
-                         <label>Service Name</label>
-                         <input type="text" [(ngModel)]="currentService.name" name="name" required>
-                      </div>
-                      <div class="form-group">
-                         <label>Base Charge (₹)</label>
-                         <input type="number" [(ngModel)]="currentService.baseCharge" name="charge" required>
-                      </div>
-                   </div>
-
-                   <div class="form-group">
-                      <label>Service Description</label>
-                      <textarea rows="4" [(ngModel)]="currentService.description" name="desc"></textarea>
-                   </div>
-
-                   <div class="form-group">
-                      <label>Service Area / Location</label>
-                      <div class="location-box">
-                         <input type="text" [(ngModel)]="currentService.serviceArea" name="area" placeholder="e.g. South Delhi, Gurgaon">
-                         <button type="button" class="gps-btn" (click)="fetchGPSLocation()" [disabled]="isFetchingLocation">
-                            <span class="material-icons" *ngIf="!isFetchingLocation">my_location</span>
-                            <span class="upload-loader" *ngIf="isFetchingLocation"></span>
-                            {{ isFetchingLocation ? 'Locating...' : 'Update GPS' }}
-                         </button>
-                      </div>
-                      
-                      <div class="form-row coords-row" *ngIf="currentService.latitude" style="margin-top: 1rem;">
-                         <div class="form-group">
-                            <label>Latitude</label>
-                            <input type="text" [value]="currentService.latitude" readonly style="opacity: 0.7;">
-                         </div>
-                         <div class="form-group">
-                            <label>Longitude</label>
-                            <input type="text" [value]="currentService.longitude" readonly style="opacity: 0.7;">
-                         </div>
-                      </div>
-                      <p class="form-hint" *ngIf="currentService.latitude">GPS coordinates are used to calculate travel distance for clients.</p>
-                   </div>
-
-                   <div class="form-row">
-                      <div class="form-group">
-                         <label>Work Starts</label>
-                         <input type="time" [(ngModel)]="currentService.startTime" name="start">
-                      </div>
-                      <div class="form-group">
-                         <label>Work Ends</label>
-                         <input type="time" [(ngModel)]="currentService.endTime" name="end">
-                      </div>
-                   </div>
-
-                   <div class="form-actions" style="margin-top: 2rem;">
-                      <button type="submit" class="btn-primary-glow" [disabled]="isSaving">
-                         <span class="material-icons" *ngIf="!isSaving">save</span>
-                         {{ isSaving ? 'Saving...' : 'Save Profile' }}
-                      </button>
-                   </div>
-                </form>
-             </div>
-
-             <ng-template #noService>
-               <div class="empty-state-large" style="padding: 5rem; text-align: center;">
-                  <span class="material-icons" style="font-size: 5rem; color: var(--primary); margin-bottom: 2rem;">engineering</span>
-                  <h2>Professional Profile Missing</h2>
-                  <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">Setup your expertise, base charges, and service location to start receiving client bookings.</p>
-                  <button class="btn-primary-glow" (click)="initializeService()">Create Service Profile</button>
-               </div>
-             </ng-template>
-          </div>
-        </ng-container>
-
-        <!-- Other Tabs Placeholders -->
-        <div class="tab-content-placeholder" *ngIf="activeTab !== 'performance' && activeTab !== 'settings'" style="margin-top: 2rem;">
-           <div class="content-card-dark" style="padding: 4rem; text-align: center; border: 1px dashed var(--glass-border);">
-              <span class="material-icons" style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem;">construction</span>
-              <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{activeTab | titlecase}} Module</h2>
-              <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem;">This section is currently being updated with advanced management tools for your professional service.</p>
-              <button class="btn-primary-glow" (click)="setTab('performance')">Return to Performance</button>
+        <!-- Professional Setup Banner (If no service) -->
+        <div class="setup-welcome glassmorphic" *ngIf="!currentService && !isSaving">
+           <div class="setup-content">
+              <span class="material-icons icon-lg">workspace_premium</span>
+              <h2>Ready to start your professional journey?</h2>
+              <p>Initialize your professional profile to start listing services and managing appointments.</p>
+              <button class="btn-primary" (click)="initializeService()">
+                <span class="material-icons">rocket_launch</span>
+                Initialize Professional Profile
+              </button>
            </div>
+        </div>
+
+        <!-- Content Views Based on activeTab -->
+        <div class="tab-content">
+          
+          <!-- ANALYTICS TAB -->
+          <div *ngIf="activeTab === 'performance'" class="view-grid">
+            <div class="metric-row">
+              <div class="glass-card metric-card">
+                <div class="card-header">
+                  <span class="material-icons revenue">payments</span>
+                  <span class="growth">+12%</span>
+                </div>
+                <h3>₹42,500</h3>
+                <p>Total Revenue</p>
+              </div>
+              <div class="glass-card metric-card">
+                <div class="card-header">
+                  <span class="material-icons appointments">calendar_month</span>
+                  <span class="growth">+5%</span>
+                </div>
+                <h3>156</h3>
+                <p>Appointments</p>
+              </div>
+              <div class="glass-card metric-card">
+                <div class="card-header">
+                  <span class="material-icons rating">star</span>
+                  <span class="growth">4.9</span>
+                </div>
+                <h3>52</h3>
+                <p>Total Reviews</p>
+              </div>
+            </div>
+
+            <div class="main-layout">
+              <div class="glass-card table-card list-section">
+                <div class="section-header">
+                  <h3>Appointments for Today</h3>
+                  <button class="btn-text">View All</button>
+                </div>
+                <div class="apt-list">
+                  <div class="apt-item" *ngFor="let apt of todayAppointments" [class.active-apt]="apt.current">
+                    <div class="apt-time">
+                      <span class="time">{{ apt.time }}</span>
+                      <span class="duration">{{ apt.duration }}</span>
+                    </div>
+                    <div class="apt-details">
+                      <h4>{{ apt.service }}</h4>
+                      <p>{{ apt.client }} • {{ apt.location }}</p>
+                    </div>
+                    <div class="apt-status" [class]="apt.status">{{ apt.status }}</div>
+                    <button class="btn-icon">
+                      <span class="material-icons">more_vert</span>
+                    </button>
+                  </div>
+                  <div *ngIf="todayAppointments.length === 0" class="empty-state p-4 text-center">
+                    <p>No appointments scheduled for today.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass-card side-section">
+                <div class="section-header">
+                  <h3>Offerings Performance</h3>
+                </div>
+                <div class="service-list">
+                  <div class="service-perf" *ngFor="let svc of activeServices">
+                    <div class="svc-icon">
+                      <span class="material-icons">{{ svc.icon }}</span>
+                    </div>
+                    <div class="svc-info">
+                      <h4>{{ svc.name }}</h4>
+                      <p>₹{{ svc.price }}</p>
+                    </div>
+                    <div class="svc-count">
+                      <span>{{ svc.bookings }}</span>
+                      <p>bookings</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCHEDULE TAB -->
+          <div *ngIf="activeTab === 'schedule'" class="view-grid">
+            <div class="glass-card full-width">
+              <div class="section-header">
+                <h3>Appointment Schedule</h3>
+                <div class="header-actions">
+                  <button class="btn-outline">
+                    <span class="material-icons">filter_list</span> Filter
+                  </button>
+                </div>
+              </div>
+              
+              <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Client</th>
+                      <th>Service</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let apt of appointments">
+                      <td>
+                        <div class="datetime">
+                          <strong>{{ apt.appointmentTime | date:'shortTime' }}</strong>
+                          <span>{{ apt.appointmentTime | date:'mediumDate' }}</span>
+                        </div>
+                      </td>
+                      <td>{{ apt.userName }}</td>
+                      <td>{{ apt.serviceName || 'Standard Service' }}</td>
+                      <td>
+                        <span class="badge-status" [class]="apt.status.toLowerCase()">{{ apt.status }}</span>
+                      </td>
+                      <td>
+                        <div class="action-group">
+                           <button *ngIf="apt.status === 'PENDING'" class="btn-success-sm" (click)="updateAptStatus(apt.id, 'CONFIRMED')">Confirm</button>
+                           <button *ngIf="apt.status === 'CONFIRMED'" class="btn-primary-sm" (click)="updateAptStatus(apt.id, 'COMPLETED')">Complete</button>
+                           <button class="btn-icon-red" (click)="updateAptStatus(apt.id, 'REJECTED')"><span class="material-icons">close</span></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="appointments.length === 0">
+                      <td colspan="5" class="text-center">No appointments found.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SERVICES TAB -->
+          <div *ngIf="activeTab === 'services'" class="view-grid">
+            <div class="glass-card full-width">
+              <div class="section-header">
+                <h3>My Service Offerings</h3>
+                <button class="btn-primary" (click)="openOfferingModal()">
+                  <span class="material-icons">add</span> Add New Service
+                </button>
+              </div>
+
+              <div class="offerings-grid">
+                <div class="offering-card glassmorphic" *ngFor="let off of offerings">
+                  <div class="card-top">
+                    <span class="material-icons service-icon">stars</span>
+                    <div class="actions">
+                      <button class="btn-icon" (click)="openOfferingModal(off)"><span class="material-icons">edit</span></button>
+                      <button class="btn-icon" (click)="deleteOffering(off.id)"><span class="material-icons">delete</span></button>
+                    </div>
+                  </div>
+                  <h4>{{ off.name }}</h4>
+                  <p class="desc">{{ off.description }}</p>
+                  <div class="meta">
+                    <span class="duration"><span class="material-icons">schedule</span> {{ off.durationMinutes }}m</span>
+                    <span class="price">₹{{ off.price }}</span>
+                  </div>
+                </div>
+                <div *ngIf="offerings.length === 0" class="empty-state full-width">
+                  <p>You haven't added any services yet.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add/Edit Offering Modal -->
+            <div class="modal-overlay" *ngIf="showOfferingModal" (click)="closeOfferingModal()">
+              <div class="modal-content glass-card" (click)="$event.stopPropagation()">
+                <h3>{{ editingOffering ? 'Edit Service' : 'Add New Service' }}</h3>
+                <div class="form-grid">
+                  <div class="form-group full-width">
+                    <label>Service Name</label>
+                    <input type="text" [(ngModel)]="offeringForm.name" placeholder="e.g., Premium Haircut">
+                  </div>
+                  <div class="form-group full-width">
+                    <label>Description</label>
+                    <textarea [(ngModel)]="offeringForm.description" rows="3" placeholder="What does this service include?"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" [(ngModel)]="offeringForm.price">
+                  </div>
+                  <div class="form-group">
+                    <label>Duration (Minutes)</label>
+                    <input type="number" [(ngModel)]="offeringForm.durationMinutes">
+                  </div>
+                </div>
+                <div class="modal-actions">
+                  <button class="btn-outline" (click)="closeOfferingModal()">Cancel</button>
+                  <button class="btn-primary" (click)="saveOffering()" [disabled]="isSaving">
+                    {{ isSaving ? 'Saving...' : 'Save Service' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLIENTS TAB -->
+          <div *ngIf="activeTab === 'clients'" class="view-grid">
+             <div class="glass-card full-width">
+                <div class="section-header">
+                  <h3>Customer Base</h3>
+                </div>
+                <div class="data-table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Client Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Last Appointment</th>
+                      <th>Total Bookings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let client of clients">
+                      <td>{{ client.firstName }} {{ client.lastName }}</td>
+                      <td>{{ client.email }}</td>
+                      <td>{{ client.phone }}</td>
+                      <td>-</td>
+                      <td>1</td>
+                    </tr>
+                    <tr *ngIf="clients.length === 0">
+                      <td colspan="5" class="text-center">No clients linked yet.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+             </div>
+          </div>
+
+          <!-- SETTINGS TAB -->
+          <div *ngIf="activeTab === 'settings'" class="settings-layout">
+            <div class="settings-grid">
+              <!-- Professional Listing Details -->
+              <div class="glass-card settings-card" *ngIf="currentService">
+                <h3>Professional Listing</h3>
+                <div class="form-grid">
+                  <div class="form-group full-width">
+                    <label>Business Display Name</label>
+                    <input type="text" [(ngModel)]="currentService.name" placeholder="Business Name">
+                  </div>
+                  <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="text" [(ngModel)]="currentService.phoneNumber" placeholder="Business Contact">
+                  </div>
+                  <div class="form-group">
+                    <label>Professional Category</label>
+                    <select [(ngModel)]="currentService.categoryId">
+                      <option [value]="null">Select Category</option>
+                      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group full-width">
+                    <label>About My Services</label>
+                    <textarea [(ngModel)]="currentService.description" rows="4"></textarea>
+                  </div>
+                  <div class="form-group full-width location-group">
+                    <label>Service Area / Location</label>
+                    <div class="input-with-button">
+                      <input type="text" [(ngModel)]="currentService.serviceArea" placeholder="Click GPS to fetch" readonly>
+                      <button class="btn-gps" (click)="fetchGPSLocation()" [disabled]="isFetchingLocation">
+                        <span class="material-icons" [class.rotating]="isFetchingLocation">my_location</span>
+                      </button>
+                    </div>
+                    <div class="coords" *ngIf="currentService.latitude">
+                      Lat: {{ currentService.latitude | number:'1.4-4' }}, Lon: {{ currentService.longitude | number:'1.4-4' }}
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button class="btn-primary" (click)="saveSettings()" [disabled]="isSaving">
+                    <span class="material-icons">save</span>
+                    {{ isSaving ? 'Saving...' : 'Update Listing' }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Verification & Profile Details -->
+              <div class="glass-card settings-card">
+                <h3>Personal & Verified Profile</h3>
+                <div class="avatar-setup">
+                  <div class="avatar-preview glassmorphic">
+                    <img *ngIf="userProfile.photoData" [src]="userProfile.photoData" alt="Profile">
+                    <span *ngIf="!userProfile.photoData" class="material-icons">person</span>
+                  </div>
+                  <div class="avatar-actions">
+                    <label class="btn-outline file-label">
+                       <span class="material-icons">photo_camera</span> Change Photo
+                       <input type="file" (change)="onUserPhotoSelected($event)" accept="image/*" hidden>
+                    </label>
+                    <p class="hint">Upload a professional headshot for client trust.</p>
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label>Aadhar Number (Last 4 digits preferred)</label>
+                    <input type="text" [(ngModel)]="userProfile.aadharNumber" placeholder="xxxx-xxxx-xxxx">
+                  </div>
+                  <div class="form-group">
+                    <label>PAN Number</label>
+                    <input type="text" [(ngModel)]="userProfile.panNumber" placeholder="ABCDE1234F">
+                  </div>
+                </div>
+                <div class="card-footer">
+                   <button class="btn-primary" (click)="saveUserProfile()">
+                    <span class="material-icons">verified_user</span> Save Personal Info
+                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
   `,
   styles: [`
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
-
-    :host {
-      --primary: #8b5cf6;
-      --primary-glow: rgba(139, 92, 246, 0.3);
-      font-family: 'Manrope', sans-serif;
-    }
-
-    .dashboard-layout {
+    .provider-dashboard-container {
       display: flex;
       min-height: 100vh;
-      background: var(--bg);
-      color: var(--text-main);
+      background: var(--deep-sea);
+      color: white;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Sidebar - Reusing styles for consistency */
-    .dashboard-sidebar {
-      width: 260px;
-      background: var(--surface-container);
-      border-right: 1px solid var(--border-color);
+    /* Sidebar Styles */
+    .sidebar {
+      width: 280px;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      padding: 2rem 0;
-      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
     }
 
-    .business-brand {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 0 1.5rem 2rem;
-      border-bottom: 1px solid var(--border-color);
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+      .logo-icon { color: var(--gold); font-size: 2rem; }
+      h2 { font-weight: 700; font-size: 1.5rem; letter-spacing: -0.5px; }
     }
 
-    .brand-hexagon {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #000;
-      box-shadow: 0 0 15px var(--primary-glow);
-    }
-
-    .brand-text h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
-      margin: 0;
-      color: var(--text-main);
-    }
-
-    .brand-text p {
-      margin: 0;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-    }
-
-    .sidebar-nav {
-      margin-top: 2rem;
-      padding: 0 1rem;
+    .nav-links {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -415,232 +458,210 @@ import { AuthService } from '../../../core/auth.service';
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 0.85rem 1.25rem;
-      border-radius: 0.75rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.3s ease;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
       cursor: pointer;
+      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.7);
+
+      .material-icons { font-size: 1.25rem; }
+      span { font-weight: 500; font-size: 0.95rem; }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+      }
+
+      &.active {
+        background: var(--glass-gradient);
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .nav-footer { margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1.5rem; }
+
+    /* Main Content Area */
+    .content-area { flex: 1; margin-left: 280px; padding: 2rem; background: radial-gradient(circle at top right, rgba(0,119,190,0.1), transparent); }
+
+    .content-header {
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+
+      h1 { font-size: 1.75rem; font-weight: 700; margin: 0; }
+      p { color: rgba(255, 255, 255, 0.6); margin: 0.25rem 0 0; }
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .notification-badge {
       position: relative;
-    }
-
-    .nav-item:hover {
-      background: var(--glass);
-      color: var(--text-main);
-    }
-
-    .nav-item.active {
-      background: rgba(192, 132, 252, 0.1);
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .nav-item.active::before {
-      content: '';
-      position: absolute; left: 0; top: 20%; bottom: 20%; width: 3px;
-      background: var(--primary); border-radius: 0 4px 4px 0;
-      box-shadow: 2px 0 10px var(--primary-glow);
-    }
-
-    .nav-divider { height: 1px; background: var(--border-color); margin: 1rem 0; }
-
-    .user-profile-mini {
-      padding: 1.25rem; margin: 0 1rem;
-      background: var(--glass);
-      border-radius: 1rem;
-      display: flex; align-items: center; gap: 0.75rem;
-      color: var(--text-main);
-    }
-
-    .avatar-circle-mini {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), #6d28d9);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 800; font-size: 0.9rem;
-    }
-
-    .user-details { flex: 1; display: flex; flex-direction: column; }
-    .user-details .name { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
-    .user-details .role { font-size: 0.7rem; color: var(--text-muted); }
-
-    /* Main Content */
-    .dashboard-main { flex: 1; padding: 3rem; overflow-y: auto; }
-
-    .dashboard-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; }
-    .header-titles h1 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 2.5rem; font-weight: 800; margin: 0 0 0.5rem 0;
-      background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .header-titles .subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 500px; }
-
-    .btn-primary-glow {
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      border: none; color: #1a0040; padding: 0.85rem 1.75rem; border-radius: 2rem;
-      font-weight: 700; display: flex; align-items: center; gap: 0.5rem;
-      cursor: pointer; box-shadow: 0 4px 20px var(--primary-glow); transition: all 0.3s ease;
-    }
-
-    /* Stats Grid */
-    .stats-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
-    .stat-card-glass {
-      background: var(--bg-surface); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px); border-radius: 1.5rem; padding: 1.75rem;
-    }
-    .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-    .stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.25rem; font-weight: 800; color: var(--text-main); display: block; }
-    .stat-sub { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-    .trend.positive { color: #6bfe9c; font-size: 0.8rem; font-weight: 800; }
-    .rating-icon { color: #ffb800; }
-
-    .earnings-bar { height: 4px; width: 100%; background: var(--border-color); border-radius: 2px; margin-top: 1rem; position: relative; }
-    .earnings-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 65%; background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
-
-    .client-avatars { display: flex; align-items: center; margin-top: 0.75rem; }
-    .client-avatars img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--bg-deep); margin-left: -8px; }
-    .client-avatars img:first-child { margin-left: 0; }
-    .client-avatars .more { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-left: 8px; }
-
-    /* Dashboard Grid */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
-    .content-card-dark { background: var(--surface-container); border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 2rem; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .card-header h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 700; margin: 0; }
-    .link-btn { font-size: 0.9rem; color: var(--primary); font-weight: 700; cursor: pointer; }
-
-    /* Timeline */
-    .schedule-timeline { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 100px; }
-    .schedule-timeline::before { content: ''; position: absolute; left: 118px; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
-
-    .schedule-item { display: flex; align-items: flex-start; gap: 2rem; position: relative; padding: 1.5rem 0; }
-    .time-slot { width: 80px; position: absolute; left: -100px; text-align: right; }
-    .time { font-weight: 800; color: var(--text-main); display: block; font-size: 1rem; }
-    .duration { font-size: 0.75rem; color: var(--text-muted); }
-
-    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #1a1e3d; border: 2px solid rgba(255, 255, 255, 0.1); z-index: 1; position: absolute; left: 13px; transform: translateX(-50%); top: 1.8rem; transition: all 0.3s ease; }
-    .timeline-dot.active { border-color: var(--primary); background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
-
-    .appointment-card { flex: 1; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 1rem; padding: 1.25rem; transition: all 0.3s ease; }
-    .schedule-item.current .appointment-card { background: rgba(192, 132, 252, 0.08); border-color: rgba(192, 132, 252, 0.2); transform: scale(1.02); }
-    .apt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    .apt-header h3 { font-size: 1.1rem; margin: 0; }
-    .apt-meta { margin: 0; color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
-    .apt-meta .material-icons { font-size: 0.9rem; color: var(--primary); }
-    .apt-meta .divider { color: rgba(255, 255, 255, 0.1); }
-
-    .apt-status { font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 1rem; text-transform: uppercase; }
-    .apt-status.confirmed { background: rgba(94, 180, 255, 0.15); color: #5eb4ff; }
-    .apt-status.completed { background: rgba(107, 254, 156, 0.15); color: #6bfe9c; }
-    .apt-status.upcoming { background: rgba(255, 255, 255, 0.05); color: #ccc; }
-
-    /* Services List */
-    .services-mini-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-    .service-mini-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--glass); border-radius: 1rem; border: 1px solid var(--glass-border); transition: all 0.3s ease; }
-    .service-mini-card:hover { transform: translateX(5px); background: var(--glass-border); }
-    .svc-icon-box { width: 44px; height: 44px; border-radius: 0.75rem; background: rgba(192, 132, 252, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); }
-    .svc-details h4 { font-size: 0.95rem; margin: 0 0 0.25rem 0; }
-    .svc-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
-    .price { color: #6bfe9c; font-weight: 700; }
-    .bookings { color: var(--text-muted); }
-
-    .btn-full-width { width: 100%; padding: 0.85rem; border-radius: 1rem; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-main); font-weight: 700; cursor: pointer; }
-
-    .upgrade-panel { margin-top: 2rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(192, 132, 252, 0.05)); border: 1px solid rgba(192, 132, 252, 0.2); text-align: center; }
-    .crown { font-size: 2.5rem; color: #ffb800; margin-bottom: 1rem; }
-    .upgrade-panel h3 { margin: 0 0 0.5rem 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .upgrade-panel p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-    .btn-premium { width: 100%; padding: 0.85rem; border-radius: 1rem; border: none; background: #fff; color: #000; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2); }
-
-    @media (max-width: 1024px) {
-      .dashboard-sidebar { width: 80px; padding: 1.5rem 0.5rem; align-items: center; }
-      .brand-text, .nav-item span, .user-details, .material-icons:last-child { display: none; }
-      .business-brand { justify-content: center; padding: 0 0 1.5rem; }
-      .nav-item { justify-content: center; padding: 1rem; }
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-layout { flex-direction: column; }
-      
-      .dashboard-sidebar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 70px;
-        flex-direction: row;
-        padding: 0;
-        border-right: none;
-        border-top: 1px solid var(--border-color);
-        background: var(--surface-container);
-        z-index: 1000;
-        justify-content: space-around;
+      cursor: pointer;
+      .material-icons { color: rgba(255, 255, 255, 0.6); }
+      .badge {
+        position: absolute; top: -5px; right: -5px; background: #ef4444;
+        color: white; font-size: 10px; width: 16px; height: 16px;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
       }
-
-      .business-brand, .user-profile-mini, .nav-divider { display: none; }
-
-      .sidebar-nav {
-         margin-top: 0;
-         flex-direction: row;
-         width: 100%;
-         height: 100%;
-         gap: 0;
-         padding: 0;
-      }
-
-      .nav-item {
-        flex: 1;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 4px;
-        padding: 0.5rem;
-        border-radius: 0;
-        font-size: 0.65rem;
-        height: 100%;
-      }
-      
-      .nav-item .material-icons { font-size: 1.4rem; }
-      .nav-item span { display: block; font-size: 0.6rem; }
-      .nav-item.active::before { display: none; }
-
-      .dashboard-main { padding: 1.5rem 1rem 100px; }
-      .dashboard-header { flex-direction: column; gap: 1rem; align-items: flex-start; margin-bottom: 2rem; }
-      .header-titles h1 { font-size: 2rem; }
-      .header-actions { width: 100%; }
-      .btn-primary-glow { width: 100%; justify-content: center; }
-
-      .stats-container { grid-template-columns: 1fr; gap: 1rem; }
-      .dashboard-grid { grid-template-columns: 1fr; }
-      
-      .schedule-timeline { padding-left: 0; }
-      .schedule-timeline::before { left: 16px; top: 40px; }
-      .schedule-item { 
-        flex-direction: column; 
-        gap: 0.5rem; 
-        padding-left: 40px; 
-      }
-      .time-slot { 
-        position: static; 
-        width: 100%; 
-        text-align: left; 
-        margin-bottom: 0.25rem;
-      }
-      .time { display: inline; margin-right: 0.5rem; }
-      .duration { display: inline; }
-      .timeline-dot { left: 17px; top: 45px; }
-
-      .content-card-dark { padding: 1.25rem; }
     }
-    .nav-item.logout-item:hover {
-      background: rgba(239, 68, 68, 0.1) !important;
+
+    .user-pill {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 50px;
+      .avatar { width: 32px; height: 32px; background: var(--gold); color: var(--deep-sea); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
     }
+
+    /* Banners */
+    .status-banner {
+      display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-radius: 16px; margin-bottom: 2rem;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+      border-left: 4px solid var(--gold);
+    }
+    .status-info {
+      display: flex; align-items: center; gap: 1rem;
+      .material-icons { color: var(--gold); font-size: 2.5rem; }
+      h3 { margin: 0; font-size: 1.25rem; }
+      p { margin: 0; color: var(--gold); opacity: 0.8; font-weight: 600; font-size: 0.85rem; }
+    }
+
+    .setup-welcome {
+       padding: 4rem 2rem; border-radius: 20px; text-align: center; margin-bottom: 2rem;
+       .setup-content {
+          max-width: 500px; margin: 0 auto;
+          .icon-lg { font-size: 5rem; color: var(--gold); margin-bottom: 1.5rem; }
+          h2 { font-size: 2rem; margin-bottom: 1rem; }
+          p { color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; line-height: 1.6; }
+       }
+    }
+
+    /* Grid Layouts */
+    .view-grid { display: flex; flex-direction: column; gap: 2rem; animation: fadeIn 0.4s ease-out; }
+
+    .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+
+    .metric-card {
+      padding: 1.5rem;
+      .card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; .material-icons { font-size: 1.5rem; &.revenue { color: #10b981; } &.appointments { color: var(--gold); } &.rating { color: #f59e0b; } } .growth { font-size: 0.8rem; padding: 0.25rem 0.5rem; border-radius: 50px; background: rgba(16, 185, 129, 0.2); color: #10b981; } }
+      h3 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+      p { color: rgba(255, 255, 255, 0.6); margin: 0; font-size: 0.9rem; }
+    }
+
+    .main-layout { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 1.5rem; }
+
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; h3 { font-size: 1.2rem; margin: 0; } }
+
+    /* Appointment Items */
+    .apt-list { display: flex; flex-direction: column; gap: 1rem; }
+    .apt-item {
+      display: grid; grid-template-columns: 120px 1fr 100px 40px; align-items: center; padding: 1.25rem; border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03); transition: all 0.3s ease;
+      &:hover { background: rgba(255, 255, 255, 0.05); transform: translateX(5px); }
+      &.active-apt { border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.05); }
+
+      .apt-time { display: flex; flex-direction: column; .time { font-weight: 700; color: var(--gold); } .duration { font-size: 0.75rem; color: rgba(255,255,255,0.5); } }
+      .apt-details { h4 { margin: 0; font-size: 0.95rem; } p { margin: 0.25rem 0 0; font-size: 0.8rem; color: rgba(255,255,255,0.6); } }
+      .apt-status { text-align: center; text-transform: uppercase; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; &.completed { background: rgba(16, 185, 129, 0.1); color: #10b981; } &.confirmed { background: rgba(59, 130, 246, 0.1); color: #3b82f6; } &.upcoming { background: rgba(255, 255, 255, 0.1); color: white; } }
+    }
+
+    /* Service Performance Styles */
+    .service-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .service-perf {
+      display: flex; align-items: center; gap: 1rem;
+      .svc-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; .material-icons { color: var(--gold); font-size: 1.25rem; } }
+      .svc-info { flex: 1; h4 { margin: 0; font-size: 0.9rem; } p { margin: 0; font-size: 0.8rem; color: rgba(255,255,255,0.6); } }
+      .svc-count { text-align: right; span { font-weight: 700; color: white; } p { margin: 0; font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; } }
+    }
+
+    /* Data Table Styles */
+    .data-table-container { overflow-x: auto; }
+    .data-table {
+      width: 100%; border-collapse: collapse; text-align: left;
+      th { padding: 1.25rem; color: rgba(255,255,255,0.6); font-weight: 500; font-size: 0.85rem; border-bottom: 2px solid rgba(255,255,255,0.05); }
+      td { padding: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+      tr:last-child td { border-bottom: none; }
+      .datetime { display: flex; flex-direction: column; strong { color: var(--gold); } span { font-size: 0.75rem; color: rgba(255,255,255,0.5); } }
+    }
+
+    .badge-status {
+      padding: 0.35rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; text-transform: capitalize;
+      &.confirmed { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+      &.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+      &.completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+      &.rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    }
+
+    /* Offerings Grid */
+    .offerings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .offering-card {
+      padding: 1.5rem; border-radius: 16px;
+      .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; .service-icon { color: var(--gold); font-size: 2rem; } .actions { display: flex; gap: 0.25rem; } }
+      h4 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.5rem 0; color: white; }
+      .desc { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.5rem; }
+      .meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; .duration { display: flex; align-items: center; gap: 0.25rem; font-size: 0.85rem; color: rgba(255,255,255,0.5); .material-icons { font-size: 1rem; } } .price { font-size: 1.1rem; font-weight: 700; color: var(--gold); } }
+    }
+
+    /* Settings Page */
+    .settings-grid { display: flex; flex-direction: column; gap: 2rem; }
+    .settings-card { padding: 2rem; h3 { margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; } }
+
+    .avatar-setup {
+      display: flex; align-items: center; gap: 2.5rem; margin-bottom: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 16px;
+      .avatar-preview { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); .material-icons { font-size: 3rem; color: rgba(255,255,255,0.2); } img { width: 100%; height: 100%; object-fit: cover; } }
+      .avatar-actions { .hint { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 0.75rem; } }
+    }
+
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .full-width { grid-column: span 2; }
+    .form-group {
+      display: flex; flex-direction: column; gap: 0.5rem;
+      label { font-size: 0.85rem; color: rgba(255,255,255,0.6); font-weight: 500; }
+      input, textarea, select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.75rem 1rem; color: white; transition: all 0.3s ease; &:focus { background: rgba(255,255,255,0.1); border-color: var(--gold); outline: none; } }
+    }
+
+    .input-with-button { display: flex; gap: 0.5rem; input { flex: 1; } }
+    .btn-gps {
+      width: 45px; height: 45px; border-radius: 8px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+      &:hover { background: var(--gold); color: var(--deep-sea); }
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+    .coords { font-size: 10px; color: var(--gold); margin-top: 0.25rem; opacity: 0.8; }
+
+    /* Modals */
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+    .modal-content { width: 90%; max-width: 600px; padding: 2.5rem; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
+
+    /* Buttons */
+    .btn-primary { background: var(--gold); color: var(--deep-sea); border: none; padding: 0.75rem 1.75rem; border-radius: 8px; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; transition: all 0.3s ease; &:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); } }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.75rem 1.75rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; &:hover { background: rgba(255,255,255,0.05); } }
+    .btn-text { background: transparent; border: none; color: var(--gold); font-weight: 600; cursor: pointer; }
+    .btn-icon { background: transparent; border: none; color: rgba(255,255,255,0.4); cursor: pointer; padding: 0.25rem; border-radius: 6px; transition: all 0.2s; &:hover { background: rgba(255,255,255,0.1); color: white; } .material-icons { font-size: 1.25rem; } }
+    .btn-icon-red { background: transparent; border: none; color: #ef4444; cursor: pointer; padding: 0.25rem; }
+    
+    .btn-success-sm { background: #10b981; color: white; border: none; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+    .btn-primary-sm { background: #3b82f6; color: white; border: none; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+
+    .action-group { display: flex; gap: 0.5rem; align-items: center; }
+
+    .empty-state { padding: 4rem 2rem; text-align: center; color: rgba(255,255,255,0.4); .material-icons { font-size: 3rem; margin-bottom: 1rem; } }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .rotating { animation: rotate 1.5s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   `]
 })
 export class ServiceProviderDashboardComponent implements OnInit {
   activeTab = 'performance';
   currentService: any = null;
+  categories: any[] = [];
   userProfile: any = {
     aadharNumber: '',
     panNumber: '',
@@ -649,20 +670,24 @@ export class ServiceProviderDashboardComponent implements OnInit {
   };
   isFetchingLocation = false;
   isSaving = false;
+  isFetchingData = false;
 
-  todayAppointments = [
-    { time: '10:00 AM', duration: '45 min', service: 'Classic Haircut', client: 'Raj P.', location: 'In-store', status: 'completed', current: false },
-    { time: '11:00 AM', duration: '1 hr', service: 'Full Grooming Package', client: 'Amit S.', location: 'In-store', status: 'completed', current: false },
-    { time: '2:30 PM', duration: '30 min', service: 'Beard Trim & Shape', client: 'Vikram R.', location: 'In-store', status: 'confirmed', current: true },
-    { time: '4:00 PM', duration: '1 hr', service: 'Hair Coloring', client: 'Neha K.', location: 'Home visit', status: 'upcoming', current: false },
-    { time: '6:00 PM', duration: '45 min', service: 'Premium Fade', client: 'Arjun M.', location: 'In-store', status: 'upcoming', current: false }
-  ];
+  appointments: any[] = [];
+  offerings: any[] = [];
+  clients: any[] = [];
 
-  activeServices = [
-    { name: 'Classic Haircut', price: '350', bookings: 45, icon: 'content_cut' },
-    { name: 'Grooming Package', price: '1,200', bookings: 28, icon: 'spa' },
-    { name: 'Home Visit', price: '1,800', bookings: 12, icon: 'home' }
-  ];
+  // Form states
+  showOfferingModal = false;
+  editingOffering: any = null;
+  offeringForm: any = {
+    name: '',
+    description: '',
+    price: 0,
+    durationMinutes: 30
+  };
+
+  todayAppointments: any[] = [];
+  activeServices: any[] = [];
 
   constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
 
@@ -677,14 +702,34 @@ export class ServiceProviderDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadServiceProviderData();
+    this.loadCategories();
+  }
+
+  setTab(tab: string) {
+    this.activeTab = tab;
+    if (this.currentService) {
+      if (tab === 'schedule') this.loadAppointments();
+      if (tab === 'services') this.loadOfferings();
+      if (tab === 'clients') this.loadClients();
+    }
+  }
+
+  loadCategories() {
+    this.apiService.getCategories().subscribe(cats => {
+      this.categories = cats.filter(c => c.isServiceCategory);
+    });
   }
 
   loadServiceProviderData() {
-    // this.apiService.getServiceByProvider(this.currentUser.id).subscribe(...)
-    // Mocking for now if not found, but we'll try to find it
+    if (!this.currentUser) return;
     this.apiService.getServices().subscribe(svcs => {
       this.currentService = svcs.find(s => s.providerId === this.currentUser?.id) || null;
       
+      if (this.currentService) {
+        this.loadAppointments();
+        this.loadOfferings();
+      }
+
       // Populate user profile
       if (this.currentUser) {
         this.userProfile = {
@@ -697,72 +742,181 @@ export class ServiceProviderDashboardComponent implements OnInit {
     });
   }
 
+  loadAppointments() {
+    if (!this.currentService) return;
+    this.apiService.getAppointmentsByService(this.currentService.id).subscribe(apts => {
+      this.appointments = apts;
+      // Filter for performance summary
+      const now = new Date();
+      this.todayAppointments = apts.filter(a => {
+        const aptDate = new Date(a.appointmentTime);
+        return aptDate.toDateString() === now.toDateString();
+      }).map(a => ({
+          id: a.id,
+          time: new Date(a.appointmentTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          duration: '30 min',
+          service: a.serviceType || 'General Service',
+          client: a.userName,
+          location: 'Phone/Address',
+          status: a.status.toLowerCase(),
+          current: false
+      }));
+    });
+  }
+
+  loadOfferings() {
+    if (!this.currentService) return;
+    this.apiService.getOfferingsByService(this.currentService.id).subscribe(offs => {
+      this.offerings = offs;
+      this.activeServices = offs.map(o => ({
+        name: o.name,
+        price: o.price.toString(),
+        bookings: 0, // Placeholder
+        icon: 'stars'
+      }));
+    });
+  }
+
+  loadClients() {
+    if (!this.currentService) return;
+    this.apiService.getClientsByService(this.currentService.id).subscribe(cls => {
+      this.clients = cls;
+    });
+  }
+
+  updateAptStatus(aptId: string, status: string) {
+    this.apiService.updateAppointmentStatus(aptId, status).subscribe(() => {
+      this.loadAppointments();
+    });
+  }
+
+  // Offerings CRUD
+  openOfferingModal(offering?: any) {
+    if (offering) {
+      this.editingOffering = offering;
+      this.offeringForm = { ...offering };
+    } else {
+      this.editingOffering = null;
+      this.offeringForm = { name: '', description: '', price: 300, durationMinutes: 30 };
+    }
+    this.showOfferingModal = true;
+  }
+
+  closeOfferingModal() {
+    this.showOfferingModal = false;
+    this.editingOffering = null;
+  }
+
+  saveOffering() {
+    if (!this.currentService) return;
+    this.isSaving = true;
+    const offeringData = { ...this.offeringForm, serviceId: this.currentService.id };
+
+    if (this.editingOffering) {
+      this.apiService.updateOffering(this.editingOffering.id, offeringData).subscribe({
+        next: () => {
+          this.loadOfferings();
+          this.closeOfferingModal();
+          this.isSaving = false;
+        },
+        error: () => this.isSaving = false
+      });
+    } else {
+      this.apiService.createOffering(offeringData).subscribe({
+        next: () => {
+          this.loadOfferings();
+          this.closeOfferingModal();
+          this.isSaving = false;
+        },
+        error: () => this.isSaving = false
+      });
+    }
+  }
+
+  deleteOffering(id: string) {
+    if (confirm('Delete this service offering?')) {
+      this.apiService.deleteOffering(id).subscribe(() => this.loadOfferings());
+    }
+  }
+
   initializeService() {
     if (!this.currentUser) return;
     this.isSaving = true;
     const newSvc = {
-      name: 'New Professional Service',
+      name: (this.currentUser.firstName + ' ' + (this.currentUser.lastName || '')).trim() + ' Pro Services',
       providerId: this.currentUser.id,
       baseCharge: 500,
-      description: 'Expert services for your neighborhood.',
-      status: 'PENDING_VERIFICATION'
+      description: 'Expert professional services.',
+      status: 'ACTIVE', // Auto-active for demonstration
+      phoneNumber: this.currentUser.phone
     };
-    // this.apiService.createService(newSvc).subscribe(...)
-    // Mocking success
-    setTimeout(() => {
-      this.currentService = { ...newSvc, id: 'svc_' + Date.now() };
-      this.isSaving = false;
-    }, 1000);
+    
+    this.apiService.createService(newSvc).subscribe({
+      next: (svc) => {
+        this.currentService = svc;
+        this.isSaving = false;
+        this.loadOfferings();
+      },
+      error: (err) => {
+        this.isSaving = false;
+        alert('Failed to initialize: ' + (err.error?.message || err.message));
+      }
+    });
   }
 
   fetchGPSLocation() {
-    this.isFetchingLocation = true;
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-          
-          this.currentService.latitude = lat;
-          this.currentService.longitude = lon;
-          
-          // Reverse geocoding using Nominatim (OSM)
-          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
-            .then(res => res.json())
-            .then(data => {
-              if (this.currentService && data.display_name) {
-                this.currentService.serviceArea = data.display_name;
-                alert('Location fetched! Your service area has been updated.');
-              }
-              this.isFetchingLocation = false;
-            })
-            .catch(err => {
-              console.error('Reverse Geocode Error:', err);
-              this.isFetchingLocation = false;
-              alert('GPS coordinates captured, but could not resolve address.');
-            });
-        },
-        (err) => {
-          console.error('Error fetching location', err);
-          this.isFetchingLocation = false;
-          alert('Could not fetch location. Please ensure GPS is enabled and permissions granted.');
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    } else {
+    if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser.');
-      this.isFetchingLocation = false;
+      return;
     }
+    this.isFetchingLocation = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        
+        this.currentService.latitude = lat;
+        this.currentService.longitude = lon;
+        
+        // Reverse geocoding using Nominatim (OSM)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+          .then(res => res.json())
+          .then(data => {
+            if (this.currentService && data.display_name) {
+              this.currentService.serviceArea = data.display_name;
+              alert('Location fetched! Your service area has been updated.');
+            }
+            this.isFetchingLocation = false;
+          })
+          .catch(err => {
+            console.error('Reverse Geocode Error:', err);
+            this.isFetchingLocation = false;
+            alert('GPS coordinates captured, but could not resolve address.');
+          });
+      },
+      (err) => {
+        console.error('Error fetching location', err);
+        this.isFetchingLocation = false;
+        alert('Could not fetch location. Please ensure GPS is enabled and permissions granted.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   }
 
   saveSettings() {
     if (!this.currentService) return;
     this.isSaving = true;
-    // this.apiService.updateService(this.currentService.id, this.currentService).subscribe(...)
-    setTimeout(() => {
-      this.isSaving = false;
-      alert('Professional settings saved successfully!');
-    }, 800);
+    this.apiService.updateService(this.currentService.id, this.currentService).subscribe({
+      next: (svc) => {
+        this.currentService = svc;
+        this.isSaving = false;
+        alert('Professional settings saved successfully!');
+      },
+      error: (err) => {
+        this.isSaving = false;
+        alert('Failed to save settings: ' + (err.error?.message || err.message));
+      }
+    });
   }
 
   onUserPhotoSelected(event: any) {
@@ -827,10 +981,6 @@ export class ServiceProviderDashboardComponent implements OnInit {
       };
       reader.onerror = reject;
     });
-  }
-
-  setTab(tab: string) {
-    this.activeTab = tab;
   }
 
   signOut() {

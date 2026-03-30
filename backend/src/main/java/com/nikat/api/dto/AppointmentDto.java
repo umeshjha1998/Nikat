@@ -14,6 +14,8 @@ public class AppointmentDto {
     private String userName;
     private String shopId;
     private String shopName;
+    private String serviceId;
+    private String serviceName;
     private LocalDateTime appointmentTime;
     private String serviceType;
     private String status;

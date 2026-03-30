@@ -10,5 +10,6 @@ import java.util.UUID;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
     List<Appointment> findByShopIdOrderByAppointmentTimeAsc(String shopId);
+    List<Appointment> findByServiceIdOrderByAppointmentTimeAsc(String serviceId);
     List<Appointment> findByUserId(String userId);
 }

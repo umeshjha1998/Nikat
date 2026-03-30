@@ -23,5 +23,8 @@ public class ServiceDto {
     private BigDecimal baseCharge;
     private String status;
     private Boolean isFeatured;
+    private String phoneNumber;
+    private Double latitude;
+    private Double longitude;
     private Double averageRating;
 }

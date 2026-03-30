@@ -13,4 +13,5 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
     long countByCreatedAtAfter(LocalDateTime date);
     List<Service> findByProviderId(String providerId);
     List<Service> findByStatus(String status);
+    boolean existsByProviderId(String providerId);
 }

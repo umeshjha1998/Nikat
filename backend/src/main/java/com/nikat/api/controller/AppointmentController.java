@@ -20,6 +20,16 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsByShop(shopId));
     }
 
+    @GetMapping("/service/{serviceId}")
+    public ResponseEntity<List<AppointmentDto>> getAppointmentsByService(@PathVariable String serviceId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByService(serviceId));
+    }
+
+    @GetMapping("/service/{serviceId}/clients")
+    public ResponseEntity<List<com.nikat.api.dto.UserDto>> getClientsByService(@PathVariable String serviceId) {
+        return ResponseEntity.ok(appointmentService.getClientsByService(serviceId));
+    }
+
     @PatchMapping("/{id}/status")
     public ResponseEntity<AppointmentDto> updateStatus(
             @PathVariable UUID id, 

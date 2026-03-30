@@ -45,6 +45,7 @@ export interface ServiceDto {
   baseCharge: number;
   status: string;
   isFeatured: boolean;
+  phoneNumber?: string;
   latitude?: number;
   longitude?: number;
   averageRating?: number;
@@ -54,7 +55,7 @@ export interface CategoryDto {
   id: string;
   name: string;
   description: string;
-  isServiceProviderCategory: boolean;
+  isServiceCategory: boolean;
   isShopCategory: boolean;
 }
 
@@ -93,6 +94,24 @@ export interface ProductDto {
   isAvailable: boolean;
   imageUrl: string;
   quantity?: number;
+}
+
+export interface ServiceOfferingDto {
+  id?: string;
+  serviceId: string;
+  name: string;
+  description?: string;
+  price: number;
+  durationMinutes: number;
+  status: string;
+}
+
+export interface UserDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
 }
 
 export interface OrderDto {
@@ -210,6 +229,14 @@ export class ApiService {
     return this.http.get<ServiceDto>(`${this.apiUrl}/public/services/${id}`);
   }
 
+  createService(service: any): Observable<ServiceDto> {
+    return this.http.post<ServiceDto>(`${this.apiUrl}/services`, service);
+  }
+
+  updateService(id: string, service: any): Observable<ServiceDto> {
+    return this.http.put<ServiceDto>(`${this.apiUrl}/services/${id}`, service);
+  }
+
   // Categories
   getCategories(): Observable<CategoryDto[]> {
     return this.http.get<CategoryDto[]>(`${this.apiUrl}/public/categories`);
@@ -258,5 +285,31 @@ export class ApiService {
     return this.http.patch<OrderDto>(`${this.apiUrl}/orders/${orderId}/status`, JSON.stringify(status), {
       headers: { 'Content-Type': 'application/json' }
     });
+  }
+
+  // Service Offerings
+  getOfferingsByService(serviceId: string): Observable<ServiceOfferingDto[]> {
+    return this.http.get<ServiceOfferingDto[]>(`${this.apiUrl}/service-offerings/service/${serviceId}`);
+  }
+
+  createOffering(offering: ServiceOfferingDto): Observable<ServiceOfferingDto> {
+    return this.http.post<ServiceOfferingDto>(`${this.apiUrl}/service-offerings`, offering);
+  }
+
+  updateOffering(id: string, offering: ServiceOfferingDto): Observable<ServiceOfferingDto> {
+    return this.http.put<ServiceOfferingDto>(`${this.apiUrl}/service-offerings/${id}`, offering);
+  }
+
+  deleteOffering(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/service-offerings/${id}`);
+  }
+
+  // Service Appointments & Clients
+  getAppointmentsByService(serviceId: string): Observable<AppointmentDto[]> {
+    return this.http.get<AppointmentDto[]>(`${this.apiUrl}/appointments/service/${serviceId}`);
+  }
+
+  getClientsByService(serviceId: string): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.apiUrl}/appointments/service/${serviceId}/clients`);
   }
 }
