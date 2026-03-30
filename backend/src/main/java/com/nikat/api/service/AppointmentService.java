@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -67,6 +69,28 @@ public class AppointmentService {
         if (dto.getServiceId() != null) {
             service = serviceRepository.findById(dto.getServiceId())
                     .orElseThrow(() -> new RuntimeException("Service not found: " + dto.getServiceId()));
+        }
+
+        LocalTime appointmentLocalTime = dto.getAppointmentTime().toLocalTime();
+        
+        if (shop != null) {
+            if (shop.getOpeningTime() != null && shop.getClosingTime() != null && !shop.getOpeningTime().trim().isEmpty() && !shop.getClosingTime().trim().isEmpty()) {
+                try {
+                    LocalTime openingTime = LocalTime.parse(shop.getOpeningTime());
+                    LocalTime closingTime = LocalTime.parse(shop.getClosingTime());
+                    if (appointmentLocalTime.isBefore(openingTime) || appointmentLocalTime.isAfter(closingTime)) {
+                        throw new RuntimeException("Appointment time must be between shop opening (" + shop.getOpeningTime() + ") and closing (" + shop.getClosingTime() + ") times.");
+                    }
+                } catch (DateTimeParseException e) {
+                    // Ignore if format is not standard
+                }
+            }
+        } else if (service != null) {
+            if (service.getStartTime() != null && service.getEndTime() != null) {
+                if (appointmentLocalTime.isBefore(service.getStartTime()) || appointmentLocalTime.isAfter(service.getEndTime())) {
+                    throw new RuntimeException("Appointment time must be between service start (" + service.getStartTime() + ") and end (" + service.getEndTime() + ") times.");
+                }
+            }
         }
 
         Appointment appointment = Appointment.builder()

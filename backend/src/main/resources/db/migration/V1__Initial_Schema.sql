@@ -252,3 +252,15 @@ INSERT INTO categories (id, name, description, is_service_category, is_shop_cate
 (gen_random_uuid(), 'Wi-Fi & Internet', 'Broadband plans, routers, and OTT services', TRUE, FALSE),
 (gen_random_uuid(), 'Yoga Classes', 'Fitness and meditation training', TRUE, FALSE),
 (gen_random_uuid(), 'Zipper/Chain Repair', 'Repair for jackets, pants, bags, etc.', TRUE, FALSE);
+
+CREATE TABLE service_offerings (
+    id UUID PRIMARY KEY,
+    service_id VARCHAR(50) NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2),
+    duration_minutes INT DEFAULT 30,
+    status VARCHAR(50) DEFAULT 'ACTIVE',
+    created_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_service_offerings_service FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+);
