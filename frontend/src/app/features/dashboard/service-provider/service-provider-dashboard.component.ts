@@ -351,7 +351,9 @@ import { Router } from '@angular/router';
                     <label>Professional Category</label>
                     <select [(ngModel)]="currentService.categoryId">
                       <option [value]="null">Select Category</option>
-                      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                      <optgroup *ngFor="let group of groupedCategories" [label]="group.name">
+                        <option *ngFor="let cat of group.categories" [value]="cat.id">{{ cat.name }}</option>
+                      </optgroup>
                     </select>
                   </div>
                   <div class="form-group full-width">
@@ -691,6 +693,102 @@ export class ServiceProviderDashboardComponent implements OnInit {
   activeTab = 'performance';
   currentService: any = null;
   categories: any[] = [];
+  groupedCategories: any[] = [];
+  private categoryMappings: {[key: string]: string} = {
+    // Home Maintenance
+    'AC/Fridge/Geyser Repair': 'Home Maintenance',
+    'Appliance Repair': 'Home Maintenance',
+    'Carpenter Service': 'Home Maintenance',
+    'Carpenter Shop': 'Home Maintenance',
+    'Electrical Repair Shop': 'Home Maintenance',
+    'Electrician': 'Home Maintenance',
+    'Gas Stove Repair': 'Home Maintenance',
+    'Glass & Mirror Shop': 'Home Maintenance',
+    'Iron Welding Shop': 'Home Maintenance',
+    'Ironsmith': 'Home Maintenance',
+    'Mason': 'Home Maintenance',
+    'Painter': 'Home Maintenance',
+    'Plumber': 'Home Maintenance',
+    'RO & Water Purifier': 'Home Maintenance',
+    'Sewing Machine Repair': 'Home Maintenance',
+    'Watch/Clock Repair': 'Home Maintenance',
+    'Mirror/Glass Installation': 'Home Maintenance',
+    'Hardware Shop': 'Home Maintenance',
+    'Home Appliances Shop': 'Home Maintenance',
+
+    // Tech & Digital
+    'Computer/Laptop Repair': 'Tech & Digital',
+    'Cyber Cafe': 'Tech & Digital',
+    'Electronic Repairs': 'Tech & Digital',
+    'Game Console Repair': 'Tech & Digital',
+    'Mobile & Accessories': 'Tech & Digital',
+    'Mobile Repair': 'Tech & Digital',
+    'Print & Photocopy': 'Tech & Digital',
+    'TV Repair': 'Tech & Digital',
+    'Wi-Fi & Internet': 'Tech & Digital',
+
+    // Daily Essentials
+    'Ayurvedic Store': 'Daily Essentials',
+    'Bakery': 'Daily Essentials',
+    'Dairy Shop': 'Daily Essentials',
+    'Dairy & Milk Delivery': 'Daily Essentials',
+    'Grocery Store': 'Daily Essentials',
+    'Ice Cream Shop': 'Daily Essentials',
+    'Juice Center': 'Daily Essentials',
+    'Meat & Poultry Shop': 'Daily Essentials',
+    'Paan Shop': 'Daily Essentials',
+    'Snacks & Fast Food': 'Daily Essentials',
+    'Sweets & Snacks': 'Daily Essentials',
+    'Milk Delivery': 'Daily Essentials',
+    'Religious Store': 'Daily Essentials',
+
+    // Personal Care & Fitness
+    'At-Home Beautician': 'Personal Care',
+    'Barber Shop': 'Personal Care',
+    'Beauty Parlour': 'Personal Care',
+    'Gym': 'Personal Care',
+    'Yoga Classes': 'Personal Care',
+
+    // Health & Medical
+    'Chemist/Pharmacy': 'Health & Medical',
+    'Dentist Clinic': 'Health & Medical',
+    'Diagnostic Lab': 'Health & Medical',
+    'Doctor Clinic': 'Health & Medical',
+    'Nursing Service': 'Health & Medical',
+    'Optician': 'Health & Medical',
+    'Physiotherapy': 'Health & Medical',
+
+    // Professional & Education
+    'Event Decoration/Rental': 'Professional & Education',
+    'Packers & Movers': 'Professional & Education',
+    'Photography Studio': 'Professional & Education',
+    'Property Dealer/Real Estate': 'Professional & Education',
+    'School': 'Professional & Education',
+    'Tuition & Coaching': 'Professional & Education',
+    'Stationery Shop': 'Professional & Education',
+
+    // Neighborhood & Domestic
+    'Cook': 'Neighborhood & Domestic',
+    'Flower Delivery': 'Neighborhood & Domestic',
+    'Garbage Collection': 'Neighborhood & Domestic',
+    'Gardener': 'Neighborhood & Domestic',
+    'House Help/Maid': 'Neighborhood & Domestic',
+    'Nanny': 'Neighborhood & Domestic',
+    'Newspaper Delivery': 'Neighborhood & Domestic',
+    'Sewage & Drainage': 'Neighborhood & Domestic',
+
+    // Fashion & Lifestyle
+    'Footwear & Repair': 'Fashion & Lifestyle',
+    'Ladies Tailor': 'Fashion & Lifestyle',
+    'Zipper/Chain Repair': 'Fashion & Lifestyle',
+    'Ladies Wear': 'Fashion & Lifestyle',
+    'Gents Wear': 'Fashion & Lifestyle',
+    'Kids Wear': 'Fashion & Lifestyle',
+    'Saree Shop': 'Fashion & Lifestyle',
+    'Raw Cloth Shop': 'Fashion & Lifestyle',
+    'Jewellery Shop': 'Fashion & Lifestyle',
+    'Sports Store': 'Fashion & Lifestyle'
+  };
   userProfile: any = {
     aadharNumber: '',
     panNumber: '',
@@ -746,7 +844,27 @@ export class ServiceProviderDashboardComponent implements OnInit {
   loadCategories() {
     this.apiService.getCategories().subscribe(cats => {
       this.categories = cats.filter(c => c.isServiceCategory);
+      this.groupCategories();
     });
+  }
+
+  groupCategories() {
+    const groups: {[key: string]: any[]} = {};
+    const normalizedMappings: {[key: string]: string} = {};
+    Object.keys(this.categoryMappings).forEach(key => {
+      normalizedMappings[key.toLowerCase()] = this.categoryMappings[key];
+    });
+
+    this.categories.forEach(cat => {
+      const groupName = normalizedMappings[cat.name?.trim().toLowerCase()] || 'Others';
+      if (!groups[groupName]) groups[groupName] = [];
+      groups[groupName].push(cat);
+    });
+
+    this.groupedCategories = Object.keys(groups).map(name => ({
+      name,
+      categories: groups[name]
+    })).sort((a, b) => a.name.localeCompare(b.name));
   }
 
   loadServiceProviderData() {
