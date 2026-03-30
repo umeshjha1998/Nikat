@@ -19,7 +19,7 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
               <h1 class="sidebar-title">Explore</h1>
               <div class="search-input-wrap">
                 <span class="material-symbols-outlined search-icon">search</span>
-                <input type="text" placeholder="Search services..." class="search-input" [(ngModel)]="searchQuery" (input)="filterServices()">
+                <input type="text" placeholder="Search services..." class="search-input" [(ngModel)]="searchQuery" (input)="onSearchChange()">
               </div>
             </div>
 
@@ -52,6 +52,7 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
                   <button class="sub-cat-item" 
                           *ngFor="let cat of group.categories" 
                           [class.active]="activeCategory === cat.id"
+                          [class.highlighted]="isCatHighlighted(cat.name)"
                           (click)="selectCategory(cat.id)">
                     {{ cat.name }}
                   </button>
@@ -436,6 +437,18 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
       opacity: 0; transition: opacity 0.2s;
     }
     .custom-checkbox.checked .check-fill { opacity: 1; }
+
+    /* Highlighted Categories */
+    .sub-cat-item.highlighted {
+      background: var(--accent-glow) !important;
+      color: var(--accent) !important;
+      border: 1px solid var(--accent) !important;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .cat-group-header.highlighted {
+      background: var(--accent-glow) !important;
+      border: 1px solid var(--accent) !important;
+    }
     .filter-text { font-size: 0.875rem; font-weight: 500; color: var(--text-main); flex: 1; }
     .open-dot {
       width: 0.5rem; height: 0.5rem; border-radius: 50%;
@@ -643,7 +656,7 @@ export class ServicesComponent implements OnInit {
   filters = { openNow: true, topRated: false, nearby: true };
   categories: CategoryDto[] = [];
   groupedCategories: any[] = [];
-  expandedGroups: Set<string> = new Set(['Home Maintenance', 'Neighborhood & Domestic']); // Open some by default
+  expandedGroups: Set<string> = new Set(['Home Maintenance', 'Neighborhood & Domestic', 'Tech & Digital']); // Open some by default
 
   private categoryMappings: {[key: string]: string} = {
     // Home Maintenance
@@ -663,85 +676,82 @@ export class ServicesComponent implements OnInit {
     'RO & Water Purifier': 'Home Maintenance',
     'Sewing Machine Repair': 'Home Maintenance',
     'Watch/Clock Repair': 'Home Maintenance',
+    'Mirror/Glass Installation': 'Home Maintenance',
+    'Hardware Shop': 'Home Maintenance',
+    'Home Appliances Shop': 'Home Maintenance',
 
     // Tech & Digital
     'Computer/Laptop Repair': 'Tech & Digital',
     'Cyber Cafe': 'Tech & Digital',
     'Electronic Repairs': 'Tech & Digital',
     'Game Console Repair': 'Tech & Digital',
+    'Mobile & Accessories': 'Tech & Digital',
     'Mobile Repair': 'Tech & Digital',
     'Print & Photocopy': 'Tech & Digital',
     'TV Repair': 'Tech & Digital',
     'Wi-Fi & Internet': 'Tech & Digital',
 
     // Daily Essentials
-    'Grocery Shop': 'Daily Essentials',
-    'Milk Delivery': 'Daily Essentials',
-    'Dairy Shop': 'Daily Essentials',
+    'Ayurvedic Store': 'Daily Essentials',
     'Bakery': 'Daily Essentials',
-    'Sweets Shop': 'Daily Essentials',
-    'Snack Shop': 'Daily Essentials',
+    'Dairy Shop': 'Daily Essentials',
+    'Dairy & Milk Delivery': 'Daily Essentials',
+    'Grocery Store': 'Daily Essentials',
     'Ice Cream Shop': 'Daily Essentials',
-    'Juice Seller': 'Daily Essentials',
-    'Panwadi': 'Daily Essentials',
+    'Juice Center': 'Daily Essentials',
+    'Meat & Poultry Shop': 'Daily Essentials',
     'Paan Shop': 'Daily Essentials',
-    'Chicken Shop': 'Daily Essentials',
-    'Meat Shop': 'Daily Essentials',
-    'Fish Shop': 'Daily Essentials',
-    'Newspaper Distributor': 'Daily Essentials',
-    'Flower Distributor': 'Daily Essentials',
-    'Garbage Collector': 'Daily Essentials',
+    'Snacks & Fast Food': 'Daily Essentials',
+    'Sweets & Snacks': 'Daily Essentials',
+    'Milk Delivery': 'Daily Essentials',
+    'Religious Store': 'Daily Essentials',
 
     // Personal Care & Fitness
+    'At-Home Beautician': 'Personal Care',
     'Barber Shop': 'Personal Care',
-    'Beautician': 'Personal Care',
     'Beauty Parlour': 'Personal Care',
-    'Salon': 'Personal Care',
-    'Spa': 'Personal Care',
-    'Massage': 'Personal Care',
     'Gym': 'Personal Care',
-    'Fitness Center': 'Personal Care',
-    'Yoga Trainer': 'Personal Care',
+    'Yoga Classes': 'Personal Care',
 
     // Health & Medical
-    'Doctor': 'Health & Medical',
-    'Clinic': 'Health & Medical',
-    'Chemist': 'Health & Medical',
-    'Pharmacy': 'Health & Medical',
-    'Dentist': 'Health & Medical',
+    'Chemist/Pharmacy': 'Health & Medical',
+    'Dentist Clinic': 'Health & Medical',
     'Diagnostic Lab': 'Health & Medical',
+    'Doctor Clinic': 'Health & Medical',
+    'Nursing Service': 'Health & Medical',
+    'Optician': 'Health & Medical',
     'Physiotherapy': 'Health & Medical',
-    'Nurse': 'Health & Medical',
-    'Ayurvedic': 'Health & Medical',
-    'Patanjali': 'Health & Medical',
-
-
 
     // Professional & Education
+    'Event Decoration/Rental': 'Professional & Education',
+    'Packers & Movers': 'Professional & Education',
+    'Photography Studio': 'Professional & Education',
+    'Property Dealer/Real Estate': 'Professional & Education',
     'School': 'Professional & Education',
-    'Tuition': 'Professional & Education',
-    'Educational Service': 'Professional & Education',
-    'Property Dealer': 'Professional & Education',
-    'Real Estate': 'Professional & Education',
-    'Photographer': 'Professional & Education',
-    'Photo Studio': 'Professional & Education',
-    'Packers and Movers': 'Professional & Education',
+    'Tuition & Coaching': 'Professional & Education',
+    'Stationery Shop': 'Professional & Education',
 
     // Neighborhood & Domestic
     'Cook': 'Neighborhood & Domestic',
+    'Flower Delivery': 'Neighborhood & Domestic',
     'Garbage Collection': 'Neighborhood & Domestic',
     'Gardener': 'Neighborhood & Domestic',
     'House Help/Maid': 'Neighborhood & Domestic',
     'Nanny': 'Neighborhood & Domestic',
+    'Newspaper Delivery': 'Neighborhood & Domestic',
     'Sewage & Drainage': 'Neighborhood & Domestic',
 
     // Fashion & Lifestyle
     'Footwear & Repair': 'Fashion & Lifestyle',
-    'Gents Tailor': 'Fashion & Lifestyle',
-    'Jewellery Shop': 'Fashion & Lifestyle',
     'Ladies Tailor': 'Fashion & Lifestyle',
-    'Sports Store': 'Fashion & Lifestyle',
-    'Zipper/Chain Repair': 'Fashion & Lifestyle'
+    'Zipper/Chain Repair': 'Fashion & Lifestyle',
+    'Ladies Wear': 'Fashion & Lifestyle',
+    'Gents Wear': 'Fashion & Lifestyle',
+    'Kids Wear': 'Fashion & Lifestyle',
+    'Saree Shop': 'Fashion & Lifestyle',
+    'Raw Cloth Shop': 'Fashion & Lifestyle',
+    'Jewellery Shop': 'Fashion & Lifestyle',
+    'Sports Store': 'Fashion & Lifestyle'
   };
 
   private groupIcons: {[key: string]: string} = {
@@ -820,7 +830,26 @@ export class ServicesComponent implements OnInit {
   selectCategory(categoryId: string, event?: Event) {
     if (event) event.stopPropagation();
     this.activeCategory = categoryId;
+    this.searchQuery = ''; // Clear search when specific cat selected
     this.filterServices();
+  }
+
+  isCatHighlighted(catName: string): boolean {
+    if (!this.searchQuery || this.searchQuery.length < 2) return false;
+    return catName.toLowerCase().includes(this.searchQuery.toLowerCase());
+  }
+
+  onSearchChange() {
+    this.filterServices();
+    // Auto expand groups containing highlights
+    if (this.searchQuery.length > 1) {
+      this.groupedCategories.forEach(group => {
+        const hasMatch = group.categories.some((c: any) => 
+          c.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+        if (hasMatch) this.expandedGroups.add(group.name);
+      });
+    }
   }
 
   filterServices() {
