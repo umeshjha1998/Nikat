@@ -199,7 +199,7 @@ public class HomeController {
                     // Quote Rotation
                     let idx = 0;
                     setInterval(() => {
-                        idx = (idx + 1) % quotes.length;
+                        idx = (idx + 1) %% quotes.length;
                         document.getElementById('quote').textContent = quotes[idx].text;
                         document.getElementById('author').textContent = "— " + quotes[idx].author;
                     }, 10000);
