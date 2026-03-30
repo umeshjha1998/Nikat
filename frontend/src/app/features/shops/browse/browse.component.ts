@@ -120,7 +120,7 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
                 {{shop.isOpen ? 'Open Now' : 'Closed'}}
               </div>
               <div class="rating-overlay">
-                <span class="material-symbols-outlined star-filled">star</span>
+                <span class="material-symbols-outlined star-filled" *ngIf="shop.rating !== 'Not Rated'">star</span>
                 <span class="rating-text">{{shop.rating}}</span>
               </div>
             </div>
@@ -531,7 +531,7 @@ export class BrowseComponent implements OnInit {
             category: s.categoryName || 'Local Business',
             description: s.description || 'Premium local shop offering exceptional quality.',
             image: s.photos && s.photos.length > 0 ? s.photos[0] : 'https://images.unsplash.com/photo-1517248135467-4c7ed9d42177?auto=format&fit=crop&q=80',
-            rating: parseFloat((4.0 + Math.random()).toFixed(1)), 
+            rating: s.averageRating ? s.averageRating.toFixed(1) : 'Not Rated',
             isOpen: s.isOpen === undefined ? true : s.isOpen, // Default to true if not provided
             isVerified: s.status === 'VERIFIED',
             createdDate: new Date(s.createdAt || Date.now()).getTime(),
@@ -596,12 +596,19 @@ export class BrowseComponent implements OnInit {
 
     // Filter by Rating
     if (this.filters.minRating > 0) {
-      filtered = filtered.filter(s => s.rating >= this.filters.minRating);
+      filtered = filtered.filter(s => {
+        if (s.rating === 'Not Rated') return false;
+        return parseFloat(s.rating) >= this.filters.minRating;
+      });
     }
 
     // Sort
     if (this.filters.sortBy === 'rating') {
-      filtered.sort((a, b) => b.rating - a.rating);
+      filtered.sort((a, b) => {
+        const rA = a.rating === 'Not Rated' ? 0 : parseFloat(a.rating);
+        const rB = b.rating === 'Not Rated' ? 0 : parseFloat(b.rating);
+        return rB - rA;
+      });
     } else if (this.filters.sortBy === 'newest') {
       filtered.sort((a, b) => b.createdDate - a.createdDate);
     }

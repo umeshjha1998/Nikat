@@ -129,9 +129,12 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
                       <span class="recommended-badge">Recommended</span>
                       <h3 class="card-title">{{displayServices[0].name}}</h3>
                     </div>
-                    <div class="rating-badge">
+                    <div class="rating-badge" *ngIf="displayServices[0].averageRating">
                       <span class="material-symbols-outlined star-filled">star</span>
-                      <span class="rating-value">4.9</span>
+                      <span class="rating-value">{{displayServices[0].averageRating.toFixed(1)}}</span>
+                    </div>
+                    <div class="rating-badge" *ngIf="!displayServices[0].averageRating">
+                      <span class="rating-value">Not Rated</span>
                     </div>
                   </div>
                   <p class="card-desc">{{displayServices[0].description || 'Expert service with premium quality. Specializing in high-quality repair and maintenance.'}}</p>
@@ -162,9 +165,12 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
                   <p class="card-desc-sm">{{svc.description || 'Premium local service offering.'}}</p>
                   <div class="card-footer-sm">
                     <span class="price-distance">₹{{svc.baseCharge || '500'}} • {{svc.serviceArea || '2 km'}}</span>
-                    <div class="rating-mini">
+                    <div class="rating-mini" *ngIf="svc.averageRating">
                       <span class="material-symbols-outlined star-filled">star</span>
-                      <span>4.7</span>
+                      <span>{{svc.averageRating.toFixed(1)}}</span>
+                    </div>
+                    <div class="rating-mini" *ngIf="!svc.averageRating">
+                      <span>Not Rated</span>
                     </div>
                   </div>
                 </div>

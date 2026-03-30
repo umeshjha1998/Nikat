@@ -68,7 +68,7 @@ import { CartService } from '../../../core/cart.service';
           <p class="shop-tagline">{{shop.description}}</p>
           <div class="meta-row">
             <div class="meta-item rating-item">
-              <span class="material-symbols-outlined star-filled">star</span>
+              <span class="material-symbols-outlined star-filled" *ngIf="shop.rating !== 'Not Rated'">star</span>
               <strong>{{shop.rating}}</strong>
               <span class="meta-muted">({{shop.reviewCount}} reviews)</span>
             </div>
@@ -264,10 +264,11 @@ import { CartService } from '../../../core/cart.service';
           <div *ngIf="activeTab === 'reviews'" class="reviews-panel">
             <div class="reviews-summary">
               <div class="score-big">{{shop.rating}}</div>
-              <div class="stars-row">
+              <div class="stars-row" *ngIf="shop.rating !== 'Not Rated'">
                 <span class="material-symbols-outlined star-filled" *ngFor="let s of getStars(shop.rating)">star</span>
               </div>
-              <p class="score-label">Based on {{shop.reviewCount}} verified reviews</p>
+              <p class="score-label" *ngIf="shop.rating !== 'Not Rated'">Based on {{shop.reviewCount}} verified reviews</p>
+              <p class="score-label" *ngIf="shop.rating === 'Not Rated'">This shop hasn't received any reviews yet.</p>
             </div>
             <div class="review-list">
               <div class="review-node" *ngFor="let r of reviews">
@@ -861,8 +862,8 @@ export class ShopDetailComponent implements OnInit {
               category: s.categoryName || this.shop.category,
               isOpen: s.isOpen,
               hours: (s.openingTime && s.closingTime) ? `${this.to12h(s.openingTime)} - ${this.to12h(s.closingTime)}` : this.shop.hours,
-              reviewCount: s.reviewCount || this.shop.reviewCount,
-              rating: s.averageRating?.toFixed(1) || this.shop.rating,
+              reviewCount: s.reviewCount || 0,
+              rating: s.averageRating ? s.averageRating.toFixed(1) : 'Not Rated',
               workerCount: s.workerCount,
               phoneNumber: s.phoneNumber,
               latitude: s.latitude,
@@ -943,7 +944,10 @@ export class ShopDetailComponent implements OnInit {
     this.isFavorited = !this.isFavorited;
   }
 
-  getStars(n: number): number[] { return Array(Math.floor(n)).fill(0); }
+  getStars(n: any): number[] { 
+    const num = parseFloat(n);
+    return isNaN(num) ? [] : Array(Math.floor(num)).fill(0); 
+  }
 
   // MANAGEMENT LOGIC
   isOwner = false;

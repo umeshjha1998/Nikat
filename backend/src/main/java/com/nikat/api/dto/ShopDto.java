@@ -32,4 +32,5 @@ public class ShopDto {
     private String phoneNumber;
     private Double latitude;
     private Double longitude;
+    private Double averageRating;
 }

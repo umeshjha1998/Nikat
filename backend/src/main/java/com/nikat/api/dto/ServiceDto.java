@@ -23,4 +23,5 @@ public class ServiceDto {
     private BigDecimal baseCharge;
     private String status;
     private Boolean isFeatured;
+    private Double averageRating;
 }

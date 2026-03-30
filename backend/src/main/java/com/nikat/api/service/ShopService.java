@@ -29,6 +29,7 @@ public class ShopService {
     private final com.nikat.api.repository.UserRepository userRepository;
     private final com.nikat.api.repository.CategoryRepository categoryRepository;
     private final com.nikat.api.repository.ProductRepository productRepository;
+    private final com.nikat.api.repository.ReviewRepository reviewRepository;
     private final ObjectMapper objectMapper;
     private final IdGenerator idGenerator;
 
@@ -171,6 +172,7 @@ public class ShopService {
                 .phoneNumber(shop.getPhoneNumber())
                 .latitude(shop.getLatitude())
                 .longitude(shop.getLongitude())
+                .averageRating(reviewRepository.findAverageRatingByShopId(shop.getId()))
                 .build();
     }
 

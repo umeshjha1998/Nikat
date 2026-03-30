@@ -28,6 +28,7 @@ export interface ShopDto {
   phoneNumber?: string;
   latitude?: number;
   longitude?: number;
+  averageRating?: number;
 }
 
 export interface ServiceDto {
@@ -44,6 +45,7 @@ export interface ServiceDto {
   baseCharge: number;
   status: string;
   isFeatured: boolean;
+  averageRating?: number;
 }
 
 export interface CategoryDto {

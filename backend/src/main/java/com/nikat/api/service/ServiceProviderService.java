@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class ServiceProviderService {
 
     private final ServiceRepository serviceRepository;
+    private final com.nikat.api.repository.ReviewRepository reviewRepository;
 
     public List<ServiceDto> getAllServices() {
         return serviceRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
@@ -54,6 +55,7 @@ public class ServiceProviderService {
                 .baseCharge(service.getBaseCharge())
                 .status(service.getStatus())
                 .isFeatured(service.getIsFeatured())
+                .averageRating(reviewRepository.findAverageRatingByServiceId(service.getId()))
                 .build();
     }
 }
