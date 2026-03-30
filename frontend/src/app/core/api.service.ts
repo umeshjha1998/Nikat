@@ -77,6 +77,8 @@ export interface AppointmentDto {
   userName: string;
   shopId: string;
   shopName: string;
+  serviceId?: string;
+  serviceName?: string;
   appointmentTime: string;
   serviceType: string;
   status: string;

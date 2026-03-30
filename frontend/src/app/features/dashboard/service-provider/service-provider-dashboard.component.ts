@@ -360,6 +360,14 @@ import { Router } from '@angular/router';
                     <label>About My Services</label>
                     <textarea [(ngModel)]="currentService.description" rows="4"></textarea>
                   </div>
+                  <div class="form-group">
+                    <label>Work Start Time</label>
+                    <input type="time" [(ngModel)]="currentService.startTime">
+                  </div>
+                  <div class="form-group">
+                    <label>Work End Time</label>
+                    <input type="time" [(ngModel)]="currentService.endTime">
+                  </div>
                   <div class="form-group full-width location-group">
                     <label>Service Area / Location</label>
                     <div class="input-with-button">

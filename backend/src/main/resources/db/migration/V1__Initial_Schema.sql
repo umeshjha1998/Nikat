@@ -143,6 +143,7 @@ CREATE TABLE appointments (
     id UUID PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL REFERENCES users(id),
     shop_id VARCHAR(50) REFERENCES shops(id),
+    service_id VARCHAR(50) REFERENCES services(id),
     appointment_time TIMESTAMP NOT NULL,
     service_type VARCHAR(150),
     status VARCHAR(50) DEFAULT 'PENDING', 

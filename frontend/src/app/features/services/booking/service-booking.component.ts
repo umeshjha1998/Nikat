@@ -611,11 +611,15 @@ export class ServiceBookingComponent implements OnInit {
 
     const appointment: Partial<AppointmentDto> = {
       userId: user.id,
-      shopId: this.shopId,
+      shopId: this.shopId || undefined,
+      serviceId: this.route.snapshot.queryParams['type'] === 'provider' ? this.shopId : undefined,
+      serviceName: this.route.snapshot.queryParams['type'] === 'provider' ? this.service.name : undefined,
       appointmentTime: isoStr as any,
       serviceType: this.getSelectedName(),
-      notes: "Booked via shop detail page"
+      notes: "Booked via " + (this.route.snapshot.queryParams['type'] === 'provider' ? 'provider' : 'shop') + " page"
     };
+
+    console.log('Sending appointment:', appointment);
 
     this.apiService.createAppointment(appointment).subscribe({
       next: (res) => {
@@ -623,7 +627,7 @@ export class ServiceBookingComponent implements OnInit {
       },
       error: (err) => {
         console.error('Booking failed', err);
-        alert('Failed to confirm booking. Please try again.');
+        alert(err.error?.message || 'Failed to confirm booking. Please try again.');
       }
     });
   }
