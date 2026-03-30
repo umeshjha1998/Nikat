@@ -840,6 +840,12 @@ export class ShopDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['tab'] === 'reviews') {
+        this.activeTab = 'reviews';
+      }
+    });
+
     this.shopId = this.route.snapshot.paramMap.get('id');
     if (this.shopId) {
       this.apiService.getShopById(this.shopId).subscribe({
@@ -875,6 +881,22 @@ export class ShopDetailComponent implements OnInit {
             image: p.imageUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKL_Gt0OYgyVI77ZOgLQt3quHujfWLr7jOYdrTIk8L931aBeRBqSRr5-Aoy2CJhm4PxppgYFrtoheNqCH4VTp-P8kxGuF0zdnyGJMj6qc5EHc_L69ZekNcPSQV-dJFNMZ4WKJbt6kE_FYz6ZHIntKoKlas7PGxLZ3bNIumtL0YjcKr6rLeVjSL-yWYLDfmyCXPeafVquM866KDuJL80TurE7oqG9OkkIh8sfy97ultbrmqJ-w8UbXuQUb7gKYbx2GXzI0onVNWpRDm',
             chips: ['Verified', 'Local']
           }));
+        }
+      });
+      
+      this.apiService.getReviewsByShop(this.shopId).subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            this.reviews = data.map(r => ({
+              name: r.reviewerName || 'Anonymous',
+              initials: (r.reviewerName || 'A').substring(0, 2).toUpperCase(),
+              rating: r.rating || 4,
+              date: r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recently',
+              comment: r.comment || '',
+              tags: [],
+              color: '#5eb4ff'
+            }));
+          }
         }
       });
     }
