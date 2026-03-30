@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/api.service';
 
@@ -46,12 +46,12 @@ import { ApiService } from '../../core/api.service';
           <div class="submit-card">
             <h2 class="submit-title">Share Your Experience</h2>
             <p class="submit-desc">Your voice matters. Help others discover great local services and shops.</p>
-            <div class="form">
+            <div *ngIf="newReview.shopId; else noShop" class="form">
               <!-- Business Name -->
               <div class="form-group">
                 <label>Business Name</label>
-                <input type="text" [placeholder]="newReview.shopId ? '' : 'Search for a shop or service...'" [(ngModel)]="newReview.businessName" class="form-input" [disabled]="!!newReview.shopId">
-                <p class="prefill-hint" *ngIf="newReview.shopId">Prefilled from your last order.</p>
+                <input type="text" [(ngModel)]="newReview.businessName" class="form-input" disabled>
+                <p class="prefill-hint">Prefilled from your verified purchase.</p>
               </div>
 
               <!-- Star Rating -->
@@ -85,6 +85,14 @@ import { ApiService } from '../../core/api.service';
                 Submit Review
               </button>
             </div>
+            
+            <ng-template #noShop>
+              <div class="verified-purchase-prompt">
+                <span class="material-symbols-outlined prompt-icon">shopping_bag</span>
+                <p>New reviews can only be posted after a verified purchase.</p>
+                <a routerLink="/shops" class="btn-browse">Browse Shops</a>
+              </div>
+            </ng-template>
           </div>
         </aside>
 
@@ -120,7 +128,9 @@ import { ApiService } from '../../core/api.service';
               </div>
 
               <!-- Business Referenced -->
-              <div class="reviewed-biz" *ngIf="review.businessName">
+              <div class="reviewed-biz" *ngIf="review.businessName"
+                   (click)="goToShop(review.shopId)"
+                   [class.clickable]="!!review.shopId">
                 <span class="material-symbols-outlined biz-icon">storefront</span>
                 <span class="biz-name">{{review.businessName}}</span>
                 <span class="biz-category">{{review.category}}</span>
@@ -301,6 +311,24 @@ import { ApiService } from '../../core/api.service';
     .biz-icon { font-size: 1rem; color: var(--accent); }
     .biz-name { font-size: 0.875rem; font-weight: 700; color: var(--on-surface); }
     .biz-category { font-size: 0.625rem; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.1em; }
+    
+    .reviewed-biz.clickable { cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+    .reviewed-biz.clickable:hover { background: var(--surface-container-high); border-color: var(--accent); transform: translateY(-1px); }
+    
+    .verified-purchase-prompt {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 2rem 0 1rem; gap: 1rem;
+    }
+    .prompt-icon { font-size: 3rem; color: var(--outline-variant); }
+    .verified-purchase-prompt p { font-size: 0.875rem; color: var(--on-surface-variant); line-height: 1.5; margin: 0; }
+    .btn-browse {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--surface-container-high); color: var(--on-surface);
+      border: 1px solid var(--glass-border); border-radius: 0.75rem;
+      padding: 0.625rem 1.25rem; font-weight: 700; font-size: 0.875rem;
+      text-decoration: none; transition: all 0.2s; margin-top: 0.5rem;
+    }
+    .btn-browse:hover { background: var(--surface-container-highest); border-color: var(--accent); color: var(--accent); }
 
     .review-body { color: var(--on-surface-variant); font-size: 0.95rem; line-height: 1.7; margin: 0 0 1rem; }
 
@@ -353,24 +381,35 @@ export class ReviewsComponent implements OnInit {
     tags: [] as string[]
   };
 
-  reviews = [
-    { name: 'Priya S.', initials: 'PS', rating: 5, date: '2 hours ago', businessName: 'The Golden Crust', category: 'Bakery', comment: 'The sourdough bread here is absolutely phenomenal. Crispy crust, soft interior, and the aroma fills the entire street. Best bakery discovery I\'ve made through Nikat!', tags: ['Authentic', 'Value'], avatarColor: '#fc9df7', likes: 24, liked: false },
-    { name: 'Rahul M.', initials: 'RM', rating: 4, date: '5 hours ago', businessName: 'TechFix Pro', category: 'Electronics', comment: 'Got my iPhone screen replaced in under 45 minutes. The quality is excellent and the price was very reasonable compared to the authorized service center. Highly recommend!', tags: ['Quick', 'Professional'], avatarColor: '#5eb4ff', likes: 18, liked: false },
-    { name: 'Ananya K.', initials: 'AK', rating: 5, date: '1 day ago', businessName: 'Sweet Delights', category: 'Sweets', comment: 'Their milk cake is to die for! Pure ghee taste that reminds me of my grandmother\'s kitchen. The kaju katli is equally impressive. A hidden gem in the neighborhood.', tags: ['Authentic', 'Friendly'], avatarColor: '#6bfe9c', likes: 42, liked: false },
-    { name: 'Vikram J.', initials: 'VJ', rating: 3, date: '2 days ago', businessName: 'Quick Stitch', category: 'Tailoring', comment: 'Decent tailoring work but delivery took longer than promised. The fitting was good though, and the fabric quality was maintained. Would give another chance.', tags: ['Professional'], avatarColor: '#facc15', likes: 6, liked: false },
-    { name: 'Meera D.', initials: 'MD', rating: 5, date: '3 days ago', businessName: 'Green Basket', category: 'Grocery', comment: 'Finally found a reliable source for organic vegetables! Everything is fresh and the prices are fair. Their home delivery is super quick too. Love this service!', tags: ['Clean', 'Value', 'Quick'], avatarColor: '#ff8c42', likes: 31, liked: false }
+  reviews: any[] = [
+    { name: 'Priya S.', initials: 'PS', rating: 5, date: '2 hours ago', businessName: 'The Golden Crust', category: 'Bakery', comment: 'The sourdough bread here is absolutely phenomenal. Crispy crust, soft interior, and the aroma fills the entire street. Best bakery discovery I\'ve made through Nikat!', tags: ['Authentic', 'Value'], avatarColor: '#fc9df7', likes: 24, liked: false, shopId: '' },
+    { name: 'Rahul M.', initials: 'RM', rating: 4, date: '5 hours ago', businessName: 'TechFix Pro', category: 'Electronics', comment: 'Got my iPhone screen replaced in under 45 minutes. The quality is excellent and the price was very reasonable compared to the authorized service center. Highly recommend!', tags: ['Quick', 'Professional'], avatarColor: '#5eb4ff', likes: 18, liked: false, shopId: '' },
+    { name: 'Ananya K.', initials: 'AK', rating: 5, date: '1 day ago', businessName: 'Sweet Delights', category: 'Sweets', comment: 'Their milk cake is to die for! Pure ghee taste that reminds me of my grandmother\'s kitchen. The kaju katli is equally impressive. A hidden gem in the neighborhood.', tags: ['Authentic', 'Friendly'], avatarColor: '#6bfe9c', likes: 42, liked: false, shopId: '' },
+    { name: 'Vikram J.', initials: 'VJ', rating: 3, date: '2 days ago', businessName: 'Quick Stitch', category: 'Tailoring', comment: 'Decent tailoring work but delivery took longer than promised. The fitting was good though, and the fabric quality was maintained. Would give another chance.', tags: ['Professional'], avatarColor: '#facc15', likes: 6, liked: false, shopId: '' },
+    { name: 'Meera D.', initials: 'MD', rating: 5, date: '3 days ago', businessName: 'Green Basket', category: 'Grocery', comment: 'Finally found a reliable source for organic vegetables! Everything is fresh and the prices are fair. Their home delivery is super quick too. Love this service!', tags: ['Clean', 'Value', 'Quick'], avatarColor: '#ff8c42', likes: 31, liked: false, shopId: '' }
   ];
 
   constructor(
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
+
+  goToShop(shopId: string) {
+    if (shopId) {
+      this.router.navigate(['/shop', shopId], { queryParams: { tab: 'reviews' } });
+    }
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['shopId']) {
         this.newReview.shopId = params['shopId'];
         this.newReview.businessName = params['shopName'];
+      } else if (params['serviceId']) {
+        // use shopId property internally for the form link
+        this.newReview.shopId = params['serviceId'];
+        this.newReview.businessName = params['serviceName'];
       }
     });
 
@@ -392,7 +431,8 @@ export class ReviewsComponent implements OnInit {
             tags: [],
             avatarColor: '#5eb4ff',
             likes: 0,
-            liked: false
+            liked: false,
+            shopId: r.shopId || null
           }));
           this.reviews = [...apiReviews];
         }
@@ -431,7 +471,8 @@ export class ReviewsComponent implements OnInit {
           tags: [...this.newReview.tags],
           avatarColor: '#5eb4ff',
           likes: 0,
-          liked: false
+          liked: false,
+          shopId: this.newReview.shopId
         };
         this.reviews.unshift(review);
         this.newReview = { shopId: '', businessName: '', rating: 5, comment: 'Good', tags: [] };
