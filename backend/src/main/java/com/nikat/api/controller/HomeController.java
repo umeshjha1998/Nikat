@@ -196,7 +196,17 @@ public class HomeController {
                            </tr>
                        </table>
                    </div>
- 
+                     <div class="charts-section" id="charts-ui" style="display: none; margin-top: 3rem;">
+                        <div class="chart-container">
+                            <div class="chart-title">JVM HEAP MEMORY <span class="chart-value" id="cur-mem">-</span></div>
+                            <div id="chart-mem"></div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-title">CPU LOAD (%%) <span class="chart-value" id="cur-cpu">-</span></div>
+                            <div id="chart-cpu"></div>
+                        </div>
+                    </div>
+
                     <div class="explore">
                         <a href="/swagger-ui.html" class="btn-swagger">API Reference Documentation</a>
                         <button id="mode-btn" onclick="toggleMode()" class="btn-swagger" style="margin-left: 1rem; border: none; cursor: pointer;">Switch Mode</button>
@@ -306,6 +316,11 @@ public class HomeController {
                             liteHeader.style.opacity = isPremium ? '0.5' : '1';
                             premHeader.textContent = isPremium ? 'Premium (Active)' : 'Premium';
                             premHeader.style.opacity = isPremium ? '1' : '0.5';
+                        }
+                        
+                        const chartsUI = document.getElementById('charts-ui');
+                        if (chartsUI) {
+                            chartsUI.style.display = isPremium ? 'grid' : 'none';
                         }
                         
                         const btn = document.getElementById('mode-btn');
