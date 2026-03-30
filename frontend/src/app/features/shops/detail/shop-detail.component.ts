@@ -890,12 +890,19 @@ export class ShopDetailComponent implements OnInit {
             this.reviews = data.map(r => ({
               name: r.reviewerName || 'Anonymous',
               initials: (r.reviewerName || 'A').substring(0, 2).toUpperCase(),
-              rating: r.rating || 4,
+              rating: r.rating || 0,
               date: r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recently',
               comment: r.comment || '',
               tags: [],
               color: '#5eb4ff'
             }));
+            this.shop.reviewCount = this.reviews.length;
+            const totalRating = this.reviews.reduce((sum, r) => sum + r.rating, 0);
+            this.shop.rating = (totalRating / this.reviews.length).toFixed(1);
+          } else {
+            this.reviews = [];
+            this.shop.reviewCount = 0;
+            this.shop.rating = "0.0";
           }
         }
       });

@@ -19,7 +19,7 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
               <h1 class="sidebar-title">Explore</h1>
               <div class="search-input-wrap">
                 <span class="material-symbols-outlined search-icon">search</span>
-                <input type="text" placeholder="Search categories..." class="search-input">
+                <input type="text" placeholder="Search services..." class="search-input" [(ngModel)]="searchQuery" (input)="filterServices()">
               </div>
             </div>
 
@@ -639,36 +639,40 @@ export class ServicesComponent implements OnInit {
   services: ServiceDto[] = [];
   displayServices: ServiceDto[] = [];
   activeCategory = 'all';
+  searchQuery = '';
   filters = { openNow: true, topRated: false, nearby: true };
   categories: CategoryDto[] = [];
   groupedCategories: any[] = [];
-  expandedGroups: Set<string> = new Set(['Home Maintenance']); // Default open
+  expandedGroups: Set<string> = new Set(['Home Maintenance', 'Neighborhood & Domestic']); // Open some by default
 
   private categoryMappings: {[key: string]: string} = {
     // Home Maintenance
+    'AC/Fridge/Geyser Repair': 'Home Maintenance',
+    'Appliance Repair': 'Home Maintenance',
+    'Carpenter Service': 'Home Maintenance',
+    'Carpenter Shop': 'Home Maintenance',
+    'Electrical Repair Shop': 'Home Maintenance',
     'Electrician': 'Home Maintenance',
-    'Plumber': 'Home Maintenance',
-    'Painter': 'Home Maintenance',
-    'Mason': 'Home Maintenance',
-    'Carpenter': 'Home Maintenance',
-    'Ironsmith': 'Home Maintenance',
-    'Welding': 'Home Maintenance',
-    'Zipper Repair': 'Home Maintenance',
-    'Chain Repair': 'Home Maintenance',
-    'Sewing Machine Repair': 'Home Maintenance',
     'Gas Stove Repair': 'Home Maintenance',
-    'RO Repair': 'Home Maintenance',
-    'Water Purifier': 'Home Maintenance',
-    'Watch Repair': 'Home Maintenance',
-    'Clock Repair': 'Home Maintenance',
-    'Shoe Repair': 'Home Maintenance',
-    'Slipper Repair': 'Home Maintenance',
-    'Mirror Installation': 'Home Maintenance',
-    'Glass Installation': 'Home Maintenance',
-    'AC Repair': 'Home Maintenance',
-    'Fridge Repair': 'Home Maintenance',
-    'Geyser Repair': 'Home Maintenance',
-    'Electrical Equipment Repair': 'Home Maintenance',
+    'Glass & Mirror Shop': 'Home Maintenance',
+    'Iron Welding Shop': 'Home Maintenance',
+    'Ironsmith': 'Home Maintenance',
+    'Mason': 'Home Maintenance',
+    'Painter': 'Home Maintenance',
+    'Plumber': 'Home Maintenance',
+    'RO & Water Purifier': 'Home Maintenance',
+    'Sewing Machine Repair': 'Home Maintenance',
+    'Watch/Clock Repair': 'Home Maintenance',
+
+    // Tech & Digital
+    'Computer/Laptop Repair': 'Tech & Digital',
+    'Cyber Cafe': 'Tech & Digital',
+    'Electronic Repairs': 'Tech & Digital',
+    'Game Console Repair': 'Tech & Digital',
+    'Mobile Repair': 'Tech & Digital',
+    'Print & Photocopy': 'Tech & Digital',
+    'TV Repair': 'Tech & Digital',
+    'Wi-Fi & Internet': 'Tech & Digital',
 
     // Daily Essentials
     'Grocery Shop': 'Daily Essentials',
@@ -711,19 +715,7 @@ export class ServicesComponent implements OnInit {
     'Ayurvedic': 'Health & Medical',
     'Patanjali': 'Health & Medical',
 
-    // Tech & Digital
-    'Wi-Fi': 'Tech & Digital',
-    'Mobile Shop': 'Tech & Digital',
-    'Mobile Repair': 'Tech & Digital',
-    'TV Repair': 'Tech & Digital',
-    'Laptop Repair': 'Tech & Digital',
-    'Computer Repair': 'Tech & Digital',
-    'Gaming Console': 'Tech & Digital',
-    'Cyber Cafe': 'Tech & Digital',
-    'Photocopy': 'Tech & Digital',
-    'Lamination': 'Tech & Digital',
-    'Printout': 'Tech & Digital',
-    'Electronics Shop': 'Tech & Digital',
+
 
     // Professional & Education
     'School': 'Professional & Education',
@@ -736,27 +728,20 @@ export class ServicesComponent implements OnInit {
     'Packers and Movers': 'Professional & Education',
 
     // Neighborhood & Domestic
-    'Househelp': 'Neighborhood & Domestic',
-    'House maid': 'Neighborhood & Domestic',
-    'Nanny': 'Neighborhood & Domestic',
     'Cook': 'Neighborhood & Domestic',
-    'Sewage Repair': 'Neighborhood & Domestic',
+    'Garbage Collection': 'Neighborhood & Domestic',
+    'Gardener': 'Neighborhood & Domestic',
+    'House Help/Maid': 'Neighborhood & Domestic',
+    'Nanny': 'Neighborhood & Domestic',
+    'Sewage & Drainage': 'Neighborhood & Domestic',
 
     // Fashion & Lifestyle
-    'Tailor': 'Fashion & Lifestyle',
-    'Ladies Tailor': 'Fashion & Lifestyle',
+    'Footwear & Repair': 'Fashion & Lifestyle',
     'Gents Tailor': 'Fashion & Lifestyle',
-    'Saree Shop': 'Fashion & Lifestyle',
-    'Raw Cloth': 'Fashion & Lifestyle',
-    'Ladies Wear': 'Fashion & Lifestyle',
-    'Gents Wear': 'Fashion & Lifestyle',
-    'Kids Wear': 'Fashion & Lifestyle',
-    'Religious Items': 'Fashion & Lifestyle',
-    'Sports Shop': 'Fashion & Lifestyle',
-    'Stationery': 'Fashion & Lifestyle',
-    'Party Decoration': 'Fashion & Lifestyle',
     'Jewellery Shop': 'Fashion & Lifestyle',
-    'Gardener': 'Fashion & Lifestyle'
+    'Ladies Tailor': 'Fashion & Lifestyle',
+    'Sports Store': 'Fashion & Lifestyle',
+    'Zipper/Chain Repair': 'Fashion & Lifestyle'
   };
 
   private groupIcons: {[key: string]: string} = {
@@ -839,15 +824,29 @@ export class ServicesComponent implements OnInit {
   }
 
   filterServices() {
-    if (this.activeCategory === 'all') {
-      this.displayServices = this.services;
-    } else {
-      this.displayServices = this.services.filter(s => s.categoryId === this.activeCategory);
+    let filtered = this.services;
+
+    // By Search Query
+    if (this.searchQuery && this.searchQuery.trim() !== '') {
+      const q = this.searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(s => 
+        (s.name && s.name.toLowerCase().includes(q)) || 
+        (s.categoryName && s.categoryName.toLowerCase().includes(q)) ||
+        (s.description && s.description.toLowerCase().includes(q))
+      );
     }
+    
+    // By Active Category
+    if (this.activeCategory !== 'all') {
+      filtered = filtered.filter(s => s.categoryId === this.activeCategory);
+    }
+    
+    this.displayServices = filtered;
   }
 
   clearFilters() {
     this.activeCategory = 'all';
+    this.searchQuery = '';
     this.filters = { openNow: false, topRated: false, nearby: false };
     this.filterServices();
   }
