@@ -214,7 +214,6 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
               </button>
             </div>
           </section>
-          </section>
         </div>
       </main>
     </div>

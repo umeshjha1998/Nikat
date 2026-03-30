@@ -112,7 +112,7 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
       <section class="shops-grid-section">
         <div class="view-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
           <h2 class="section-title" style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800;">
-            {{ activeCategory === 'all' ? 'All Nearby Shops' : (categories.find(c => c.id === activeCategory)?.name + ' Shops') }}
+            {{ activeCategoryName }}
             <span style="display: block; font-size: 0.875rem; color: var(--text-muted); font-weight: 600; margin-top: 0.25rem;">{{ displayShops.length }} results found in your area</span>
           </h2>
           
@@ -583,6 +583,12 @@ export class BrowseComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load categories:', err)
     });
+  }
+
+  get activeCategoryName(): string {
+    if (this.activeCategory === 'all') return 'All Nearby Shops';
+    const cat = this.categories.find(c => c.id === this.activeCategory);
+    return cat ? cat.name + ' Shops' : 'Nearby Shops';
   }
 
   loadShops() {
