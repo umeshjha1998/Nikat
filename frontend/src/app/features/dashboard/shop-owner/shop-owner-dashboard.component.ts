@@ -316,7 +316,7 @@ import { AuthService } from '../../../core/auth.service';
                    </thead>
                    <tbody>
                       <tr *ngFor="let order of orders">
-                         <td class="order-id">#{{ order.id?.substring(0,8) }}</td>
+                         <td class="order-id">#{{ order.id }}</td>
                          <td>
                             <div class="customer-info">
                                <strong>{{ order.customerName }}</strong>
