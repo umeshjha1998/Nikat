@@ -56,18 +56,18 @@ public class HomeController {
                         filter: blur(80px);
                     }
                     .blob {
-                        position: absolute; border-radius: 50%; opacity: 0.3; animation: move 20s infinite alternate;
+                        position: absolute; border-radius: 50%%; opacity: 0.3; animation: move 20s infinite alternate;
                     }
                     .blob-1 { width: 500px; height: 500px; background: var(--primary); top: -200px; left: -100px; }
                     .blob-2 { width: 400px; height: 400px; background: var(--secondary); bottom: -100px; right: -50px; }
                     
                     @keyframes move {
-                        0% { transform: translate(0, 0) scale(1); }
-                        100% { transform: translate(10vw, 10vh) scale(1.1); }
+                        0%% { transform: translate(0, 0) scale(1); }
+                        100%% { transform: translate(10vw, 10vh) scale(1.1); }
                     }
  
                     .container {
-                        width: 95%;
+                        width: 95%%;
                         max-width: 1100px;
                         padding: 2.5rem;
                         background: var(--glass-bg);
@@ -86,12 +86,12 @@ public class HomeController {
                         letter-spacing: 1px; margin-bottom: 2rem; text-transform: uppercase;
                     }
                     .dot {
-                        width: 10px; height: 10px; background: var(--success); border-radius: 50%;
+                        width: 10px; height: 10px; background: var(--success); border-radius: 50%%;
                         box-shadow: 0 0 15px var(--success); animation: pulse 2s infinite;
                     }
                     @keyframes pulse {
-                        0%, 100% { transform: scale(1); opacity: 1; }
-                        50% { transform: scale(1.3); opacity: 0.5; }
+                        0%%, 100%% { transform: scale(1); opacity: 1; }
+                        50%% { transform: scale(1.3); opacity: 0.5; }
                     }
  
                     h1 {
@@ -177,7 +177,7 @@ public class HomeController {
                             <div id="chart-mem"></div>
                         </div>
                         <div class="chart-container">
-                            <div class="chart-title">CPU LOAD (%) <span class="chart-value" id="cur-cpu">-</span></div>
+                            <div class="chart-title">CPU LOAD (%%) <span class="chart-value" id="cur-cpu">-</span></div>
                             <div id="chart-cpu"></div>
                         </div>
                    </div>
