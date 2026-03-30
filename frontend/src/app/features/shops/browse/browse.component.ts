@@ -108,9 +108,28 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
         </div>
       </div>
 
-      <!-- Shop Cards Grid -->
+      <!-- Shop Cards Grid / Map View -->
       <section class="shops-grid-section">
-        <div class="shops-grid">
+        <div class="view-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <h2 class="section-title" style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800;">
+            {{ activeCategory === 'all' ? 'All Nearby Shops' : (categories.find(c => c.id === activeCategory)?.name + ' Shops') }}
+            <span style="display: block; font-size: 0.875rem; color: var(--text-muted); font-weight: 600; margin-top: 0.25rem;">{{ displayShops.length }} results found in your area</span>
+          </h2>
+          
+          <div class="view-toggle-wrap" style="display: flex; background: var(--card-bg); padding: 0.25rem; border-radius: 1rem; border: 1px solid var(--border-color);">
+            <button class="toggle-btn-small" [class.active]="!isMapView" (click)="setMapView(false)">
+              <span class="material-symbols-outlined">grid_view</span>
+              <span>Grid</span>
+            </button>
+            <button class="toggle-btn-small" [class.active]="isMapView" (click)="setMapView(true)">
+              <span class="material-symbols-outlined">map</span>
+              <span>Map</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid View -->
+        <div class="shops-grid" *ngIf="!isMapView">
           <!-- Shop Cards from API / Mock -->
           <div class="shop-card" *ngFor="let shop of displayShops" [routerLink]="['/shop', shop.id]">
             <div class="shop-image">
@@ -154,6 +173,17 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
               </div>
               <button class="btn-partner">Partner with Us</button>
             </div>
+          </div>
+        </div>
+
+        <!-- Map View -->
+        <div class="map-view-container" *ngIf="isMapView" style="height: 600px; border-radius: 2rem; border: 2px solid var(--border-color); overflow: hidden; position: relative;">
+          <div id="shopMap" style="height: 100%; width: 100%; z-index: 1;"></div>
+          
+          <!-- Map Overlay Controls -->
+          <div class="map-overlay-info" style="position: absolute; bottom: 1.5rem; left: 1.5rem; z-index: 1000; background: var(--bg); padding: 1rem; border-radius: 1rem; border: 1px solid var(--glass-border); box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 280px;" *ngIf="displayShops.length > 0">
+            <p style="margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--text-main);">Exploring {{displayShops.length}} locations</p>
+            <p style="margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--text-muted);">Zoom in to see exact shop locations and click markers for details.</p>
           </div>
         </div>
       </section>
@@ -485,6 +515,38 @@ import { ApiService, CategoryDto } from '../../../core/api.service';
       .footer-inner { gap: 1.5rem; text-align: center; }
       .footer-links { flex-direction: column; gap: 1rem; }
     }
+
+    /* Small Toggle Buttons */
+    .toggle-btn-small {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem; border-radius: 0.75rem;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--text-muted); background: transparent; border: none;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .toggle-btn-small .material-symbols-outlined { font-size: 1.25rem; }
+    .toggle-btn-small.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px var(--primary-glow); }
+    .toggle-btn-small:not(.active):hover { color: var(--text-main); background: var(--glass); }
+
+    /* Leaflet Customizations */
+    ::ng-deep .leaflet-container { font-family: 'Manrope', sans-serif !important; }
+    ::ng-deep .leaflet-popup-content-wrapper { 
+      background: var(--bg) !important; color: var(--text-main) !important;
+      border-radius: 1.25rem !important; border: 1px solid var(--glass-border) !important;
+      padding: 0 !important; overflow: hidden !important;
+    }
+    ::ng-deep .leaflet-popup-content { margin: 0 !important; width: 220px !important; }
+    ::ng-deep .leaflet-popup-tip { background: var(--bg) !important; border: 1px solid var(--glass-border) !important; }
+    
+    .map-popup-card { padding: 1rem; }
+    .map-popup-img { width: 100%; height: 100px; object-fit: cover; border-radius: 0.75rem; margin-bottom: 0.75rem; }
+    .map-popup-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; margin: 0 0 0.25rem; color: var(--text-main); }
+    .map-popup-cat { font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase; }
+    .map-popup-btn { 
+      display: block; width: 100%; margin-top: 0.75rem; padding: 0.5rem; 
+      background: var(--primary); color: #fff; border: none; border-radius: 0.5rem; 
+      font-weight: 700; text-align: center; text-decoration: none; font-size: 0.8rem;
+    }
   `]
 })
 export class BrowseComponent implements OnInit {
@@ -496,12 +558,16 @@ export class BrowseComponent implements OnInit {
   // New UI state
   isCategoriesExpanded = false;
   showFilters = false;
+  isMapView = false;
   filters = {
     openNow: false,
     verifiedOnly: false,
     minRating: 0,
     sortBy: 'popularity'
   };
+
+  private map: any;
+  private markers: any[] = [];
 
   constructor(private apiService: ApiService) {}
 
@@ -513,7 +579,6 @@ export class BrowseComponent implements OnInit {
   loadCategories() {
     this.apiService.getCategories().subscribe({
       next: (cats) => {
-        // Only show categories that have shops
         this.categories = cats.filter(c => c.isShopCategory);
       },
       error: (err) => console.error('Failed to load categories:', err)
@@ -532,9 +597,11 @@ export class BrowseComponent implements OnInit {
             description: s.description || 'Premium local shop offering exceptional quality.',
             image: s.photos && s.photos.length > 0 ? s.photos[0] : 'https://images.unsplash.com/photo-1517248135467-4c7ed9d42177?auto=format&fit=crop&q=80',
             rating: s.averageRating ? s.averageRating.toFixed(1) : 'Not Rated',
-            isOpen: s.isOpen === undefined ? true : s.isOpen, // Default to true if not provided
+            isOpen: s.isOpen === undefined ? true : s.isOpen,
             isVerified: s.status === 'VERIFIED',
             createdDate: new Date(s.createdAt || Date.now()).getTime(),
+            latitude: s.latitude,
+            longitude: s.longitude,
             tagColor: 'primary',
             footerLabel: 'Starting from',
             footerValue: s.startingPrice ? '₹' + s.startingPrice : 'No products yet'
@@ -546,6 +613,79 @@ export class BrowseComponent implements OnInit {
     });
   }
 
+  setMapView(isMap: boolean) {
+    this.isMapView = isMap;
+    if (isMap) {
+      setTimeout(() => this.initMap(), 100);
+    } else {
+      this.map = null;
+      this.markers = [];
+    }
+  }
+
+  private initMap() {
+    // @ts-ignore
+    if (this.map || !window.L) return;
+
+    // @ts-ignore
+    const L = window.L;
+
+    // Default to New Delhi if no shops or no coordinates
+    const centerLat = this.displayShops[0]?.latitude || 28.6139;
+    const centerLon = this.displayShops[0]?.longitude || 77.2090;
+
+    this.map = L.map('shopMap', {
+      center: [centerLat, centerLon],
+      zoom: 13,
+      zoomControl: false
+    });
+
+    L.control.zoom({ position: 'topright' }).addTo(this.map);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    this.updateMapMarkers();
+  }
+
+  private updateMapMarkers() {
+    // @ts-ignore
+    if (!this.map || !window.L) return;
+    // @ts-ignore
+    const L = window.L;
+
+    // Clear existing markers
+    this.markers.forEach(m => this.map.removeLayer(m));
+    this.markers = [];
+
+    const bounds: any[] = [];
+
+    this.displayShops.forEach(shop => {
+      if (shop.latitude && shop.longitude) {
+        const marker = L.marker([shop.latitude, shop.longitude]).addTo(this.map);
+        
+        const popupContent = `
+          <div class="map-popup-card">
+            <img src="${shop.image}" class="map-popup-img" alt="${shop.name}">
+            <div class="map-popup-cat">${shop.category}</div>
+            <h3 class="map-popup-title">${shop.name}</h3>
+            <p style="margin:0; font-size: 0.75rem; color: var(--text-muted);">${shop.rating} ★ • ${shop.isOpen ? 'Open Now' : 'Closed'}</p>
+            <a href="/shop/${shop.id}" class="map-popup-btn">View Details</a>
+          </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+        this.markers.push(marker);
+        bounds.push([shop.latitude, shop.longitude]);
+      }
+    });
+
+    if (bounds.length > 0) {
+      this.map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }
+
   filterByCategory(categoryId: string) {
     this.activeCategory = categoryId;
     this.filterShops();
@@ -555,7 +695,6 @@ export class BrowseComponent implements OnInit {
     if (this.isCategoriesExpanded) return this.categories;
     const initial = this.categories.slice(0, 10);
     const current = this.categories.find(c => c.id === this.activeCategory);
-    // If the selected category is not in the first 10, add it but ensure no duplicates
     if (current && !initial.find(i => i.id === current.id)) {
       initial.push(current);
     }
@@ -579,22 +718,18 @@ export class BrowseComponent implements OnInit {
   filterShops() {
     let filtered = [...this.shops];
 
-    // Filter by Category
     if (this.activeCategory !== 'all') {
       filtered = filtered.filter(s => s.categoryId === this.activeCategory);
     }
 
-    // Filter by Open Now
     if (this.filters.openNow) {
       filtered = filtered.filter(s => s.isOpen);
     }
 
-    // Filter by Verified
     if (this.filters.verifiedOnly) {
       filtered = filtered.filter(s => s.isVerified);
     }
 
-    // Filter by Rating
     if (this.filters.minRating > 0) {
       filtered = filtered.filter(s => {
         if (s.rating === 'Not Rated') return false;
@@ -602,7 +737,6 @@ export class BrowseComponent implements OnInit {
       });
     }
 
-    // Sort
     if (this.filters.sortBy === 'rating') {
       filtered.sort((a, b) => {
         const rA = a.rating === 'Not Rated' ? 0 : parseFloat(a.rating);
@@ -614,5 +748,9 @@ export class BrowseComponent implements OnInit {
     }
 
     this.displayShops = filtered;
+    
+    if (this.isMapView) {
+      this.updateMapMarkers();
+    }
   }
 }

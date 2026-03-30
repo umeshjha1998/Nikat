@@ -102,26 +102,37 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
 
           <!-- Main Content Area -->
           <section class="content-area">
-            <!-- Active Vibe Chips -->
-            <div class="active-chips">
-              <div class="vibe-chip accent" *ngIf="activeCategory !== 'all'">
-                {{ activeCategoryName }}
-                <span class="material-symbols-outlined chip-close" (click)="selectCategory('all')">close</span>
+            <!-- Active Vibe Chips & View Toggle -->
+            <div class="content-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+              <div class="active-chips" style="margin: 0;">
+                <div class="vibe-chip accent" *ngIf="activeCategory !== 'all'">
+                  {{ activeCategoryName }}
+                  <span class="material-symbols-outlined chip-close" (click)="selectCategory('all')">close</span>
+                </div>
+                <div class="vibe-chip" *ngIf="filters.nearby">
+                  Within 5km
+                  <span class="material-symbols-outlined chip-close" (click)="filters.nearby = false">close</span>
+                </div>
+                <button class="clear-btn" (click)="clearFilters()" *ngIf="activeCategory !== 'all' || filters.nearby">Clear All</button>
               </div>
-              <div class="vibe-chip" *ngIf="filters.nearby">
-                Within 5km
-                <span class="material-symbols-outlined chip-close" (click)="filters.nearby = false">close</span>
+
+              <div class="view-toggle-wrap" style="display: flex; background: var(--card-bg); padding: 0.25rem; border-radius: 9999px; border: 1px solid var(--border-color);">
+                <button class="toggle-btn-small" [class.active]="!isMapView" (click)="setMapView(false)">
+                  <span class="material-symbols-outlined">grid_view</span>
+                </button>
+                <button class="toggle-btn-small" [class.active]="isMapView" (click)="setMapView(true)">
+                  <span class="material-symbols-outlined">map</span>
+                </button>
               </div>
-              <button class="clear-btn" (click)="clearFilters()">Clear All</button>
             </div>
 
             <!-- Bento Grid Results -->
-            <div class="results-grid" *ngIf="displayServices.length > 0; else noServices">
+            <div class="results-grid" *ngIf="!isMapView && displayServices.length > 0; else noServices">
               <!-- Featured Card -->
               <div class="result-card featured" *ngIf="displayServices[0]">
                 <div class="card-glow"></div>
                 <div class="card-image">
-                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM1Qnj0VQEg70OrDBJmRJJWTVNTT3y_Grqv_5MwrPY-hnO0pioqbHD1hKnuzVR3X4IaexULI2Nvz0mVCi30BxotDpzU8NIXlO1gzdlKqgHfMbIRTytX2fdcqdLLjgRT6PB7mF_Bh_zjCbpL99ST2_s6zss2t5CZvMa9xLms2AwjtVb0PPqpMrsgwGEyH7qbNFNkjzRoczmWMM77uDuHuNgSyVu-B-SuFjC6899oWRM26K35PbnNI1ClKn79xDjVuUQEWlRBfj9Q2PH" alt="Service">
+                  <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80" alt="Service">
                 </div>
                 <div class="card-body">
                   <div class="card-top">
@@ -155,7 +166,7 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
               <!-- Regular Cards -->
               <div class="result-card" *ngFor="let svc of displayServices.slice(1)">
                 <div class="card-image-sm">
-                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHm1MF-n2-jOIYf2c5h10oW8wgwDoSXbtWuGKf_4x5Y-H-QDAqC0EyuMnuS5K_Qrqhayp8TSe-5oxfTW0spenuamMV918Gl3V_g0BzqSRl4vQJx4iaRUQ8QTvGGHxwAt4IWh29S7eP9USO_sZp0vvgH0b10mSCWG4ovv-lr0CdgvKF5SRr8ZAbIFvkfrW6Y7CyGKpWSF8ULURxFXQOLbjfFRwVwE_svSWwPx6HnDD0a4QqseFkS6ux7P-6Zg8_-UDeyivCcKZIRoSJ" alt="Service">
+                  <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80" alt="Service">
                   <div class="open-badge">
                     <span class="open-indicator"></span> OPEN
                   </div>
@@ -177,86 +188,32 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
               </div>
             </div>
 
+            <!-- Map View -->
+            <div class="map-view-container" *ngIf="isMapView" style="height: 600px; border-radius: 2rem; border: 2px solid var(--border-color); overflow: hidden; position: relative; margin-bottom: 2rem;">
+              <div id="serviceMap" style="height: 100%; width: 100%; z-index: 1;"></div>
+              
+              <div class="map-overlay-info" style="position: absolute; bottom: 1.5rem; left: 1.5rem; z-index: 1000; background: var(--bg); padding: 10px 15px; border-radius: 10px; border: 1px solid var(--glass-border); box-shadow: 0 5px 15px rgba(0,0,0,0.1);" *ngIf="displayServices.length > 0">
+                <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">Showing {{displayServices.length}} providers</span>
+              </div>
+            </div>
+
             <ng-template #noServices>
-              <!-- Mock data when no services from API -->
-              <div class="results-grid">
-                <div class="result-card featured">
-                  <div class="card-glow"></div>
-                  <div class="card-image">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM1Qnj0VQEg70OrDBJmRJJWTVNTT3y_Grqv_5MwrPY-hnO0pioqbHD1hKnuzVR3X4IaexULI2Nvz0mVCi30BxotDpzU8NIXlO1gzdlKqgHfMbIRTytX2fdcqdLLjgRT6PB7mF_Bh_zjCbpL99ST2_s6zss2t5CZvMa9xLms2AwjtVb0PPqpMrsgwGEyH7qbNFNkjzRoczmWMM77uDuHuNgSyVu-B-SuFjC6899oWRM26K35PbnNI1ClKn79xDjVuUQEWlRBfj9Q2PH" alt="PixelFix Solutions">
-                  </div>
-                  <div class="card-body">
-                    <div class="card-top">
-                      <div>
-                        <span class="recommended-badge">Recommended</span>
-                        <h3 class="card-title">PixelFix Solutions</h3>
-                      </div>
-                      <div class="rating-badge">
-                        <span class="material-symbols-outlined star-filled">star</span>
-                        <span class="rating-value">4.9</span>
-                      </div>
-                    </div>
-                    <p class="card-desc">Expert screen replacement and motherboard repairs. We specialize in Apple and Samsung devices with genuine parts.</p>
-                    <div class="card-meta">
-                      <div class="meta-item">
-                        <span class="material-symbols-outlined">location_on</span>
-                        1.2 km away
-                      </div>
-                      <div class="meta-item">
-                        <span class="material-symbols-outlined">schedule</span>
-                        Closes 8:00 PM
-                      </div>
-                    </div>
-                    <a routerLink="/book-service" class="btn-book">Book Appointment</a>
-                  </div>
-                </div>
-
-                <div class="result-card">
-                  <div class="card-image-sm">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHm1MF-n2-jOIYf2c5h10oW8wgwDoSXbtWuGKf_4x5Y-H-QDAqC0EyuMnuS5K_Qrqhayp8TSe-5oxfTW0spenuamMV918Gl3V_g0BzqSRl4vQJx4iaRUQ8QTvGGHxwAt4IWh29S7eP9USO_sZp0vvgH0b10mSCWG4ovv-lr0CdgvKF5SRr8ZAbIFvkfrW6Y7CyGKpWSF8ULURxFXQOLbjfFRwVwE_svSWwPx6HnDD0a4QqseFkS6ux7P-6Zg8_-UDeyivCcKZIRoSJ" alt="The Tech Lab">
-                    <div class="open-badge">
-                      <span class="open-indicator"></span> OPEN
-                    </div>
-                  </div>
-                  <div class="card-body-sm">
-                    <h3 class="card-title-sm">The Tech Lab</h3>
-                    <p class="card-desc-sm">Laptop motherboard & battery specialists.</p>
-                    <div class="card-footer-sm">
-                      <span class="price-distance">$$ • 3.5 km</span>
-                      <div class="rating-mini">
-                        <span class="material-symbols-outlined star-filled">star</span>
-                        <span>4.7</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="result-card">
-                  <div class="card-image-sm">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYHyeeDmrZ4-tHp4PyucApj9nRyKAXlACI45w6E5z_Jcf1p3BJ50eqhy9FXnIXW3MZiuL0W7isX-OPMLLGbbS_CWYXkbWOSqECbS9fh3tJetFygi61AHVbF9ERsNCrxNU9P68QDW6AxYgBHhOEwsgBS2xp-rbNpLdNUSXhLV1Nf1y5dzZSN_ICSwh-sksQKNmCKkfYvzKhyEVAAnDUiv-H3WFgyXjXPq0f8sHajJdKDR8kz1lgl7oFSX_HbpuxBlPM3_iwr0--fY9M" alt="QuickRestore Mobile">
-                  </div>
-                  <div class="card-body-sm">
-                    <h3 class="card-title-sm">QuickRestore Mobile</h3>
-                    <p class="card-desc-sm">Quick screen repairs and accessory sales.</p>
-                    <div class="card-footer-sm">
-                      <span class="price-distance">$ • 0.8 km</span>
-                      <div class="rating-mini">
-                        <span class="material-symbols-outlined star-filled">star</span>
-                        <span>4.5</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="no-results-state" *ngIf="!isMapView" style="padding: 4rem 2rem; text-align: center; background: var(--card-bg); border-radius: 2rem; border: 1px solid var(--border-color);">
+                <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--text-muted); opacity: 0.3; margin-bottom: 1.5rem;">search_off</span>
+                <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0 0 0.5rem;">No services found</h3>
+                <p style="color: var(--text-muted); max-width: 300px; margin: 0 auto;">Try adjusting your filters or search query to find what you're looking for.</p>
+                <button class="btn-clear" (click)="clearFilters()" style="margin-top: 1.5rem; background: var(--primary); color: #fff; border-radius: 9999px; padding: 0.75rem 2rem; border: none; font-weight: 700;">Reset All Filters</button>
               </div>
             </ng-template>
 
             <!-- Load More -->
-            <div class="load-more-wrap">
+            <div class="load-more-wrap" *ngIf="!isMapView && displayServices.length > 5">
               <button class="btn-load-more">
                 Load More Results
                 <span class="material-symbols-outlined">keyboard_arrow_down</span>
               </button>
             </div>
+          </section>
           </section>
         </div>
       </main>
@@ -651,10 +608,42 @@ import { ApiService, ServiceDto, CategoryDto } from '../../core/api.service';
       .card-title { font-size: 1.1rem; }
       .btn-book { width: 100%; text-align: center; }
     }
+
+    .toggle-btn-small {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.5rem 1rem; border: none; background: transparent;
+      color: var(--text-muted); cursor: pointer; border-radius: 9999px;
+      transition: all 0.2s;
+    }
+    .toggle-btn-small:hover { color: var(--accent); }
+    .toggle-btn-small.active { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--accent-glow); }
+    .toggle-btn-small .material-symbols-outlined { font-size: 1.25rem; }
+
+    ::ng_deep .provider-popup .leaflet-popup-content-wrapper {
+      background: var(--card-bg); color: var(--text-main); border-radius: 12px;
+      padding: 0; overflow: hidden; border: 1px solid var(--border-color);
+    }
+    ::ng_deep .provider-popup .leaflet-popup-tip { background: var(--card-bg); }
+    ::ng_deep .popup-content { font-family: 'Manrope', sans-serif; }
+    ::ng_deep .popup-image { width: 100%; height: 100px; object-fit: cover; }
+    ::ng_deep .popup-body { padding: 12px; }
+    ::ng_deep .popup-title { font-size: 1rem; font-weight: 800; margin: 0 0 4px; color: var(--text-main); }
+    ::ng_deep .popup-cat { font-size: 0.7rem; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+    ::ng_deep .popup-charge { font-size: 0.9rem; font-weight: 700; color: #10b981; margin-top: 8px; display: block; }
+    ::ng_deep .btn-view-map {
+      display: block; width: 100%; padding: 8px; margin-top: 10px;
+      background: var(--primary); color: white; border: none; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none;
+    }
   `]
 
 })
 export class ServicesComponent implements OnInit {
+  declare L: any;
+  isMapView = false;
+  private map: any;
+  private markers: any[] = [];
+
   services: ServiceDto[] = [];
   displayServices: ServiceDto[] = [];
   activeCategory = 'all';
@@ -906,6 +895,83 @@ export class ServicesComponent implements OnInit {
     }
     
     this.displayServices = filtered;
+    
+    if (this.isMapView) {
+      setTimeout(() => this.updateMapMarkers(), 100);
+    }
+  }
+
+  setMapView(isMap: boolean) {
+    this.isMapView = isMap;
+    if (isMap) {
+      setTimeout(() => this.initMap(), 100);
+    }
+  }
+
+  private initMap() {
+    if (this.map) {
+      this.map.remove();
+    }
+
+    // Default center (Delhi)
+    const defaultLat = 28.6139;
+    const defaultLng = 77.2090;
+
+    this.map = (window as any).L.map('serviceMap', {
+      zoomControl: false
+    }).setView([defaultLat, defaultLng], 13);
+
+    (window as any).L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    }).addTo(this.map);
+
+    (window as any).L.control.zoom({
+      position: 'topright'
+    }).addTo(this.map);
+
+    this.updateMapMarkers();
+  }
+
+  private updateMapMarkers() {
+    if (!this.map) return;
+
+    // Clear existing markers
+    this.markers.forEach(m => m.remove());
+    this.markers = [];
+
+    const bounds: any[] = [];
+
+    this.displayServices.forEach(svc => {
+      if (svc.latitude && svc.longitude) {
+        const marker = (window as any).L.marker([svc.latitude, svc.longitude]);
+        
+        const popupHtml = `
+          <div class="popup-content">
+            <img class="popup-image" src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80" />
+            <div class="popup-body">
+              <span class="popup-cat">${svc.categoryName}</span>
+              <h4 class="popup-title">${svc.name}</h4>
+              <span class="popup-charge">Base Charge: ₹${svc.baseCharge}</span>
+              <a href="/book-service/${svc.id}" class="btn-view-map">Book Now</a>
+            </div>
+          </div>
+        `;
+
+        marker.bindPopup(popupHtml, {
+          className: 'provider-popup',
+          maxWidth: 200,
+          minWidth: 200
+        });
+
+        marker.addTo(this.map);
+        this.markers.push(marker);
+        bounds.push([svc.latitude, svc.longitude]);
+      }
+    });
+
+    if (bounds.length > 0) {
+      this.map.fitBounds(bounds, { padding: [50, 50] });
+    }
   }
 
   clearFilters() {

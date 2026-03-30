@@ -13,6 +13,8 @@ export interface UserDto {
   isShopOwner: boolean;
   isServiceProvider: boolean;
   status: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface AuthResponse {
@@ -30,6 +32,8 @@ export interface RegisterRequest {
   businessName?: string;
   businessAddress?: string;
   idProofUrl?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface AuthRequest {

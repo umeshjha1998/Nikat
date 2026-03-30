@@ -433,7 +433,31 @@ import { ApiService, OrderDto } from '../../core/api.service';
                   <label>Phone Number</label>
                   <input type="text" [(ngModel)]="userProfile.phone" placeholder="+91 XXXX XXXX">
                 </div>
-                <button class="btn-prime-save" (click)="saveProfile()">Save Changes</button>
+                
+                <div class="form-group-internal" style="margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                  <label>My Location (GPS)</label>
+                  <div class="location-action-bar" style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+                     <button class="btn-outline-action" type="button" (click)="fetchGPSLocation()" [disabled]="isFetchingLocation" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <span class="material-icons" *ngIf="!isFetchingLocation">my_location</span>
+                        <span class="upload-loader" *ngIf="isFetchingLocation" style="width: 14px; height: 14px;"></span>
+                        {{ isFetchingLocation ? 'Determining...' : 'Update GPS Location' }}
+                     </button>
+                  </div>
+                  
+                  <div class="coords-display" *ngIf="userProfile.latitude" style="display: flex; gap: 1.5rem; margin-top: 1rem; padding: 1rem; background: var(--bg); border-radius: 1rem; border: 1px solid var(--glass-border);">
+                     <div class="coord-item">
+                        <small style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; font-weight: 800; display: block;">Latitude</small>
+                        <span style="font-family: monospace; font-size: 0.9rem;">{{userProfile.latitude}}</span>
+                     </div>
+                     <div class="coord-item">
+                        <small style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; font-weight: 800; display: block;">Longitude</small>
+                        <span style="font-family: monospace; font-size: 0.9rem;">{{userProfile.longitude}}</span>
+                     </div>
+                  </div>
+                  <p class="form-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;" *ngIf="userProfile.latitude">Coordinates are saved to help find services within your neighborhood.</p>
+                </div>
+
+                <button class="btn-prime-save" (click)="saveProfile()" style="margin-top: 1.5rem;">Save Changes</button>
               </div>
             </section>
 
@@ -832,6 +856,7 @@ export class DashboardComponent implements OnInit {
   showNotifications = false;
   showSearch = false;
   showProfileMenu = false;
+  isFetchingLocation = false;
   searchTerm = '';
   activeMenuBooking: any = null;
   reschedulingBooking: any = null;
@@ -846,11 +871,13 @@ export class DashboardComponent implements OnInit {
 
   orders: OrderDto[] = [];
 
-  userProfile = {
+  userProfile: any = {
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
+    latitude: null,
+    longitude: null,
     emailNotifications: true,
     smsAlerts: false
   };
@@ -888,6 +915,8 @@ export class DashboardComponent implements OnInit {
         lastName: this.currentUser.lastName || '',
         email: this.currentUser.email || '',
         phone: this.currentUser.phone || '',
+        latitude: this.currentUser.latitude || null,
+        longitude: this.currentUser.longitude || null,
         emailNotifications: true,
         smsAlerts: false
       };
@@ -1053,12 +1082,51 @@ export class DashboardComponent implements OnInit {
     console.log('Invoice downloaded for:', order.id);
   }
 
+  fetchGPSLocation() {
+    this.isFetchingLocation = true;
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          
+          this.userProfile.latitude = lat;
+          this.userProfile.longitude = lon;
+
+          // Reverse geocoding using Nominatim (OSM)
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+            .then(res => res.json())
+            .then(data => {
+              if (this.userProfile && data.display_name) {
+                alert(`Location found: ${data.display_name}. Profile coordinates updated!`);
+              }
+              this.isFetchingLocation = false;
+            })
+            .catch(err => {
+              console.error('Reverse Geocode Error:', err);
+              this.isFetchingLocation = false;
+              alert('GPS coordinates captured, but could not resolve address.');
+            });
+        },
+        (err) => {
+          console.error('Error fetching location', err);
+          this.isFetchingLocation = false;
+          alert('Could not fetch location. Please ensure GPS is enabled and permissions granted.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser.');
+      this.isFetchingLocation = false;
+    }
+  }
+
   saveProfile() {
     if (!this.currentUser) return;
     
     this.authService.updateProfile(this.currentUser.id, this.userProfile).subscribe({
       next: () => {
-        alert('Profile updated successfully in the database!');
+        alert('Profile and GPS coordinates updated successfully!');
       },
       error: (err) => {
         alert('Failed to update profile: ' + (err.error?.message || err.message));

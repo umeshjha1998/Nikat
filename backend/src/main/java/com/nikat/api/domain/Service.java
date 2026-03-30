@@ -51,6 +51,12 @@ public class Service {
     @Column(name = "is_featured")
     private Boolean isFeatured;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

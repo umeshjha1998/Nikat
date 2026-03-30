@@ -19,4 +19,6 @@ public class UserDto {
     private Boolean isShopOwner;
     private Boolean isServiceProvider;
     private String status;
+    private Double latitude;
+    private Double longitude;
 }

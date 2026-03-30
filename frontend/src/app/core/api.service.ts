@@ -45,6 +45,8 @@ export interface ServiceDto {
   baseCharge: number;
   status: string;
   isFeatured: boolean;
+  latitude?: number;
+  longitude?: number;
   averageRating?: number;
 }
 

@@ -19,6 +19,8 @@ CREATE TABLE users (
     is_service_provider BOOLEAN DEFAULT FALSE,
     status VARCHAR(50) DEFAULT 'PENDING_VERIFICATION',
     email_verified BOOLEAN DEFAULT FALSE,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -66,6 +68,8 @@ CREATE TABLE services (
     start_time TIME,
     end_time TIME,
     base_charge DECIMAL(10, 2),
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
     status VARCHAR(50) DEFAULT 'PENDING_VERIFICATION',
     is_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -108,7 +112,6 @@ CREATE TABLE community_posts (
 
 CREATE TABLE advertisements (
     id UUID PRIMARY KEY,
-    title VARCHAR(200),
     image_url VARCHAR(255) NOT NULL,
     target_link VARCHAR(255),
     display_order INT,
@@ -164,8 +167,7 @@ CREATE TABLE order_items (
     id UUID PRIMARY KEY,
     order_id VARCHAR(50) NOT NULL REFERENCES shop_orders(id),
     product_id UUID NOT NULL REFERENCES products(id),
-    quantity INTEGER NOT NULL,
-    unit_price DECIMAL(10, 2) NOT NULL,
+    quantity INTEGER NOT NULL, unit_price DECIMAL(10, 2) NOT NULL,
     total_price DECIMAL(12, 2) NOT NULL
 );
 

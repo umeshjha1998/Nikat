@@ -19,4 +19,6 @@ public class RegisterRequest {
     private String businessName;
     private String businessAddress;
     private String idProofUrl;
+    private Double latitude;
+    private Double longitude;
 }

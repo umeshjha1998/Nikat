@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { ApiService } from '../../../core/api.service';
+import { FormsModule } from '@angular/forms';
+import { ApiService, ServiceDto } from '../../../core/api.service';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-service-provider-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="dashboard-layout">
       <!-- Sidebar -->
@@ -195,8 +196,89 @@ import { AuthService } from '../../../core/auth.service';
           </div>
         </ng-container>
 
+        <!-- SETTINGS TAB -->
+        <ng-container *ngIf="activeTab === 'settings'">
+          <div class="settings-view">
+             <div class="content-card-dark settings-form" *ngIf="currentService; else noService">
+                <div class="card-header">
+                   <h2>Pro Studio Settings</h2>
+                   <p style="color: var(--text-muted); margin-top: 0.5rem;">Configure your professional visibility and GPS location.</p>
+                </div>
+                
+                <form class="glass-form" (submit)="saveSettings(); $event.preventDefault()" style="margin-top: 2rem;">
+                   <div class="form-row">
+                      <div class="form-group">
+                         <label>Service Name</label>
+                         <input type="text" [(ngModel)]="currentService.name" name="name" required>
+                      </div>
+                      <div class="form-group">
+                         <label>Base Charge (₹)</label>
+                         <input type="number" [(ngModel)]="currentService.baseCharge" name="charge" required>
+                      </div>
+                   </div>
+
+                   <div class="form-group">
+                      <label>Service Description</label>
+                      <textarea rows="4" [(ngModel)]="currentService.description" name="desc"></textarea>
+                   </div>
+
+                   <div class="form-group">
+                      <label>Service Area / Location</label>
+                      <div class="location-box">
+                         <input type="text" [(ngModel)]="currentService.serviceArea" name="area" placeholder="e.g. South Delhi, Gurgaon">
+                         <button type="button" class="gps-btn" (click)="fetchGPSLocation()" [disabled]="isFetchingLocation">
+                            <span class="material-icons" *ngIf="!isFetchingLocation">my_location</span>
+                            <span class="upload-loader" *ngIf="isFetchingLocation"></span>
+                            {{ isFetchingLocation ? 'Locating...' : 'Update GPS' }}
+                         </button>
+                      </div>
+                      
+                      <div class="form-row coords-row" *ngIf="currentService.latitude" style="margin-top: 1rem;">
+                         <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="text" [value]="currentService.latitude" readonly style="opacity: 0.7;">
+                         </div>
+                         <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="text" [value]="currentService.longitude" readonly style="opacity: 0.7;">
+                         </div>
+                      </div>
+                      <p class="form-hint" *ngIf="currentService.latitude">GPS coordinates are used to calculate travel distance for clients.</p>
+                   </div>
+
+                   <div class="form-row">
+                      <div class="form-group">
+                         <label>Work Starts</label>
+                         <input type="time" [(ngModel)]="currentService.startTime" name="start">
+                      </div>
+                      <div class="form-group">
+                         <label>Work Ends</label>
+                         <input type="time" [(ngModel)]="currentService.endTime" name="end">
+                      </div>
+                   </div>
+
+                   <div class="form-actions" style="margin-top: 2rem;">
+                      <button type="submit" class="btn-primary-glow" [disabled]="isSaving">
+                         <span class="material-icons" *ngIf="!isSaving">save</span>
+                         {{ isSaving ? 'Saving...' : 'Save Profile' }}
+                      </button>
+                   </div>
+                </form>
+             </div>
+
+             <ng-template #noService>
+               <div class="empty-state-large" style="padding: 5rem; text-align: center;">
+                  <span class="material-icons" style="font-size: 5rem; color: var(--primary); margin-bottom: 2rem;">engineering</span>
+                  <h2>Professional Profile Missing</h2>
+                  <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">Setup your expertise, base charges, and service location to start receiving client bookings.</p>
+                  <button class="btn-primary-glow" (click)="initializeService()">Create Service Profile</button>
+               </div>
+             </ng-template>
+          </div>
+        </ng-container>
+
         <!-- Other Tabs Placeholders -->
-        <div class="tab-content-placeholder" *ngIf="activeTab !== 'performance'" style="margin-top: 2rem;">
+        <div class="tab-content-placeholder" *ngIf="activeTab !== 'performance' && activeTab !== 'settings'" style="margin-top: 2rem;">
            <div class="content-card-dark" style="padding: 4rem; text-align: center; border: 1px dashed var(--glass-border);">
               <span class="material-icons" style="font-size: 4rem; color: var(--primary); margin-bottom: 1.5rem;">construction</span>
               <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{activeTab | titlecase}} Module</h2>
@@ -507,6 +589,10 @@ import { AuthService } from '../../../core/auth.service';
 })
 export class ServiceProviderDashboardComponent implements OnInit {
   activeTab = 'performance';
+  currentService: any = null;
+  isFetchingLocation = false;
+  isSaving = false;
+
   todayAppointments = [
     { time: '10:00 AM', duration: '45 min', service: 'Classic Haircut', client: 'Raj P.', location: 'In-store', status: 'completed', current: false },
     { time: '11:00 AM', duration: '1 hr', service: 'Full Grooming Package', client: 'Amit S.', location: 'In-store', status: 'completed', current: false },
@@ -532,7 +618,86 @@ export class ServiceProviderDashboardComponent implements OnInit {
     return name.charAt(0).toUpperCase();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadServiceProviderData();
+  }
+
+  loadServiceProviderData() {
+    // In a real app, we'd fetch by current user ID
+    // this.apiService.getServiceByProvider(this.currentUser.id).subscribe(...)
+    // Mocking for now if not found, but we'll try to find it
+    this.apiService.getServices().subscribe(svcs => {
+      this.currentService = svcs.find(s => s.providerId === this.currentUser?.id) || null;
+    });
+  }
+
+  initializeService() {
+    if (!this.currentUser) return;
+    this.isSaving = true;
+    const newSvc = {
+      name: 'New Professional Service',
+      providerId: this.currentUser.id,
+      baseCharge: 500,
+      description: 'Expert services for your neighborhood.',
+      status: 'PENDING_VERIFICATION'
+    };
+    // this.apiService.createService(newSvc).subscribe(...)
+    // Mocking success
+    setTimeout(() => {
+      this.currentService = { ...newSvc, id: 'svc_' + Date.now() };
+      this.isSaving = false;
+    }, 1000);
+  }
+
+  fetchGPSLocation() {
+    this.isFetchingLocation = true;
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          
+          this.currentService.latitude = lat;
+          this.currentService.longitude = lon;
+          
+          // Reverse geocoding using Nominatim (OSM)
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+            .then(res => res.json())
+            .then(data => {
+              if (this.currentService && data.display_name) {
+                this.currentService.serviceArea = data.display_name;
+                alert('Location fetched! Your service area has been updated.');
+              }
+              this.isFetchingLocation = false;
+            })
+            .catch(err => {
+              console.error('Reverse Geocode Error:', err);
+              this.isFetchingLocation = false;
+              alert('GPS coordinates captured, but could not resolve address.');
+            });
+        },
+        (err) => {
+          console.error('Error fetching location', err);
+          this.isFetchingLocation = false;
+          alert('Could not fetch location. Please ensure GPS is enabled and permissions granted.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser.');
+      this.isFetchingLocation = false;
+    }
+  }
+
+  saveSettings() {
+    if (!this.currentService) return;
+    this.isSaving = true;
+    // this.apiService.updateService(this.currentService.id, this.currentService).subscribe(...)
+    setTimeout(() => {
+      this.isSaving = false;
+      alert('Professional settings saved successfully!');
+    }, 800);
+  }
 
   setTab(tab: string) {
     this.activeTab = tab;

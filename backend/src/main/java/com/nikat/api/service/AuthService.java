@@ -58,6 +58,8 @@ public class AuthService {
                 .isServiceProvider("SERVICE_PROVIDER".equals(request.getRole()))
                 .status("PENDING_VERIFICATION")
                 .emailVerified(false)
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
                 .build();
 
         user = userRepository.save(user);
@@ -69,6 +71,8 @@ public class AuthService {
                     .name(request.getBusinessName() != null ? request.getBusinessName()
                             : (user.getFirstName() + "'s Shop"))
                     .address(request.getBusinessAddress())
+                    .latitude(request.getLatitude())
+                    .longitude(request.getLongitude())
                     .status("PENDING_VERIFICATION")
                     .build();
             shopRepository.save(shop);
@@ -78,6 +82,8 @@ public class AuthService {
                     .name(request.getBusinessName() != null ? request.getBusinessName()
                             : (user.getFirstName() + "'s Service"))
                     .serviceArea(request.getBusinessAddress())
+                    .latitude(request.getLatitude())
+                    .longitude(request.getLongitude())
                     .status("PENDING_VERIFICATION")
                     .build();
             serviceRepository.save(nikatService);
@@ -137,6 +143,8 @@ public class AuthService {
                 .isShopOwner(user.getIsShopOwner())
                 .isServiceProvider(user.getIsServiceProvider())
                 .status(user.getStatus())
+                .latitude(user.getLatitude())
+                .longitude(user.getLongitude())
                 .build();
     }
 }

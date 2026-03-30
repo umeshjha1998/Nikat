@@ -177,6 +177,35 @@ import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.co
                   <textarea rows="3" formControlName="businessAddress" placeholder="Street, landmark, floor..."></textarea>
                 </div>
 
+                <!-- GPS Section -->
+                <div class="gps-capture-container">
+                  <header>
+                    <div class="g-info">
+                      <strong>GPS Coordinates (Mandatory)</strong>
+                      <p>Necessary for customers to find your accurate location.</p>
+                    </div>
+                    <div class="gps-badge" [class.success]="gpsStatus === 'SUCCESS'" [class.error]="gpsStatus === 'ERROR'">
+                      <span class="pulse-dot" *ngIf="gpsStatus === 'FETCHING'"></span>
+                      {{ gpsStatus === 'IDLE' ? 'Not Captured' : (gpsStatus === 'FETCHING' ? 'Fetching...' : (gpsStatus === 'SUCCESS' ? 'Captured' : 'Capture Failed')) }}
+                    </div>
+                  </header>
+
+                  <div class="gps-coords-preview" *ngIf="gpsStatus === 'SUCCESS'">
+                    <div class="coord"><span>Lat:</span> {{registerForm.get('latitude')?.value}}</div>
+                    <div class="coord"><span>Lng:</span> {{registerForm.get('longitude')?.value}}</div>
+                  </div>
+
+                  <div class="alert-premium error small" *ngIf="gpsStatus === 'ERROR'">
+                    <span class="material-icons">location_off</span>
+                    {{ gpsError }}
+                  </div>
+
+                  <button type="button" class="btn-gps" (click)="fetchLocation()" [disabled]="gpsStatus === 'FETCHING'">
+                    <span class="material-icons">{{ gpsStatus === 'SUCCESS' ? 'my_location' : 'gps_fixed' }}</span>
+                    {{ gpsStatus === 'SUCCESS' ? 'Retake Location' : 'Capture My GPS Location' }}
+                  </button>
+                </div>
+
                 <div class="actions-footer split">
                   <button type="button" class="btn-ghost" (click)="prevStep()">Back</button>
                   <button type="submit" class="btn-prime-glow flex-1" [disabled]="registerForm.invalid || isLoading">
@@ -286,6 +315,39 @@ import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.co
     .tel-wrap .prefix { position: absolute; left: 1.25rem; color: var(--text-muted); font-weight: 700; border-right: 1px solid var(--glass-border); padding-right: 0.75rem; }
     .tel-wrap input { padding-left: 3.8rem; }
 
+    /* GPS Capture */
+    .gps-capture-container {
+      margin-bottom: 2rem; padding: 1.5rem; border-radius: 1.25rem; background: var(--surface-container); border: 1px solid var(--glass-border);
+    }
+    .gps-capture-container header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 1rem; }
+    .g-info strong { display: block; font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.25rem; }
+    .g-info p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+    
+    .gps-badge {
+      padding: 0.4rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+      background: rgba(var(--text-main-rgb), 0.05); color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+    }
+    .gps-badge.success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+    .gps-badge.error { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+    
+    .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+
+    .gps-coords-preview {
+      display: flex; gap: 1rem; margin-bottom: 1.25rem; padding: 0.75rem 1rem; background: var(--bg); border-radius: 0.75rem; border: 1px dashed var(--glass-border);
+    }
+    .gps-coords-preview .coord { font-family: 'JetBrains Mono', monospace, sans-serif; font-size: 0.8rem; color: var(--text-main); }
+    .gps-coords-preview .coord span { color: var(--primary); font-weight: 700; margin-right: 0.25rem; }
+
+    .btn-gps {
+      width: 100%; padding: 0.8rem; border-radius: 0.75rem; border: 1px solid var(--primary); background: transparent;
+      color: var(--primary); font-family: inherit; font-weight: 700; cursor: pointer; transition: 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    }
+    .btn-gps:hover { background: rgba(var(--primary-rgb), 0.05); }
+    .btn-gps:disabled { opacity: 0.5; cursor: not-allowed; }
+    .alert-premium.error.small { padding: 0.75rem; font-size: 0.8rem; margin-bottom: 1.25rem; }
+
     .actions-footer { margin-top: 2rem; }
     .actions-footer.split { display: flex; gap: 1rem; }
     .btn-prime-glow {
@@ -314,6 +376,10 @@ export class RegisterComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   currentStep = 1;
+
+  // GPS Handling
+  gpsStatus: 'IDLE' | 'FETCHING' | 'SUCCESS' | 'ERROR' = 'IDLE';
+  gpsError = '';
   
   allCategories: CategoryDto[] = [];
   filteredCategories: CategoryDto[] = [];
@@ -333,7 +399,9 @@ export class RegisterComponent implements OnInit {
       role: ['USER', Validators.required],
       businessName: [''],
       businessAddress: [''],
-      categoryId: ['']
+      categoryId: [''],
+      latitude: [null],
+      longitude: [null]
     });
   }
 
@@ -378,14 +446,74 @@ export class RegisterComponent implements OnInit {
       this.registerForm.get('businessName')?.setValidators(Validators.required);
       this.registerForm.get('businessAddress')?.setValidators(Validators.required);
       this.registerForm.get('categoryId')?.setValidators(Validators.required);
+      this.registerForm.get('latitude')?.setValidators(Validators.required);
+      this.registerForm.get('longitude')?.setValidators(Validators.required);
     }
     this.registerForm.get('businessName')?.updateValueAndValidity();
     this.registerForm.get('businessAddress')?.updateValueAndValidity();
     this.registerForm.get('categoryId')?.updateValueAndValidity();
+    this.registerForm.get('latitude')?.updateValueAndValidity();
+    this.registerForm.get('longitude')?.updateValueAndValidity();
   }
 
   setCategory(catId: string) {
     this.registerForm.get('categoryId')?.setValue(catId);
+  }
+
+  fetchLocation() {
+    this.gpsStatus = 'FETCHING';
+    this.gpsError = '';
+
+    if (!navigator.geolocation) {
+      this.gpsStatus = 'ERROR';
+      this.gpsError = 'Geolocation is not supported by your browser.';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        
+        this.registerForm.patchValue({
+          latitude: lat,
+          longitude: lng
+        });
+        this.gpsStatus = 'SUCCESS';
+
+        // Reverse Geocoding
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.display_name) {
+              // If address is empty or just whitespace, auto-fill it
+              const currentAddress = this.registerForm.get('businessAddress')?.value;
+              if (!currentAddress || !currentAddress.trim()) {
+                this.registerForm.patchValue({ businessAddress: data.display_name });
+              }
+            }
+          })
+          .catch(err => console.error('Reverse geocoding failed:', err));
+      },
+      (err) => {
+        this.gpsStatus = 'ERROR';
+        switch (err.code) {
+          case err.PERMISSION_DENIED:
+            this.gpsError = 'Permission denied. Please allow location access.';
+            break;
+          case err.POSITION_UNAVAILABLE:
+            this.gpsError = 'Location information is unavailable.';
+            break;
+          case err.TIMEOUT:
+            this.gpsError = 'Request timed out.';
+            break;
+          default:
+            this.gpsError = 'An unknown error occurred.';
+            break;
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   }
 
   isBusinessRole(): boolean {

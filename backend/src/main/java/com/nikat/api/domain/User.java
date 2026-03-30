@@ -66,6 +66,12 @@ public class User {
     @Column(name = "email_verified")
     private Boolean emailVerified;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
