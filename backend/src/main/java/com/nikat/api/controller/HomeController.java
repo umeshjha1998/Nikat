@@ -171,19 +171,35 @@ public class HomeController {
                         </div>
                     </div>
  
-                    <div class="charts-section">
-                        <div class="chart-container">
-                            <div class="chart-title">JVM HEAP MEMORY <span class="chart-value" id="cur-mem">-</span></div>
-                            <div id="chart-mem"></div>
-                        </div>
-                        <div class="chart-container">
-                            <div class="chart-title">CPU LOAD (%%) <span class="chart-value" id="cur-cpu">-</span></div>
-                            <div id="chart-cpu"></div>
-                        </div>
+                   <div id="mode-info" style="margin-top: 3rem; text-align: left; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 1.5rem; border: 1px solid var(--glass-border);">
+                       <h3 style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem; text-transform: uppercase;">Engine Mode Comparison</h3>
+                       <table style="width: 100%%; border-collapse: collapse; font-size: 0.85rem;">
+                           <tr style="border-bottom: 1px solid var(--glass-border);">
+                               <th style="padding: 0.5rem; text-align: left;">Feature</th>
+                               <th style="padding: 0.5rem; text-align: left; color: var(--success);">Lite (Active)</th>
+                               <th style="padding: 0.5rem; text-align: left; color: var(--primary);">Premium</th>
+                           </tr>
+                           <tr>
+                               <td style="padding: 0.5rem; color: var(--text-dim);">Metrics Polling</td>
+                               <td id="lite-poll" style="padding: 0.5rem;">20 Minutes</td>
+                               <td id="prem-poll" style="padding: 0.5rem;">10 Seconds</td>
+                           </tr>
+                           <tr>
+                               <td style="padding: 0.5rem; color: var(--text-dim);">Auto-Sleep</td>
+                               <td style="padding: 0.5rem; color: var(--success);">Enabled</td>
+                               <td style="padding: 0.5rem; color: var(--secondary);">Inhibited</td>
+                           </tr>
+                           <tr>
+                               <td style="padding: 0.5rem; color: var(--text-dim);">Cost Efficiency</td>
+                               <td style="padding: 0.5rem; color: var(--success);">Maximum</td>
+                               <td style="padding: 0.5rem;">Standard</td>
+                           </tr>
+                       </table>
                    </div>
  
                     <div class="explore">
                         <a href="/swagger-ui.html" class="btn-swagger">API Reference Documentation</a>
+                        <button id="mode-btn" onclick="toggleMode()" class="btn-swagger" style="margin-left: 1rem; border: none; cursor: pointer;">Switch Mode</button>
                     </div>
                 </div>
  
@@ -270,7 +286,41 @@ public class HomeController {
                             console.warn('Metrics polling error', e);
                         }
                     }
-                    setInterval(fetchMetrics, 3000);
+                    // Mode Toggle Logic
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let isPremium = urlParams.get('mode') === 'premium';
+                    const pollInterval = isPremium ? 10000 : 1200000; // 10s for premium, 20m for lite
+
+                    function updateModeUI() {
+                        const badge = document.querySelector('.badge span');
+                        const liteHeader = document.querySelector('th:nth-child(2)');
+                        const premHeader = document.querySelector('th:nth-child(3)');
+                        
+                        if (badge) {
+                            badge.textContent = isPremium ? 'Premium Performance Mode' : 'Eco/Lite Mode (Auto-sleep Enabled)';
+                            badge.parentElement.style.borderColor = isPremium ? 'var(--primary)' : 'rgba(16, 185, 129, 0.2)';
+                        }
+                        
+                        if (liteHeader && premHeader) {
+                            liteHeader.textContent = isPremium ? 'Lite' : 'Lite (Active)';
+                            liteHeader.style.opacity = isPremium ? '0.5' : '1';
+                            premHeader.textContent = isPremium ? 'Premium (Active)' : 'Premium';
+                            premHeader.style.opacity = isPremium ? '1' : '0.5';
+                        }
+                        
+                        const btn = document.getElementById('mode-btn');
+                        if (btn) {
+                            btn.textContent = isPremium ? 'Switch to Lite Mode' : 'Switch to Premium Mode';
+                        }
+                    }
+
+                    function toggleMode() {
+                        const newMode = isPremium ? 'lite' : 'premium';
+                        window.location.href = window.location.origin + window.location.pathname + '?mode=' + newMode;
+                    }
+
+                    updateModeUI();
+                    setInterval(fetchMetrics, pollInterval);
                     fetchMetrics();
                 </script>
             </body>
