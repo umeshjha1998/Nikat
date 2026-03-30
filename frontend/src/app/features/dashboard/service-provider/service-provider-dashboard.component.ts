@@ -843,7 +843,7 @@ export class ServiceProviderDashboardComponent implements OnInit {
 
   loadCategories() {
     this.apiService.getCategories().subscribe(cats => {
-      this.categories = cats.filter(c => c.isServiceCategory);
+      this.categories = cats;
       this.groupCategories();
     });
   }

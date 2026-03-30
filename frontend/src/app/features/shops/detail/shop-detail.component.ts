@@ -897,13 +897,8 @@ export class ShopDetailComponent implements OnInit {
               tags: [],
               color: '#5eb4ff'
             }));
-            this.shop.reviewCount = this.reviews.length;
-            const totalRating = this.reviews.reduce((sum, r) => sum + r.rating, 0);
-            this.shop.rating = (totalRating / this.reviews.length).toFixed(1);
           } else {
             this.reviews = [];
-            this.shop.reviewCount = 0;
-            this.shop.rating = "0.0";
           }
         }
       });
