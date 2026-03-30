@@ -201,9 +201,60 @@ import { AuthService } from '../../../core/auth.service';
           <div class="settings-view">
              <div class="content-card-dark settings-form" *ngIf="currentService; else noService">
                 <div class="card-header">
-                   <h2>Pro Studio Settings</h2>
-                   <p style="color: var(--text-muted); margin-top: 0.5rem;">Configure your professional visibility and GPS location.</p>
-                </div>
+                    <h2>Pro Studio Settings</h2>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Configure your professional visibility and GPS location.</p>
+                 </div>
+
+                 <!-- Personal Profile Section -->
+                 <div class="personal-verification-section" style="margin-top: 2.5rem; margin-bottom: 2.5rem; padding: 2rem; background: rgba(255,255,255,0.03); border-radius: 1.5rem; border: 1px solid var(--glass-border);">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                      <span class="material-icons">verified_user</span> Personal Account & Verification
+                    </h3>
+                    
+                    <div class="user-photo-upload" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem;">
+                      <div class="photo-preview-large" [style.backgroundImage]="'url(' + (userProfile.photoData || 'assets/default-avatar.png') + ')'" 
+                           style="width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow);">
+                      </div>
+                      <div class="photo-upload-controls">
+                        <label class="btn-outline-glass" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 1rem; border: 1px solid var(--glass-border); background: var(--glass);">
+                          <span class="material-icons">camera_alt</span>
+                          Change Profile Photo
+                          <input type="file" (change)="onUserPhotoSelected($event)" accept="image/*" hidden>
+                        </label>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Photo auto-compressed to 25KB Max</p>
+                      </div>
+                    </div>
+
+                    <div class="glass-form">
+                       <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                          <div class="form-group">
+                             <label>Aadhar ID Number</label>
+                             <input type="text" [(ngModel)]="userProfile.aadharNumber" name="aadhar" placeholder="12-digit UID" style="width: 100%; padding: 0.8rem; border-radius: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);">
+                          </div>
+                          <div class="form-group">
+                             <label>PAN Card Number</label>
+                             <input type="text" [(ngModel)]="userProfile.panNumber" name="pan" placeholder="ABCDE1234F" style="text-transform: uppercase; width: 100%; padding: 0.8rem; border-radius: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);">
+                          </div>
+                       </div>
+                       <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                          <div class="form-group">
+                             <label>Passport Number (Optional)</label>
+                             <input type="text" [(ngModel)]="userProfile.passportNumber" name="passport" placeholder="Passport Number" style="width: 100%; padding: 0.8rem; border-radius: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-main);">
+                          </div>
+                          <div class="form-group" style="display: flex; align-items: flex-end;">
+                             <button type="button" class="btn-primary-glow" (click)="saveUserProfile()" style="width: 100%; height: 45px; justify-content: center;">
+                               Update Personal Profile
+                             </button>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+
+                 <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                       <span class="material-icons">business</span> Professional Details
+                    </h3>
+                 </div>
                 
                 <form class="glass-form" (submit)="saveSettings(); $event.preventDefault()" style="margin-top: 2rem;">
                    <div class="form-row">
@@ -590,6 +641,12 @@ import { AuthService } from '../../../core/auth.service';
 export class ServiceProviderDashboardComponent implements OnInit {
   activeTab = 'performance';
   currentService: any = null;
+  userProfile: any = {
+    aadharNumber: '',
+    panNumber: '',
+    passportNumber: '',
+    photoData: ''
+  };
   isFetchingLocation = false;
   isSaving = false;
 
@@ -623,11 +680,20 @@ export class ServiceProviderDashboardComponent implements OnInit {
   }
 
   loadServiceProviderData() {
-    // In a real app, we'd fetch by current user ID
     // this.apiService.getServiceByProvider(this.currentUser.id).subscribe(...)
     // Mocking for now if not found, but we'll try to find it
     this.apiService.getServices().subscribe(svcs => {
       this.currentService = svcs.find(s => s.providerId === this.currentUser?.id) || null;
+      
+      // Populate user profile
+      if (this.currentUser) {
+        this.userProfile = {
+          aadharNumber: this.currentUser.aadharNumber || '',
+          panNumber: this.currentUser.panNumber || '',
+          passportNumber: this.currentUser.passportNumber || '',
+          photoData: this.currentUser.photoData || ''
+        };
+      }
     });
   }
 
@@ -697,6 +763,70 @@ export class ServiceProviderDashboardComponent implements OnInit {
       this.isSaving = false;
       alert('Professional settings saved successfully!');
     }, 800);
+  }
+
+  onUserPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+      this.compressImage(file, 25 * 1024).then(compressed => {
+        this.userProfile.photoData = compressed;
+      });
+    }
+  }
+
+  saveUserProfile() {
+    if (!this.currentUser) return;
+    this.isSaving = true;
+    
+    this.authService.updateProfile(this.currentUser.id, this.userProfile).subscribe({
+      next: () => {
+        this.isSaving = false;
+        alert('Personal verification details updated successfully!');
+      },
+      error: (err) => {
+        this.isSaving = false;
+        alert('Failed to update personal details: ' + (err.error?.message || err.message));
+      }
+    });
+  }
+
+  private compressImage(file: File, maxSize: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          let quality = 0.8;
+          let base64 = '';
+          const draw = () => {
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            base64 = canvas.toDataURL('image/jpeg', quality);
+            if (base64.length > maxSize * 1.33 && quality > 0.1) {
+              quality -= 0.1;
+              width *= 0.9;
+              height *= 0.9;
+              draw();
+            } else {
+              resolve(base64);
+            }
+          };
+          draw();
+        };
+      };
+      reader.onerror = reject;
+    });
   }
 
   setTab(tab: string) {

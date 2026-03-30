@@ -457,6 +457,43 @@ import { ApiService, OrderDto } from '../../core/api.service';
                   <p class="form-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;" *ngIf="userProfile.latitude">Coordinates are saved to help find services within your neighborhood.</p>
                 </div>
 
+                <!-- NEW: Verification Details Section -->
+                <div class="form-group-internal" style="margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                  <label>Verification Details (Optional)</label>
+                  <div class="form-row">
+                    <div class="form-group-internal">
+                      <label>Aadhar Number</label>
+                      <input type="text" [(ngModel)]="userProfile.aadharNumber" placeholder="XXXX XXXX XXXX">
+                    </div>
+                    <div class="form-group-internal">
+                      <label>PAN Number</label>
+                      <input type="text" [(ngModel)]="userProfile.panNumber" placeholder="ABCDE1234F">
+                    </div>
+                  </div>
+                  <div class="form-group-internal" style="margin-top: 1rem;">
+                    <label>Passport Number</label>
+                    <input type="text" [(ngModel)]="userProfile.passportNumber" placeholder="L1234567">
+                  </div>
+                </div>
+
+                <!-- NEW: Photo Section -->
+                <div class="form-group-internal" style="margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                  <label>Profile Photo (Max 25kb)</label>
+                  <div class="photo-upload-container" style="display: flex; gap: 1.5rem; align-items: center; margin-top: 0.5rem;">
+                    <div class="current-photo" *ngIf="userProfile.photoData" style="width: 80px; height: 80px; border-radius: 1rem; overflow: hidden; border: 2px solid var(--primary); background: var(--bg);">
+                      <img [src]="userProfile.photoData" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="photo-placeholder" *ngIf="!userProfile.photoData" style="width: 80px; height: 80px; border-radius: 1rem; border: 2px dashed var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                      <span class="material-icons">no_photography</span>
+                    </div>
+                    <label class="btn-outline-action" style="flex: 1; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                      <span class="material-icons">add_a_photo</span>
+                      {{ userProfile.photoData ? 'Change Photo' : 'Upload Photo' }}
+                      <input type="file" (change)="onPhotoSelected($event)" accept="image/*" style="display: none;">
+                    </label>
+                  </div>
+                </div>
+
                 <button class="btn-prime-save" (click)="saveProfile()" style="margin-top: 1.5rem;">Save Changes</button>
               </div>
             </section>
@@ -878,6 +915,10 @@ export class DashboardComponent implements OnInit {
     phone: '',
     latitude: null,
     longitude: null,
+    aadharNumber: '',
+    panNumber: '',
+    passportNumber: '',
+    photoData: '',
     emailNotifications: true,
     smsAlerts: false
   };
@@ -917,6 +958,10 @@ export class DashboardComponent implements OnInit {
         phone: this.currentUser.phone || '',
         latitude: this.currentUser.latitude || null,
         longitude: this.currentUser.longitude || null,
+        aadharNumber: this.currentUser.aadharNumber || '',
+        panNumber: this.currentUser.panNumber || '',
+        passportNumber: this.currentUser.passportNumber || '',
+        photoData: this.currentUser.photoData || '',
         emailNotifications: true,
         smsAlerts: false
       };
@@ -1118,7 +1163,68 @@ export class DashboardComponent implements OnInit {
     } else {
       alert('Geolocation is not supported by your browser.');
       this.isFetchingLocation = false;
+  }
+  }
+
+  onPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.compressImage(e.target.result, 800, 800, 0.7).then(compressed => {
+          this.userProfile.photoData = compressed;
+        });
+      };
+      reader.readAsDataURL(file);
     }
+  }
+
+  private compressImage(dataUrl: string, maxWidth: number, maxHeight: number, quality: number): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = dataUrl;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Recursive compression to get under 25kb
+        const attemptCompression = (q: number) => {
+          const result = canvas.toDataURL('image/jpeg', q);
+          const sizeKb = Math.round((result.length * 3 / 4) / 1024);
+          
+          if (sizeKb > 25 && q > 0.1) {
+            attemptCompression(q - 0.1);
+          } else {
+            resolve(result);
+          }
+        };
+
+        attemptCompression(quality);
+      };
+    });
   }
 
   saveProfile() {

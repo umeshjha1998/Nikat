@@ -50,6 +50,10 @@ public class UserService {
         user.setLastName(dto.getLastName());
         user.setPhone(dto.getPhone());
         user.setEmail(dto.getEmail());
+        user.setAadharNumber(dto.getAadharNumber());
+        user.setPanNumber(dto.getPanNumber());
+        user.setPassportNumber(dto.getPassportNumber());
+        user.setPhotoData(dto.getPhotoData());
         return mapToDto(userRepository.save(user));
     }
 
@@ -80,6 +84,10 @@ public class UserService {
                 .isShopOwner(user.getIsShopOwner())
                 .isServiceProvider(user.getIsServiceProvider())
                 .status(user.getStatus())
+                .aadharNumber(user.getAadharNumber())
+                .panNumber(user.getPanNumber())
+                .passportNumber(user.getPassportNumber())
+                .photoData(user.getPhotoData())
                 .build();
     }
 }

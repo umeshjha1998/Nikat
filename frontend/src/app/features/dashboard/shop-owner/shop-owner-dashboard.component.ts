@@ -370,6 +370,52 @@ import { AuthService } from '../../../core/auth.service';
         <ng-container *ngIf="activeTab === 'settings'">
           <div class="settings-form content-card-dark" *ngIf="currentShop; else noShop">
              <h2>Shop Profile Settings</h2>
+             
+             <!-- Personal Profile Section -->
+             <div class="personal-verification-section" style="margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--glass-border);">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <span class="material-icons">badge</span> Personal Verification Details
+                </h3>
+                
+                <div class="user-photo-upload" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 2rem;">
+                  <div class="photo-preview-large" [style.backgroundImage]="'url(' + (userProfile.photoData || 'assets/default-avatar.png') + ')'" 
+                       style="width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow);">
+                  </div>
+                  <div class="photo-upload-controls">
+                    <label class="btn-outline-glass" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;">
+                      <span class="material-icons">camera_alt</span>
+                      Change Photo
+                      <input type="file" (change)="onUserPhotoSelected($event)" accept="image/*" hidden>
+                    </label>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Max size: 25KB (Auto-compressed)</p>
+                  </div>
+                </div>
+
+                <div class="glass-form">
+                   <div class="form-row">
+                      <div class="form-group">
+                         <label>Aadhar Number</label>
+                         <input type="text" [(ngModel)]="userProfile.aadharNumber" name="aadhar" placeholder="12-digit Aadhar Number">
+                      </div>
+                      <div class="form-group">
+                         <label>PAN Card Number</label>
+                         <input type="text" [(ngModel)]="userProfile.panNumber" name="pan" placeholder="ABCDE1234F" style="text-transform: uppercase;">
+                      </div>
+                   </div>
+                   <div class="form-row">
+                      <div class="form-group">
+                         <label>Passport Number</label>
+                         <input type="text" [(ngModel)]="userProfile.passportNumber" name="passport" placeholder="Passport Number">
+                      </div>
+                      <div class="form-group" style="display: flex; align-items: flex-end;">
+                         <button type="button" class="btn-primary-glow" (click)="saveUserProfile()" style="width: 100%;">
+                           Update Personal Info
+                         </button>
+                      </div>
+                   </div>
+                </div>
+             </div>
+
              <form class="glass-form" (submit)="saveSettings(); $event.preventDefault()">
                 <div class="form-row">
                    <div class="form-group">
@@ -1629,6 +1675,12 @@ export class ShopOwnerDashboardComponent implements OnInit {
     imageUrl: '',
     quantity: 0
   };
+  userProfile: any = {
+    aadharNumber: '',
+    panNumber: '',
+    passportNumber: '',
+    photoData: ''
+  };
   workerNamesList: string[] = [];
   
   // Appointment confirmation modal
@@ -1687,6 +1739,17 @@ export class ShopOwnerDashboardComponent implements OnInit {
         if (shops.length > 0) {
           this.currentShop = shops[0];
           this.workerNamesList = (this.currentShop.workerNames || '').split(',').map(n => n.trim());
+          
+          // Map user profile fields
+          if (user) {
+            this.userProfile = {
+              aadharNumber: user.aadharNumber || '',
+              panNumber: user.panNumber || '',
+              passportNumber: user.passportNumber || '',
+              photoData: user.photoData || ''
+            };
+          }
+
           this.loadProducts();
           this.loadAppointments();
           this.loadInquiries();
@@ -1990,6 +2053,28 @@ export class ShopOwnerDashboardComponent implements OnInit {
       error: (err) => {
         console.error('Update failed', err);
         alert('Failed to save settings. Please try again.');
+      }
+    });
+  }
+
+  onUserPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.compressImage(file, 25 * 1024).then(compressed => {
+        this.userProfile.photoData = compressed;
+      });
+    }
+  }
+
+  saveUserProfile() {
+    if (!this.currentUser) return;
+    
+    this.authService.updateProfile(this.currentUser.id, this.userProfile).subscribe({
+      next: (updatedUser) => {
+        alert('Personal verification details updated successfully!');
+      },
+      error: (err) => {
+        alert('Failed to update personal details: ' + (err.error?.message || err.message));
       }
     });
   }
