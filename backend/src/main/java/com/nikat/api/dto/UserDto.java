@@ -19,6 +19,10 @@ public class UserDto {
     private Boolean isShopOwner;
     private Boolean isServiceProvider;
     private String status;
+    private String aadharNumber;
+    private String panNumber;
+    private String passportNumber;
+    private String photoData;
     private Double latitude;
     private Double longitude;
 }

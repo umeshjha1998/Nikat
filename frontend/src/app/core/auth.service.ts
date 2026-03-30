@@ -13,6 +13,10 @@ export interface UserDto {
   isShopOwner: boolean;
   isServiceProvider: boolean;
   status: string;
+  aadharNumber?: string;
+  panNumber?: string;
+  passportNumber?: string;
+  photoData?: string;
   latitude?: number;
   longitude?: number;
 }
@@ -31,7 +35,10 @@ export interface RegisterRequest {
   role: string;
   businessName?: string;
   businessAddress?: string;
-  idProofUrl?: string;
+  aadharNumber?: string;
+  panNumber?: string;
+  passportNumber?: string;
+  photoData?: string;
   latitude?: number;
   longitude?: number;
 }

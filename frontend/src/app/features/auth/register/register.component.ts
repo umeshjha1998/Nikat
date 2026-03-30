@@ -129,6 +129,47 @@ import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.co
                   <input type="password" formControlName="password" placeholder="Min 6 characters">
                 </div>
 
+                <div class="verification-gate">
+                  <header (click)="showVerification = !showVerification">
+                    <span class="material-icons">verified_user</span>
+                    <div class="v-info">
+                      <strong>Verification Details (Optional)</strong>
+                      <p>Boost your profile trust with these details.</p>
+                    </div>
+                    <span class="material-icons dropdown-icon" [style.transform]="showVerification ? 'rotate(180deg)' : 'none'">expand_more</span>
+                  </header>
+
+                  <div class="v-fields" *ngIf="showVerification">
+                    <div class="f-group">
+                      <label>Aadhar Number</label>
+                      <input type="text" formControlName="aadharNumber" placeholder="XXXX XXXX XXXX">
+                    </div>
+                    <div class="f-group">
+                      <label>PAN Number</label>
+                      <input type="text" formControlName="panNumber" placeholder="ABCDE1234F">
+                    </div>
+                    <div class="f-group">
+                      <label>Passport Number</label>
+                      <input type="text" formControlName="passportNumber" placeholder="L1234567">
+                    </div>
+                    
+                    <div class="f-group photo-upload">
+                      <label>Profile Photo (Max 25kb)</label>
+                      <div class="photo-preview-wrap" *ngIf="registerForm.get('photoData')?.value">
+                        <img [src]="registerForm.get('photoData')?.value" alt="Preview">
+                        <button type="button" class="btn-remove" (click)="registerForm.patchValue({photoData: ''})">
+                          <span class="material-icons">close</span>
+                        </button>
+                      </div>
+                      <div class="upload-trigger" *ngIf="!registerForm.get('photoData')?.value">
+                        <input type="file" (change)="onPhotoSelected($event)" accept="image/*">
+                        <span class="material-icons">add_a_photo</span>
+                        <p>Upload Photo</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="actions-footer split">
                   <button type="button" class="btn-ghost" (click)="prevStep()">Back</button>
                   <button type="button" class="btn-prime-glow flex-1" (click)="nextStep()" *ngIf="isBusinessRole()">
@@ -348,6 +389,32 @@ import { ThemeToggleComponent } from '../../../core/theme-toggle/theme-toggle.co
     .btn-gps:disabled { opacity: 0.5; cursor: not-allowed; }
     .alert-premium.error.small { padding: 0.75rem; font-size: 0.8rem; margin-bottom: 1.25rem; }
 
+    .alert-premium.error.small { padding: 0.75rem; font-size: 0.8rem; margin-bottom: 1.25rem; }
+
+    /* Verification Gate */
+    .verification-gate { margin: 1.5rem 0; border: 1px solid var(--glass-border); border-radius: 1.25rem; background: var(--surface-container); overflow: hidden; }
+    .verification-gate header { padding: 1.25rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; transition: 0.2s; }
+    .verification-gate header:hover { background: rgba(var(--text-main-rgb), 0.05); }
+    .verification-gate header .material-icons { color: var(--primary); }
+    .verification-gate header .dropdown-icon { margin-left: auto; color: var(--text-muted); transition: 0.3s; }
+    .v-info strong { display: block; font-size: 0.9rem; color: var(--text-main); }
+    .v-info p { font-size: 0.75rem; color: var(--text-muted); }
+    .v-fields { padding: 1.25rem; border-top: 1px solid var(--glass-border); background: var(--bg); }
+
+    .photo-upload .upload-trigger {
+      width: 100%; height: 120px; border: 2px dashed var(--glass-border); border-radius: 1rem;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; transition: 0.2s; color: var(--text-muted);
+    }
+    .photo-upload .upload-trigger:hover { border-color: var(--primary); color: var(--primary); background: rgba(var(--primary-rgb), 0.05); }
+    .photo-upload .upload-trigger input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+    .photo-upload .upload-trigger .material-icons { font-size: 2rem; margin-bottom: 0.5rem; }
+    
+    .photo-preview-wrap { position: relative; width: 100px; height: 100px; border-radius: 1rem; overflow: hidden; border: 2px solid var(--primary); }
+    .photo-preview-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .btn-remove { position: absolute; top: 0; right: 0; background: var(--primary); color: #fff; border: none; width: 24px; height: 24px; border-radius: 0 0 0 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-remove .material-icons { font-size: 14px; }
+
     .actions-footer { margin-top: 2rem; }
     .actions-footer.split { display: flex; gap: 1rem; }
     .btn-prime-glow {
@@ -376,6 +443,7 @@ export class RegisterComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   currentStep = 1;
+  showVerification = false;
 
   // GPS Handling
   gpsStatus: 'IDLE' | 'FETCHING' | 'SUCCESS' | 'ERROR' = 'IDLE';
@@ -400,6 +468,10 @@ export class RegisterComponent implements OnInit {
       businessName: [''],
       businessAddress: [''],
       categoryId: [''],
+      aadharNumber: [''],
+      panNumber: [''],
+      passportNumber: [''],
+      photoData: [''],
       latitude: [null],
       longitude: [null]
     });
@@ -577,5 +649,64 @@ export class RegisterComponent implements OnInit {
       this.registerForm.markAllAsTouched();
       this.errorMessage = 'Please complete all required fields.';
     }
+  }
+
+  onPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.isLoading = true;
+      this.compressImage(file, 25 * 1024).then(base64 => {
+        this.registerForm.patchValue({ photoData: base64 });
+        this.isLoading = false;
+      }).catch(err => {
+        this.isLoading = false;
+        this.errorMessage = 'Image compression failed. Please try a different photo.';
+        console.error('Compression failed', err);
+      });
+    }
+  }
+
+  private compressImage(file: File, maxSize: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          const maxDimension = 800;
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let quality = 0.7;
+          let base64 = canvas.toDataURL('image/jpeg', quality);
+          
+          while (base64.length > maxSize && quality > 0.1) {
+            quality -= 0.1;
+            base64 = canvas.toDataURL('image/jpeg', quality);
+          }
+          
+          resolve(base64);
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
   }
 }

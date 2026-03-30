@@ -39,8 +39,8 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String password;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
+    @Column(name = "photo_data", columnDefinition = "TEXT")
+    private String photoData;
 
     @Column(name = "aadhar_number", length = 50)
     private String aadharNumber;

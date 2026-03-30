@@ -58,6 +58,10 @@ public class AuthService {
                 .isServiceProvider("SERVICE_PROVIDER".equals(request.getRole()))
                 .status("PENDING_VERIFICATION")
                 .emailVerified(false)
+                .aadharNumber(request.getAadharNumber())
+                .panNumber(request.getPanNumber())
+                .passportNumber(request.getPassportNumber())
+                .photoData(request.getPhotoData())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .build();
@@ -143,6 +147,10 @@ public class AuthService {
                 .isShopOwner(user.getIsShopOwner())
                 .isServiceProvider(user.getIsServiceProvider())
                 .status(user.getStatus())
+                .aadharNumber(user.getAadharNumber())
+                .panNumber(user.getPanNumber())
+                .passportNumber(user.getPassportNumber())
+                .photoData(user.getPhotoData())
                 .latitude(user.getLatitude())
                 .longitude(user.getLongitude())
                 .build();

@@ -38,7 +38,7 @@ public class InquiryService {
                 .id(inquiry.getId())
                 .userId(inquiry.getUser().getId())
                 .userName(inquiry.getUser().getFirstName() + " " + (inquiry.getUser().getLastName() != null ? inquiry.getUser().getLastName() : ""))
-                .userAvatar(inquiry.getUser().getPhotoUrl())
+                .userAvatar(inquiry.getUser().getPhotoData())
                 .shopId(inquiry.getShop() != null ? inquiry.getShop().getId() : null)
                 .message(inquiry.getMessage())
                 .reply(inquiry.getReply())

@@ -18,7 +18,10 @@ public class RegisterRequest {
     private String role;
     private String businessName;
     private String businessAddress;
-    private String idProofUrl;
+    private String aadharNumber;
+    private String panNumber;
+    private String passportNumber;
+    private String photoData;
     private Double latitude;
     private Double longitude;
 }

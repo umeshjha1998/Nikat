@@ -10,7 +10,7 @@ CREATE TABLE users (
     gender VARCHAR(20),
     address TEXT,
     password_hash VARCHAR(255) NOT NULL,
-    photo_url VARCHAR(255),
+    photo_data TEXT,
     aadhar_number VARCHAR(50),
     pan_number VARCHAR(20),
     passport_number VARCHAR(50),
